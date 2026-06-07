@@ -63,13 +63,13 @@ export default function SpecialOffer() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-r from-[#111111] via-[#1E1E1E] to-[#25221F] overflow-hidden relative text-left">
+    <section className="py-28 bg-[#111111] overflow-hidden relative text-left">
       
       {/* Background Graphic Lines */}
       <div className="absolute inset-0 opacity-15 pointer-events-none">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <path d="M-100 100 C 200 300, 400 0, 1000 200" fill="none" stroke="#BCA58A" strokeWidth="1.5" />
-          <path d="M0 300 C 300 500, 600 200, 1200 400" fill="none" stroke="#BCA58A" strokeWidth="1" />
+          <path d="M-100 100 C 200 300, 400 0, 1000 200" fill="none" stroke="#BCA58A" strokeWidth="0.8" />
+          <path d="M0 300 C 300 500, 600 200, 1200 400" fill="none" stroke="#BCA58A" strokeWidth="0.5" />
         </svg>
       </div>
 
@@ -83,16 +83,18 @@ export default function SpecialOffer() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <span className="text-xs font-bold tracking-[0.3em] text-[#BCA58A] uppercase block mb-4">
+            <span className="text-[10px] tracking-[0.35em] text-[#BCA58A] uppercase block mb-4 font-medium"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Seasonal Promotion
             </span>
-            
-            <h2 className="text-3xl md:text-5.5xl font-display font-medium text-white mb-6 leading-tight">
-              Summer Festive Edit <br />
-              <span className="text-[#BCA58A] italic">Up to 40% Off</span>
+            <h2 className="text-4xl md:text-5xl font-light text-[#FAF9F6] mb-5 leading-tight"
+              style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Summer Festive Edit<br />
+              <em className="italic text-[#BCA58A]">Up to 40% Off</em>
             </h2>
             
-            <p className="text-gray-300 text-sm md:text-base mb-10 leading-relaxed font-body max-w-lg">
+            <p className="text-[#6B6B6B] text-sm mb-10 leading-relaxed max-w-lg"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Indulge in our collection of hand-embroidered salwar suits, designer anarkalis, and premium silk sets. Verified craftsmanship at irresistible prices.
             </p>
 
@@ -100,11 +102,13 @@ export default function SpecialOffer() {
             <div className="flex gap-4 mb-10">
               {timerItems.map((item, index) => (
                 <div key={index} className="flex flex-col items-center">
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center justify-center text-xl md:text-3xl font-display font-medium text-white shadow-inner relative overflow-hidden group hover:border-[#BCA58A]/30 transition-all duration-300">
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-[#1E1E1E] border border-[#BCA58A]/20 flex items-center justify-center text-2xl md:text-3xl font-light text-[#FAF9F6] hover:border-[#BCA58A]/50 transition-all duration-300"
+                    style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {formatNumber(item.value)}
                     <div className="absolute inset-0 bg-gradient-to-b from-[#BCA58A]/5 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
-                  <span className="text-[10px] tracking-widest text-[#BCA58A] uppercase mt-2 font-bold">
+                  <span className="text-[9px] tracking-[0.2em] text-[#BCA58A] uppercase mt-2 font-semibold"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {item.label}
                   </span>
                 </div>
@@ -140,7 +144,8 @@ export default function SpecialOffer() {
             <motion.button
               whileHover={{ scale: 1.03, boxShadow: '0 20px 40px rgba(188,165,138,0.2)' }}
               whileTap={{ scale: 0.97 }}
-              className="inline-flex items-center gap-3 bg-[#BCA58A] text-white px-8 py-4 tracking-widest text-xs font-semibold rounded-lg hover:bg-[#a69076] transition-colors group cursor-pointer"
+              className="inline-flex items-center gap-3 bg-[#BCA58A] hover:bg-[#BCA58A] text-[#111111] px-10 py-4 tracking-[0.25em] text-[10px] font-bold transition-colors group cursor-pointer"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               SHOP THE SALE
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -156,7 +161,7 @@ export default function SpecialOffer() {
             className="relative justify-self-center lg:justify-self-end w-full max-w-md"
           >
             {/* Elegant Fabric Pattern Photo */}
-            <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-premium bg-[#1E1E1E] relative border border-white/10 group">
+            <div className="aspect-[4/3] overflow-hidden bg-[#111111] relative border border-[#BCA58A]/15 group">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={activeFabric}

@@ -1,21 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Segoe+UI:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap');
 
+/* ─── DESIGN TOKENS ─── */
 :root {
-  --primary-black: #111111;
-  --primary-dark: #1E1E1E;
-  --secondary-ivory: #FAF9F6;
-  --secondary-beige: #EBDDD0;
-  --secondary-bronze: #BCA5A0;
-  --secondary-light: #686868;
-
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'Segoe UI', sans-serif;
+  --charcoal:     #111111;
+  --charcoal-mid: #111111;
+  --charcoal-soft:#1E1E1E;
+  --ivory:        #FAF9F6;
+  --ivory-soft:   #E8DDD0;
+  --ivory-dim:    #E8DDD0;
+  --gold:         #BCA58A;
+  --gold-light:   #BCA58A;
+  --gold-dark:    #BCA58A;
+  --crimson:      #111111;
+  --text-dark:    #1E1E1E;
+  --text-mid:     #6B6B6B;
+  --text-muted:   #6B6B6B;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body:    'DM Sans', sans-serif;
 }
 
-* {
+/* ─── BASE RESET ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 html {
@@ -24,74 +32,45 @@ html {
 
 body {
   font-family: var(--font-body);
-  color: var(--primary-black);
-  background-color: #ffffff;
+  background: var(--charcoal);
+  color: var(--ivory);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Selection Color */
-::selection {
-  background-color: var(--secondary-bronze);
-  color: white;
-}
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--charcoal); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
-::-moz-selection {
-  background-color: var(--secondary-bronze);
-  color: white;
-}
+/* ─── SELECTION ─── */
+::selection { background: var(--gold); color: var(--charcoal); }
 
-
-body {
-  margin: 0;
-}
-
+/* ─── ROOT CONTAINER ─── */
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+/* ─── LOADING SCREEN ─── */
+.svg-text-stroke {
+  font-family: 'Great Vibes', cursive;
+  font-size: 120px;
+  font-weight: 400;
+  fill: none;
+  stroke: #BCA58A;
+  stroke-width: 1;
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  letter-spacing: 4px;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.svg-text-fill {
+  font-family: 'Great Vibes', cursive;
+  font-size: 120px;
+  font-weight: 400;
+  fill: #BCA58A;
+  letter-spacing: 4px;
 }

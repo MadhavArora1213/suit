@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const testimonials = [
@@ -37,82 +37,68 @@ export default function Testimonials() {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % testimonials.length);
-    }, 7000);
+    const timer = setInterval(() => setCurrent((prev) => (prev + 1) % testimonials.length), 7000);
     return () => clearInterval(timer);
   }, []);
 
-  const nextTesti = () => {
-    setCurrent((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const prevTesti = () => {
-    setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
   return (
-    <section className="py-24 bg-[#FAF9F6] relative overflow-hidden text-left">
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 relative z-10">
-        
-        {/* Header */}
-        <div className="text-center mb-16">
-          <span className="text-xs font-bold tracking-[0.3em] text-[#BCA58A] uppercase block mb-3">
-            Customer Stories
-          </span>
-          <h2 className="text-3xl md:text-5xl font-display font-medium text-[#111111] mb-6">
-            Loved by Connoisseurs
+    <section className="py-24 bg-[#111111] relative overflow-hidden border-t border-[#BCA58A]/10">
+      <div className="max-w-[1000px] mx-auto px-6 md:px-14 relative z-10 flex flex-col md:flex-row items-center gap-12 md:gap-24">
+
+        {/* Left Intro */}
+        <div className="w-full md:w-1/3 text-center md:text-left">
+          <span className="text-[10px] tracking-[0.35em] text-[#BCA58A] uppercase block mb-4 font-medium"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>Testimonials</span>
+          <h2 className="text-4xl md:text-5xl font-light text-[#FAF9F6] mb-6"
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            Client <em className="italic text-[#BCA58A]">Stories</em>
           </h2>
-          <p className="text-[#686868] text-sm md:text-base max-w-xl mx-auto font-body">
-            Read authentic reviews from women who cherish premium handloom and artisan ethnic wear.
-          </p>
+          <div className="hidden md:flex items-center gap-4 mt-12">
+            <button onClick={() => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length)}
+              className="w-10 h-10 border border-[#BCA58A]/30 hover:border-[#BCA58A] text-[#6B6B6B] hover:text-[#BCA58A] flex items-center justify-center transition-all cursor-pointer">
+              <ChevronLeft size={16} />
+            </button>
+            <button onClick={() => setCurrent((p) => (p + 1) % testimonials.length)}
+              className="w-10 h-10 border border-[#BCA58A]/30 hover:border-[#BCA58A] text-[#6B6B6B] hover:text-[#BCA58A] flex items-center justify-center transition-all cursor-pointer">
+              <ChevronRight size={16} />
+            </button>
+          </div>
         </div>
 
-        {/* Cinematic Single Review Container */}
-        <div className="max-w-3xl mx-auto bg-white rounded-3xl p-8 md:p-14 border border-[#EBDDD0]/30 shadow-premium relative min-h-[350px] flex flex-col justify-between">
-          
-          {/* Quote Mark */}
-          <div className="absolute top-6 right-8 text-[#BCA58A]/10 pointer-events-none">
-            <Quote size={80} className="fill-current" />
-          </div>
-
+        {/* Right Quote */}
+        <div className="w-full md:w-2/3 relative">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={current}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.4 }}
-              className="space-y-6 flex-1 flex flex-col justify-between"
-            >
-              <div>
-                {/* Rating Stars */}
-                <div className="flex gap-1.5 mb-6">
-                  {[...Array(testimonials[current].rating)].map((_, i) => (
-                    <Star key={i} size={16} className="fill-[#BCA58A] text-[#BCA58A]" />
-                  ))}
-                </div>
+            <motion.div key={current}
+              initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.5 }}
+              className="text-left space-y-8">
 
-                {/* Review Text */}
-                <p className="text-lg md:text-xl text-neutral-800 leading-relaxed italic font-display font-medium">
-                  "{testimonials[current].text}"
-                </p>
+              {/* Stars */}
+              <div className="flex gap-2">
+                {[...Array(testimonials[current].rating)].map((_, i) => (
+                  <Star key={i} size={14} className="fill-[#BCA58A] text-[#BCA58A]" />
+                ))}
               </div>
 
-              {/* User Avatar & Name */}
-              <div className="flex items-center gap-4 border-t border-[#EBDDD0]/25 pt-6 mt-6">
-                <div className="w-12 h-12 rounded-full overflow-hidden border border-[#EBDDD0] bg-gray-100 flex-shrink-0">
-                  <img
-                    src={testimonials[current].avatar}
-                    alt={testimonials[current].name}
-                    className="w-full h-full object-cover"
-                  />
+              {/* Quote text */}
+              <blockquote className="text-xl md:text-3xl font-light italic text-[#FAF9F6]/90 leading-relaxed"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                "{testimonials[current].text}"
+              </blockquote>
+
+              {/* Author */}
+              <div className="flex items-center gap-5 pt-4">
+                <div className="w-12 h-12 rounded-full overflow-hidden border border-[#BCA58A]/30">
+                  <img src={testimonials[current].avatar} alt={testimonials[current].name}
+                    className="w-full h-full object-cover" />
                 </div>
-                <div>
-                  <h4 className="text-sm font-semibold tracking-wide text-neutral-900">
+                <div className="text-left">
+                  <h4 className="text-base font-medium text-[#FAF9F6]"
+                    style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {testimonials[current].name}
                   </h4>
-                  <p className="text-[10px] tracking-wider text-[#BCA58A] uppercase font-bold">
+                  <p className="text-[9px] tracking-[0.2em] text-[#BCA58A] uppercase font-semibold mt-0.5"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {testimonials[current].role}
                   </p>
                 </div>
@@ -120,37 +106,18 @@ export default function Testimonials() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Slider controls */}
-          <div className="absolute right-6 bottom-6 flex items-center gap-2">
-            <button
-              onClick={prevTesti}
-              className="w-9 h-9 rounded-full border border-neutral-200 hover:border-[#BCA58A] text-neutral-600 hover:text-[#BCA58A] flex items-center justify-center transition-colors cursor-pointer"
-            >
+          {/* Mobile Controls */}
+          <div className="flex md:hidden items-center gap-4 mt-10 justify-center">
+            <button onClick={() => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length)}
+              className="w-10 h-10 border border-[#BCA58A]/30 hover:border-[#BCA58A] text-[#6B6B6B] hover:text-[#BCA58A] flex items-center justify-center transition-all cursor-pointer">
               <ChevronLeft size={16} />
             </button>
-            <button
-              onClick={nextTesti}
-              className="w-9 h-9 rounded-full border border-neutral-200 hover:border-[#BCA58A] text-neutral-600 hover:text-[#BCA58A] flex items-center justify-center transition-colors cursor-pointer"
-            >
+            <button onClick={() => setCurrent((p) => (p + 1) % testimonials.length)}
+              className="w-10 h-10 border border-[#BCA58A]/30 hover:border-[#BCA58A] text-[#6B6B6B] hover:text-[#BCA58A] flex items-center justify-center transition-all cursor-pointer">
               <ChevronRight size={16} />
             </button>
           </div>
         </div>
-
-        {/* Indicators */}
-        <div className="flex justify-center gap-3 mt-8">
-          {testimonials.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrent(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                current === index ? 'bg-[#BCA58A] w-6' : 'bg-neutral-300 hover:bg-neutral-400'
-              }`}
-              title={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-
       </div>
     </section>
   );

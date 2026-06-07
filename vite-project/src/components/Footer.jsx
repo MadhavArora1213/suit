@@ -24,232 +24,146 @@ export default function Footer() {
 
   const handleSubscribe = (e) => {
     e.preventDefault();
-    if (!email) {
-      setError('Please enter your email.');
-      return;
-    }
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('Please enter a valid email address.');
-      return;
-    }
+    if (!email) { setError('Please enter your email.'); return; }
+    if (!/\S+@\S+\.\S+/.test(email)) { setError('Please enter a valid email address.'); return; }
     setError('');
     setSubscribed(true);
     setEmail('');
-    setTimeout(() => {
-      setSubscribed(false);
-    }, 5000);
+    setTimeout(() => setSubscribed(false), 5000);
   };
 
   return (
-    <footer className="bg-[#111111] text-white">
-      {/* Newsletter Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="border-b border-gray-800"
-      >
-        <div className="max-w-[1600px] mx-auto px-6 md:px-12 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="text-left">
-              <h3 className="text-3xl font-display mb-4">Stay Connected</h3>
-              <p className="text-gray-400 font-body text-sm">Subscribe to our newsletter for exclusive offers and the latest designer collections.</p>
-            </div>
+    <footer className="bg-[#111111] text-[#FAF9F6] border-t border-[#BCA58A]/10">
 
-            <div className="w-full">
-              <form onSubmit={handleSubscribe} className="flex flex-col gap-2 w-full">
-                <div className="flex gap-4">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-[#BCA58A] transition-colors"
-                  />
-                  <motion.button
-                    type="submit"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="bg-[#BCA58A] hover:bg-[#a69076] text-white px-8 py-3 rounded-lg font-medium transition tracking-wider text-xs font-semibold"
-                  >
-                    Subscribe
+      {/* Newsletter */}
+      <div className="border-b border-[#BCA58A]/10">
+        <div className="max-w-[1600px] mx-auto px-6 md:px-14 py-16">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }} viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div className="text-left">
+              <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase block mb-3 font-medium"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>Stay Connected</span>
+              <h3 className="text-3xl md:text-4xl font-light text-[#FAF9F6] mb-2"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Join the <em className="italic text-[#BCA58A]">Inner Circle</em>
+              </h3>
+              <p className="text-xs text-[#6B6B6B] leading-relaxed"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                Exclusive offers, new arrivals, and artisan stories — delivered with elegance.
+              </p>
+            </div>
+            <div>
+              <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
+                <div className="flex gap-3">
+                  <input type="email" placeholder="Your email address"
+                    value={email} onChange={(e) => setEmail(e.target.value)}
+                    className="flex-1 bg-[#111111] border border-[#BCA58A]/20 text-[#FAF9F6] placeholder-[#6B6B6B] px-5 py-3.5 text-sm focus:outline-none focus:border-[#BCA58A] transition-colors"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }} />
+                  <motion.button type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="bg-[#BCA58A] hover:bg-[#BCA58A] text-[#111111] px-8 py-3.5 text-[10px] font-bold tracking-[0.2em] transition-colors cursor-pointer"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    SUBSCRIBE
                   </motion.button>
                 </div>
-                {error && <p className="text-rose-500 text-xs text-left font-body">{error}</p>}
-                {subscribed && (
-                  <p className="text-emerald-500 text-xs text-left font-body font-semibold">
-                    Thank you! Check your inbox for a 10% welcome discount.
-                  </p>
-                )}
+                {error && <p className="text-rose-400 text-xs">{error}</p>}
+                {subscribed && <p className="text-emerald-400 text-xs font-medium">Thank you! Check your inbox for a 10% welcome discount.</p>}
               </form>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Main Footer Content */}
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12 text-left">
+      {/* Main content */}
+      <div className="max-w-[1600px] mx-auto px-6 md:px-14 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14 text-left">
+
           {/* Brand */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="space-y-4"
-          >
+          <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }} viewport={{ once: true }} className="space-y-4 lg:col-span-1">
             <div>
-              <h2 className="text-2xl font-display font-bold tracking-widest text-[#BCA58A]">SUITÉ</h2>
-              <span className="text-[7px] font-body tracking-[0.25em] text-gray-500 uppercase -mt-1 block">
+              <h2 className="text-2xl tracking-[0.14em] text-[#BCA58A]"
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500 }}>
+                SUITÉ
+              </h2>
+              <span className="text-[7px] tracking-[0.28em] text-[#6B6B6B] uppercase block -mt-0.5"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Ethnic Elegance Redefined
               </span>
             </div>
-            <p className="text-gray-400 text-xs leading-relaxed font-body">
-              Premium ethnic wear curated from heritage artisans across India. Quality, elegance, and rich tradition woven into every single stitch.
+            <div className="w-8 h-px bg-[#BCA58A]/30" />
+            <p className="text-xs text-[#6B6B6B] leading-relaxed"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Premium ethnic wear curated from heritage artisans across India. Quality, elegance, and rich tradition woven into every stitch.
             </p>
           </motion.div>
 
-          {/* Quick Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="font-semibold text-xs tracking-widest uppercase mb-4 text-[#BCA58A]">SHOP</h4>
-            <ul className="space-y-3 text-gray-400 text-xs font-body">
-              {['New Arrivals', 'Best Sellers', 'Trending Now', 'Festive Sale'].map((item) => (
-                <li key={item}>
-                  <motion.a
-                    href="#"
-                    whileHover={{ x: 3, color: '#BCA58A' }}
-                    className="transition-colors block"
-                  >
-                    {item}
-                  </motion.a>
+          {/* Links */}
+          {[
+            { title: 'SHOP', links: ['New Arrivals', 'Best Sellers', 'Trending Now', 'Festive Sale'] },
+            { title: 'COLLECTIONS', links: ['Anarkali Suits', 'Sharara Suits', 'Patiala Suits', 'Pakistani Suits'] },
+            { title: 'HELP', links: ['Contact Us', 'Shipping & Delivery', 'Returns Policy', 'FAQs'] },
+          ].map(({ title, links }, ci) => (
+            <motion.div key={title} initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: ci * 0.1 + 0.1, duration: 0.6 }} viewport={{ once: true }}>
+              <h4 className="text-[9px] font-semibold tracking-[0.28em] uppercase mb-5 text-[#BCA58A]"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>{title}</h4>
+              <ul className="space-y-3">
+                {links.map((link) => (
+                  <li key={link}>
+                    <motion.a href="#" whileHover={{ x: 4, color: '#BCA58A' }}
+                      className="text-xs text-[#6B6B6B] transition-colors block"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      {link}
+                    </motion.a>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+
+          {/* Contact */}
+          <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }} viewport={{ once: true }}>
+            <h4 className="text-[9px] font-semibold tracking-[0.28em] uppercase mb-5 text-[#BCA58A]"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>CONTACT</h4>
+            <ul className="space-y-4">
+              {[
+                { Icon: Phone, text: '+91 98765 43210' },
+                { Icon: Mail, text: 'hello@suite.com' },
+                { Icon: MapPin, text: 'Mumbai, India' },
+              ].map(({ Icon, text }) => (
+                <li key={text} className="flex items-start gap-3">
+                  <Icon size={13} className="mt-0.5 text-[#BCA58A] flex-shrink-0" />
+                  <span className="text-xs text-[#6B6B6B]" style={{ fontFamily: "'DM Sans', sans-serif" }}>{text}</span>
                 </li>
               ))}
-            </ul>
-          </motion.div>
-
-          {/* Collections */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="font-semibold text-xs tracking-widest uppercase mb-4 text-[#BCA58A]">COLLECTIONS</h4>
-            <ul className="space-y-3 text-gray-400 text-xs font-body">
-              {['Anarkali Suits', 'Sharara Suits', 'Patiala Suits', 'Pakistani Suits'].map((item) => (
-                <li key={item}>
-                  <motion.a
-                    href="#"
-                    whileHover={{ x: 3, color: '#BCA58A' }}
-                    className="transition-colors block"
-                  >
-                    {item}
-                  </motion.a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Customer Service */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="font-semibold text-xs tracking-widest uppercase mb-4 text-[#BCA58A]">HELP</h4>
-            <ul className="space-y-3 text-gray-400 text-xs font-body">
-              {['Contact Us', 'Shipping & Delivery', 'Returns Policy', 'FAQs'].map((item) => (
-                <li key={item}>
-                  <motion.a
-                    href="#"
-                    whileHover={{ x: 3, color: '#BCA58A' }}
-                    className="transition-colors block"
-                  >
-                    {item}
-                  </motion.a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Contact Info */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h4 className="font-semibold text-xs tracking-widest uppercase mb-4 text-[#BCA58A]">CONTACT</h4>
-            <ul className="space-y-4 text-gray-400 text-xs font-body">
-              <li className="flex items-start gap-3">
-                <Phone size={14} className="mt-0.5 text-[#BCA58A] flex-shrink-0" />
-                <span>+91 98765 43210</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Mail size={14} className="mt-0.5 text-[#BCA58A] flex-shrink-0" />
-                <span>hello@suite.com</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <MapPin size={14} className="mt-0.5 text-[#BCA58A] flex-shrink-0" />
-                <span>Mumbai, India</span>
-              </li>
             </ul>
           </motion.div>
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-800 my-8"></div>
+        <div className="border-t border-[#BCA58A]/8 my-8" />
 
-        {/* Bottom Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="flex flex-col md:flex-row justify-between items-center gap-6"
-        >
-          <p className="text-gray-500 text-xs font-body">© 2026 SUITÉ. All rights reserved.</p>
-
-          {/* Social Links */}
-          <div className="flex gap-6">
-            {[
-              { Icon: Github, label: 'GitHub' },
-              { Icon: Send, label: 'Twitter' },
-              { Icon: Globe, label: 'Website' },
-              { Icon: Linkedin, label: 'LinkedIn' },
-            ].map(({ Icon, label }) => (
-              <motion.a
-                key={label}
-                href="#"
-                whileHover={{ scale: 1.2, color: '#BCA58A' }}
-                whileTap={{ scale: 0.9 }}
-                className="text-gray-500 hover:text-[#BCA58A] transition-colors"
-                title={label}
-              >
-                <Icon size={18} />
+        {/* Bottom */}
+        <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }}
+          viewport={{ once: true }} className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[10px] text-[#6B6B6B]/60" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            © 2026 SUITÉ · All Rights Reserved · Crafted with Heritage
+          </p>
+          <div className="flex gap-5">
+            {[{ Icon: Github, label: 'GitHub' }, { Icon: Send, label: 'Twitter' }, { Icon: Globe, label: 'Website' }, { Icon: Linkedin, label: 'LinkedIn' }].map(({ Icon, label }) => (
+              <motion.a key={label} href="#" whileHover={{ scale: 1.2, color: '#BCA58A' }} whileTap={{ scale: 0.9 }}
+                className="text-[#6B6B6B]/50 hover:text-[#BCA58A] transition-colors" title={label}>
+                <Icon size={16} />
               </motion.a>
             ))}
           </div>
-
-          {/* Payment Methods */}
-          <div className="flex gap-4 items-center">
-            <span className="text-gray-500 text-xs font-body">Secure Payments:</span>
-            <div className="flex gap-3 text-base filter grayscale opacity-60 hover:opacity-100 transition-opacity">
-              {['💳', '🏦', '📱', '🛡️'].map((emoji, i) => (
-                <motion.span
-                  key={i}
-                  whileHover={{ scale: 1.2 }}
-                  className="cursor-pointer"
-                >
-                  {emoji}
-                </motion.span>
+          <div className="flex items-center gap-3">
+            <span className="text-[9px] text-[#6B6B6B]/50" style={{ fontFamily: "'DM Sans', sans-serif" }}>Secure Payments:</span>
+            <div className="flex gap-3 text-sm opacity-50 hover:opacity-80 transition-opacity">
+              {['💳', '🏦', '📱', '🛡️'].map((e, i) => (
+                <motion.span key={i} whileHover={{ scale: 1.25 }} className="cursor-pointer">{e}</motion.span>
               ))}
             </div>
           </div>

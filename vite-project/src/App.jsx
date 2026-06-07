@@ -1,19 +1,25 @@
 import { useState } from 'react'
 import './App.css'
+import LoadingScreen from './LoadingScreen'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import FeaturedCollections from './components/FeaturedCollections'
-import CategoryShowcase from './components/CategoryShowcase'
-import WhyChooseUs from './components/WhyChooseUs'
+import StackedCategories from './components/StackedCategories'
+import InteractiveLookbook from './components/InteractiveLookbook'
+import ScrollytellingCraft from './components/ScrollytellingCraft'
 import Testimonials from './components/Testimonials'
-import Lookbook from './components/Lookbook'
 import SpecialOffer from './components/SpecialOffer'
-import Gallery from './components/Gallery'
 import Footer from './components/Footer'
 
 function App() {
+  const [loadingComplete, setLoadingComplete] = useState(false)
+  const [contentVisible, setContentVisible] = useState(false)
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState({})
+
+  const handleLoadComplete = () => {
+    setLoadingComplete(true)
+    setTimeout(() => setContentVisible(true), 200)
+  }
 
   const addToCart = (product, size = 'M') => {
     setCart((prev) => {
@@ -52,8 +58,10 @@ function App() {
     setFavorites((prev) => ({ ...prev, [productId]: !prev[productId] }))
   }
 
+  if (!loadingComplete) return <LoadingScreen onComplete={handleLoadComplete} />
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#0A0A0A]" style={{ opacity: contentVisible ? 1 : 0, transition: 'opacity 0.8s ease' }}>
       <Navbar 
         cart={cart} 
         removeFromCart={removeFromCart} 
@@ -63,18 +71,11 @@ function App() {
         addToCart={addToCart}
       />
       <Hero addToCart={addToCart} />
-      <FeaturedCollections 
-        cart={cart}
-        addToCart={addToCart}
-        favorites={favorites}
-        toggleFavorite={toggleFavorite}
-      />
-      <CategoryShowcase />
+      <StackedCategories />
+      <ScrollytellingCraft />
+      <InteractiveLookbook addToCart={addToCart} />
       <Testimonials />
-      <Lookbook addToCart={addToCart} />
       <SpecialOffer />
-      <Gallery addToCart={addToCart} />
-      <WhyChooseUs />
       <Footer />
     </div>
   )

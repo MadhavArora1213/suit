@@ -66,13 +66,13 @@ export default function Lookbook({ addToCart }) {
   const activeLook = lookbookItems[activeIndex];
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section className="py-28 bg-[#FAF9F6] relative overflow-hidden">
       
       {/* Luxury Editorial Margins */}
-      <div className="absolute left-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-[0.4em] text-[#BCA58A]/30 uppercase hidden 2xl:block select-none pointer-events-none">
+      <div className="absolute left-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-[0.4em] text-[#BCA58A]/20 uppercase hidden 2xl:block select-none pointer-events-none">
         SUITÉ LOOKBOOK
       </div>
-      <div className="absolute right-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] text-[10px] font-bold tracking-[0.4em] text-[#BCA58A]/30 uppercase hidden 2xl:block select-none pointer-events-none">
+      <div className="absolute right-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] text-[10px] font-bold tracking-[0.4em] text-[#BCA58A]/20 uppercase hidden 2xl:block select-none pointer-events-none">
         EDITION 2026
       </div>
 
@@ -86,14 +86,17 @@ export default function Lookbook({ addToCart }) {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="text-xs font-bold tracking-[0.3em] text-[#BCA58A] uppercase block mb-4">
+          <span className="text-[10px] tracking-[0.35em] text-[#BCA58A] uppercase block mb-4 font-medium"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Fashion Inspiration
           </span>
-          <h2 className="text-4xl md:text-5xl font-display font-medium text-[#111111] mb-6">
-            Lookbook & Style Guide
+          <h2 className="text-4xl md:text-5xl font-light text-[#1E1E1E] mb-5"
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            Lookbook &amp; <em className="italic text-[#BCA58A]">Style Guide</em>
           </h2>
-          <div className="h-[1px] w-20 bg-[#BCA58A]/30 mx-auto mb-6"></div>
-          <p className="text-[#686868] text-sm md:text-base max-w-xl mx-auto font-body leading-relaxed">
+          <div className="h-px w-16 bg-[#BCA58A]/30 mx-auto mb-5" />
+          <p className="text-[#6B6B6B] text-sm max-w-md mx-auto leading-relaxed"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Get inspired by how our ethnic designer suits drape, fit, and capture royal heritage.
           </p>
         </motion.div>
@@ -151,17 +154,16 @@ export default function Lookbook({ addToCart }) {
                 <button
                   key={index}
                   onClick={() => setActiveIndex(index)}
-                  className={`relative pb-2 text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase transition-colors duration-300 ${
-                    activeIndex === index ? 'text-[#111111]' : 'text-[#686868]/50 hover:text-[#111111]'
-                  }`}
+                  className={`relative pb-2 text-[10px] md:text-xs font-semibold tracking-[0.2em] uppercase transition-colors duration-300 cursor-pointer ${
+                  activeIndex === index ? 'text-[#1E1E1E]' : 'text-[#6B6B6B]/50 hover:text-[#1E1E1E]'
+                }`}
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
                   <span>{item.num} / {item.title.split(' ')[0]}</span>
                   {activeIndex === index && (
-                    <motion.div
-                      layoutId="lookbookActiveUnderline"
-                      className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#BCA58A]"
-                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                    />
+                  <motion.div layoutId="lookbookActiveUnderline"
+                      className="absolute bottom-0 left-0 right-0 h-px bg-[#BCA58A]"
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }} />
                   )}
                 </button>
               ))}
@@ -218,7 +220,7 @@ export default function Lookbook({ addToCart }) {
 
                 {/* Inline Shoppable Widget */}
                 <div className="pt-6 border-t border-[#EBDDD0]/40 text-left">
-                  <div className="bg-[#FAF9F6] rounded-2xl border border-[#EBDDD0]/45 p-4 md:p-6 flex flex-col sm:flex-row gap-4 items-center justify-between hover:shadow-premium hover:border-[#BCA58A]/40 transition-all duration-500">
+                  <div className="bg-[#FAF9F6] border border-[#BCA58A]/15 p-4 md:p-6 flex flex-col sm:flex-row gap-4 items-center justify-between hover:border-[#BCA58A]/40 transition-all duration-500">
                     <div className="flex items-center gap-4 w-full sm:w-auto">
                       <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#EBDDD0]/15 flex-shrink-0">
                         <img
@@ -246,7 +248,7 @@ export default function Lookbook({ addToCart }) {
                         image: activeLook.image,
                         badge: 'Lookbook Edition'
                       }, 'M')}
-                      className="w-full sm:w-auto px-6 py-3 bg-[#111111] hover:bg-[#BCA58A] text-white text-xs font-bold tracking-[0.2em] rounded-lg flex items-center justify-center gap-2.5 transition-colors duration-300 flex-shrink-0 cursor-pointer"
+                      className="w-full sm:w-auto px-6 py-3 bg-[#1E1E1E] hover:bg-[#BCA58A] text-[#FAF9F6] text-[9px] font-bold tracking-[0.2em] flex items-center justify-center gap-2.5 transition-colors duration-300 flex-shrink-0 cursor-pointer"
                     >
                       <ShoppingBag size={14} />
                       <span>ADD LOOK TO BAG</span>

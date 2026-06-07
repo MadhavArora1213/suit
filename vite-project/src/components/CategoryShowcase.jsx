@@ -2,81 +2,58 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 const categories = [
-  {
-    name: 'Anarkali Suits',
-    image: '/anarkali_suit.png',
-  },
-  {
-    name: 'Pakistani Suits',
-    image: '/pakistani_suit.png',
-  },
-  {
-    name: 'Punjabi Patiala',
-    image: '/patiala_suit.png',
-  },
-  {
-    name: 'Sharara Suits',
-    image: '/sharara_suit.png',
-  },
-  {
-    name: 'Chikankari Suits',
-    image: '/chikankari_suit.png',
-  },
-  {
-    name: 'Banarasi Silk',
-    image: '/banarasi_suit.png',
-  },
+  { name: 'Anarkali Suits', image: '/anarkali_suit.png' },
+  { name: 'Pakistani Suits', image: '/pakistani_suit.png' },
+  { name: 'Punjabi Patiala', image: '/patiala_suit.png' },
+  { name: 'Sharara Suits', image: '/sharara_suit.png' },
+  { name: 'Chikankari Suits', image: '/chikankari_suit.png' },
+  { name: 'Banarasi Silk', image: '/banarasi_suit.png' },
 ];
 
 export default function CategoryShowcase() {
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12">
-        
-        {/* Layout Split: Categories & Boutique Promo */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14 items-stretch">
-          
-          {/* Categories Grid (Spans 2 cols) */}
-          <div className="lg:col-span-2 text-left">
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="mb-10"
-            >
-              <span className="text-xs font-bold tracking-[0.2em] text-[#BCA58A] uppercase block mb-3">
+    <section className="py-28 bg-[#FAF9F6]" id="collections">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-14">
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 items-start">
+
+          {/* Left: Categories */}
+          <div className="lg:col-span-2">
+            <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }} viewport={{ once: true }} className="mb-12 text-left">
+              <span className="text-[10px] tracking-[0.35em] text-[#BCA58A] uppercase block mb-4 font-medium"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Shop By Category
               </span>
-              <h2 className="text-3xl md:text-5xl font-display font-medium text-[#111111]">
-                Explore Our Collections
+              <h2 className="text-4xl md:text-5xl font-light text-[#1E1E1E] leading-tight"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Explore <em className="italic text-[#BCA58A]">Our Collections</em>
               </h2>
+              <div className="mt-4 w-12 h-px bg-[#BCA58A]/40" />
             </motion.div>
 
-            {/* Circular Category items */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 md:gap-12">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 md:gap-7">
               {categories.map((cat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.08, duration: 0.5 }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -6 }}
-                  className="group cursor-pointer flex flex-col items-center"
-                >
-                  {/* Circle Image */}
-                  <div className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-2 border-[#EBDDD0] group-hover:border-[#BCA58A] shadow-md hover:shadow-premium transition-all duration-300 relative bg-[#FAF9F6] mb-5">
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-[#111111]/5 group-hover:bg-transparent transition-colors duration-300"></div>
+                <motion.div key={index}
+                  initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.07, duration: 0.5 }} viewport={{ once: true }}
+                  whileHover={{ y: -5 }}
+                  className="group cursor-pointer">
+                  {/* Square editorial card */}
+                  <div className="aspect-square overflow-hidden relative bg-[#E8DDD0] mb-3 border border-[#BCA58A]/10 group-hover:border-[#BCA58A]/40 transition-all duration-400">
+                    <img src={cat.image} alt={cat.name}
+                      className="w-full h-full object-cover transform scale-100 group-hover:scale-108 transition-transform duration-600" />
+                    <div className="absolute inset-0 bg-[#1E1E1E]/10 group-hover:bg-transparent transition-colors duration-300" />
+                    {/* Bottom label overlay */}
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#1E1E1E]/70 to-transparent p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-400">
+                      <span className="text-[9px] tracking-[0.2em] text-[#BCA58A] uppercase font-semibold flex items-center gap-1.5"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Shop Now <ArrowRight size={10} />
+                      </span>
+                    </div>
                   </div>
-                  
-                  {/* Category Name */}
-                  <span className="text-sm sm:text-base font-semibold tracking-wider text-[#1E1E1E] group-hover:text-[#BCA58A] transition-colors duration-300 text-center">
+                  <span className="text-[13px] font-medium tracking-wide text-[#1E1E1E] group-hover:text-[#BCA58A] transition-colors duration-300 block text-center"
+                    style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px' }}>
                     {cat.name}
                   </span>
                 </motion.div>
@@ -84,45 +61,38 @@ export default function CategoryShowcase() {
             </div>
           </div>
 
-          {/* Boutique Promo Card (Spans 1 col) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="rounded-3xl overflow-hidden relative shadow-premium bg-[#111111] group min-h-[350px] flex flex-col justify-end p-8 md:p-10 text-left"
-          >
-            {/* Background Store Showroom Image */}
-            <div className="absolute inset-0 bg-cover bg-center z-0 opacity-55 transform scale-100 group-hover:scale-105 transition-transform duration-700" style={{ backgroundImage: `url('https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=800&q=80')` }}></div>
-            
-            {/* Dark Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent z-10"></div>
-            
-            {/* Text & Button */}
-            <div className="relative z-20">
-              <span className="text-[10px] font-bold tracking-[0.25em] text-[#BCA58A] uppercase block mb-2">
+          {/* Right: Boutique Promo */}
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9 }} viewport={{ once: true }}
+            className="relative overflow-hidden bg-[#1E1E1E] group min-h-[500px] flex flex-col justify-end p-8 md:p-10 text-left">
+            <div className="absolute inset-0 bg-cover bg-center z-0 opacity-45 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700"
+              style={{ backgroundImage: `url('https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&w=800&q=80')` }} />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/50 to-transparent z-10" />
+            {/* Gold fine border accent */}
+            <div className="absolute inset-3 border border-[#BCA58A]/15 z-20 pointer-events-none" />
+
+            <div className="relative z-30">
+              <span className="text-[9px] font-semibold tracking-[0.28em] text-[#BCA58A] uppercase block mb-3"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Boutiques You Can Trust
               </span>
-              <h3 className="text-2xl md:text-3xl font-display font-medium text-white mb-4 leading-tight">
-                Curated Stores from Across India
+              <h3 className="text-2xl md:text-3xl font-light text-[#FAF9F6] mb-4 leading-snug"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Curated Stores from<br /><em className="italic text-[#BCA58A]">Across India</em>
               </h3>
-              <p className="text-xs md:text-sm text-[#FAF9F6]/80 mb-8 leading-relaxed font-body">
+              <p className="text-xs text-[#FAF9F6]/55 mb-8 leading-relaxed"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Explore handpicked designer suits directly sourced from verified heritage boutiques and master artisans.
               </p>
-              
-              <motion.button
-                whileHover={{ scale: 1.03, backgroundColor: '#BCA58A', color: '#FAF9F6' }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full bg-[#FAF9F6] text-[#111111] py-3.5 rounded-xl text-xs font-semibold tracking-widest inline-flex items-center justify-center gap-2 transition-all duration-300"
-              >
-                EXPLORE BOUTIQUES
-                <ArrowRight size={14} />
+              <motion.button whileHover={{ scale: 1.02, backgroundColor: '#BCA58A', color: '#111111', borderColor: '#BCA58A' }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full border border-[#FAF9F6]/30 text-[#FAF9F6] py-3.5 text-[9px] font-semibold tracking-[0.25em] inline-flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                EXPLORE BOUTIQUES <ArrowRight size={12} />
               </motion.button>
             </div>
           </motion.div>
-
         </div>
-        
       </div>
     </section>
   );
