@@ -84,7 +84,7 @@ export default function Footer() {
             <div>
               <h2 className="text-2xl tracking-[0.14em] text-[#BCA58A]"
                 style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500 }}>
-                SUITÉ
+                GURNAAZ
               </h2>
               <span className="text-[7px] tracking-[0.28em] text-[#6B6B6B] uppercase block -mt-0.5"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -130,7 +130,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {[
                 { Icon: Phone, text: '+91 98765 43210' },
-                { Icon: Mail, text: 'hello@suite.com' },
+                { Icon: Mail, text: 'hello@gurnaaz.com' },
                 { Icon: MapPin, text: 'Mumbai, India' },
               ].map(({ Icon, text }) => (
                 <li key={text} className="flex items-start gap-3">
@@ -149,7 +149,7 @@ export default function Footer() {
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.8 }}
           viewport={{ once: true }} className="flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-[10px] text-[#6B6B6B]/60" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            © 2026 SUITÉ · All Rights Reserved · Crafted with Heritage
+            © 2026 GURNAAZ · All Rights Reserved · Crafted with Heritage
           </p>
           <div className="flex gap-5">
             {[{ Icon: Github, label: 'GitHub' }, { Icon: Send, label: 'Twitter' }, { Icon: Globe, label: 'Website' }, { Icon: Linkedin, label: 'LinkedIn' }].map(({ Icon, label }) => (

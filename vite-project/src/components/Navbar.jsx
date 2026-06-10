@@ -94,7 +94,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                 className="text-[26px] md:text-[30px] font-semibold tracking-[0.18em] text-[#111111] group-hover:text-[#BCA58A] transition-colors duration-400"
                 style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}
               >
-                SUITÉ
+                GURNAAZ
               </span>
               <span className="text-[7px] tracking-[0.3em] text-[#BCA58A]/70 uppercase -mt-0.5 font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Ethnic Elegance Redefined

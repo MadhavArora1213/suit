@@ -60,7 +60,7 @@ export default function Gallery({ addToCart }) {
             Instagram Moments
           </h2>
           <p className="text-[#6B6B6B] text-sm md:text-base max-w-xl mx-auto font-body">
-            Follow our style journey on social media. Share your look with <span className="font-semibold text-[#BCA58A]">#SuiteEthnicWear</span>.
+            Follow our style journey on social media. Share your look with <span className="font-semibold text-[#BCA58A]">#GurnaazEthnicWear</span>.
           </p>
         </div>
 

@@ -70,7 +70,7 @@ export default function Lookbook({ addToCart }) {
       
       {/* Luxury Editorial Margins */}
       <div className="absolute left-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-[0.4em] text-[#BCA58A]/20 uppercase hidden 2xl:block select-none pointer-events-none">
-        SUITÉ LOOKBOOK
+        GURNAAZ LOOKBOOK
       </div>
       <div className="absolute right-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] text-[10px] font-bold tracking-[0.4em] text-[#BCA58A]/20 uppercase hidden 2xl:block select-none pointer-events-none">
         EDITION 2026
