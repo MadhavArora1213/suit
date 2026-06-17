@@ -17,7 +17,7 @@ const col2 = [
 const col3 = [
   { id: 7, name: 'Classic Straight', price: '₹5,499', image: '/pakistani_suit.png', height: 'h-[50vh]' },
   { id: 8, name: 'Heritage Luxe', price: '₹12,499', image: '/hero_campaign_suits.png', height: 'h-[60vh]' },
-  { id: 9, name: 'Cotton Silk', price: '₹4,499', image: '/cotton_suit.png', height: 'h-[40vh]' },
+  { id: 9, name: 'Glacier Blue Organza', price: '₹14,500', image: '/sky_blue_suit.jpg', height: 'h-[40vh]' },
 ];
 
 const ProductCard = ({ item }) => (

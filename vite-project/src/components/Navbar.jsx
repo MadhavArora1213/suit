@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Search, User, ShoppingBag, X, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import gurnaazLogo from '../assets/gurnaaz.png';
 
 const allProductsLookup = [
   { id: 't1', name: 'Embroidered Silk Suit Set', price: '₹4,299', image: '/designer_suit_1.png', boutique: 'Kala Mandir' },
@@ -9,7 +10,7 @@ const allProductsLookup = [
   { id: 't4', name: 'Pakistani Straight Suit Set', price: '₹4,799', image: '/pakistani_suit.png', boutique: 'Nazraana' },
   { id: 'n1', name: 'Floral Silk Anarkali Suit', price: '₹6,899', image: '/anarkali_suit.png', boutique: 'Silk Weaver' },
   { id: 'n2', name: 'Classic Georgette Suit Set', price: '₹3,299', image: '/designer_suit_1.png', boutique: 'Poshak' },
-  { id: 'n3', name: 'Cotton Patiala Salwar Suit', price: '₹2,499', image: '/patiala_suit.png', boutique: 'Jaipur Block' },
+  { id: 'n3', name: 'Glacier Blue Organza Suit Set', price: '₹14,500', image: '/sky_blue_suit.jpg', boutique: 'Punjabi Couture' },
   { id: 'n4', name: 'Organza Dupatta Suit Set', price: '₹5,199', image: '/chikankari_suit.png', boutique: 'Rivaaz' },
   { id: 'b1', name: 'Velvet Embroidered Suit Set', price: '₹8,999', image: '/banarasi_suit.png', boutique: 'Vastra' },
   { id: 'b2', name: 'Chikankari Handloom Suit Set', price: '₹7,499', image: '/chikankari_suit.png', boutique: 'Awadh Kraft' },
@@ -89,16 +90,8 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
           <div className="flex items-center justify-between">
 
             {/* Logo */}
-            <motion.a href="#" whileHover={{ scale: 1.02 }} className="flex flex-col items-start cursor-pointer group">
-              <span
-                className="text-[26px] md:text-[30px] font-semibold tracking-[0.18em] text-[#111111] group-hover:text-[#BCA58A] transition-colors duration-400"
-                style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}
-              >
-                GURNAAZ
-              </span>
-              <span className="text-[7px] tracking-[0.3em] text-[#BCA58A]/70 uppercase -mt-0.5 font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                Ethnic Elegance Redefined
-              </span>
+            <motion.a href="#" whileHover={{ scale: 1.02 }} className="flex items-center gap-2 cursor-pointer group">
+              <img src={gurnaazLogo} alt="GURNAAZ" className="h-12 md:h-14 w-auto object-contain" />
             </motion.a>
 
             {/* Center Nav Links */}

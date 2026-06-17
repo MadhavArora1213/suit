@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Mail, MapPin, Phone, Send, Globe } from 'lucide-react';
 import { useState } from 'react';
+import gurnaazLogo from '../assets/gurnaaz.png';
 
 const Github = ({ size }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -82,14 +83,7 @@ export default function Footer() {
           <motion.div initial={{ opacity: 0, y: 18 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }} viewport={{ once: true }} className="space-y-4 lg:col-span-1">
             <div>
-              <h2 className="text-2xl tracking-[0.14em] text-[#BCA58A]"
-                style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontWeight: 500 }}>
-                GURNAAZ
-              </h2>
-              <span className="text-[7px] tracking-[0.28em] text-[#6B6B6B] uppercase block -mt-0.5"
-                style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                Ethnic Elegance Redefined
-              </span>
+              <img src={gurnaazLogo} alt="GURNAAZ" className="h-16 w-auto object-contain" />
             </div>
             <div className="w-8 h-px bg-[#BCA58A]/30" />
             <p className="text-xs text-[#6B6B6B] leading-relaxed"

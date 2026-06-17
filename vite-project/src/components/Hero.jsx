@@ -6,7 +6,7 @@ const galleryItems = [
   { id: 1, image: '/hero_campaign_suits.png', name: 'Banarasi Silk' },
   { id: 2, image: '/anarkali_suit.png', name: 'Royal Anarkali' },
   { id: 3, image: '/sharara_suit.png', name: 'Modern Sharara' },
-  { id: 4, image: '/pakistani_suit.png', name: 'Classic Straight' },
+  { id: 4, image: '/sky_blue_suit.jpg', name: 'Glacier Blue Organza' },
   { id: 5, image: '/hero_campaign_palace.png', name: 'Bridal Couture' },
   { id: 6, image: '/designer_suit_1.png', name: 'Heritage Luxe' },
 ];
