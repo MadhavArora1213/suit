@@ -387,6 +387,39 @@ export const addProduct    = (product)    => { const arr = getProducts(); arr.un
 export const updateProduct = (id, data)   => saveProducts(getProducts().map(p => p.id === id ? { ...p, ...data } : p));
 export const deleteProduct = (id)         => saveProducts(getProducts().filter(p => p.id !== id));
 
+const defaultVideos = [
+  'https://assets.mixkit.co/videos/preview/mixkit-fashion-woman-with-a-red-dress-walking-in-a-field-40485-large.mp4',
+  'https://assets.mixkit.co/videos/preview/mixkit-beautiful-woman-in-white-dress-posing-in-nature-41584-large.mp4'
+];
+
+const defaultReels = [
+  'https://assets.mixkit.co/videos/preview/mixkit-young-woman-modelling-a-red-summer-dress-40487-large.mp4',
+  'https://assets.mixkit.co/videos/preview/mixkit-model-posing-in-a-fashion-photoshoot-40486-large.mp4',
+  'https://assets.mixkit.co/videos/preview/mixkit-woman-running-in-slow-motion-in-a-long-dress-40488-large.mp4',
+  'https://assets.mixkit.co/videos/preview/mixkit-young-woman-posing-with-a-flowing-dress-in-a-field-40489-large.mp4'
+];
+
+const injectDefaultMedia = (product, index) => {
+  const images = product.additionalImages && product.additionalImages.length > 0
+    ? product.additionalImages
+    : [
+        product.image || '/designer_suit_1.png',
+        '/banarasi_suit.png',
+        '/chikankari_suit.png',
+        '/sharara_suit.png'
+      ];
+  
+  return {
+    ...product,
+    videoUrl: product.videoUrl || defaultVideos[index % defaultVideos.length],
+    reelUrl: product.reelUrl || defaultReels[index % defaultReels.length],
+    additionalImages: images,
+    sizes: product.sizes && product.sizes.length > 0
+      ? product.sizes
+      : ['S (36)', 'M (38)', 'L (40)', 'XL (42)', 'XXL (44)']
+  };
+};
+
 export const getAllProducts = () => {
   const adminProducts = getProducts();
   const overrides = get('gurnaaz_static_overrides', {});
@@ -400,7 +433,8 @@ export const getAllProducts = () => {
     return p;
   });
 
-  return [...adminProducts, ...processedStatics.filter(p => !adminIds.has(p.id))];
+  const merged = [...adminProducts, ...processedStatics.filter(p => !adminIds.has(p.id))];
+  return merged.map((p, idx) => injectDefaultMedia(p, idx));
 };
 
 // ── REVIEWS & RATINGS ─────────────────────────────────────────
@@ -623,4 +657,78 @@ export const updateOrderStatus = (id, status) => {
 // ── Notify main website of data change ───────────────────────
 export const notifyWebsite = () => {
   window.dispatchEvent(new CustomEvent('admin-data-updated'));
+};
+
+export const staticBoutiques = {
+  'Kala Mandir': {
+    name: 'Kala Mandir',
+    description: 'Renowned for handloomed raw silks, traditional weaves, and intricate zardozi craftsmanship from Varanasi and beyond. Kala Mandir brings centuries of royal heritage directly to your ethnic wardrobe.',
+    contact: '+91 98765 01001 | contact@kalamandir.com',
+    address: '14, Heritage Lane, Chowk, Varanasi, UP',
+    coverImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
+    rating: 4.8
+  },
+  'Zari Heritage': {
+    name: 'Zari Heritage',
+    description: 'Specialists in classic Chanderi block prints, traditional Patiala gathered salwars, and fine resham borders. We preserve the organic texture of Indian handloom with modern cuts.',
+    contact: '+91 98765 01002 | info@zariheritage.com',
+    address: '72, Block Print Bazar, Sector 17, Chandigarh',
+    coverImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+    rating: 4.6
+  },
+  'Gulabo Jaipur': {
+    name: 'Gulabo Jaipur',
+    description: 'Bringing the royal charm of Rajasthan to life with flowy pure georgette fabrics, hand-applied gota patti laces, and traditional Angrakha cuts in vibrant block colors.',
+    contact: '+91 98765 01003 | hello@gulabojaipur.com',
+    address: 'B-4, Johari Bazar, Jaipur, Rajasthan',
+    coverImage: 'https://images.unsplash.com/photo-1605784401368-5af1d9d6c4dc?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80',
+    rating: 4.9
+  },
+  'Nazraana': {
+    name: 'Nazraana',
+    description: 'Exquisite straight-cut Lucknowi silhouettes and Chikankari shadow embroidery, decorated with delicate shadow work lace inserts and pure chiffon dupattas.',
+    contact: '+91 98765 01004 | shop@nazraana.com',
+    address: 'Hazratganj Main Market, Lucknow, UP',
+    coverImage: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80',
+    rating: 4.7
+  },
+  'Vastra': {
+    name: 'Vastra',
+    description: 'Vastra designs premium velvet collections with heavy hand-applied zardozi works. Our designs combine heavy traditional embellishments with clean, structured tailoring.',
+    contact: '+91 98765 01005 | orders@vastra.in',
+    address: 'Block C, Shahpur Jat, New Delhi',
+    coverImage: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    rating: 4.9
+  },
+  'Awadh Kraft': {
+    name: 'Awadh Kraft',
+    description: 'Authentic hand-embroidered Lucknowi Chikankari directly from craft councils and block weavers in Lucknow. Premium heritage ethnic wear.',
+    contact: '+91 98765 01006 | contact@awadhkraft.org',
+    address: 'Artisans Market, Chowk, Lucknow, UP',
+    coverImage: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&q=80',
+    rating: 4.8
+  }
+};
+
+export const getBoutiqueProfile = (boutiqueName) => {
+  if (!boutiqueName) return null;
+  const name = boutiqueName.trim();
+  if (staticBoutiques[name]) {
+    return staticBoutiques[name];
+  }
+  return {
+    name: name,
+    description: `Premium ethnic wear boutique offering handpicked designer suits, salwar sets, and traditional wear directly from artisan workshops.`,
+    contact: '+91 99999 88888 | hello@' + name.toLowerCase().replace(/\s+/g, '') + '.com',
+    address: 'Artisan Plaza, Sector 5, Greater Noida, NCR',
+    coverImage: 'https://images.unsplash.com/photo-1605784401368-5af1d9d6c4dc?auto=format&fit=crop&w=1200&q=80',
+    logo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
+    rating: 4.5
+  };
 };

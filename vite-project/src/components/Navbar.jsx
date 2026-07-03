@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import gurnaazLogo from '../assets/gurnaaz.png';
 import { getAllProducts } from '../utils/adminStore';
 
-export default function Navbar({ cart = [], removeFromCart, updateCartQty, favorites = {}, toggleFavorite, addToCart, setView, setSelectedCategory, setSelectedProduct, user, handleLogout }) {
+export default function Navbar({ cart = [], removeFromCart, updateCartQty, favorites = {}, toggleFavorite, addToCart, setView, setSelectedCategory, setSelectedProduct, setSelectedBoutique, user, handleLogout }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -118,6 +118,26 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                           style={{ fontFamily: "'DM Sans', sans-serif" }}
                         >
                           {cat} Suits
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  {item === 'BOUTIQUES' && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 bg-[#FAF9F6] border border-[#BCA58A]/15 shadow-2xl py-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 rounded">
+                      {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft'].map((bt) => (
+                        <a
+                          key={bt}
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSelectedBoutique(bt);
+                            setView('seller-shop');
+                          }}
+                          className="block px-6 py-2.5 text-[10px] tracking-widest uppercase text-[#111111]/70 hover:text-[#BCA58A] hover:bg-[#E8DDD0]/20 transition-all font-semibold"
+                          style={{ fontFamily: "'DM Sans', sans-serif" }}
+                        >
+                          {bt}
                         </a>
                       ))}
                     </div>
@@ -295,7 +315,25 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                       ))}
                     </div>
                   </div>
-                  {['COLLECTIONS', 'BOUTIQUES', 'ABOUT US'].map((item, i) => (
+
+                  <div className="space-y-2">
+                    <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">BOUTIQUE SHOPS</span>
+                    <div className="pl-4 flex flex-col gap-3">
+                      {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft'].map((bt) => (
+                        <a key={bt} href="#" onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedBoutique(bt);
+                          setView('seller-shop');
+                          setIsOpen(false);
+                        }}
+                          className="text-[10px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors uppercase font-medium">
+                          {bt}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+
+                  {['COLLECTIONS', 'ABOUT US'].map((item, i) => (
                     <a key={i} href="#" onClick={(e) => {
                       e.preventDefault();
                       if (item === 'COLLECTIONS') { setSelectedCategory('Anarkali'); setView('category'); }

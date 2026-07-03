@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Star, Heart, ShoppingBag, ChevronDown, ChevronUp, Check, ShieldCheck, Truck, RefreshCw, Send, Ruler } from 'lucide-react';
+import { ArrowLeft, Star, Heart, ShoppingBag, ChevronDown, ChevronUp, Check, ShieldCheck, Truck, RefreshCw, Send, Ruler, Play, Pause, Volume2, VolumeX, X, Video } from 'lucide-react';
 import { getReviews, addReview, syncProductReviews } from '../utils/adminStore';
 
 const P = '#005461';
 
-export default function ProductDetailsPage({ product, setView, setSelectedCategory, addToCart, favorites = {}, toggleFavorite }) {
+export default function ProductDetailsPage({ product, setView, setSelectedCategory, setSelectedBoutique, addToCart, favorites = {}, toggleFavorite }) {
   const [selectedSize, setSelectedSize] = useState('');
   const [activeTab, setActiveTab] = useState('description');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -27,6 +27,42 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
 
   // Size Guide Modal State
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
+
+  // Reel Modal State
+  const [reelOpen, setReelOpen] = useState(false);
+  const [reelMuted, setReelMuted] = useState(true);
+  const [reelProgress, setReelProgress] = useState(0);
+  const [reelSelectedSize, setReelSelectedSize] = useState('M');
+  const [reelPlaying, setReelPlaying] = useState(true);
+  const reelVideoRef = useRef(null);
+
+  const handleTimeUpdate = () => {
+    if (reelVideoRef.current) {
+      const progress = (reelVideoRef.current.currentTime / reelVideoRef.current.duration) * 100;
+      setReelProgress(progress || 0);
+    }
+  };
+
+  const toggleReelPlay = () => {
+    if (reelVideoRef.current) {
+      if (reelPlaying) {
+        reelVideoRef.current.pause();
+      } else {
+        reelVideoRef.current.play().catch(e => console.log(e));
+      }
+      setReelPlaying(!reelPlaying);
+    }
+  };
+
+  // Pause playing video if modal closes
+  useEffect(() => {
+    if (!reelOpen) {
+      setReelPlaying(false);
+    } else {
+      setReelPlaying(true);
+      setReelProgress(0);
+    }
+  }, [reelOpen]);
 
   useEffect(() => {
     if (product?.id) {
@@ -185,20 +221,33 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
           <div className="flex flex-col gap-4">
             {/* Large Main Photo */}
             <div className="w-full aspect-[3/4] bg-white border border-[#BCA58A]/10 overflow-hidden relative rounded shadow-sm">
-              <img 
-                src={allImages[activeImageIndex]} 
-                alt={product.name} 
-                className="w-full h-full object-cover object-top"
-              />
+              {activeImageIndex === allImages.length && product.videoUrl ? (
+                <video 
+                  src={product.videoUrl} 
+                  controls 
+                  autoPlay 
+                  playsInline
+                  loop 
+                  muted 
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <img 
+                  src={allImages[activeImageIndex]} 
+                  alt={product.name} 
+                  className="w-full h-full object-cover object-top"
+                />
+              )}
               {product.badge && (
-                <span className="absolute top-4 left-4 bg-[#FAF9F6]/90 backdrop-blur-sm text-[#BCA58A] text-[9px] font-bold tracking-widest uppercase px-3 py-1.5 border border-[#BCA58A]/25 rounded-sm">
+                <span className="absolute top-4 left-4 bg-[#FAF9F6]/90 backdrop-blur-sm text-[#BCA58A] text-[9px] font-bold tracking-widest uppercase px-3 py-1.5 border border-[#BCA58A]/25 rounded-sm z-10">
                   {product.badge}
                 </span>
               )}
             </div>
             
             {/* Small Thumbnails Carousel */}
-            {allImages.length > 1 && (
+            {(allImages.length > 1 || product.videoUrl) && (
               <div className="flex gap-3 overflow-x-auto py-1">
                 {allImages.map((img, index) => (
                   <button 
@@ -213,6 +262,23 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                     <img src={img} alt="thumb" className="w-full h-full object-cover object-top" />
                   </button>
                 ))}
+                
+                {/* Product Video Thumbnail */}
+                {product.videoUrl && (
+                  <button 
+                    onClick={() => setActiveImageIndex(allImages.length)}
+                    className={`w-20 aspect-[3/4] bg-[#111111] flex-shrink-0 transition-all rounded cursor-pointer border flex items-center justify-center relative overflow-hidden ${
+                      activeImageIndex === allImages.length 
+                        ? 'border-[#BCA58A] ring-1 ring-[#BCA58A]/20' 
+                        : 'border-[#BCA58A]/10 opacity-70 hover:opacity-100'
+                    }`}
+                  >
+                    <div className="absolute inset-0 bg-[#111111]/40 z-10 flex items-center justify-center">
+                      <Play size={20} className="text-[#FAF9F6] fill-[#FAF9F6]" />
+                    </div>
+                    <video src={product.videoUrl} referrerPolicy="no-referrer" className="w-full h-full object-cover pointer-events-none opacity-50" muted />
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -220,7 +286,13 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
           {/* RIGHT: Product specifications */}
           <div className="space-y-6 text-left">
             <div className="space-y-2">
-              <span className="inline-block text-[#BCA58A] text-[9px] font-bold tracking-[0.2em] uppercase border border-[#BCA58A]/25 px-3 py-1 rounded-sm">
+              <span 
+                onClick={() => {
+                  setSelectedBoutique(product.boutique);
+                  setView('seller-shop');
+                }}
+                className="inline-block text-[#BCA58A] text-[9px] font-bold tracking-[0.2em] uppercase border border-[#BCA58A]/25 px-3 py-1 rounded-sm cursor-pointer hover:bg-[#BCA58A] hover:text-[#FAF9F6] transition-all"
+              >
                 ✓ Boutique: {product.boutique}
               </span>
               
@@ -336,6 +408,19 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
               >
                 <span>BUY NOW / ORDER NOW</span>
               </motion.button>
+
+              {/* Product Reel Button */}
+              {product.reelUrl && (
+                <motion.button 
+                  whileHover={{ scale: 1.01, boxShadow: '0 4px 20px rgba(188,165,138,0.25)' }} 
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => setReelOpen(true)}
+                  className="w-full bg-[#FAF9F6] border border-[#BCA58A] hover:bg-[#E8DDD0]/20 text-[#BCA58A] py-4 text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2.5 transition-colors shadow-sm rounded cursor-pointer"
+                >
+                  <Video size={14} className="animate-pulse" />
+                  <span>WATCH PRODUCT REEL (9:16)</span>
+                </motion.button>
+              )}
             </div>
 
             {/* Editorial Accordion specs */}
@@ -579,6 +664,153 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
         </div>
 
       </div>
+
+      {/* 9:16 Vertical Reel Modal */}
+      <AnimatePresence>
+        {reelOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Dark Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 0.9 }} 
+              exit={{ opacity: 0 }}
+              onClick={() => setReelOpen(false)}
+              className="absolute inset-0 bg-black/90 backdrop-blur-md cursor-pointer"
+            />
+            
+            {/* Phone Container Shell */}
+            <motion.div 
+              initial={{ scale: 0.9, y: 50, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 50, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="relative w-full max-w-[380px] aspect-[9/16] h-[82vh] max-h-[760px] bg-[#111111] rounded-[2.5rem] border-[8px] border-[#2E2E2E] shadow-2xl overflow-hidden z-10 flex flex-col justify-end text-left"
+            >
+              {/* Smartphone Camera Notch */}
+              <div className="absolute top-3 left-1/2 -translate-x-1/2 w-28 h-4.5 bg-[#2E2E2E] rounded-full z-30 flex items-center justify-center">
+                <div className="w-12 h-1 bg-black/40 rounded-full" />
+              </div>
+
+              {/* Video Element */}
+              <div className="absolute inset-0 w-full h-full cursor-pointer" onClick={toggleReelPlay}>
+                <video 
+                  ref={reelVideoRef}
+                  src={product.reelUrl} 
+                  autoPlay 
+                  playsInline
+                  loop 
+                  muted={reelMuted}
+                  onTimeUpdate={handleTimeUpdate}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
+                />
+                
+                {/* Play/Pause Overlay Indicator on Tap */}
+                {!reelPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 pointer-events-none">
+                    <div className="w-16 h-16 rounded-full bg-black/50 flex items-center justify-center text-white backdrop-blur-sm">
+                      <Play size={28} className="fill-current" />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Close Button */}
+              <button 
+                onClick={() => setReelOpen(false)}
+                className="absolute top-6 right-6 p-2 bg-black/45 hover:bg-black/60 text-white rounded-full backdrop-blur-sm z-30 border border-white/10 transition-colors"
+              >
+                <X size={16} />
+              </button>
+
+              {/* Right Side Social Bar */}
+              <div className="absolute right-4 bottom-32 flex flex-col gap-5 z-20 items-center">
+                {/* Wishlist Icon */}
+                <button 
+                  onClick={() => toggleFavorite(product.id)}
+                  className="flex flex-col items-center gap-1.5"
+                >
+                  <div className={`p-3 rounded-full backdrop-blur-md border ${
+                    favorites[product.id] 
+                      ? 'bg-rose-500 border-rose-400 text-white' 
+                      : 'bg-black/40 border-white/10 text-white hover:bg-black/60'
+                  } transition-all`}>
+                    <Heart size={16} className={favorites[product.id] ? 'fill-current' : ''} />
+                  </div>
+                  <span className="text-[9px] text-white/90 font-bold uppercase tracking-wider">Save</span>
+                </button>
+
+                {/* Mute Button */}
+                <button 
+                  onClick={() => setReelMuted(!reelMuted)}
+                  className="flex flex-col items-center gap-1.5"
+                >
+                  <div className="p-3 bg-black/40 border border-white/10 text-white hover:bg-black/60 rounded-full backdrop-blur-md transition-all">
+                    {reelMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                  </div>
+                  <span className="text-[9px] text-white/90 font-bold uppercase tracking-wider">{reelMuted ? 'Mute' : 'Sound'}</span>
+                </button>
+              </div>
+
+              {/* Bottom Glassmorphism Product Card & Description */}
+              <div className="relative z-20 p-5 bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-20 flex flex-col gap-4">
+                
+                {/* Brand & Title info */}
+                <div className="space-y-1">
+                  <span className="text-[9px] tracking-widest text-[#BCA58A] uppercase font-bold">
+                    {product.boutique} · EXCLUSIVE
+                  </span>
+                  <h3 className="text-lg font-light text-white leading-tight font-display" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    {product.name}
+                  </h3>
+                  <p className="text-sm font-semibold text-[#BCA58A]">{product.price}</p>
+                </div>
+
+                {/* Size chips selector inside reel */}
+                <div className="space-y-1.5">
+                  <span className="text-[9px] text-white/70 uppercase tracking-widest font-bold">Select Size</span>
+                  <div className="flex gap-1.5">
+                    {['S', 'M', 'L', 'XL', 'XXL'].map((sz) => (
+                      <button 
+                        key={sz}
+                        onClick={() => setReelSelectedSize(sz)}
+                        className={`px-3 py-1.5 text-[10px] font-bold rounded border transition-colors ${
+                          reelSelectedSize === sz 
+                            ? 'bg-[#BCA58A] border-transparent text-[#FAF9F6]' 
+                            : 'bg-black/30 border-white/15 text-white hover:border-[#BCA58A]'
+                        }`}
+                      >
+                        {sz}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Add to Cart quick CTA */}
+                <button 
+                  onClick={() => {
+                    addToCart(product, reelSelectedSize);
+                    alert(`Added ${product.name} (Size ${reelSelectedSize}) to your bag!`);
+                    setReelOpen(false);
+                  }}
+                  className="w-full bg-[#BCA58A] hover:bg-[#9A8268] text-white py-3 text-[10px] font-bold tracking-[0.25em] uppercase flex items-center justify-center gap-2 transition-colors rounded-lg shadow-lg"
+                >
+                  <ShoppingBag size={12} />
+                  <span>ADD TO BAG</span>
+                </button>
+              </div>
+
+              {/* Progress Slider Bar */}
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/15 z-20">
+                <div 
+                  className="h-full bg-[#BCA58A] transition-all duration-100 ease-linear"
+                  style={{ width: `${reelProgress}%` }}
+                />
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

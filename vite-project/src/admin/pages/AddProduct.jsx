@@ -50,6 +50,8 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
     rating: editProduct?.rating || '4.5',
     igLikes: editProduct?.igLikes || '',
     igComments: editProduct?.igComments || '',
+    videoUrl: editProduct?.videoUrl || '',
+    reelUrl: editProduct?.reelUrl || '',
   });
 
   const [selectedSizes, setSelectedSizes] = useState(editProduct?.sizes || []);
@@ -102,13 +104,15 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       rating: parseFloat(form.rating),
       igLikes: form.igLikes,
       igComments: form.igComments,
+      videoUrl: form.videoUrl,
+      reelUrl: form.reelUrl,
       sizes: selectedSizes,
       occasions: selectedOccasions,
       care: selectedCare,
       stockQty,
       image: mainImage || '/designer_suit_1.png',
       additionalImages,
-      addedAt: new Date().toISOString(),
+      addedAt: editProduct?.addedAt || new Date().toISOString(),
       source: 'admin',
     };
 
@@ -348,6 +352,22 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 <span className="text-xs text-[#6B8C90] mt-1">Add</span>
                 <input type="file" accept="image/*" multiple onChange={handleAdditionalImages} className="hidden" />
               </label>
+            </div>
+          </Card>
+
+          {/* Media Links */}
+          <Card title="Product Video & Reels" subtitle="Add standard and vertical reel-style video loops">
+            <div className="space-y-4">
+              <div>
+                <Label>Standard Product Video URL</Label>
+                <Input value={form.videoUrl} onChange={e => update('videoUrl', e.target.value)} placeholder="e.g. https://assets.mixkit.co/... .mp4" />
+                <p className="text-[10px] text-[#6B8C90] mt-1">Direct MP4/WebM video URL recommended</p>
+              </div>
+              <div>
+                <Label>Vertical 9:16 Reel Video URL</Label>
+                <Input value={form.reelUrl} onChange={e => update('reelUrl', e.target.value)} placeholder="e.g. https://assets.mixkit.co/... .mp4" />
+                <p className="text-[10px] text-[#6B8C90] mt-1">Reel-style vertical video (MP4/WebM link)</p>
+              </div>
             </div>
           </Card>
 

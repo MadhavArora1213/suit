@@ -15,6 +15,7 @@ import CheckoutPage from './components/CheckoutPage'
 import LoginPage from './components/LoginPage'
 import CategoryPage from './components/CategoryPage'
 import ProductDetailsPage from './components/ProductDetailsPage'
+import SellerShopPage from './components/SellerShopPage'
 
 function App() {
   const [loadingComplete, setLoadingComplete] = useState(false)
@@ -25,6 +26,7 @@ function App() {
   const [user, setUser] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedBoutique, setSelectedBoutique] = useState(null)
 
   const handleLoadComplete = () => {
     setLoadingComplete(true)
@@ -95,6 +97,7 @@ function App() {
         setView={setView}
         setSelectedCategory={setSelectedCategory}
         setSelectedProduct={setSelectedProduct}
+        setSelectedBoutique={setSelectedBoutique}
         user={user}
         handleLogout={handleLogout}
       />
@@ -125,9 +128,19 @@ function App() {
           product={selectedProduct}
           setView={setView}
           setSelectedCategory={setSelectedCategory}
+          setSelectedBoutique={setSelectedBoutique}
           addToCart={addToCart}
           favorites={favorites}
           toggleFavorite={toggleFavorite}
+        />
+      )}
+
+      {view === 'seller-shop' && (
+        <SellerShopPage 
+          boutiqueName={selectedBoutique}
+          setView={setView}
+          setSelectedProduct={setSelectedProduct}
+          addToCart={addToCart}
         />
       )}
 
