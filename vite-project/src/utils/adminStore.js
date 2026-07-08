@@ -9,7 +9,10 @@ import {
   saveProductRatingToFirestore,
   isFirebaseConfigured,
   saveOrderToFirestore,
-  fetchOrdersFromFirestore
+  fetchOrdersFromFirestore,
+  saveProductToFirestore,
+  deleteProductFromFirestore,
+  fetchProductsFromFirestore
 } from '../firebase';
 
 const KEYS = {
@@ -383,9 +386,40 @@ export const fileToBase64 = (file) =>
 // ── PRODUCTS ─────────────────────────────────────────────────
 export const getProducts   = ()           => get(KEYS.products, []);
 export const saveProducts  = (arr)        => set(KEYS.products, arr);
-export const addProduct    = (product)    => { const arr = getProducts(); arr.unshift(product); saveProducts(arr); };
-export const updateProduct = (id, data)   => saveProducts(getProducts().map(p => p.id === id ? { ...p, ...data } : p));
-export const deleteProduct = (id)         => saveProducts(getProducts().filter(p => p.id !== id));
+
+export const addProduct = (product) => {
+  const arr = getProducts();
+  arr.unshift(product);
+  saveProducts(arr);
+  if (isFirebaseConfigured()) {
+    saveProductToFirestore(product.id, product).catch(err =>
+      console.error("Failed to add product to Firestore:", err)
+    );
+  }
+};
+
+export const updateProduct = (id, data) => {
+  const updatedList = getProducts().map(p => p.id === id ? { ...p, ...data } : p);
+  saveProducts(updatedList);
+  
+  if (isFirebaseConfigured()) {
+    const updatedProd = updatedList.find(p => p.id === id);
+    if (updatedProd) {
+      saveProductToFirestore(id, updatedProd).catch(err =>
+        console.error("Failed to update product in Firestore:", err)
+      );
+    }
+  }
+};
+
+export const deleteProduct = (id) => {
+  saveProducts(getProducts().filter(p => p.id !== id));
+  if (isFirebaseConfigured()) {
+    deleteProductFromFirestore(id).catch(err =>
+      console.error("Failed to delete product from Firestore:", err)
+    );
+  }
+};
 
 const defaultVideos = [
   'https://assets.mixkit.co/videos/preview/mixkit-fashion-woman-with-a-red-dress-walking-in-a-field-40485-large.mp4',
@@ -731,4 +765,54 @@ export const getBoutiqueProfile = (boutiqueName) => {
     logo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
     rating: 4.5
   };
+};
+
+export const syncProducts = async (onSyncComplete) => {
+  if (!isFirebaseConfigured()) return;
+  try {
+    const dbProducts = await fetchProductsFromFirestore();
+    const localProducts = getProducts();
+    
+    // If Firestore is completely empty, populate it with all static products
+    if (dbProducts.length === 0) {
+      console.log("Firestore products collection is empty. Auto-populating with static products...");
+      const allToUpload = [...localProducts, ...staticProducts];
+      const uploadedIds = new Set();
+      for (const p of allToUpload) {
+        if (!uploadedIds.has(p.id)) {
+          await saveProductToFirestore(p.id, p);
+          uploadedIds.add(p.id);
+        }
+      }
+      const newDbProducts = await fetchProductsFromFirestore();
+      saveProducts(newDbProducts);
+      if (onSyncComplete) onSyncComplete(newDbProducts);
+      return;
+    }
+
+    // Bidirectional merge
+    const mergedMap = new Map();
+    dbProducts.forEach(p => mergedMap.set(p.id, p));
+    localProducts.forEach(p => {
+      if (!mergedMap.has(p.id)) {
+        mergedMap.set(p.id, p);
+      }
+    });
+
+    // Upload local products that aren't in Firestore yet
+    const dbIds = new Set(dbProducts.map(p => p.id));
+    for (const p of localProducts) {
+      if (!dbIds.has(p.id)) {
+        await saveProductToFirestore(p.id, p);
+      }
+    }
+
+    const mergedList = Array.from(mergedMap.values());
+    saveProducts(mergedList);
+    if (onSyncComplete) {
+      onSyncComplete(mergedList);
+    }
+  } catch (error) {
+    console.error("Error syncing products:", error);
+  }
 };
