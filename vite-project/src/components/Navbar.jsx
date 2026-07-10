@@ -13,7 +13,6 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
   const [scrolled, setScrolled] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [orderId, setOrderId] = useState('');
-  const [timeLeft, setTimeLeft] = useState({ hours: 1, minutes: 24, seconds: 53 });
   const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
@@ -29,18 +28,6 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
     const handleScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return { hours: 1, minutes: 24, seconds: 53 };
-      });
-    }, 1000);
-    return () => clearInterval(timer);
   }, []);
 
   const suggestions = ['Anarkali', 'Sharara', 'Banarasi', 'Chikankari', 'Patiala', 'Pakistani'];
@@ -65,16 +52,6 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 right-0 z-50"
     >
-      {/* Announcement Bar */}
-      <div className="bg-[#FAF9F6] text-[#111111] py-1.5 sm:py-2 px-4 text-center text-[9px] sm:text-[10px] tracking-[0.18em] sm:tracking-[0.22em] font-semibold flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-4 uppercase">
-        <span>End of Season Sale · Extra 15% Off · Code: SUITE15</span>
-        <div className="flex items-center gap-1 font-mono bg-black/20 px-2.5 py-0.5 rounded text-[#BCA58A] font-bold text-[10px]">
-          <span>{String(timeLeft.hours).padStart(2, '0')}</span>:
-          <span>{String(timeLeft.minutes).padStart(2, '0')}</span>:
-          <span>{String(timeLeft.seconds).padStart(2, '0')}</span>
-        </div>
-      </div>
-
       {/* Main Nav */}
       <div className={`transition-all duration-500 ${scrolled
         ? 'bg-[#FAF9F6]/95 backdrop-blur-xl border-b border-[#BCA58A]/10 shadow-lg'
@@ -125,7 +102,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
 
                   {item === 'BOUTIQUES' && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 bg-[#FAF9F6] border border-[#BCA58A]/15 shadow-2xl py-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 rounded">
-                      {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft'].map((bt) => (
+                      {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft', 'Badshah Designer Fabrics'].map((bt) => (
                         <a
                           key={bt}
                           href="#"
@@ -319,7 +296,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   <div className="space-y-2">
                     <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">BOUTIQUE SHOPS</span>
                     <div className="pl-4 flex flex-col gap-3">
-                      {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft'].map((bt) => (
+                      {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft', 'Badshah Designer Fabrics'].map((bt) => (
                         <a key={bt} href="#" onClick={(e) => {
                           e.preventDefault();
                           setSelectedBoutique(bt);
