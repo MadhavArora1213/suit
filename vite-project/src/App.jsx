@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { syncProducts } from './utils/adminStore'
 import './App.css'
 import LoadingScreen from './LoadingScreen'
 import Navbar from './components/Navbar'
@@ -27,6 +28,12 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedBoutique, setSelectedBoutique] = useState(null)
+
+  useEffect(() => {
+    syncProducts(() => {
+      window.dispatchEvent(new CustomEvent('admin-data-updated'));
+    });
+  }, []);
 
   const handleLoadComplete = () => {
     setLoadingComplete(true)

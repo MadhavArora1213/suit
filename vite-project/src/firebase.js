@@ -1,5 +1,5 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
-import { getFirestore, doc, setDoc, getDocs, collection, query, where } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDocs, collection, query, where, deleteDoc } from 'firebase/firestore';
 
 // Helper to get Firebase configuration dynamically from localStorage
 function getFirebaseConfig() {
@@ -18,12 +18,13 @@ function getFirebaseConfig() {
   
   // Default fallback config
   return {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyClFiWI7RdM1kdDN8nk-UoBjXYRftfbRKQ",
+    authDomain: "gurnaaz-526cd.firebaseapp.com",
+    projectId: "gurnaaz-526cd",
+    storageBucket: "gurnaaz-526cd.firebasestorage.app",
+    messagingSenderId: "600400347474",
+    appId: "1:600400347474:web:65316d5774cc55a0c0ba8b",
+    measurementId: "G-1BNQCSYYRE"
   };
 }
 
@@ -260,3 +261,98 @@ export async function fetchOrdersFromFirestore() {
     return [];
   }
 }
+
+/**
+ * Saves or updates a product in the Firestore database
+ */
+export async function saveProductToFirestore(productId, product) {
+  if (!isFirebaseConfigured() || !db) {
+    console.warn("Firebase not configured. Product saved locally.");
+    return null;
+  }
+  try {
+    const productRef = doc(db, 'products', productId);
+    
+    // Normalize/sanitize data to prevent Firestore errors
+    const data = {
+      id: productId,
+      name: product.name || '',
+      price: product.price || '',
+      priceNum: Number(product.priceNum || 0),
+      boutique: product.boutique || '',
+      badge: product.badge || '',
+      collection: product.collection || 'Trending',
+      styleCategory: product.styleCategory || 'Traditional',
+      suitType: product.suitType || 'Anarkali',
+      type: product.type || product.suitType || 'Anarkali',
+      shortDesc: product.shortDesc || '',
+      fabricDetails: product.fabricDetails || '',
+      fabricName: product.fabricName || '',
+      fabricDesc: product.fabricDesc || '',
+      rating: Number(product.rating || 4.5),
+      igLikes: product.igLikes || '',
+      igComments: product.igComments || '',
+      videoUrl: product.videoUrl || '',
+      reelUrl: product.reelUrl || '',
+      sizes: product.sizes || [],
+      occasions: product.occasions || [],
+      care: product.care || [],
+      stockQty: product.stockQty || {},
+      image: product.image || '',
+      additionalImages: product.additionalImages || [],
+      addedAt: product.addedAt || new Date().toISOString(),
+      source: product.source || 'admin',
+      updatedAt: new Date().toISOString()
+    };
+    
+    await setDoc(productRef, data);
+    console.log(`Product ${productId} successfully stored in Firestore!`);
+    return data;
+  } catch (error) {
+    console.error("Firestore write product error: ", error);
+    return null;
+  }
+}
+
+/**
+ * Deletes a product from the Firestore database
+ */
+export async function deleteProductFromFirestore(productId) {
+  if (!isFirebaseConfigured() || !db) {
+    return false;
+  }
+  try {
+    const productRef = doc(db, 'products', productId);
+    await deleteDoc(productRef);
+    console.log(`Product ${productId} successfully deleted from Firestore!`);
+    return true;
+  } catch (error) {
+    console.error("Firestore delete product error: ", error);
+    return false;
+  }
+}
+
+/**
+ * Fetches all products from the Firestore database
+ */
+export async function fetchProductsFromFirestore() {
+  if (!isFirebaseConfigured() || !db) {
+    return [];
+  }
+  try {
+    const productsCol = collection(db, 'products');
+    const querySnapshot = await getDocs(productsCol);
+    const products = [];
+    querySnapshot.forEach((docSnap) => {
+      products.push(docSnap.data());
+    });
+    
+    // Sort descending by addedAt
+    products.sort((a, b) => new Date(b.addedAt || 0) - new Date(a.addedAt || 0));
+    return products;
+  } catch (error) {
+    console.error("Firestore fetch products error: ", error);
+    return [];
+  }
+}
+
