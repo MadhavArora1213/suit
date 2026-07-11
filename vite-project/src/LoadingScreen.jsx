@@ -29,7 +29,7 @@ export default function LoadingScreen({ onComplete }) {
     });
   }, [onComplete]);
 
-  const word = "Welcome";
+  const word = "Welcome to Gurnaaz";
 
   const renderSmoke = () => (
     <div className="absolute left-0 top-0 w-full h-0 z-0 pointer-events-none">
@@ -39,7 +39,7 @@ export default function LoadingScreen({ onComplete }) {
   );
 
   const renderSvgText = () => (
-    <svg viewBox="0 0 600 200" style={{position:'absolute',left:'50%',transform:'translateX(-50%)',width:'min(600px, 90vw)',height:'200px',overflow:'visible',pointerEvents:'none',zIndex:10}}>
+    <svg viewBox="0 0 900 200" style={{position:'absolute',left:'50%',transform:'translateX(-50%)',width:'min(900px, 95vw)',height:'200px',overflow:'visible',pointerEvents:'none',zIndex:10}}>
       <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" className="svg-text-stroke"
         style={{fontFamily:"'Great Vibes', cursive", fontWeight:400}}>
         {word}

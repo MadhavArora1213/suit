@@ -1,232 +1,381 @@
-import { useState, useRef, useEffect } from 'react';
-import { motion, useSpring, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ShoppingBag } from 'lucide-react';
-import { getHero } from '../utils/adminStore';
+import { useEffect, useRef, useState } from 'react';
 
-const staticGalleryItems = [
-  { id: 1, image: '/hero_campaign_suits.png', name: 'Banarasi Silk', title: 'Banarasi Silk' },
-  { id: 2, image: '/anarkali_suit.png', name: 'Royal Anarkali', title: 'Royal Anarkali' },
-  { id: 3, image: '/sharara_suit.png', name: 'Modern Sharara', title: 'Modern Sharara' },
-  { id: 4, image: '/sky_blue_suit.jpg', name: 'Glacier Blue Organza', title: 'Glacier Blue Organza' },
-  { id: 5, image: '/hero_campaign_palace.png', name: 'Bridal Couture', title: 'Bridal Couture' },
-  { id: 6, image: '/designer_suit_1.png', name: 'Heritage Luxe', title: 'Heritage Luxe' },
+/*
+  Gurnaaz Hero — Queen's editorial layout:
+  ┌─────────────────────────────────────────────────────┐
+  │  GURNAAZ  (huge faded watermark behind all)         │
+  │                                                     │
+  │  Fa          [MODEL IMAGE]          ◆shion           │
+  │  (left edge)   (centered)           (right edge)    │
+  │                                                     │
+  │  [Thumbnails]            [8+  4k+  4.9]            │
+  │  PLAY VIDEO                                         │
+  │  ⟳ choose..   ←  01  →                             │
+  └─────────────────────────────────────────────────────┘
+*/
+
+const SLIDES = [
+  { img: '/gurnaaz_hero_model_custom_5.png' },
+  { img: '/anarkali_suit.png' },
+  { img: '/chikankari_suit.png' },
 ];
 
-const defaultHeroData = {
-  tagLine: 'Edition 2026',
-  heading: 'Unveiling Masterpieces',
-  subText: 'A curated journey through heritage craftsmanship and modern luxury silhouettes.',
-  ctaText: 'Explore Gallery',
-  ctaLink: '#collections',
-};
+export default function Hero() {
+  const sectionRef = useRef(null);
+  const rotateRef  = useRef(null);
+  const [slide, setSlide] = useState(0);
+  const [ready, setReady] = useState(false);
 
-export default function Hero({ addToCart }) {
-  const [heroData, setHeroData] = useState(defaultHeroData);
-  const [galleryItems, setGalleryItems] = useState(staticGalleryItems);
-
-  const loadHeroData = () => {
-    const data = getHero(defaultHeroData);
-    setHeroData(data);
-
-    // If there are slides saved from the admin panel hero slideshow
-    // (Wait, we can fetch the slides too. In HeroSection.jsx we had `slides` array. Let's make sure it's stored under KEYS.hero or we can load it from localStorage if we saved it in getHero)
-    if (data && data.slides && data.slides.length > 0) {
-      setGalleryItems(data.slides.map((s, idx) => ({
-        id: s.id || idx,
-        image: s.image,
-        name: s.title || 'Collection item'
-      })));
-    } else {
-      setGalleryItems(staticGalleryItems);
-    }
-  };
-
+  /* ── entry animation ── */
   useEffect(() => {
-    loadHeroData();
-    window.addEventListener('admin-data-updated', loadHeroData);
-    return () => window.removeEventListener('admin-data-updated', loadHeroData);
+    const t = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setReady(true));
+    });
+    return () => cancelAnimationFrame(t);
   }, []);
 
-  const infiniteItems = [...galleryItems, ...galleryItems];
-  
-  // Magnetic Button State
-  const buttonRef = useRef(null);
-  const [btnPos, setBtnPos] = useState({ x: 0, y: 0 });
-
-  // Floating Image Reveal on Text Hover
-  const [isTextHovered, setIsTextHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
-
-  const handleMouseMove = (e) => {
-    setMousePos({ x: e.clientX, y: e.clientY });
-
-    // Magnetic Button Logic
-    if (buttonRef.current) {
-      const { left, top, width, height } = buttonRef.current.getBoundingClientRect();
-      // Check if mouse is near the button
-      const dist = Math.hypot(e.clientX - (left + width/2), e.clientY - (top + height/2));
-      if (dist < 150) {
-        const x = (e.clientX - (left + width / 2)) * 0.4;
-        const y = (e.clientY - (top + height / 2)) * 0.4;
-        setBtnPos({ x, y });
-      } else {
-        setBtnPos({ x: 0, y: 0 });
-      }
-    }
-  };
-
+  /* ── rotating circle text ── */
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    const el = rotateRef.current;
+    if (!el) return;
+    let a = 0;
+    const id = setInterval(() => { a += 0.35; el.style.transform = `rotate(${a}deg)`; }, 16);
+    return () => clearInterval(id);
   }, []);
 
-  const springX = useSpring(btnPos.x, { stiffness: 150, damping: 15 });
-  const springY = useSpring(btnPos.y, { stiffness: 150, damping: 15 });
-  
-  // Springs for the floating text-hover image
-  const floatX = useSpring(mousePos.x, { stiffness: 100, damping: 20 });
-  const floatY = useSpring(mousePos.y, { stiffness: 100, damping: 20 });
+  const prev = () => setSlide(s => (s === 0 ? SLIDES.length - 1 : s - 1));
+  const next = () => setSlide(s => (s === SLIDES.length - 1 ? 0 : s + 1));
+
+  const ease = 'cubic-bezier(0.16,1,0.3,1)';
+  const anim = (delay = 0) => ({
+    opacity:   ready ? 1 : 0,
+    transform: ready ? 'none' : 'translateY(24px)',
+    transition: `opacity 1s ${delay}s ${ease}, transform 1s ${delay}s ${ease}`,
+  });
 
   return (
-    <section className="relative w-full min-h-screen md:h-screen bg-[#FAF9F6] flex flex-col md:flex-row overflow-hidden cursor-default">
-      
-      {/* Subtle Film Grain Overlay */}
-      <div className="absolute inset-0 pointer-events-none z-50 opacity-[0.04] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
+    <>
+      <style>{`
+        /* ── nav hover underline ── */
+        .gh-nav-btn:hover { background:#111 !important; }
+        .gh-nav-btn:hover svg path { stroke:#fff !important; }
+      `}</style>
 
-      {/* Floating Image Reveal (When hovering "Masterpieces") */}
-      <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden hidden md:block">
-        <AnimatePresence>
-          {isTextHovered && (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
-              animate={{ opacity: 1, scale: 1, rotate: 5 }}
-              exit={{ opacity: 0, scale: 0.8, rotate: 10 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="absolute w-48 h-64 rounded-xl overflow-hidden shadow-2xl border-4 border-[#FAF9F6]"
-              style={{ 
-                x: floatX, 
-                y: floatY,
-                marginLeft: '-6rem',
-                marginTop: '-8rem'
-              }}
-            >
-              <img src="/designer_suit_1.png" alt="Floating Detail" className="w-full h-full object-cover" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <section
+        ref={sectionRef}
+        style={{
+          position:   'relative',
+          width:      '100%',
+          height:     '100vh',
+          minHeight:  '620px',
+          background: '#FAF9F6', // Matched with Navbar Ivory
+          overflow:   'hidden',
+          fontFamily: "'Montserrat', sans-serif",
+        }}
+      >
 
-      {/* Left Side: Editorial Canvas */}
-      <div className="relative w-full md:w-[45%] lg:w-[40%] h-auto min-h-[55vh] md:h-full flex flex-col justify-center px-6 md:px-12 lg:px-20 z-20 bg-[#FAF9F6] shadow-[20px_0_40px_rgba(0,0,0,0.03)] pt-28 pb-14 md:py-0">
-        
-        {/* Massive Background Number */}
-        <div className="absolute top-1/2 -translate-y-1/2 left-0 pl-12 opacity-[0.03] pointer-events-none select-none">
-          <span className="text-[180px] md:text-[300px] font-light leading-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            01
+        {/* ════════════ LAYER 1 — GURNAAZ watermark ════════════ */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 1, pointerEvents: 'none', userSelect: 'none', overflow: 'hidden',
+          ...anim(0),
+        }}>
+          <span style={{
+            fontFamily: "'Cinzel', serif",
+            fontSize:   'clamp(100px, 20vw, 310px)',
+            fontWeight: 700,
+            color:      'rgba(0,0,0,0.055)',
+            letterSpacing: '0.12em',
+            whiteSpace: 'nowrap',
+            lineHeight: 1,
+          }}>
+            GURNAAZ
           </span>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10"
-        >
-          <div className="flex items-center gap-4 mb-6 md:mb-8">
-            <div className="w-8 h-px bg-[#BCA58A]" />
-            <span className="text-[9px] tracking-[0.4em] text-[#BCA58A] uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              {heroData.tagLine}
-            </span>
+        {/* ════════════ LAYER 2 — "Fa" LEFT ════════════ */}
+        <div style={{
+          position:  'absolute',
+          left: 0, top: '50%',
+          transform: ready ? 'translateY(-50%)' : 'translateY(-50%) translateX(-30px)',
+          opacity:   ready ? 1 : 0,
+          transition:`opacity 1s 0.2s ${ease}, transform 1s 0.2s ${ease}`,
+          zIndex:    2,
+          pointerEvents: 'none',
+          userSelect:    'none',
+          lineHeight: 0.85,
+        }}>
+          <span style={{
+            fontFamily:    "'Cinzel', serif",
+            fontSize:      'clamp(90px, 15vw, 210px)',
+            fontWeight:    700,
+            color:         '#111',
+            letterSpacing: '-0.04em',
+            display:       'block',
+            paddingLeft:   'clamp(18px, 3.5vw, 56px)',
+          }}>
+            Fa
+          </span>
+        </div>
+
+        {/* ════════════ LAYER 2 — "◆shion" RIGHT ════════════ */}
+        <div style={{
+          position:  'absolute',
+          right: 0, top: '50%',
+          transform: ready ? 'translateY(-50%)' : 'translateY(-50%) translateX(30px)',
+          opacity:   ready ? 1 : 0,
+          transition:`opacity 1s 0.2s ${ease}, transform 1s 0.2s ${ease}`,
+          zIndex:    2,
+          pointerEvents: 'none',
+          userSelect:    'none',
+          display: 'flex',
+          alignItems: 'center',
+          lineHeight: 0.85,
+        }}>
+          <span style={{
+            fontFamily: "'Cinzel', serif",
+            fontSize:   'clamp(26px, 3.6vw, 56px)',
+            color:      '#111',
+            lineHeight: 1,
+            marginRight: '3px',
+            flexShrink: 0,
+          }}>◆</span>
+          <span style={{
+            fontFamily:    "'Cinzel', serif",
+            fontSize:      'clamp(90px, 15vw, 210px)',
+            fontWeight:    700,
+            color:         '#111',
+            letterSpacing: '-0.04em',
+            display:       'block',
+            paddingRight:  'clamp(18px, 3.5vw, 56px)',
+          }}>
+            shion
+          </span>
+        </div>
+
+        {/* ════════════ LAYER 3 — Model image (ON TOP of text) ════════════ */}
+        <div style={{
+          position:  'absolute',
+          left: '50%', bottom: 0,
+          transform: ready
+            ? 'translateX(-50%)'
+            : 'translateX(-50%) translateY(40px)',
+          opacity:   ready ? 1 : 0,
+          transition:`opacity 1.2s 0.35s ${ease}, transform 1.2s 0.35s ${ease}`,
+          width:     'clamp(300px, 45vw, 650px)',
+          height:    '92vh',
+          zIndex:    3,
+          mixBlendMode: 'multiply',
+        }}>
+          <img
+            src={SLIDES[slide].img}
+            alt="Gurnaaz Collection"
+            style={{
+              width:           '100%',
+              height:          '100%',
+              objectFit:       'contain',
+              objectPosition:  'center bottom',
+              display:         'block',
+              transform:       'scale(1.10)',
+              transformOrigin: 'bottom center',
+            }}
+          />
+        </div>
+
+        {/* ════════════ LAYER 5 — Play Video widget (left) ════════════ */}
+        <div style={{
+          position:  'absolute',
+          left:      'clamp(18px, 4vw, 60px)',
+          top:       '55%',
+          transform: 'translateY(-50%)',
+          zIndex:    10,
+          display:   'flex',
+          flexDirection: 'column',
+          alignItems:    'center',
+          gap:           '10px',
+          cursor:        'pointer',
+          ...anim(0.5),
+        }}>
+          {/* Stacked thumbnail cards */}
+          <div style={{ position: 'relative', width: '88px', height: '68px' }}>
+            {/* back card */}
+            <div style={{
+              position: 'absolute', top: 0, left: 14,
+              width: '60px', height: '58px', borderRadius: '10px',
+              overflow: 'hidden', border: '2.5px solid #fff',
+              boxShadow: '0 6px 18px rgba(0,0,0,0.13)',
+            }}>
+              <img src="/gurnaaz_fabric.png" alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            {/* front card */}
+            <div style={{
+              position: 'absolute', top: 9, left: 0,
+              width: '60px', height: '58px', borderRadius: '10px',
+              overflow: 'hidden', border: '2.5px solid #fff',
+              boxShadow: '0 6px 18px rgba(0,0,0,0.10)',
+            }}>
+              <img src="/gurnaaz_hero_model.png" alt=""
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', filter: 'brightness(0.8)' }} />
+            </div>
           </div>
-          
-          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-light text-[#111111] leading-[0.95] tracking-tight mb-6 md:mb-8 relative z-20" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            {heroData.heading.split(' ')[0]} <br/>
-            <span 
-              className="italic text-[#BCA58A] pl-6 md:pl-8 block cursor-pointer transition-colors hover:text-[#111111]"
-              onMouseEnter={() => setIsTextHovered(true)}
-              onMouseLeave={() => setIsTextHovered(false)}
-            >
-              {heroData.heading.split(' ').slice(1).join(' ') || 'Masterpieces'}
-            </span>
-          </h1>
-          
-          <p className="text-[#6B6B6B] text-[10px] md:text-xs tracking-widest uppercase font-bold max-w-xs mb-8 md:mb-12 leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            {heroData.subText}
-          </p>
-          
-          <div className="flex items-start">
-            <motion.a 
-              ref={buttonRef}
-              href={heroData.ctaLink || "#collections"} 
-              style={{ x: springX, y: springY }}
-              className="relative flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-full border border-[#111111]/20 text-[#111111] group overflow-hidden transition-colors hover:border-[#BCA58A] z-30 bg-[#FAF9F6]"
-            >
-              <div className="absolute inset-0 bg-[#BCA58A] scale-0 group-hover:scale-100 transition-transform duration-500 rounded-full ease-[cubic-bezier(0.16,1,0.3,1)] origin-center" />
-              <div className="relative z-10 flex flex-col items-center gap-1.5 group-hover:text-[#FAF9F6] transition-colors duration-300">
-                <span className="text-[8px] md:text-[9px] uppercase tracking-[0.3em] font-bold text-center px-3" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                  {heroData.ctaText.split(' ')[0]} <br/> {heroData.ctaText.split(' ').slice(1).join(' ') || 'Gallery'}
-                </span>
-                <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-300" />
+
+          {/* Play button */}
+          <div style={{
+            width: '38px', height: '38px', borderRadius: '50%',
+            background: '#fff',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 4px 18px rgba(0,0,0,0.14)',
+          }}>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+              <path d="M3.5 2.5L10.5 6.5L3.5 10.5V2.5Z" fill="#111" />
+            </svg>
+          </div>
+
+          {/* Label */}
+          <span style={{
+            fontSize: '8.5px', fontWeight: 600,
+            letterSpacing: '0.22em', textTransform: 'uppercase', color: '#111',
+          }}>
+            PLAY VIDEO
+          </span>
+        </div>
+
+        {/* ════════════ LAYER 5 — Stats (bottom right, above arrows) ════════════ */}
+        <div style={{
+          position: 'absolute',
+          right:    'clamp(18px, 4vw, 60px)',
+          bottom:   'clamp(80px, 13vh, 120px)',
+          zIndex:   10,
+          display:  'flex',
+          alignItems: 'stretch',
+          ...anim(0.6),
+        }}>
+          {[
+            { val: '8+',  label: 'Experience' },
+            { val: '4k+', label: 'Best clients' },
+            { val: '4.9', label: 'Review' },
+          ].map((s, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'stretch' }}>
+              <div style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                paddingLeft: i === 0 ? 0 : '20px', paddingRight: '20px',
+              }}>
+                <span style={{
+                  fontFamily: "'Cinzel', serif",
+                  fontSize: 'clamp(22px, 2.8vw, 36px)',
+                  fontWeight: 600, color: '#111', lineHeight: 1,
+                }}>{s.val}</span>
+                <span style={{
+                  fontSize: '8px', color: '#888',
+                  letterSpacing: '0.06em', marginTop: '4px', whiteSpace: 'nowrap',
+                }}>{s.label}</span>
               </div>
-            </motion.a>
+              {i < 2 && (
+                <div style={{
+                  width: '1px', background: 'rgba(0,0,0,0.15)',
+                  alignSelf: 'stretch', margin: '2px 0',
+                }} />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* ════════════ LAYER 5 — Rotating circle text (bottom left) ════════════ */}
+        <div style={{
+          position: 'absolute',
+          left:     'clamp(18px, 4vw, 60px)',
+          bottom:   'clamp(18px, 3.5vh, 40px)',
+          zIndex:   10,
+          width:    '88px', height: '88px',
+          display:  'flex', alignItems: 'center', justifyContent: 'center',
+          ...anim(0.7),
+        }}>
+          <svg
+            ref={rotateRef}
+            width="88" height="88" viewBox="0 0 88 88"
+            style={{ position: 'absolute', transformOrigin: 'center' }}
+          >
+            <defs>
+              <path id="ghCircle"
+                d="M44,44 m-31,0 a31,31 0 1,1 62,0 a31,31 0 1,1 -62,0" />
+            </defs>
+            <text style={{
+              fontSize: '8px', letterSpacing: '2.4px',
+              fill: '#555', fontFamily: "'Montserrat', sans-serif", fontWeight: 500,
+            }}>
+              <textPath href="#ghCircle">
+                Choose your style · Choose your style ·
+              </textPath>
+            </text>
+          </svg>
+          {/* Centre star */}
+          <div style={{
+            width: '28px', height: '28px', borderRadius: '50%',
+            border: '1.5px solid #111', background: '#FAF9F6',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 2,
+          }}>
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+              <path d="M5.5 0L6.5 4.5L11 5.5L6.5 6.5L5.5 11L4.5 6.5L0 5.5L4.5 4.5L5.5 0Z" fill="#111" />
+            </svg>
           </div>
-        </motion.div>
-      </div>
+        </div>
 
-      {/* Right Side: Skewed Auto-Scrolling Gallery */}
-      <div className="w-full md:w-[55%] lg:w-[60%] h-[45vh] md:h-full relative overflow-hidden bg-[#FAF9F6]">
-        
-        {/* Soft edge gradients */}
-        <div className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-[#FAF9F6] to-transparent z-10 hidden md:block pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#FAF9F6] to-transparent z-10 hidden md:block pointer-events-none" />
+        {/* ════════════ LAYER 5 — Nav arrows + counter (bottom right) ════════════ */}
+        <div style={{
+          position: 'absolute',
+          right:    'clamp(18px, 4vw, 60px)',
+          bottom:   'clamp(18px, 3.5vh, 40px)',
+          zIndex:   10,
+          display:  'flex', alignItems: 'center', gap: '14px',
+          ...anim(0.7),
+        }}>
+          <button
+            className="gh-nav-btn"
+            onClick={prev}
+            style={{
+              width: '36px', height: '36px', borderRadius: '50%',
+              border: '1.5px solid rgba(0,0,0,0.22)', background: 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', transition: 'background 0.25s',
+              color: '#111',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.5"
+                strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
 
-        <motion.div 
-          className="flex flex-col gap-4 p-4 md:p-12 md:pl-0"
-          animate={{ y: ["0%", "-50%"] }}
-          transition={{ y: { repeat: Infinity, repeatType: "loop", duration: 40, ease: "linear" } }}
-        >
-          <div className="grid grid-cols-2 gap-4 md:gap-12 w-full">
-            {infiniteItems.map((item, index) => (
-              <div 
-                key={`${item.id}-${index}`} 
-                className={`relative group w-full aspect-[3/4] md:aspect-[4/5] rounded-xl overflow-hidden shadow-2xl cursor-pointer bg-[#111111] ${index % 2 !== 0 ? 'md:mt-24' : ''}`}
-              >
-                {/* Subtle Image Skew on load */}
-                <motion.img 
-                  initial={{ scale: 1.1, filter: "blur(4px)" }}
-                  animate={{ scale: 1, filter: "blur(0px)" }}
-                  transition={{ duration: 1.5, delay: index * 0.1 }}
-                  src={item.image} 
-                  alt={item.name} 
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-[1.5s] ease-[cubic-bezier(0.16,1,0.3,1)] opacity-90 group-hover:opacity-100"
-                />
-                
-                <div className="absolute inset-0 bg-[#111111]/60 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] transition-all duration-500" />
-                
-                <div className="absolute inset-0 p-8 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100">
-                  <span className="text-[#BCA58A] text-[9px] tracking-[0.3em] font-bold uppercase mb-2 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    New Arrival
-                  </span>
-                  <h3 className="text-[#FAF9F6] text-3xl mb-6 font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                    {item.name}
-                  </h3>
-                  
-                  <button 
-                    onClick={(e) => { e.stopPropagation(); addToCart && addToCart(item); }}
-                    className="w-full bg-[#FAF9F6] text-[#111111] hover:bg-[#BCA58A] hover:text-[#FAF9F6] py-4 flex items-center justify-center gap-2 text-[10px] tracking-[0.25em] font-bold transition-colors"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
-                  >
-                    <ShoppingBag size={14} />
-                    ADD TO BAG
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+          <span style={{
+            fontFamily: "'Cinzel', serif",
+            fontSize: '15px', fontWeight: 600, color: '#111',
+            minWidth: '20px', textAlign: 'center', letterSpacing: '0.05em',
+          }}>
+            {String(slide + 1).padStart(2, '0')}
+          </span>
 
-      </div>
+          <button
+            className="gh-nav-btn"
+            onClick={next}
+            style={{
+              width: '36px', height: '36px', borderRadius: '50%',
+              border: '1.5px solid rgba(0,0,0,0.22)', background: 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', transition: 'background 0.25s',
+              color: '#111',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M5 2L10 7L5 12" stroke="currentColor" strokeWidth="1.5"
+                strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
 
-    </section>
+      </section>
+    </>
   );
 }

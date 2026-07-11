@@ -55,32 +55,35 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
       {/* Main Nav */}
       <div className={`transition-all duration-500 ${scrolled
         ? 'bg-[#FAF9F6]/95 backdrop-blur-xl border-b border-[#BCA58A]/10 shadow-lg'
-        : 'bg-[#FAF9F6]/90 backdrop-blur-md border-b border-transparent'
+        : 'bg-transparent'
       }`}>
-        <div className="max-w-[1600px] mx-auto px-6 md:px-14 py-4">
+        <div className={`max-w-[1600px] mx-auto px-6 md:px-14 transition-all duration-500 ${scrolled ? 'py-3' : 'py-4'}`}>
           <div className="flex items-center justify-between">
 
             {/* Logo */}
             <motion.a href="#" onClick={(e) => { e.preventDefault(); setView('home'); }} whileHover={{ scale: 1.02 }} className="flex items-center gap-2 cursor-pointer group">
-              <img src={gurnaazLogo} alt="GURNAAZ" className="h-12 md:h-14 w-auto object-contain" />
+              <img src={gurnaazLogo} alt="GURNAAZ" className="h-10 md:h-12 w-auto object-contain" />
             </motion.a>
 
-            <div className="hidden md:flex items-center gap-10">
-              {['HOME', 'SHOP', 'COLLECTIONS', 'BOUTIQUES', 'ABOUT US'].map((item, i) => (
+            <div className="hidden md:flex items-center gap-[4.5rem]">
+              {['Home', 'About', 'Collection', 'Contact'].map((item, i) => (
                 <div key={i} className="relative group py-2">
                   <a href="#" onClick={(e) => { 
                     e.preventDefault(); 
-                    if (item === 'HOME') setView('home');
-                    if (item === 'COLLECTIONS') { setSelectedCategory('Anarkali'); setView('category'); } 
+                    if (item === 'Home') setView('home');
+                    if (item === 'Collection') { setSelectedCategory('Anarkali'); setView('category'); } 
                   }}
-                    className="relative text-[11px] tracking-[0.18em] text-[#111111]/70 hover:text-[#111111] group-hover:text-[#111111] transition-colors duration-300 uppercase py-2"
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}
+                    className="relative text-[14.5px] tracking-[0.03em] text-[#888888] hover:text-[#111111] transition-all duration-300 font-medium py-2"
+                    style={{ fontFamily: "'Montserrat', sans-serif" }}
                   >
-                    {item}
-                    <span className="absolute bottom-0 left-0 w-0 h-px bg-[#BCA58A] transition-all duration-400 group-hover:w-full" />
+                    <span className={item === 'Home' ? "text-[#111111] font-semibold" : ""}>{item}</span>
+                    {/* Sleek active underline for Home */}
+                    {item === 'Home' && (
+                      <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-[1.5px] bg-[#111111]" />
+                    )}
                   </a>
 
-                  {item === 'SHOP' && (
+                  {item === 'Collection' && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-[#FAF9F6] border border-[#BCA58A]/15 shadow-2xl py-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 rounded">
                       {['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi'].map((cat) => (
                         <a
@@ -91,30 +94,10 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                             setSelectedCategory(cat);
                             setView('category');
                           }}
-                          className="block px-6 py-2.5 text-[10px] tracking-widest uppercase text-[#111111]/70 hover:text-[#BCA58A] hover:bg-[#E8DDD0]/20 transition-all font-semibold"
-                          style={{ fontFamily: "'DM Sans', sans-serif" }}
+                          className="block px-6 py-2.5 text-[12px] text-[#111111]/70 hover:text-[#BCA58A] hover:bg-[#E8DDD0]/20 transition-all font-medium"
+                          style={{ fontFamily: "'Montserrat', sans-serif" }}
                         >
-                          {cat} Suits
-                        </a>
-                      ))}
-                    </div>
-                  )}
-
-                  {item === 'BOUTIQUES' && (
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-52 bg-[#FAF9F6] border border-[#BCA58A]/15 shadow-2xl py-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 rounded">
-                      {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft', 'Badshah Designer Fabrics'].map((bt) => (
-                        <a
-                          key={bt}
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setSelectedBoutique(bt);
-                            setView('seller-shop');
-                          }}
-                          className="block px-6 py-2.5 text-[10px] tracking-widest uppercase text-[#111111]/70 hover:text-[#BCA58A] hover:bg-[#E8DDD0]/20 transition-all font-semibold"
-                          style={{ fontFamily: "'DM Sans', sans-serif" }}
-                        >
-                          {bt}
+                          {cat}
                         </a>
                       ))}
                     </div>
@@ -124,63 +107,46 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
             </div>
 
             {/* Icons */}
-            <div className="flex items-center gap-6 md:gap-7">
-              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
+            <div className="flex items-center gap-5">
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="text-[#111111]/70 hover:text-[#BCA58A] transition-colors cursor-pointer">
-                <Search size={18} />
+                className="w-11 h-11 rounded-full border border-[#111111]/10 bg-transparent flex items-center justify-center text-[#111111] hover:border-[#111111]/30 hover:bg-[#111111]/5 transition-all cursor-pointer">
+                <Search size={17} strokeWidth={1.5} />
               </motion.button>
 
-              {user ? (
-                <div className="flex items-center gap-3 relative">
-                  <span className="text-[10px] tracking-wider font-bold text-[#BCA58A] uppercase hidden sm:block">
-                    Hi, {user.name.split(' ')[0]}
-                  </span>
-                  <motion.button 
-                    whileHover={{ scale: 1.05 }} 
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleLogout}
-                    title="Log Out"
-                    className="text-[10px] text-rose-500 hover:text-rose-700 tracking-wider font-bold uppercase cursor-pointer"
-                  >
-                    Logout
-                  </motion.button>
-                </div>
-              ) : (
-                <motion.button 
-                  whileHover={{ scale: 1.1 }} 
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setView('login')}
-                  className="text-[#111111]/70 hover:text-[#BCA58A] transition-colors cursor-pointer"
-                  title="Login / Register"
-                >
-                  <User size={18} />
-                </motion.button>
-              )}
-
-              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
-                onClick={() => setWishlistOpen(true)}
-                className="text-[#111111]/70 hover:text-[#BCA58A] transition-colors relative cursor-pointer">
-                <Heart size={18} />
-                {favoriteCount > 0 && (
-                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
-                    className="absolute -top-1.5 -right-1.5 bg-[#BCA58A] text-[#FAF9F6] text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                    {favoriteCount}
-                  </motion.span>
-                )}
-              </motion.button>
-
-              <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
+              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                 onClick={() => setView('cart')}
-                className="text-[#111111]/70 hover:text-[#BCA58A] transition-colors relative cursor-pointer">
-                <ShoppingBag size={18} />
+                className="w-11 h-11 rounded-full border border-[#111111]/10 bg-transparent flex items-center justify-center text-[#111111] hover:border-[#111111]/30 hover:bg-[#111111]/5 transition-all relative cursor-pointer">
+                <ShoppingBag size={17} strokeWidth={1.5} />
                 {cartItemCount > 0 && (
                   <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
-                    className="absolute -top-1.5 -right-1.5 bg-[#111111] text-[#FAF9F6] text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    className="absolute -top-1 -right-1 bg-[#BCA58A] text-[#FAF9F6] text-[9px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
                     {cartItemCount}
                   </motion.span>
                 )}
               </motion.button>
+
+              {user ? (
+                <motion.button 
+                  whileHover={{ scale: 1.05 }} 
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleLogout}
+                  title="Log Out"
+                  className="w-11 h-11 rounded-full overflow-hidden border border-[#111111]/10 hover:border-[#111111]/30 transition-all cursor-pointer ml-1"
+                >
+                  <img src="/hero_fashion_model.png" alt="User Profile" className="w-full h-full object-cover" />
+                </motion.button>
+              ) : (
+                <motion.button 
+                  whileHover={{ scale: 1.05 }} 
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setView('login')}
+                  className="w-11 h-11 rounded-full overflow-hidden border border-[#BCA58A] hover:border-[#BCA58A]/70 transition-all ml-1 cursor-pointer"
+                  title="Login / Register"
+                >
+                  <img src="/hero_fashion_model.png" alt="User Profile" className="w-full h-full object-cover" />
+                </motion.button>
+              )}
 
               {/* Hamburger */}
               <motion.button whileHover={{ scale: 1.1 }}
