@@ -132,9 +132,9 @@ export default function Hero() {
           position: 'relative',
           width: '100%',
           height: '100vh',
-          minHeight: '620px',
-          background: '#FAF9F6', // Matched with Navbar Ivory
-          overflow: 'hidden',
+          minHeight: '700px',
+          background: '#FAF9F6',
+          overflow: 'visible',
           fontFamily: "'Montserrat', sans-serif",
         }}
       >
@@ -238,7 +238,7 @@ export default function Hero() {
         <div style={{
           position: 'absolute',
           left: 'clamp(10px, 4vw, 60px)',
-          bottom: 'clamp(80px, 18vh, 160px)', // Lifted even higher up
+          bottom: 'clamp(120px, 25vh, 220px)',
           pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
@@ -249,13 +249,13 @@ export default function Hero() {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '12px',
+            gap: '14px',
             cursor: 'pointer',
             ...anim(0.5),
           }}>
           {/* Circular Layout Container */}
-          <div style={{ position: 'relative', width: '120px', height: '120px' }}>
-            
+          <div style={{ position: 'relative', width: '160px', height: '160px' }}>
+
             {/* 6 Images in a rotating circle */}
             <div style={{ position: 'absolute', inset: 0, animation: 'orbit 25s linear infinite' }}>
               {[
@@ -267,7 +267,7 @@ export default function Hero() {
                 '/cute_luxury_model.png'
               ].map((imgSrc, i) => {
                 const angle = (i * 60) * (Math.PI / 180);
-                const radius = 45;
+                const radius = 58;
                 const x = Math.cos(angle) * radius;
                 const y = Math.sin(angle) * radius;
                 return (
@@ -276,9 +276,9 @@ export default function Hero() {
                     left: `calc(50% + ${x}px)`,
                     top: `calc(50% + ${y}px)`,
                     transform: 'translate(-50%, -50%)',
-                    width: '32px', height: '32px', borderRadius: '50%',
-                    overflow: 'hidden', border: '2px solid #FAF9F6',
-                    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+                    width: '44px', height: '44px', borderRadius: '50%',
+                    overflow: 'hidden', border: '3px solid #FAF9F6',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
                     zIndex: 5,
                     animation: 'counterOrbit 25s linear infinite',
                   }}>
@@ -293,13 +293,13 @@ export default function Hero() {
               position: 'absolute',
               left: '50%', top: '50%',
               transform: 'translate(-50%, -50%)',
-              width: '42px', height: '42px', borderRadius: '50%',
+              width: '48px', height: '48px', borderRadius: '50%',
               background: '#fff',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               boxShadow: '0 4px 18px rgba(0,0,0,0.14)',
               zIndex: 10,
             }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </div>
@@ -307,8 +307,8 @@ export default function Hero() {
 
           {/* Label */}
           <span className="gh-protected-text" style={{
-            fontSize: '10.5px', fontWeight: 700, // Increased font size
-            letterSpacing: '0.22em', textTransform: 'uppercase', color: '#111',
+            fontSize: '13px', fontWeight: 700,
+            letterSpacing: '0.25em', textTransform: 'uppercase', color: '#111',
           }}>
             EXPLORE
           </span>
@@ -318,24 +318,24 @@ export default function Hero() {
         {/* ════════════ LAYER 4a — Rotating Text ════════════ */}
         <div className="hero-rotating-text" style={{
           position: 'absolute',
-          left: 'clamp(200px, 20vw, 300px)', // Shifted right further to clear the even larger explore widget
-          bottom: 'clamp(80px, 18vh, 160px)', // Match the Explore widget's exact bottom position
+          left: 'clamp(200px, 20vw, 300px)',
+          bottom: 'clamp(120px, 25vh, 220px)',
           pointerEvents: 'auto',
-          width: '140px', height: '140px', // Increased size further
+          width: '180px', height: '180px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           ...anim(0.7),
         }}>
             <svg
               ref={rotateRef}
-              width="140" height="140" viewBox="0 0 140 140" // Increased size
+              width="180" height="180" viewBox="0 0 180 180"
               style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible', transformOrigin: 'center' }}
             >
               <defs>
                 <path id="ghCircle"
-                  d="M 70, 70 m -54, 0 a 54,54 0 1,1 108,0 a 54,54 0 1,1 -108,0" /> {/* Even larger circle path */}
+                  d="M 90, 90 m -70, 0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" />
               </defs>
               <text style={{
-                fontSize: '12px', letterSpacing: '3.6px', // Increased font size to match new path
+                fontSize: '13px', letterSpacing: '4px',
                 fill: '#555', fontFamily: "'Montserrat', sans-serif", fontWeight: 500,
               }}>
                 <textPath href="#ghCircle">
@@ -345,12 +345,12 @@ export default function Hero() {
             </svg>
             {/* Centre star */}
             <div style={{
-              width: '40px', height: '40px', borderRadius: '50%', // Increased star circle size
+              width: '48px', height: '48px', borderRadius: '50%',
               border: '1.5px solid #111', background: '#FAF9F6',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               position: 'relative', zIndex: 2,
             }}>
-              <svg width="18" height="18" viewBox="0 0 11 11" fill="none">
+              <svg width="20" height="20" viewBox="0 0 11 11" fill="none">
                 <path d="M5.5 0L6.5 4.5L11 5.5L6.5 6.5L5.5 11L4.5 6.5L0 5.5L4.5 4.5L5.5 0Z" fill="#111" />
               </svg>
             </div>
@@ -365,7 +365,7 @@ export default function Hero() {
         <div className="hero-stats" style={{
           position: 'absolute',
           right: 'clamp(18px, 4vw, 60px)',
-          bottom: 'clamp(190px, 30vh, 220px)', // Lifted higher to match the new nav arrows height
+          bottom: 'clamp(180px, 28vh, 260px)',
           pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'stretch',
@@ -409,7 +409,7 @@ export default function Hero() {
         <div style={{
           position: 'absolute',
           right: 'clamp(18px, 4vw, 60px)',
-          bottom: 'clamp(80px, 18vh, 160px)', // Matched horizontally with the Explore widget on the left
+          bottom: 'clamp(120px, 22vh, 200px)',
           pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
