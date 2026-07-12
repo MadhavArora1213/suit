@@ -57,12 +57,12 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
         ? 'bg-[#FAF9F6]/95 backdrop-blur-xl border-b border-[#BCA58A]/10 shadow-lg'
         : 'bg-transparent'
       }`}>
-        <div className={`max-w-[1600px] mx-auto px-6 md:px-14 transition-all duration-500 ${scrolled ? 'py-3' : 'py-4'}`}>
+        <div className={`max-w-[1600px] mx-auto px-6 md:px-14 transition-all duration-500 ${scrolled ? 'py-1.5' : 'py-2.5'}`}>
           <div className="flex items-center justify-between">
 
             {/* Logo */}
             <motion.a href="#" onClick={(e) => { e.preventDefault(); setView('home'); }} whileHover={{ scale: 1.02 }} className="flex items-center gap-2 cursor-pointer group">
-              <img src={gurnaazLogo} alt="GURNAAZ" className="h-10 md:h-12 w-auto object-contain" />
+              <img src={gurnaazLogo} alt="GURNAAZ" className="h-8 md:h-10 w-auto object-contain" />
             </motion.a>
 
             <div className="hidden md:flex items-center gap-[4.5rem]">
@@ -134,7 +134,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   title="Log Out"
                   className="w-11 h-11 rounded-full overflow-hidden border border-[#111111]/10 hover:border-[#111111]/30 transition-all cursor-pointer ml-1"
                 >
-                  <img src="/hero_fashion_model.png" alt="User Profile" className="w-full h-full object-cover" />
+                  <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
                 </motion.button>
               ) : (
                 <motion.button 
@@ -144,7 +144,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   className="w-11 h-11 rounded-full overflow-hidden border border-[#BCA58A] hover:border-[#BCA58A]/70 transition-all ml-1 cursor-pointer"
                   title="Login / Register"
                 >
-                  <img src="/hero_fashion_model.png" alt="User Profile" className="w-full h-full object-cover" />
+                  <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
                 </motion.button>
               )}
 
