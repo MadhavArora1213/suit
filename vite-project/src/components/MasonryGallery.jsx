@@ -37,10 +37,10 @@ const ProductCard = ({ item, onClickCard, onQuickAdd }) => (
     
     {/* Content */}
     <div className="absolute inset-0 p-8 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100">
-      <h3 className="text-3xl text-[#FAF9F6] mb-1 font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+      <h3 className="text-3xl md:text-4xl text-[#FAF9F6] mb-1 font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
         {item.name}
       </h3>
-      <p className="text-[#BCA58A] text-[10px] tracking-widest mb-6 font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <p className="text-[#BCA58A] text-[11px] tracking-[0.3em] mb-6 uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
         {item.price}
       </p>
       
@@ -49,9 +49,9 @@ const ProductCard = ({ item, onClickCard, onQuickAdd }) => (
           e.stopPropagation();
           onQuickAdd(item.realId);
         }}
-        className="w-full bg-[#FAF9F6] hover:bg-[#BCA58A] hover:text-[#FAF9F6] text-[#111111] py-4 flex items-center justify-center gap-2 text-[10px] tracking-[0.2em] font-bold transition-colors"
+        className="w-full bg-[#FAF9F6]/10 hover:bg-[#FAF9F6] backdrop-blur-md text-[#FAF9F6] hover:text-[#111111] py-4 flex items-center justify-center gap-2 text-[10px] tracking-[0.3em] font-medium transition-all duration-500 border border-[#FAF9F6]/20 hover:border-[#FAF9F6]"
       >
-        <ShoppingBag size={14} />
+        <ShoppingBag size={14} strokeWidth={1.5} />
         <span>QUICK ADD</span>
       </button>
     </div>
@@ -106,9 +106,9 @@ export default function ParallaxMasonry({ setView, setSelectedProduct, addToCart
       <div className="max-w-[1600px] mx-auto px-6 md:px-12 relative z-10">
         
         {/* Header */}
-        <div className="flex flex-col items-center text-center mb-24 relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none select-none w-full">
-            <span className="text-[180px] md:text-[300px] font-light leading-none tracking-tighter" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+        <div className="flex flex-col items-center text-center mb-32 relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] pointer-events-none select-none w-full overflow-hidden flex justify-center">
+            <span className="text-[180px] md:text-[380px] font-light leading-none tracking-tighter" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Gallery
             </span>
           </div>
@@ -117,17 +117,17 @@ export default function ParallaxMasonry({ setView, setSelectedProduct, addToCart
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="relative z-10"
           >
-            <span className="text-[10px] tracking-[0.4em] text-[#BCA58A] uppercase font-bold mb-6 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <span className="text-[11px] tracking-[0.5em] text-[#BCA58A] uppercase font-medium mb-6 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               The Masterpieces
             </span>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-light text-[#111111] leading-[0.9]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-6xl md:text-8xl lg:text-9xl font-light text-[#111111] leading-[0.9] tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Curated <br/>
-              <em className="italic text-[#BCA58A]">Silhouettes</em>
+              <em className="italic text-[#BCA58A] font-light">Silhouettes</em>
             </h2>
-            <p className="mt-8 text-[#6B6B6B] text-xs tracking-widest font-bold uppercase max-w-sm mx-auto leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <p className="mt-8 text-[#555] text-[10px] tracking-[0.3em] uppercase max-w-md mx-auto leading-loose" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               Explore our vast collection of handcrafted luxury. Every piece is woven with heritage.
             </p>
           </motion.div>

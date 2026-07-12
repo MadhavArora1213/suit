@@ -4,12 +4,16 @@ import './App.css'
 import LoadingScreen from './LoadingScreen'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import MasonryGallery from './components/MasonryGallery'
-import InteractiveLookbook from './components/InteractiveLookbook'
-import ScrollytellingCraft from './components/ScrollytellingCraft'
-import FabricMagnifier from './components/FabricMagnifier'
-import Testimonials from './components/Testimonials'
-import SpecialOffer from './components/SpecialOffer'
+import WhyShopGurnaaz from './components/WhyShopGurnaaz'
+import HowItWorks from './components/HowItWorks'
+import FeaturedStores from './components/FeaturedStores'
+import WhySellersChoose from './components/WhySellersChoose'
+import PremiumPackaging from './components/PremiumPackaging'
+import CustomerReviews from './components/Testimonials'
+import GurnaazPromise from './components/GurnaazPromise'
+import FAQ from './components/FAQ'
+import BecomeSellerCTA from './components/BecomeSellerCTA'
+import Newsletter from './components/Newsletter'
 import Footer from './components/Footer'
 import CartPage from './components/CartPage'
 import CheckoutPage from './components/CheckoutPage'
@@ -112,12 +116,16 @@ function App() {
       {view === 'home' && (
         <>
           <Hero addToCart={addToCart} />
-          <MasonryGallery setView={setView} setSelectedProduct={setSelectedProduct} addToCart={addToCart} />
-          <ScrollytellingCraft />
-          <FabricMagnifier />
-          <InteractiveLookbook addToCart={addToCart} setView={setView} setSelectedProduct={setSelectedProduct} />
-          <Testimonials />
-          <SpecialOffer />
+          <WhyShopGurnaaz />
+          <HowItWorks />
+          <FeaturedStores setView={setView} setSelectedBoutique={setSelectedBoutique} />
+          <WhySellersChoose />
+          <PremiumPackaging />
+          <CustomerReviews />
+          <GurnaazPromise />
+          <FAQ />
+          <BecomeSellerCTA />
+          <Newsletter />
         </>
       )}
 

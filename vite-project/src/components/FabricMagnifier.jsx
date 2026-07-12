@@ -43,26 +43,26 @@ export default function FabricMagnifier() {
   };
 
   return (
-    <section className="relative w-full bg-[#111111] py-32 overflow-hidden" id="fabric-zoom">
+    <section className="relative w-full bg-[#FAF9F6] py-32 overflow-hidden" id="fabric-zoom">
       
       <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex flex-col lg:flex-row gap-16 items-center">
         
         {/* Left Side: Typography */}
         <div className="w-full lg:w-1/3 text-left">
-          <span className="text-[#BCA58A] text-[10px] tracking-[0.4em] uppercase font-bold mb-6 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <span className="text-[#BCA58A] text-[11px] tracking-[0.5em] uppercase font-medium mb-6 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             The Microscopic Detail
           </span>
-          <h2 className="text-5xl md:text-6xl font-light text-[#FAF9F6] mb-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h2 className="text-6xl md:text-8xl lg:text-9xl font-light text-[#111111] leading-[0.9] tracking-tight mb-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Feel the <br/>
-            <em className="italic text-[#BCA58A]">Texture</em>
+            <em className="italic text-[#BCA58A] font-light">Texture</em>
           </h2>
-          <p className="text-[#FAF9F6]/70 text-sm tracking-widest leading-relaxed font-medium mb-10" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-[#555] text-[13px] tracking-wide leading-relaxed font-light mb-12" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Our embroidery is so dense, it requires up to 500 stitches per square inch. Hover over the garment to inspect the microscopic precision of our master artisans.
           </p>
           
           <div className="flex items-center gap-4 text-[#BCA58A]">
-            <Search size={16} className="animate-pulse" />
-            <span className="text-[10px] uppercase tracking-widest font-bold">Interactive Zoom Enabled</span>
+            <Search size={18} className="animate-pulse" strokeWidth={1.5} />
+            <span className="text-[10px] uppercase tracking-[0.3em] font-medium">Interactive Zoom Enabled</span>
           </div>
         </div>
 
@@ -73,17 +73,17 @@ export default function FabricMagnifier() {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onMouseMove={handleMouseMove}
-            className="relative w-full aspect-[4/3] md:aspect-video rounded-2xl overflow-hidden cursor-crosshair bg-[#1E1E1E]"
+            className="relative w-full aspect-[4/3] md:aspect-[16/10] overflow-hidden cursor-crosshair bg-white shadow-xl"
           >
             {/* The Base Image */}
             <img 
               src={fabricImage} 
               alt="Fabric Detail" 
-              className="w-full h-full object-cover object-top opacity-60"
+              className="w-full h-full object-cover object-top opacity-90"
             />
             
-            {/* Dark Cinematic Overlay to make the zoom pop more */}
-            <div className="absolute inset-0 bg-[#111111]/30 pointer-events-none" />
+            {/* Very light cinematic overlay */}
+            <div className="absolute inset-0 bg-white/10 pointer-events-none mix-blend-overlay" />
 
             {/* The Magnifying Glass Lens */}
             {isHovered && (
@@ -92,7 +92,7 @@ export default function FabricMagnifier() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 transition={{ duration: 0.2 }}
-                className="absolute pointer-events-none z-10 rounded-full border-4 border-[#BCA58A]/30 shadow-2xl backdrop-blur-sm"
+                className="absolute pointer-events-none z-10 rounded-full border border-white/40 shadow-2xl backdrop-blur-sm"
                 style={{
                   width: `${lensSize}px`,
                   height: `${lensSize}px`,
@@ -102,13 +102,13 @@ export default function FabricMagnifier() {
                   backgroundSize: '400% 400%', // 4x Zoom
                   backgroundPosition: `${bgPosition.x} ${bgPosition.y}`,
                   backgroundRepeat: 'no-repeat',
-                  boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.1)'
+                  boxShadow: '0 25px 50px -12px rgba(0,0,0,0.2), inset 0 0 20px rgba(255,255,255,0.3)'
                 }}
               >
                 {/* Crosshair inside the lens */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-30">
-                  <div className="w-4 h-[1px] bg-[#FAF9F6]"></div>
-                  <div className="h-4 w-[1px] bg-[#FAF9F6] absolute"></div>
+                  <div className="w-6 h-[1px] bg-[#111111]/40"></div>
+                  <div className="h-6 w-[1px] bg-[#111111]/40 absolute"></div>
                 </div>
               </motion.div>
             )}
@@ -120,8 +120,8 @@ export default function FabricMagnifier() {
                 animate={{ opacity: 1 }}
                 className="absolute inset-0 flex items-center justify-center pointer-events-none"
               >
-                <span className="bg-[#111111]/80 backdrop-blur-md text-[#FAF9F6] border border-[#FAF9F6]/10 px-6 py-3 rounded-full text-[10px] tracking-[0.3em] font-bold uppercase shadow-2xl flex items-center gap-3">
-                  <Search size={14} className="text-[#BCA58A]" />
+                <span className="bg-white/80 backdrop-blur-md text-[#111111] border border-[#111111]/5 px-8 py-4 rounded-full text-[10px] tracking-[0.4em] font-medium uppercase shadow-lg flex items-center gap-4">
+                  <Search size={16} className="text-[#BCA58A]" />
                   Hover to Magnify
                 </span>
               </motion.div>
