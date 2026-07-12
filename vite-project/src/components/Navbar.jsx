@@ -62,7 +62,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
 
             {/* Logo */}
             <motion.a href="#" onClick={(e) => { e.preventDefault(); setView('home'); }} whileHover={{ scale: 1.02 }} className="flex items-center gap-2 cursor-pointer group">
-              <img src={gurnaazLogo} alt="GURNAAZ" className="h-8 md:h-10 w-auto object-contain" />
+              <img src={gurnaazLogo} alt="GURNAAZ" className="h-8 md:h-10 2xl:h-14 w-auto object-contain" />
             </motion.a>
 
             <div className="hidden md:flex items-center gap-[4.5rem]">
@@ -73,7 +73,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                     if (item === 'Home') setView('home');
                     if (item === 'Collection') { setSelectedCategory('Anarkali'); setView('category'); } 
                   }}
-                    className="relative text-[14.5px] tracking-[0.03em] text-[#888888] hover:text-[#111111] transition-all duration-300 font-medium py-2"
+                    className="relative text-[14.5px] 2xl:text-[17px] tracking-[0.03em] text-[#888888] hover:text-[#111111] transition-all duration-300 font-medium py-2"
                     style={{ fontFamily: "'Montserrat', sans-serif" }}
                   >
                     <span className={item === 'Home' ? "text-[#111111] font-semibold" : ""}>{item}</span>
@@ -107,17 +107,17 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
             </div>
 
             {/* Icons */}
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-3 md:gap-5">
               <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="w-11 h-11 rounded-full border border-[#111111]/10 bg-transparent flex items-center justify-center text-[#111111] hover:border-[#111111]/30 hover:bg-[#111111]/5 transition-all cursor-pointer">
-                <Search size={17} strokeWidth={1.5} />
+                className="w-9 h-9 md:w-11 md:h-11 2xl:w-14 2xl:h-14 rounded-full border border-[#111111]/10 bg-transparent flex items-center justify-center text-[#111111] hover:border-[#111111]/30 hover:bg-[#111111]/5 transition-all cursor-pointer">
+                <Search strokeWidth={1.5} className="2xl:w-6 2xl:h-6 md:w-[17px] md:h-[17px] w-4 h-4" />
               </motion.button>
 
               <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                 onClick={() => setView('cart')}
-                className="w-11 h-11 rounded-full border border-[#111111]/10 bg-transparent flex items-center justify-center text-[#111111] hover:border-[#111111]/30 hover:bg-[#111111]/5 transition-all relative cursor-pointer">
-                <ShoppingBag size={17} strokeWidth={1.5} />
+                className="w-9 h-9 md:w-11 md:h-11 2xl:w-14 2xl:h-14 rounded-full border border-[#111111]/10 bg-transparent flex items-center justify-center text-[#111111] hover:border-[#111111]/30 hover:bg-[#111111]/5 transition-all relative cursor-pointer">
+                <ShoppingBag strokeWidth={1.5} className="2xl:w-6 2xl:h-6 md:w-[17px] md:h-[17px] w-4 h-4" />
                 {cartItemCount > 0 && (
                   <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
                     className="absolute -top-1 -right-1 bg-[#BCA58A] text-[#FAF9F6] text-[9px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
@@ -132,7 +132,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   whileTap={{ scale: 0.98 }}
                   onClick={handleLogout}
                   title="Log Out"
-                  className="w-11 h-11 rounded-full overflow-hidden border border-[#111111]/10 hover:border-[#111111]/30 transition-all cursor-pointer ml-1"
+                  className="w-9 h-9 md:w-11 md:h-11 2xl:w-14 2xl:h-14 rounded-full overflow-hidden border border-[#111111]/10 hover:border-[#111111]/30 transition-all cursor-pointer ml-1"
                 >
                   <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
                 </motion.button>
@@ -141,7 +141,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   whileHover={{ scale: 1.05 }} 
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setView('login')}
-                  className="w-11 h-11 rounded-full overflow-hidden border border-[#BCA58A] hover:border-[#BCA58A]/70 transition-all ml-1 cursor-pointer"
+                  className="w-9 h-9 md:w-11 md:h-11 2xl:w-14 2xl:h-14 rounded-full overflow-hidden border border-[#BCA58A] hover:border-[#BCA58A]/70 transition-all ml-1 cursor-pointer"
                   title="Login / Register"
                 >
                   <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />

@@ -65,6 +65,58 @@ export default function Hero() {
   return (
     <>
       <style>{`
+        /* ── responsive hero elements ── */
+        .gurnaaz-watermark { padding-top: 18vh !important; }
+        .fashion-text-container { top: 34% !important; }
+
+        /* Widget backgrounds only needed on mobile where they overlap the dress */
+        .gh-protected-text {
+          background: transparent;
+          backdrop-filter: none;
+          padding: 0;
+          border-radius: 0;
+        }
+        .gh-nav-btn { background: transparent !important; }
+
+        @media (max-width: 768px) {
+          .gurnaaz-watermark { padding-top: 15vh !important; }
+          .fashion-text-container { top: 26% !important; }
+          .hero-rotating-text { display: none !important; }
+          .hero-stats { display: none !important; }
+          
+          .gh-protected-text {
+            background: rgba(250, 249, 246, 0.85) !important;
+            backdrop-filter: blur(4px) !important;
+            padding: 4px 10px !important;
+            border-radius: 20px !important;
+          }
+          .gh-nav-btn { background: #FAF9F6 !important; }
+        }
+
+        /* ── massive screens (4K) scaling for widgets ── */
+        @media (min-width: 1800px) {
+          .gh-scale-large-left { transform: scale(1.5); transform-origin: bottom left; }
+          .gh-scale-large-right { transform: scale(1.5); transform-origin: bottom right; }
+        }
+        @media (max-width: 1799px) {
+          .gh-scale-large-left { transform: scale(0.75); transform-origin: bottom left; }
+          .gh-scale-large-right { transform: scale(0.75); transform-origin: bottom right; }
+          .hero-model-container { width: clamp(480px, 80vw, 700px) !important; bottom: -7vh !important; height: 95vh !important; }
+          .hero-fashion-text { font-size: clamp(90px, 21vw, 340px) !important; }
+          .hero-gurnaaz-text { font-size: clamp(50px, 15vw, 210px) !important; }
+        }
+        @media (max-width: 1000px) {
+          .hero-stats { display: none !important; }
+          .hero-model-container { bottom: -10vh !important; }
+        }
+        @media (max-width: 768px) {
+          .gh-scale-large-left { transform: scale(0.65); transform-origin: bottom left; }
+          .gh-scale-large-right { transform: scale(0.65); transform-origin: bottom right; }
+          .gurnaaz-watermark { padding-top: 12vh !important; }
+          .fashion-text-container { top: 25% !important; }
+          .hero-model-container { bottom: 10vh !important; height: 85vh !important; width: clamp(300px, 120vw, 480px) !important; }
+        }
+
         /* ── nav hover underline ── */
         .gh-nav-btn:hover { background:#111 !important; }
         .gh-nav-btn:hover svg path { stroke:#fff !important; }
@@ -87,17 +139,16 @@ export default function Hero() {
         }}
       >
 
-        {/* ════════════ LAYER 1 — GURNAAZ watermark ════════════ */}
-        <div style={{
+        <div className="gurnaaz-watermark" style={{
           position: 'absolute', inset: 0,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          paddingBottom: '55vh', // Moved further up to leave room for bottom widgets
+          display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+          paddingTop: '22vh', // default fallback, handled by CSS class
           zIndex: 1, pointerEvents: 'none', userSelect: 'none', overflow: 'hidden',
           ...anim(0),
         }}>
-          <span style={{
+          <span className="hero-gurnaaz-text" style={{
             fontFamily: "'Cormorant Garamond', serif", // Perfectly matching the "Fashion" font
-            fontSize: 'clamp(90px, 16vw, 250px)', // sweet spot between too big and too small
+            fontSize: 'clamp(65px, 18vw, 500px)', // default massive max for 4K
             fontWeight: 400,
             color: 'rgba(0,0,0,0.055)',
             letterSpacing: '0.10em', // medium letter spacing
@@ -112,28 +163,24 @@ export default function Hero() {
         </div>
 
         {/* ════════════ LAYER 2 — "Fashion" TEXT ════════════ */}
-        <div style={{
+        <div className="fashion-text-container" style={{
           position: 'absolute',
-          left: 0, right: 0, top: '36%',
+          left: 0, right: 0, top: '38%', // default fallback, handled by CSS class
           transform: ready ? 'translateY(-50%)' : 'translateY(-50%) translateY(20px)',
           opacity: ready ? 1 : 0,
           transition: `opacity 1s 0.2s ${ease}, transform 1s 0.2s ${ease}`,
-          zIndex: 2,
-          pointerEvents: 'none',
-          userSelect: 'none',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          lineHeight: 0.85,
+          textAlign: 'center',
+          zIndex: 2, pointerEvents: 'none', userSelect: 'none',
         }}>
-          <span style={{
+          <span className="hero-fashion-text" style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 'clamp(120px, 25vw, 420px)',
+            fontSize: 'clamp(110px, 25vw, 800px)', // default massive max for 4K
             fontWeight: 300,
             color: '#111',
             letterSpacing: '-0.02em',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center'
           }}>
             Fashi
             <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -143,7 +190,7 @@ export default function Hero() {
                 position: 'absolute',
                 fontSize: '0.22em',
                 color: '#111',
-                top: '68%', // Nudged further down for perfect center
+                top: '59%', // Optically centered in the Cormorant Garamond 'o'
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
               }}>
@@ -155,7 +202,7 @@ export default function Hero() {
         </div>
 
         {/* ════════════ LAYER 3 — Model image (ON TOP of text) ════════════ */}
-        <div style={{
+        <div className="hero-model-container" style={{
           position: 'absolute',
           left: '50%', bottom: '8vh',
           transform: ready
@@ -163,7 +210,7 @@ export default function Hero() {
             : 'translateX(-50%) translateY(40px)',
           opacity: ready ? 1 : 0,
           transition: `opacity 1.2s 0.35s ${ease}, transform 1.2s 0.35s ${ease}`,
-          width: 'clamp(300px, 45vw, 650px)',
+          width: 'clamp(480px, 120vw, 1500px)', // Default huge max width for 4K
           height: '92vh',
           zIndex: 3,
         }}>
@@ -184,15 +231,18 @@ export default function Hero() {
           />
         </div>
 
-        {/* ════════════ LAYER 5 — Bottom Left Group (Explore + Choose Style) ════════════ */}
+        {/* ════════════ LAYER 4 & 4a — Bottom Left Widgets Wrapper ════════════ */}
+        <div className="gh-scale-large-left" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
+          
+        {/* ════════════ LAYER 4 — Bottom left "Explore" widget ════════════ */}
         <div style={{
           position: 'absolute',
-          left: 'clamp(18px, 4vw, 60px)',
-          bottom: 'clamp(120px, 15vh, 160px)', // moved up significantly to fit on first screen
-          zIndex: 10,
+          left: 'clamp(10px, 4vw, 60px)',
+          bottom: 'clamp(80px, 18vh, 160px)', // Lifted even higher up
+          pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
-          gap: 'clamp(30px, 4vw, 50px)',
+          gap: 'clamp(10px, 4vw, 50px)',
         }}>
           {/* Explore widget */}
           <div style={{
@@ -256,31 +306,36 @@ export default function Hero() {
           </div>
 
           {/* Label */}
-          <span style={{
-            fontSize: '8.5px', fontWeight: 600,
+          <span className="gh-protected-text" style={{
+            fontSize: '10.5px', fontWeight: 700, // Increased font size
             letterSpacing: '0.22em', textTransform: 'uppercase', color: '#111',
           }}>
             EXPLORE
           </span>
           </div>
+        </div>
 
-          {/* Rotating circle text */}
-          <div style={{
-            width: '88px', height: '88px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            ...anim(0.7),
-          }}>
+        {/* ════════════ LAYER 4a — Rotating Text ════════════ */}
+        <div className="hero-rotating-text" style={{
+          position: 'absolute',
+          left: 'clamp(200px, 20vw, 300px)', // Shifted right further to clear the even larger explore widget
+          bottom: 'clamp(80px, 18vh, 160px)', // Match the Explore widget's exact bottom position
+          pointerEvents: 'auto',
+          width: '140px', height: '140px', // Increased size further
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          ...anim(0.7),
+        }}>
             <svg
               ref={rotateRef}
-              width="88" height="88" viewBox="0 0 88 88"
-              style={{ position: 'absolute', transformOrigin: 'center' }}
+              width="140" height="140" viewBox="0 0 140 140" // Increased size
+              style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible', transformOrigin: 'center' }}
             >
               <defs>
                 <path id="ghCircle"
-                  d="M44,44 m-31,0 a31,31 0 1,1 62,0 a31,31 0 1,1 -62,0" />
+                  d="M 70, 70 m -54, 0 a 54,54 0 1,1 108,0 a 54,54 0 1,1 -108,0" /> {/* Even larger circle path */}
               </defs>
               <text style={{
-                fontSize: '8px', letterSpacing: '2.4px',
+                fontSize: '12px', letterSpacing: '3.6px', // Increased font size to match new path
                 fill: '#555', fontFamily: "'Montserrat', sans-serif", fontWeight: 500,
               }}>
                 <textPath href="#ghCircle">
@@ -290,24 +345,28 @@ export default function Hero() {
             </svg>
             {/* Centre star */}
             <div style={{
-              width: '28px', height: '28px', borderRadius: '50%',
+              width: '40px', height: '40px', borderRadius: '50%', // Increased star circle size
               border: '1.5px solid #111', background: '#FAF9F6',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              zIndex: 2,
+              position: 'relative', zIndex: 2,
             }}>
-              <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+              <svg width="18" height="18" viewBox="0 0 11 11" fill="none">
                 <path d="M5.5 0L6.5 4.5L11 5.5L6.5 6.5L5.5 11L4.5 6.5L0 5.5L4.5 4.5L5.5 0Z" fill="#111" />
               </svg>
             </div>
-          </div>
         </div>
 
+        </div> {/* End Left Wrapper */}
+
+        {/* ════════════ LAYER 5 & 6 — Bottom Right Widgets Wrapper ════════════ */}
+        <div className="gh-scale-large-right" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 10 }}>
+
         {/* ════════════ LAYER 5 — Stats (bottom right, above arrows) ════════════ */}
-        <div style={{
+        <div className="hero-stats" style={{
           position: 'absolute',
           right: 'clamp(18px, 4vw, 60px)',
-          bottom: 'clamp(140px, 20vh, 180px)',
-          zIndex: 10,
+          bottom: 'clamp(190px, 30vh, 220px)', // Lifted higher to match the new nav arrows height
+          pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'stretch',
           ...anim(0.6),
@@ -320,16 +379,18 @@ export default function Hero() {
             <div key={i} style={{ display: 'flex', alignItems: 'stretch' }}>
               <div style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center',
-                paddingLeft: i === 0 ? 0 : '20px', paddingRight: '20px',
+                paddingLeft: i === 0 ? 0 : '14px', paddingRight: '14px',
               }}>
                 <span style={{
                   fontFamily: "'Cinzel', serif",
-                  fontSize: 'clamp(22px, 2.8vw, 36px)',
+                  fontSize: 'clamp(28px, 3.5vw, 48px)', // Increased stat value size
                   fontWeight: 600, color: '#111', lineHeight: 1,
+                  textShadow: '0 0 15px rgba(250, 249, 246, 1), 0 0 30px rgba(250, 249, 246, 1)', // Protective glow
                 }}>{s.val}</span>
                 <span style={{
-                  fontSize: '8px', color: '#888',
-                  letterSpacing: '0.06em', marginTop: '4px', whiteSpace: 'nowrap',
+                  fontSize: '10.5px', color: '#888', // Increased stat label size
+                  letterSpacing: '0.06em', marginTop: '6px', whiteSpace: 'nowrap',
+                  textShadow: '0 0 10px rgba(250, 249, 246, 1), 0 0 20px rgba(250, 249, 246, 1)', // Protective glow
                 }}>{s.label}</span>
               </div>
               {i < 2 && (
@@ -344,36 +405,39 @@ export default function Hero() {
 
 
 
-        {/* ════════════ LAYER 5 — Nav arrows + counter (bottom right) ════════════ */}
+        {/* ════════════ LAYER 6 — Nav arrows & Counter (bottom right) ════════════ */}
         <div style={{
           position: 'absolute',
           right: 'clamp(18px, 4vw, 60px)',
-          bottom: 'clamp(60px, 8vh, 100px)', // moved up to stay proportional
-          zIndex: 10,
-          display: 'flex', alignItems: 'center', gap: '14px',
-          ...anim(0.7),
+          bottom: 'clamp(80px, 18vh, 160px)', // Matched horizontally with the Explore widget on the left
+          pointerEvents: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '24px',
+          ...anim(0.8),
         }}>
           <button
             className="gh-nav-btn"
             onClick={prev}
             style={{
-              width: '36px', height: '36px', borderRadius: '50%',
-              border: '1.5px solid rgba(0,0,0,0.22)', background: 'transparent',
+              width: '46px', height: '46px', borderRadius: '50%', // Increased button size
+              border: '1.5px solid rgba(0,0,0,0.22)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', transition: 'background 0.25s',
               color: '#111',
             }}
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
               <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.5"
                 strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
 
-          <span style={{
+          <span className="gh-protected-text" style={{
             fontFamily: "'Cinzel', serif",
-            fontSize: '15px', fontWeight: 600, color: '#111',
-            minWidth: '20px', textAlign: 'center', letterSpacing: '0.05em',
+            fontSize: '18px', fontWeight: 700, color: '#111', // Increased counter size
+            minWidth: '32px', textAlign: 'center', letterSpacing: '0.05em',
+            display: 'inline-block'
           }}>
             {String(slide + 1).padStart(2, '0')}
           </span>
@@ -382,19 +446,21 @@ export default function Hero() {
             className="gh-nav-btn"
             onClick={next}
             style={{
-              width: '36px', height: '36px', borderRadius: '50%',
-              border: '1.5px solid rgba(0,0,0,0.22)', background: 'transparent',
+              width: '46px', height: '46px', borderRadius: '50%', // Increased button size
+              border: '1.5px solid rgba(0,0,0,0.22)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', transition: 'background 0.25s',
               color: '#111',
             }}
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
               <path d="M5 2L10 7L5 12" stroke="currentColor" strokeWidth="1.5"
                 strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>
+
+        </div> {/* End Right Wrapper */}
 
       </section>
     </>
