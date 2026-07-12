@@ -35,6 +35,14 @@ export default function Hero() {
     return () => cancelAnimationFrame(t);
   }, []);
 
+  /* ── auto slider ── */
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSlide(s => (s + 1) % SLIDES.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
+
   /* ── rotating circle text ── */
   useEffect(() => {
     const el = rotateRef.current;
@@ -83,18 +91,21 @@ export default function Hero() {
         <div style={{
           position: 'absolute', inset: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          paddingBottom: '45vh', // Kept high up
+          paddingBottom: '55vh', // Moved further up to leave room for bottom widgets
           zIndex: 1, pointerEvents: 'none', userSelect: 'none', overflow: 'hidden',
           ...anim(0),
         }}>
           <span style={{
             fontFamily: "'Cormorant Garamond', serif", // Perfectly matching the "Fashion" font
-            fontSize: 'clamp(100px, 18vw, 280px)',
+            fontSize: 'clamp(90px, 16vw, 250px)', // sweet spot between too big and too small
             fontWeight: 400,
             color: 'rgba(0,0,0,0.055)',
-            letterSpacing: '0.12em',
+            letterSpacing: '0.10em', // medium letter spacing
             whiteSpace: 'nowrap',
             lineHeight: 1,
+            display: 'inline-block', // needed for transform to apply
+            transform: 'scale(1, 1.8)', // stretch the font height vertically
+            transformOrigin: 'center center',
           }}>
             GURNAAZ
           </span>
@@ -103,7 +114,7 @@ export default function Hero() {
         {/* ════════════ LAYER 2 — "Fashion" TEXT ════════════ */}
         <div style={{
           position: 'absolute',
-          left: 0, right: 0, top: '40%',
+          left: 0, right: 0, top: '36%',
           transform: ready ? 'translateY(-50%)' : 'translateY(-50%) translateY(20px)',
           opacity: ready ? 1 : 0,
           transition: `opacity 1s 0.2s ${ease}, transform 1s 0.2s ${ease}`,
@@ -146,7 +157,7 @@ export default function Hero() {
         {/* ════════════ LAYER 3 — Model image (ON TOP of text) ════════════ */}
         <div style={{
           position: 'absolute',
-          left: '50%', bottom: 0,
+          left: '50%', bottom: '8vh',
           transform: ready
             ? 'translateX(-50%)'
             : 'translateX(-50%) translateY(40px)',
@@ -177,7 +188,7 @@ export default function Hero() {
         <div style={{
           position: 'absolute',
           left: 'clamp(18px, 4vw, 60px)',
-          bottom: 'clamp(40px, 8vh, 80px)', // moved up slightly to fit on screen safely
+          bottom: 'clamp(120px, 15vh, 160px)', // moved up significantly to fit on first screen
           zIndex: 10,
           display: 'flex',
           alignItems: 'center',
@@ -337,7 +348,7 @@ export default function Hero() {
         <div style={{
           position: 'absolute',
           right: 'clamp(18px, 4vw, 60px)',
-          bottom: 'clamp(18px, 3.5vh, 40px)',
+          bottom: 'clamp(60px, 8vh, 100px)', // moved up to stay proportional
           zIndex: 10,
           display: 'flex', alignItems: 'center', gap: '14px',
           ...anim(0.7),
