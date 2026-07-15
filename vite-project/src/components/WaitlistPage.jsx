@@ -57,6 +57,17 @@ export default function WaitlistPage() {
   const [otpResendTimer, setOtpResendTimer] = useState(0);
   const otpInputRefs = useRef([]);
 
+  // Dynamic page title
+  useEffect(() => {
+    const titles = {
+      1: 'GURNAAZ — Something Beautiful Is Coming',
+      2: 'GURNAAZ — Reserve Your Spot',
+      3: 'GURNAAZ — Verify Your Email',
+      4: 'GURNAAZ — Welcome to the Family'
+    };
+    document.title = titles[step] || titles[1];
+  }, [step]);
+
   useEffect(() => {
     const unsubscribe = onWaitlistUpdate((count) => {
       const newSeats = Math.max(0, TOTAL_SEATS - count);
