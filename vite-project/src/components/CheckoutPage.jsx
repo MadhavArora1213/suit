@@ -268,7 +268,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
             </a>
 
             <button 
-              onClick={() => setView('home')}
+              onClick={() => window.location.href = '/sell'}
               className="flex-1 border border-[#BCA58A]/35 hover:border-[#111111] text-[#111111] py-4 rounded text-xs font-bold tracking-widest uppercase transition-all"
             >
               Back to Storefront
@@ -346,7 +346,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
           <div className="py-20 text-center border border-[#BCA58A]/15 bg-white p-10 rounded">
             <ShoppingBag size={32} className="mx-auto text-[#BCA58A] mb-4" />
             <h3 className="text-xl font-light mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Your bag is empty</h3>
-            <button onClick={() => setView('home')} className="mt-4 bg-[#BCA58A] text-white px-8 py-3 text-xs font-bold tracking-widest uppercase hover:bg-[#9A8268] transition-colors">
+            <button onClick={() => window.location.href = '/sell'} className="mt-4 bg-[#BCA58A] text-white px-8 py-3 text-xs font-bold tracking-widest uppercase hover:bg-[#9A8268] transition-colors">
               Continue Shopping
             </button>
           </div>

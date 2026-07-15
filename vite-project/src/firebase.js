@@ -1,5 +1,5 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
-import { getFirestore, doc, setDoc, getDocs, collection, query, where, deleteDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDocs, collection, query, where, deleteDoc, onSnapshot } from 'firebase/firestore';
 
 // Helper to get Firebase configuration dynamically from localStorage
 function getFirebaseConfig() {
@@ -16,15 +16,15 @@ function getFirebaseConfig() {
     console.error("Failed to parse dynamic Firebase config:", e);
   }
   
-  // Default fallback config
+  // Default fallback config from environment variables
   return {
-    apiKey: "AIzaSyClFiWI7RdM1kdDN8nk-UoBjXYRftfbRKQ",
-    authDomain: "gurnaaz-526cd.firebaseapp.com",
-    projectId: "gurnaaz-526cd",
-    storageBucket: "gurnaaz-526cd.firebasestorage.app",
-    messagingSenderId: "600400347474",
-    appId: "1:600400347474:web:65316d5774cc55a0c0ba8b",
-    measurementId: "G-1BNQCSYYRE"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+    appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ""
   };
 }
 
@@ -353,6 +353,74 @@ export async function fetchProductsFromFirestore() {
   } catch (error) {
     console.error("Firestore fetch products error: ", error);
     return [];
+  }
+}
+
+/**
+ * Saves a waitlist email to the 'waitlist' collection in Firestore
+ * Returns true if saved, false if already exists or error
+ */
+export async function saveWaitlistEmail(email, name) {
+  if (!isFirebaseConfigured() || !db) {
+    console.warn("Firebase not configured. Waitlist email not saved.");
+    return false;
+  }
+  if (!email || !email.trim()) return false;
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const docId = normalizedEmail.replace(/[.#$\[\]]/g, '_');
+
+  try {
+    const existing = await getDocs(query(collection(db, 'waitlist'), where('email', '==', normalizedEmail)));
+    if (!existing.empty) {
+      console.log("Email already in waitlist:", normalizedEmail);
+      return false;
+    }
+
+    const waitlistRef = doc(db, 'waitlist', docId);
+    await setDoc(waitlistRef, {
+      email: normalizedEmail,
+      name: (name || '').trim(),
+      joinedAt: new Date().toISOString(),
+      status: 'active'
+    });
+    console.log("Waitlist email saved successfully:", normalizedEmail);
+    return true;
+  } catch (error) {
+    console.error("Firestore waitlist write error:", error);
+    return false;
+  }
+}
+
+/**
+ * Returns the total number of waitlist signups
+ */
+export async function getWaitlistCount() {
+  if (!isFirebaseConfigured() || !db) return 0;
+  try {
+    const snapshot = await getDocs(collection(db, 'waitlist'));
+    return snapshot.size;
+  } catch (error) {
+    console.error("Firestore waitlist count error:", error);
+    return 0;
+  }
+}
+
+/**
+ * Listens to real-time changes on the waitlist collection
+ * Calls onUpdate(count) whenever the collection changes
+ * Returns unsubscribe function
+ */
+export function onWaitlistUpdate(onUpdate) {
+  if (!isFirebaseConfigured() || !db) return () => {};
+  try {
+    const waitlistRef = collection(db, 'waitlist');
+    return onSnapshot(waitlistRef, (snapshot) => {
+      onUpdate(snapshot.size);
+    });
+  } catch (error) {
+    console.error("Firestore waitlist listener error:", error);
+    return () => {};
   }
 }
 

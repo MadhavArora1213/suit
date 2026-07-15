@@ -136,7 +136,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
         
         <div className="relative z-20 text-center px-6 max-w-3xl space-y-4">
           <button 
-            onClick={() => setView('home')}
+            onClick={() => window.location.href = '/sell'}
             className="inline-flex items-center gap-2 text-xs tracking-widest text-[#BCA58A] hover:text-[#FAF9F6] uppercase font-bold transition-colors cursor-pointer mb-2"
           >
             <ArrowLeft size={13} />

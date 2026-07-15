@@ -61,17 +61,17 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
           <div className="flex items-center justify-between">
 
             {/* Logo */}
-            <motion.a href="#" onClick={(e) => { e.preventDefault(); setView('home'); }} whileHover={{ scale: 1.02 }} className="flex items-center gap-2 cursor-pointer group">
+            <motion.a href="/sell" onClick={(e) => { e.preventDefault(); window.location.href = '/sell'; }} whileHover={{ scale: 1.02 }} className="flex items-center gap-2 cursor-pointer group">
               <img src={gurnaazLogo} alt="GURNAAZ" className="h-8 md:h-10 2xl:h-14 w-auto object-contain" />
             </motion.a>
 
             <div className="hidden md:flex items-center gap-[4.5rem]">
               {['Home', 'About', 'Collection', 'Contact'].map((item, i) => (
                 <div key={i} className="relative group py-2">
-                  <a href="#" onClick={(e) => { 
-                    e.preventDefault(); 
-                    if (item === 'Home') setView('home');
-                    if (item === 'Collection') { setSelectedCategory('Anarkali'); setView('category'); } 
+                  <a href="#" onClick={(e) => {
+                    e.preventDefault();
+                    if (item === 'Home') window.location.href = '/sell';
+                    if (item === 'Collection') { setSelectedCategory('Anarkali'); setView('category'); }
                   }}
                     className="relative text-[14.5px] 2xl:text-[17px] tracking-[0.03em] text-[#888888] hover:text-[#111111] transition-all duration-300 font-medium py-2"
                     style={{ fontFamily: "'Montserrat', sans-serif" }}
@@ -238,7 +238,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   <button onClick={() => setIsOpen(false)} className="text-[#6B6B6B] hover:text-[#111111] cursor-pointer"><X size={20} /></button>
                 </div>
                 <div className="flex flex-col gap-5 text-left">
-                  <a href="#" onClick={(e) => { e.preventDefault(); setView('home'); setIsOpen(false); }}
+                  <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = '/sell'; setIsOpen(false); }}
                     className="text-[11px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors py-1 border-b border-[#BCA58A]/10 uppercase font-semibold">
                     HOME
                   </a>
@@ -280,7 +280,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                     <a key={i} href="#" onClick={(e) => {
                       e.preventDefault();
                       if (item === 'COLLECTIONS') { setSelectedCategory('Anarkali'); setView('category'); }
-                      else { setView('home'); }
+                      else { window.location.href = '/sell'; }
                       setIsOpen(false);
                     }}
                       className="text-[11px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors py-1 border-b border-[#BCA58A]/10 uppercase font-semibold">

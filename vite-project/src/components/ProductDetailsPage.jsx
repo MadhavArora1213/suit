@@ -172,7 +172,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
 
   if (!product) {
     return <div className="py-32 text-center"><p className="text-sm text-[#6B6B6B]">Loading...</p>
-      <button onClick={() => setView('home')} className="mt-4 text-xs underline font-bold cursor-pointer">Go Home</button></div>;
+      <button onClick={() => window.location.href = '/sell'} className="mt-4 text-xs underline font-bold cursor-pointer">Go Home</button></div>;
   }
 
   const allImages = [product.image, ...(product.additionalImages || [])].filter(Boolean);
@@ -238,7 +238,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
           <button onClick={() => {
             if (product.boutique) { setSelectedBoutique(product.boutique); setView('seller-shop'); }
             else if (product.type) { setSelectedCategory(product.type); setView('category'); }
-            else setView('home');
+            else window.location.href = '/sell';
           }} className="inline-flex items-center gap-2 text-[10px] tracking-[0.2em] text-[#BCA58A] hover:text-[#111111] uppercase font-semibold transition-colors cursor-pointer">
             <ArrowLeft size={12} /> Back to {product.boutique || 'Collection'}
           </button>

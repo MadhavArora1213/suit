@@ -289,7 +289,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-[#111111]/40 via-[#111111]/10 to-[#FAF9F6]" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#111111]/30 to-transparent" />
-        <button onClick={() => setView('home')}
+        <button onClick={() => window.location.href = '/sell'}
           className="absolute top-8 left-6 md:left-12 z-30 flex items-center gap-2 bg-[#FAF9F6]/90 hover:bg-[#FAF9F6] text-[#111111] text-[9px] uppercase tracking-[0.2em] px-5 py-2.5 backdrop-blur-md shadow-lg transition-all duration-300 cursor-pointer border border-[#BCA58A]/15">
           <ArrowLeft size={12} /> Back to Home
         </button>

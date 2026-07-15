@@ -18,7 +18,7 @@ export default function CartPage({ cart, updateCartQty, removeFromCart, setView 
     >
       {/* Back to Home Link */}
       <button 
-        onClick={() => setView('home')} 
+        onClick={() => window.location.href = '/sell'} 
         className="flex items-center gap-2 text-xs tracking-widest text-[#BCA58A] uppercase font-bold mb-8 hover:text-[#111111] transition-colors cursor-pointer"
       >
         <ArrowLeft size={14} />
@@ -39,7 +39,7 @@ export default function CartPage({ cart, updateCartQty, removeFromCart, setView 
             Add premium ethnic wear from the Gurnaaz collections to begin your style journey.
           </p>
           <button 
-            onClick={() => setView('home')}
+            onClick={() => window.location.href = '/sell'}
             className="bg-[#BCA58A] hover:bg-[#9A8268] text-[#FAF9F6] px-8 py-4 text-xs font-bold tracking-widest uppercase transition-colors shadow-lg cursor-pointer"
           >
             EXPLORE COLLECTIONS

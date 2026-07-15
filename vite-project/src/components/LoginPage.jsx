@@ -137,7 +137,7 @@ export default function LoginPage({ setView, onLoginSuccess }) {
       <div className="bg-white border border-[#BCA58A]/20 p-8 md:p-10 shadow-2xl relative rounded">
         {/* Back Button */}
         <button 
-          onClick={() => setView('home')} 
+          onClick={() => window.location.href = '/sell'} 
           className="absolute top-6 left-6 text-[#6B6B6B] hover:text-[#111111] transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider"
         >
           <ArrowLeft size={16} />

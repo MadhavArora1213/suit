@@ -21,6 +21,7 @@ import LoginPage from './components/LoginPage'
 import CategoryPage from './components/CategoryPage'
 import ProductDetailsPage from './components/ProductDetailsPage'
 import SellerShopPage from './components/SellerShopPage'
+import WaitlistPage from './components/WaitlistPage'
 
 function App() {
   const [loadingComplete, setLoadingComplete] = useState(false)
@@ -32,6 +33,8 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedBoutique, setSelectedBoutique] = useState(null)
+
+  const currentPath = window.location.pathname
 
   useEffect(() => {
     syncProducts(() => {
@@ -46,12 +49,12 @@ function App() {
 
   const handleLoginSuccess = (userProfile) => {
     setUser(userProfile)
-    setView('home')
+    window.location.href = '/sell'
   }
 
   const handleLogout = () => {
     setUser(null)
-    setView('home')
+    window.location.href = '/sell'
     alert('Logged out successfully.')
   }
 
@@ -95,6 +98,8 @@ function App() {
   const clearCart = () => setCart([])
 
   if (!loadingComplete) return <LoadingScreen onComplete={handleLoadComplete} />
+
+  if (currentPath === '/') return <WaitlistPage />
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]" style={{ opacity: contentVisible ? 1 : 0, transition: 'opacity 0.8s ease' }}>

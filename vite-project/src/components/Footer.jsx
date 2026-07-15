@@ -24,7 +24,7 @@ export default function Footer({ setView }) {
       <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex flex-col items-center">
         
         {/* Brand */}
-        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="mb-12 cursor-pointer" onClick={() => setView && setView('home')}>
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="mb-12 cursor-pointer" onClick={() => window.location.href = '/sell'}>
           <img src={gurnaazLogo} alt="GURNAAZ" className="h-16 w-auto object-contain mx-auto" />
         </motion.div>
 
