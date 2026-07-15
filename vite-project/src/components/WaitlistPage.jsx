@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { saveWaitlistEmail, onWaitlistUpdate } from '../firebase';
+import { saveWaitlistEmail, isEmailInWaitlist, onWaitlistUpdate } from '../firebase';
 import { sendBrevoOtp, sendWaitlistWelcomeEmail, generateOtp } from '../brevo';
 
 const TOTAL_SEATS = 1000;
@@ -104,26 +104,65 @@ export default function WaitlistPage() {
     return () => clearInterval(timer);
   }, [otpResendTimer]);
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.toLowerCase());
+  };
+
   const handleNameSubmit = (e) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    const trimmed = name.trim();
+    if (!trimmed) {
+      setError("Please enter your name.");
+      return;
+    }
+    if (trimmed.length < 2) {
+      setError("Name must be at least 2 characters.");
+      return;
+    }
+    if (trimmed.length > 50) {
+      setError("Name is too long.");
+      return;
+    }
+    setError('');
     setStep(2);
   };
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    if (!email.trim() || otpSending) return;
+    if (otpSending) return;
+
+    const trimmedEmail = email.trim().toLowerCase();
+
+    // Email format validation
+    if (!trimmedEmail) {
+      setError("Please enter your email address.");
+      return;
+    }
+    if (!validateEmail(trimmedEmail)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
     setOtpSending(true);
     setError('');
+
     try {
+      // Check if email already exists in Firebase BEFORE sending OTP
+      const exists = await isEmailInWaitlist(trimmedEmail);
+      if (exists) {
+        setError("This email is already on the waitlist! We'll be in touch soon.");
+        setOtpSending(false);
+        return;
+      }
+
       // Generate and send OTP
       const otp = generateOtp();
       setGeneratedOtp(otp);
-      const sent = await sendBrevoOtp(email.trim().toLowerCase(), otp);
+      const sent = await sendBrevoOtp(trimmedEmail, otp, name.trim());
       if (sent) {
         setStep(3);
         setOtpResendTimer(60);
-        // Auto-focus first OTP input
         setTimeout(() => otpInputRefs.current[0]?.focus(), 300);
       } else {
         setError("Failed to send verification code. Please try again.");
@@ -185,13 +224,16 @@ export default function WaitlistPage() {
 
     // OTP correct — save to Firebase and send welcome email
     try {
-      const saved = await saveWaitlistEmail(email.trim().toLowerCase(), name.trim());
-      if (saved) {
+      const result = await saveWaitlistEmail(email.trim().toLowerCase(), name.trim());
+      if (result.success) {
         console.log("Email verified and saved to Firebase!");
         sendWaitlistWelcomeEmail(email.trim().toLowerCase(), name.trim()).catch(() => {});
         setStep(4);
+      } else if (result.reason === 'duplicate') {
+        setError("This email is already on the waitlist! We'll be in touch soon.");
+        setTimeout(() => setError(''), 4000);
       } else {
-        setError("You're already on the list! We'll be in touch soon.");
+        setError("Something went wrong. Please try again.");
         setTimeout(() => setError(''), 3000);
       }
     } catch (err) {
@@ -399,7 +441,7 @@ export default function WaitlistPage() {
                   <input
                     type="text"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => { setName(e.target.value); setError(''); }}
                     placeholder="Your first name"
                     required
                     autoFocus
@@ -416,6 +458,20 @@ export default function WaitlistPage() {
                     Continue
                   </motion.button>
                 </motion.form>
+
+                {/* Error */}
+                <AnimatePresence>
+                  {error && (
+                    <motion.p
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="mt-3 sm:mt-4 text-[11px] sm:text-xs text-red-400/80 px-4"
+                    >
+                      {error}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
 
                 <motion.p
                   initial={{ opacity: 0 }}

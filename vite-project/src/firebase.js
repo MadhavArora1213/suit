@@ -357,24 +357,42 @@ export async function fetchProductsFromFirestore() {
 }
 
 /**
+ * Checks if an email already exists in the waitlist
+ * Returns true if exists, false if not
+ */
+export async function isEmailInWaitlist(email) {
+  if (!isFirebaseConfigured() || !db) return false;
+  if (!email || !email.trim()) return false;
+
+  const normalizedEmail = email.trim().toLowerCase();
+  try {
+    const existing = await getDocs(query(collection(db, 'waitlist'), where('email', '==', normalizedEmail)));
+    return !existing.empty;
+  } catch (error) {
+    console.error("Firestore check email error:", error);
+    return false;
+  }
+}
+
+/**
  * Saves a waitlist email to the 'waitlist' collection in Firestore
- * Returns true if saved, false if already exists or error
+ * Returns { success: true } or { success: false, reason: 'duplicate' | 'error' }
  */
 export async function saveWaitlistEmail(email, name) {
   if (!isFirebaseConfigured() || !db) {
     console.warn("Firebase not configured. Waitlist email not saved.");
-    return false;
+    return { success: false, reason: 'error' };
   }
-  if (!email || !email.trim()) return false;
+  if (!email || !email.trim()) return { success: false, reason: 'error' };
 
   const normalizedEmail = email.trim().toLowerCase();
   const docId = normalizedEmail.replace(/[.#$\[\]]/g, '_');
 
   try {
+    // Double-check uniqueness before saving
     const existing = await getDocs(query(collection(db, 'waitlist'), where('email', '==', normalizedEmail)));
     if (!existing.empty) {
-      console.log("Email already in waitlist:", normalizedEmail);
-      return false;
+      return { success: false, reason: 'duplicate' };
     }
 
     const waitlistRef = doc(db, 'waitlist', docId);
@@ -385,10 +403,10 @@ export async function saveWaitlistEmail(email, name) {
       status: 'active'
     });
     console.log("Waitlist email saved successfully:", normalizedEmail);
-    return true;
+    return { success: true };
   } catch (error) {
     console.error("Firestore waitlist write error:", error);
-    return false;
+    return { success: false, reason: 'error' };
   }
 }
 
