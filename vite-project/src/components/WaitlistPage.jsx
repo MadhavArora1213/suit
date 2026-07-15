@@ -226,7 +226,6 @@ export default function WaitlistPage() {
     try {
       const result = await saveWaitlistEmail(email.trim().toLowerCase(), name.trim());
       if (result.success) {
-        console.log("Email verified and saved to Firebase!");
         sendWaitlistWelcomeEmail(email.trim().toLowerCase(), name.trim()).catch(() => {});
         setStep(4);
       } else if (result.reason === 'duplicate') {

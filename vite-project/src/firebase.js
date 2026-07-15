@@ -40,7 +40,6 @@ function initFirebase() {
       app = getApp();
     }
     db = getFirestore(app);
-    console.log("Firebase initialized successfully with configuration:", firebaseConfig.projectId);
   } catch (err) {
     console.error("Firebase initialization failed:", err);
     db = null;
@@ -53,7 +52,6 @@ initFirebase();
 // Listen to runtime config changes (from Settings page saves)
 if (typeof window !== 'undefined') {
   window.addEventListener('gurnaaz-firebase-updated', () => {
-    console.log("Firebase config updated. Re-initializing Firebase...");
     initFirebase();
   });
 }
@@ -69,7 +67,6 @@ export function isFirebaseConfigured() {
  */
 export async function saveUserData(userProfile) {
   if (!isFirebaseConfigured() || !db) {
-    console.warn("Firebase not configured. User profile saved locally.");
     return;
   }
   if (!userProfile || (!userProfile.email && !userProfile.phone)) return;
@@ -84,7 +81,6 @@ export async function saveUserData(userProfile) {
       phone: userProfile.phone || '',
       updatedAt: new Date().toISOString()
     }, { merge: true });
-    console.log("User data successfully stored in Firebase Firestore!");
   } catch (error) {
     console.error("Firebase Firestore write error: ", error);
   }
@@ -95,7 +91,6 @@ export async function saveUserData(userProfile) {
  */
 export async function saveReviewToFirestore(productId, review) {
   if (!isFirebaseConfigured() || !db) {
-    console.warn("Firebase is not configured. Review saved locally only.");
     return null;
   }
   try {
@@ -113,7 +108,6 @@ export async function saveReviewToFirestore(productId, review) {
     };
     
     await setDoc(reviewRef, reviewData);
-    console.log(`Review ${reviewId} successfully stored in Firestore!`);
     return reviewData;
   } catch (error) {
     console.error("Firestore write review error: ", error);
@@ -164,7 +158,6 @@ export async function saveProductRatingToFirestore(productId, avgRating, totalRe
       reviewsCount: Number(totalReviewsCount),
       updatedAt: new Date().toISOString()
     }, { merge: true });
-    console.log(`Rating for product ${productId} updated in Firestore to ${avgRating}`);
   } catch (error) {
     console.error("Firestore save product rating error: ", error);
   }
@@ -196,7 +189,6 @@ export async function fetchProductOverridesFromFirestore() {
  */
 export async function saveOrderToFirestore(orderId, orderDetails) {
   if (!isFirebaseConfigured() || !db) {
-    console.warn("Firebase not configured. Order saved locally.");
     return null;
   }
   try {
@@ -230,7 +222,6 @@ export async function saveOrderToFirestore(orderId, orderDetails) {
     };
     
     await setDoc(orderRef, data);
-    console.log(`Order ${orderId} successfully stored in Firestore!`);
     return data;
   } catch (error) {
     console.error("Firestore write order error: ", error);
@@ -267,7 +258,6 @@ export async function fetchOrdersFromFirestore() {
  */
 export async function saveProductToFirestore(productId, product) {
   if (!isFirebaseConfigured() || !db) {
-    console.warn("Firebase not configured. Product saved locally.");
     return null;
   }
   try {
@@ -306,7 +296,6 @@ export async function saveProductToFirestore(productId, product) {
     };
     
     await setDoc(productRef, data);
-    console.log(`Product ${productId} successfully stored in Firestore!`);
     return data;
   } catch (error) {
     console.error("Firestore write product error: ", error);
@@ -324,7 +313,6 @@ export async function deleteProductFromFirestore(productId) {
   try {
     const productRef = doc(db, 'products', productId);
     await deleteDoc(productRef);
-    console.log(`Product ${productId} successfully deleted from Firestore!`);
     return true;
   } catch (error) {
     console.error("Firestore delete product error: ", error);
@@ -380,7 +368,6 @@ export async function isEmailInWaitlist(email) {
  */
 export async function saveWaitlistEmail(email, name) {
   if (!isFirebaseConfigured() || !db) {
-    console.warn("Firebase not configured. Waitlist email not saved.");
     return { success: false, reason: 'error' };
   }
   if (!email || !email.trim()) return { success: false, reason: 'error' };
@@ -402,7 +389,6 @@ export async function saveWaitlistEmail(email, name) {
       joinedAt: new Date().toISOString(),
       status: 'active'
     });
-    console.log("Waitlist email saved successfully:", normalizedEmail);
     return { success: true };
   } catch (error) {
     console.error("Firestore waitlist write error:", error);

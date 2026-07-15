@@ -85,7 +85,6 @@ export async function sendBrevoOtp(toEmail, otpCode, userName) {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Failed to send OTP');
 
-    console.log("OTP email sent successfully to:", toEmail);
     return true;
   } catch (error) {
     console.error("Error sending OTP email:", error.message);
@@ -183,7 +182,6 @@ export async function sendWaitlistWelcomeEmail(toEmail, userName) {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Failed to send welcome email');
 
-    console.log("Welcome email sent successfully to:", toEmail);
     return true;
   } catch (error) {
     console.error("Error sending welcome email:", error.message);

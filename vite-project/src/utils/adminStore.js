@@ -953,7 +953,6 @@ export const syncProducts = async (onSyncComplete) => {
     
     // If Firestore is completely empty, populate it with all static products
     if (dbProducts.length === 0) {
-      console.log("Firestore products collection is empty. Auto-populating with static products...");
       const allToUpload = [...localProducts, ...staticProducts];
       const uploadedIds = new Set();
       for (const p of allToUpload) {
