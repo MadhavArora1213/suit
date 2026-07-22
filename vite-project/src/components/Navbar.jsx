@@ -147,7 +147,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   onClick={(e) => {
                     e.preventDefault();
                     if (item === 'Home') window.location.href = '/sell';
-                    else if (item === 'Collection') { setSelectedCategory('All'); setView('category'); }
+                    else if (item === 'Collection') { window.location.href = '/collections'; }
                     else if (item === 'Boutiques') { setView('seller-shop'); }
                     else if (item === 'Contact') { setView('contact'); }
                     else if (item === 'About Us') { setView('about'); }
@@ -363,7 +363,7 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   {['COLLECTIONS', 'ABOUT US', 'CONTACT'].map((item, i) => (
                     <a key={i} href="#" onClick={(e) => {
                       e.preventDefault();
-                      if (item === 'COLLECTIONS') { setSelectedCategory('Anarkali'); setView('category'); }
+                      if (item === 'COLLECTIONS') { window.location.href = '/collections'; }
                       else if (item === 'CONTACT') { setView('contact'); }
                       else { window.location.href = '/sell'; }
                       setIsOpen(false);

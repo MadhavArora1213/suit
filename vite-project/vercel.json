@@ -5,6 +5,7 @@
   "installCommand": "npm install",
   "rootDirectory": "vite-project",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" }
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ]
 }

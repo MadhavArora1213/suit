@@ -60,6 +60,11 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   // Load products matching this category
   useEffect(() => {
     const all = getAllProducts();
+    if (categoryName === 'All') {
+      setProducts(all);
+      setFilteredProducts(all);
+      return;
+    }
     const categoryFiltered = all.filter(p => {
       const typeMatch = (p.type || p.suitType || '').toLowerCase() === categoryName.toLowerCase();
       const colMatch = (p.collection || '').toLowerCase() === categoryName.toLowerCase();

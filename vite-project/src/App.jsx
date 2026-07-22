@@ -26,26 +26,41 @@ import ContactPage from './components/ContactPage'
 import AboutPage from './components/AboutPage'
 import PrivacyPolicy from './components/PrivacyPolicy'
 import FAQPage from './components/FAQPage'
+import CollectionsPage from './components/CollectionsPage'
+import CollectionDetailPage from './components/CollectionDetailPage'
 
 function App() {
-  const [loadingComplete, setLoadingComplete] = useState(false)
-  const [contentVisible, setContentVisible] = useState(false)
+  const isHomeRoute = window.location.pathname === '/' || window.location.pathname === '';
+
+  const [loadingComplete, setLoadingComplete] = useState(isHomeRoute ? false : true)
+  const [contentVisible, setContentVisible] = useState(isHomeRoute ? false : true)
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState({})
   const getInitialView = () => {
     const path = window.location.pathname;
     if (path === '/') return 'customer-home';
+    if (path === '/collections') return 'collections';
+    if (path.startsWith('/collections/')) return 'collection-detail';
     if (path === '/contact') return 'contact';
     if (path === '/about') return 'about';
     if (path === '/privacy') return 'privacy';
     if (path === '/faq') return 'faq';
     return 'home';
   };
+
+  const getCollectionFromPath = () => {
+    const path = window.location.pathname;
+    if (path.startsWith('/collections/')) {
+      return path.replace('/collections/', '');
+    }
+    return null;
+  };
   const [view, setView] = useState(getInitialView());
   const [user, setUser] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [selectedBoutique, setSelectedBoutique] = useState(null)
+  const [selectedCollectionSlug, setSelectedCollectionSlug] = useState(getCollectionFromPath())
 
   const currentPath = window.location.pathname
 
@@ -58,6 +73,8 @@ function App() {
   useEffect(() => {
     const pathMap = {
       'customer-home': '/',
+      'collections': '/collections',
+      'collection-detail': `/collections/${selectedCollectionSlug || ''}`,
       'contact': '/contact',
       'about': '/about',
       'privacy': '/privacy',
@@ -124,7 +141,7 @@ function App() {
 
   const clearCart = () => setCart([])
 
-  if (!loadingComplete) return <LoadingScreen onComplete={handleLoadComplete} />
+  if (!loadingComplete && isHomeRoute) return <LoadingScreen onComplete={handleLoadComplete} />
 
   if (view === 'customer-home') {
     return (
@@ -183,6 +200,27 @@ function App() {
           categoryName={selectedCategory}
           setView={setView}
           setSelectedProduct={setSelectedProduct}
+          addToCart={addToCart}
+        />
+      )}
+
+      {view === 'collections' && (
+        <CollectionsPage 
+          setView={setView}
+          setSelectedCategory={setSelectedCategory}
+          setSelectedProduct={setSelectedProduct}
+          setSelectedCollectionSlug={setSelectedCollectionSlug}
+          addToCart={addToCart}
+        />
+      )}
+
+      {view === 'collection-detail' && selectedCollectionSlug && (
+        <CollectionDetailPage
+          slug={selectedCollectionSlug}
+          setView={setView}
+          setSelectedCategory={setSelectedCategory}
+          setSelectedProduct={setSelectedProduct}
+          setSelectedCollectionSlug={setSelectedCollectionSlug}
           addToCart={addToCart}
         />
       )}
