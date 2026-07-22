@@ -215,7 +215,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     const prof = getBoutiqueProfile(boutiqueName);
     setProfile(enhancedBoutiques[boutiqueName] || prof);
     const allProds = getAllProducts();
-    const boutiqueProds = allProds.filter(p => p.boutique && p.boutique.trim().toLowerCase() === boutiqueName.trim().toLowerCase());
+    const boutiqueProds = allProds.filter(p => p.boutique && boutiqueName && p.boutique.trim().toLowerCase() === boutiqueName.trim().toLowerCase());
     setProducts(boutiqueProds);
     setFilteredProducts(boutiqueProds);
     const savedFavs = localStorage.getItem('gurnaaz_favorites');

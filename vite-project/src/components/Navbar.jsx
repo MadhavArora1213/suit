@@ -50,114 +50,198 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 left-0 right-0 z-50"
+      className="fixed top-0 left-0 right-0 z-[100]"
     >
       {/* Main Nav */}
-      <div className={`transition-all duration-500 ${scrolled
-        ? 'bg-[#FAF9F6]/95 backdrop-blur-xl border-b border-[#BCA58A]/10 shadow-lg'
-        : 'bg-transparent'
+      <div className={`transition-all duration-500 flex flex-col ${scrolled
+        ? 'bg-[#FAF9F6]/95 backdrop-blur-2xl border-b border-[#BCA58A]/15 shadow-sm'
+        : 'bg-[#FAF9F6] border-b border-[#BCA58A]/10 shadow-sm'
       }`}>
-        <div className={`max-w-[1600px] mx-auto px-6 md:px-14 transition-all duration-500 ${scrolled ? 'py-1.5' : 'py-2.5'}`}>
-          <div className="flex items-center justify-between">
-
-            {/* Logo */}
-            <motion.a href="/sell" onClick={(e) => { e.preventDefault(); window.location.href = '/sell'; }} whileHover={{ scale: 1.02 }} className="flex items-center gap-2 cursor-pointer group">
-              <img src={gurnaazLogo} alt="GURNAAZ" className="h-8 md:h-10 2xl:h-14 w-auto object-contain" />
-            </motion.a>
-
-            <div className="hidden md:flex items-center gap-[4.5rem]">
-              {['Home', 'About', 'Collection', 'Contact'].map((item, i) => (
-                <div key={i} className="relative group py-2">
-                  <a href="#" onClick={(e) => {
-                    e.preventDefault();
-                    if (item === 'Home') window.location.href = '/sell';
-                    if (item === 'Collection') { setSelectedCategory('Anarkali'); setView('category'); }
-                  }}
-                    className="relative text-[14.5px] 2xl:text-[17px] tracking-[0.03em] text-[#888888] hover:text-[#111111] transition-all duration-300 font-medium py-2"
-                    style={{ fontFamily: "'Montserrat', sans-serif" }}
-                  >
-                    <span className={item === 'Home' ? "text-[#111111] font-semibold" : ""}>{item}</span>
-                    {/* Sleek active underline for Home */}
-                    {item === 'Home' && (
-                      <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-[1.5px] bg-[#111111]" />
-                    )}
-                  </a>
-
-                  {item === 'Collection' && (
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-[#FAF9F6] border border-[#BCA58A]/15 shadow-2xl py-2 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 rounded">
-                      {['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi'].map((cat) => (
-                        <a
-                          key={cat}
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setSelectedCategory(cat);
-                            setView('category');
-                          }}
-                          className="block px-6 py-2.5 text-[12px] text-[#111111]/70 hover:text-[#BCA58A] hover:bg-[#E8DDD0]/20 transition-all font-medium"
-                          style={{ fontFamily: "'Montserrat', sans-serif" }}
-                        >
-                          {cat}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+        {/* Row 1: Top Bar (Logo & Icons) */}
+        <div className={`max-w-[1600px] mx-auto w-full px-6 md:px-12 transition-all duration-500 ${scrolled ? 'pt-2 pb-1' : 'pt-3 pb-2'}`}>
+          <div className="relative flex items-center justify-between">
+            
+            {/* Left: Mobile Hamburger & Desktop Search */}
+            <div className="flex items-center gap-4 w-1/3">
+              <button 
+                className={`md:hidden flex flex-col justify-center gap-1.5 w-6 h-6 cursor-pointer text-[#111111]`}
+                onClick={() => setIsOpen(!isOpen)}>
+                <span className={`w-5 h-px bg-current transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
+                <span className={`w-4 h-px bg-current transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
+                <span className={`w-5 h-px bg-current transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[5px]' : ''}`} />
+              </button>
+              
+              <button 
+                onClick={() => setSearchOpen(!searchOpen)}
+                className={`hidden md:flex items-center gap-2 cursor-pointer transition-colors text-[#111111] hover:text-[#BCA58A]`}>
+                <Search strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
+                <span className="text-[10px] uppercase tracking-[0.2em] font-medium" style={{ fontFamily: "'Montserrat', sans-serif" }}>Search</span>
+              </button>
             </div>
 
-            {/* Icons */}
-            <div className="flex items-center gap-3 md:gap-5">
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                onClick={() => setSearchOpen(!searchOpen)}
-                className="w-9 h-9 md:w-11 md:h-11 2xl:w-14 2xl:h-14 rounded-full border border-[#111111]/10 bg-transparent flex items-center justify-center text-[#111111] hover:border-[#111111]/30 hover:bg-[#111111]/5 transition-all cursor-pointer">
-                <Search strokeWidth={1.5} className="2xl:w-6 2xl:h-6 md:w-[17px] md:h-[17px] w-4 h-4" />
-              </motion.button>
+            {/* Center: Logo */}
+            <div className="flex justify-center w-1/3">
+              <motion.a href="/sell" onClick={(e) => { e.preventDefault(); window.location.href = '/sell'; }} whileHover={{ scale: 1.02 }} className="cursor-pointer group flex flex-col items-center">
+                <img src={gurnaazLogo} alt="GURNAAZ" className="h-6 md:h-8 lg:h-10 w-auto object-contain drop-shadow-sm" />
+              </motion.a>
+            </div>
 
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+            {/* Right: Icons */}
+            <div className="flex items-center justify-end gap-4 lg:gap-6 w-1/3">
+              
+              <button 
+                onClick={() => setSearchOpen(!searchOpen)}
+                className={`md:hidden cursor-pointer transition-colors text-[#111111] hover:text-[#BCA58A]`}>
+                <Search strokeWidth={1.5} className="w-5 h-5" />
+              </button>
+
+              <button 
+                onClick={() => setWishlistOpen(true)}
+                className={`hidden sm:block cursor-pointer transition-colors relative text-[#111111] hover:text-[#BCA58A]`}>
+                <Heart strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
+                {favoriteCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#BCA58A] rounded-full" />
+                )}
+              </button>
+
+              <button 
                 onClick={() => setView('cart')}
-                className="w-9 h-9 md:w-11 md:h-11 2xl:w-14 2xl:h-14 rounded-full border border-[#111111]/10 bg-transparent flex items-center justify-center text-[#111111] hover:border-[#111111]/30 hover:bg-[#111111]/5 transition-all relative cursor-pointer">
-                <ShoppingBag strokeWidth={1.5} className="2xl:w-6 2xl:h-6 md:w-[17px] md:h-[17px] w-4 h-4" />
+                className={`cursor-pointer transition-colors relative text-[#111111] hover:text-[#BCA58A]`}>
+                <ShoppingBag strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
                 {cartItemCount > 0 && (
                   <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
-                    className="absolute -top-1 -right-1 bg-[#BCA58A] text-[#FAF9F6] text-[9px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-sm">
+                    className="absolute -top-1.5 -right-2 bg-[#BCA58A] text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-sm">
                     {cartItemCount}
                   </motion.span>
                 )}
-              </motion.button>
+              </button>
 
               {user ? (
-                <motion.button 
-                  whileHover={{ scale: 1.05 }} 
-                  whileTap={{ scale: 0.98 }}
+                <button 
                   onClick={handleLogout}
                   title="Log Out"
-                  className="w-9 h-9 md:w-11 md:h-11 2xl:w-14 2xl:h-14 rounded-full overflow-hidden border border-[#111111]/10 hover:border-[#111111]/30 transition-all cursor-pointer ml-1"
+                  className="hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#BCA58A] cursor-pointer ml-2 hover:scale-105 transition-transform"
                 >
                   <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
-                </motion.button>
+                </button>
               ) : (
-                <motion.button 
-                  whileHover={{ scale: 1.05 }} 
-                  whileTap={{ scale: 0.95 }}
+                <button 
                   onClick={() => setView('login')}
-                  className="w-9 h-9 md:w-11 md:h-11 2xl:w-14 2xl:h-14 rounded-full overflow-hidden border border-[#BCA58A] hover:border-[#BCA58A]/70 transition-all ml-1 cursor-pointer"
+                  className={`hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#111111]/20 hover:border-[#111111] cursor-pointer ml-2 transition-all`}
                   title="Login / Register"
                 >
-                  <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
-                </motion.button>
+                  <User strokeWidth={1.5} className={`w-full h-full p-1 text-[#111111]`} />
+                </button>
               )}
-
-              {/* Hamburger */}
-              <motion.button whileHover={{ scale: 1.1 }}
-                className="md:hidden flex flex-col justify-center items-center gap-1.5 w-6 h-6 cursor-pointer"
-                onClick={() => setIsOpen(!isOpen)}>
-                <span className={`w-5 h-px bg-[#111111] transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
-                <span className={`w-5 h-px bg-[#111111] transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
-                <span className={`w-5 h-px bg-[#111111] transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
-              </motion.button>
             </div>
           </div>
+        </div>
+
+        {/* Row 2: Top-Level Pages & Megamenu (Desktop Only) */}
+        <div className={`hidden md:flex justify-center border-t transition-colors duration-500 ${scrolled ? 'border-[#BCA58A]/10 py-1.5' : 'border-[#111111]/10 py-2'}`}>
+          <ul className="flex items-center gap-8 lg:gap-14">
+            {['Home', 'Collection', 'Boutiques', 'About Us', 'Contact'].map((item) => (
+              <li key={item} className={`group ${item === 'Collection' ? 'static' : 'relative'}`}>
+                <a 
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (item === 'Home') window.location.href = '/sell';
+                    else if (item === 'Collection') { setSelectedCategory('All'); setView('category'); }
+                    else if (item === 'Boutiques') { setView('seller-shop'); }
+                    else if (item === 'Contact') { setView('contact'); }
+                    else if (item === 'About Us') { setView('about'); }
+                    else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+                  }}
+                  className={`relative text-[10.5px] lg:text-[11px] uppercase tracking-[0.2em] font-medium transition-colors duration-300 py-2 text-[#111111]/80 hover:text-[#BCA58A]`}
+                  style={{ fontFamily: "'Montserrat', sans-serif" }}
+                >
+                  {item}
+                  <span className="absolute bottom-1 left-0 w-0 h-[1px] transition-all duration-300 group-hover:w-full bg-[#BCA58A]" />
+                </a>
+
+                {/* Cinematic Full-Width Megamenu */}
+                {item === 'Collection' && (
+                  <div className="absolute top-full left-0 w-full bg-[#FAF9F6]/95 backdrop-blur-2xl border-t border-[#BCA58A]/20 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 overflow-hidden h-[450px]">
+                    <div className="max-w-[1600px] mx-auto w-full px-6 md:px-12 py-10 h-full flex gap-12">
+                      
+                      {/* Col 1: Shop By Category */}
+                      <div className="w-1/5 flex flex-col">
+                        <span className="text-[10px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-6">Shop by Category</span>
+                        <div className="flex flex-col gap-4">
+                          {['Anarkali', 'Sharara', 'Banarasi', 'Chikankari', 'Patiala', 'Pakistani'].map((cat) => (
+                            <a
+                              key={cat}
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setSelectedCategory(cat);
+                                setView('category');
+                              }}
+                              className="text-[12px] text-[#111111]/70 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-medium tracking-[0.1em] uppercase w-max"
+                              style={{ fontFamily: "'DM Sans', sans-serif" }}
+                            >
+                              {cat}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Col 2: Curated Edits */}
+                      <div className="w-1/5 flex flex-col border-l border-[#BCA58A]/10 pl-12">
+                        <span className="text-[10px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-6">Curated Edits</span>
+                        <div className="flex flex-col gap-4">
+                          {['The Wedding Edit', 'Summer Pastels', 'Artisan Heritage', 'Minimalist Luxury', 'Velvet Collection'].map((edit) => (
+                            <a
+                              key={edit}
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setSelectedCategory('All');
+                                setView('category');
+                              }}
+                              className="text-[13px] text-[#111111]/90 hover:text-[#BCA58A] transition-colors duration-300 font-light tracking-[0.05em]"
+                              style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}
+                            >
+                              {edit}
+                            </a>
+                          ))}
+                        </div>
+                        <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('All'); setView('category'); }}
+                          className="mt-auto text-[10px] font-bold text-[#111111] hover:text-[#BCA58A] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
+                          View All Pieces <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
+                        </a>
+                      </div>
+
+                      {/* Col 3: Featured Image 1 */}
+                      <div className="w-1/4 h-full relative overflow-hidden group/img cursor-pointer" onClick={() => { setSelectedCategory('Anarkali'); setView('category'); }}>
+                        <img src="/lavender_generated.png" alt="Lavender Edit" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/img:scale-105" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <div className="absolute bottom-6 left-6 text-white">
+                          <span className="text-[9px] tracking-[0.2em] font-bold uppercase mb-1 block">Trending Now</span>
+                          <h3 className="text-2xl font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>The Lavender Edit</h3>
+                        </div>
+                      </div>
+
+                      {/* Col 4: Featured Image 2 */}
+                      <div className="w-[35%] h-full relative overflow-hidden group/img cursor-pointer" onClick={() => { setSelectedCategory('Sharara'); setView('category'); }}>
+                        <img src="/black_edit.png" alt="Evening Glamour" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/img:scale-105" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                        <div className="absolute bottom-6 left-6 text-white">
+                          <span className="text-[9px] tracking-[0.2em] font-bold uppercase mb-1 block">New Arrival</span>
+                          <h3 className="text-3xl font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Midnight Velvet</h3>
+                          <p className="text-[11px] tracking-wider mt-2 opacity-80" style={{ fontFamily: "'Montserrat', sans-serif" }}>Shop the exclusive dark romance collection.</p>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
 
           {/* Search Panel */}
           <AnimatePresence>
@@ -276,10 +360,11 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                     </div>
                   </div>
 
-                  {['COLLECTIONS', 'ABOUT US'].map((item, i) => (
+                  {['COLLECTIONS', 'ABOUT US', 'CONTACT'].map((item, i) => (
                     <a key={i} href="#" onClick={(e) => {
                       e.preventDefault();
                       if (item === 'COLLECTIONS') { setSelectedCategory('Anarkali'); setView('category'); }
+                      else if (item === 'CONTACT') { setView('contact'); }
                       else { window.location.href = '/sell'; }
                       setIsOpen(false);
                     }}
@@ -291,8 +376,6 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
-      </div>
 
       {/* Cart Drawer */}
       <AnimatePresence>

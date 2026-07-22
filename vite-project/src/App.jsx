@@ -17,18 +17,31 @@ import Newsletter from './components/Newsletter'
 import Footer from './components/Footer'
 import CartPage from './components/CartPage'
 import CheckoutPage from './components/CheckoutPage'
-import LoginPage from './components/LoginPage'
+import LoginSignup from './components/LoginSignup'
 import CategoryPage from './components/CategoryPage'
 import ProductDetailsPage from './components/ProductDetailsPage'
 import SellerShopPage from './components/SellerShopPage'
-import WaitlistPage from './components/WaitlistPage'
+import CustomerHomePage from './components/CustomerHomePage'
+import ContactPage from './components/ContactPage'
+import AboutPage from './components/AboutPage'
+import PrivacyPolicy from './components/PrivacyPolicy'
+import FAQPage from './components/FAQPage'
 
 function App() {
   const [loadingComplete, setLoadingComplete] = useState(false)
   const [contentVisible, setContentVisible] = useState(false)
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState({})
-  const [view, setView] = useState('home')
+  const getInitialView = () => {
+    const path = window.location.pathname;
+    if (path === '/') return 'customer-home';
+    if (path === '/contact') return 'contact';
+    if (path === '/about') return 'about';
+    if (path === '/privacy') return 'privacy';
+    if (path === '/faq') return 'faq';
+    return 'home';
+  };
+  const [view, setView] = useState(getInitialView());
   const [user, setUser] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectedProduct, setSelectedProduct] = useState(null)
@@ -41,6 +54,20 @@ function App() {
       window.dispatchEvent(new CustomEvent('admin-data-updated'));
     });
   }, []);
+
+  useEffect(() => {
+    const pathMap = {
+      'customer-home': '/',
+      'contact': '/contact',
+      'about': '/about',
+      'privacy': '/privacy',
+      'faq': '/faq',
+      'home': '/sell',
+    };
+    if (pathMap[view] && window.location.pathname !== pathMap[view]) {
+      window.history.pushState(null, '', pathMap[view]);
+    }
+  }, [view]);
 
   const handleLoadComplete = () => {
     setLoadingComplete(true)
@@ -99,7 +126,24 @@ function App() {
 
   if (!loadingComplete) return <LoadingScreen onComplete={handleLoadComplete} />
 
-  if (currentPath === '/') return <WaitlistPage />
+  if (view === 'customer-home') {
+    return (
+      <CustomerHomePage 
+        setView={setView} 
+        cart={cart} 
+        favorites={favorites} 
+        addToCart={addToCart} 
+        removeFromCart={removeFromCart} 
+        updateCartQty={updateCartQty} 
+        toggleFavorite={toggleFavorite} 
+        setSelectedCategory={setSelectedCategory}
+        setSelectedProduct={setSelectedProduct}
+        setSelectedBoutique={setSelectedBoutique}
+        user={user}
+        handleLogout={handleLogout}
+      />
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]" style={{ opacity: contentVisible ? 1 : 0, transition: 'opacity 0.8s ease' }}>
@@ -182,10 +226,26 @@ function App() {
       )}
 
       {view === 'login' && (
-        <LoginPage 
+        <LoginSignup
           setView={setView}
           onLoginSuccess={handleLoginSuccess}
         />
+      )}
+
+      {view === 'contact' && (
+        <ContactPage setView={setView} />
+      )}
+
+      {view === 'about' && (
+        <AboutPage setView={setView} />
+      )}
+
+      {view === 'privacy' && (
+        <PrivacyPolicy setView={setView} />
+      )}
+
+      {view === 'faq' && (
+        <FAQPage setView={setView} />
       )}
 
       <Footer setView={setView} />
