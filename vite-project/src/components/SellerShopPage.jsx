@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import {
   Phone, MapPin, Star, Filter, ArrowUpDown, ChevronDown, Check, ArrowLeft,
   ShoppingBag, Eye, Heart, ShieldCheck, Clock, Truck, RotateCcw,
-  MessageCircle, Award, Users, BadgeCheck, X, ChevronUp, Sparkles, Play
+  MessageCircle, Award, Users, BadgeCheck, X, ChevronUp, Sparkles, Play, Store
 } from 'lucide-react';
 import { FaInstagram } from 'react-icons/fa';
 import { getAllProducts, getBoutiqueProfile } from '../utils/adminStore';
@@ -272,7 +272,22 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     window.dispatchEvent(new CustomEvent('favorites-updated'));
   };
 
-  if (!profile) return null;
+  if (!profile) {
+    return (
+      <div className="bg-[#FAF9F6] min-h-screen flex flex-col items-center justify-center text-center px-6">
+        <Store size={64} className="text-[#BCA58A]/30 mb-6" />
+        <h1 className="text-3xl md:text-4xl font-light text-[#111111] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          Boutique Not Found
+        </h1>
+        <p className="text-[#6B6B6B] max-w-md mb-8">
+          We couldn't find the boutique you were looking for. It might have been removed or the URL is incorrect.
+        </p>
+        <button onClick={() => window.location.href = '/boutiques'} className="bg-[#111111] hover:bg-[#BCA58A] text-[#FAF9F6] px-8 py-3 text-[10px] font-bold tracking-[0.2em] uppercase transition-colors cursor-pointer rounded-xl">
+          Browse All Boutiques
+        </button>
+      </div>
+    );
+  }
   const activeFilters = Object.values(filters).filter(v => v !== 'All').length;
 
   return (

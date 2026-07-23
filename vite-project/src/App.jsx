@@ -28,6 +28,7 @@ import PrivacyPolicy from './components/PrivacyPolicy'
 import FAQPage from './components/FAQPage'
 import CollectionsPage from './components/CollectionsPage'
 import CollectionDetailPage from './components/CollectionDetailPage'
+import BoutiquesPage from './components/BoutiquesPage'
 
 function App() {
   const isHomeRoute = window.location.pathname === '/' || window.location.pathname === '';
@@ -41,6 +42,9 @@ function App() {
     if (path === '/') return 'customer-home';
     if (path === '/collections') return 'collections';
     if (path.startsWith('/collections/')) return 'collection-detail';
+    if (path.startsWith('/category/')) return 'category';
+    if (path === '/boutiques') return 'boutiques';
+    if (path.startsWith('/boutiques/')) return 'seller-shop';
     if (path === '/contact') return 'contact';
     if (path === '/about') return 'about';
     if (path === '/privacy') return 'privacy';
@@ -55,11 +59,31 @@ function App() {
     }
     return null;
   };
+  
+  const getBoutiqueFromPath = () => {
+    const path = window.location.pathname;
+    if (path.startsWith('/boutiques/')) {
+      const slug = path.replace('/boutiques/', '');
+      return decodeURIComponent(slug).replace(/-/g, ' ');
+    }
+    return null;
+  };
+
+  const getCategoryFromPath = () => {
+    const path = window.location.pathname;
+    if (path.startsWith('/category/')) {
+      // capitalizes first letter (e.g. anarkali -> Anarkali)
+      const cat = path.replace('/category/', '');
+      return cat.charAt(0).toUpperCase() + cat.slice(1);
+    }
+    return null;
+  };
+
   const [view, setView] = useState(getInitialView());
   const [user, setUser] = useState(null)
-  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState(getCategoryFromPath())
   const [selectedProduct, setSelectedProduct] = useState(null)
-  const [selectedBoutique, setSelectedBoutique] = useState(null)
+  const [selectedBoutique, setSelectedBoutique] = useState(getBoutiqueFromPath())
   const [selectedCollectionSlug, setSelectedCollectionSlug] = useState(getCollectionFromPath())
 
   const currentPath = window.location.pathname
@@ -75,6 +99,9 @@ function App() {
       'customer-home': '/',
       'collections': '/collections',
       'collection-detail': `/collections/${selectedCollectionSlug || ''}`,
+      'category': `/category/${(selectedCategory || '').toLowerCase()}`,
+      'boutiques': '/boutiques',
+      'seller-shop': `/boutiques/${(selectedBoutique || '').toLowerCase().replace(/ /g, '-')}`,
       'contact': '/contact',
       'about': '/about',
       'privacy': '/privacy',
@@ -84,7 +111,7 @@ function App() {
     if (pathMap[view] && window.location.pathname !== pathMap[view]) {
       window.history.pushState(null, '', pathMap[view]);
     }
-  }, [view]);
+  }, [view, selectedCollectionSlug, selectedCategory, selectedBoutique]);
 
   const handleLoadComplete = () => {
     setLoadingComplete(true)
@@ -175,6 +202,7 @@ function App() {
         setSelectedCategory={setSelectedCategory}
         setSelectedProduct={setSelectedProduct}
         setSelectedBoutique={setSelectedBoutique}
+        setSelectedCollectionSlug={setSelectedCollectionSlug}
         user={user}
         handleLogout={handleLogout}
       />
@@ -234,6 +262,13 @@ function App() {
           addToCart={addToCart}
           favorites={favorites}
           toggleFavorite={toggleFavorite}
+        />
+      )}
+
+      {view === 'boutiques' && (
+        <BoutiquesPage 
+          setView={setView}
+          setSelectedBoutique={setSelectedBoutique}
         />
       )}
 

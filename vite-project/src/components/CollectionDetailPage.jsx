@@ -69,10 +69,39 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
 
   const products = useMemo(() => {
     if (!collection) return [];
+    
+    // Explicit Collection Overrides
     if (slug === 'wedding' || slug === 'anarkali') {
       return allProducts.filter(p => (p.collection || '').toLowerCase() === slug);
     }
+    if (slug === 'velvet') {
+      return allProducts.filter(p => (p.fabricName || '').toLowerCase().includes('velvet') || (p.name || '').toLowerCase().includes('velvet'));
+    }
+    if (slug === 'black') {
+      return allProducts.filter(p => (p.name || '').toLowerCase().includes('black') || (p.fabricDetails || '').toLowerCase().includes('black'));
+    }
+    if (slug === 'pastel') {
+      const pastels = ['pink', 'peach', 'mint', 'lavender', 'ivory', 'cream', 'blush', 'sky'];
+      return allProducts.filter(p => pastels.some(color => (p.name || '').toLowerCase().includes(color) || (p.shortDesc || '').toLowerCase().includes(color)));
+    }
+    if (slug === 'luxury') {
+      return allProducts.filter(p => p.priceNum >= 12000);
+    }
+    if (slug === 'festive') {
+      return allProducts.filter(p => (p.occasions || []).includes('Festive') || (p.occasions || []).includes('Party'));
+    }
+    if (slug === 'silk') {
+      return allProducts.filter(p => (p.fabricName || '').toLowerCase().includes('silk'));
+    }
+    if (slug === 'casual') {
+      return allProducts.filter(p => (p.occasions || []).includes('Casual') || (p.type || '').toLowerCase() === 'casual');
+    }
+    if (slug === 'monsoon') {
+      return allProducts.filter(p => (p.name || '').toLowerCase().includes('blue') || (p.fabricName || '').toLowerCase().includes('georgette') || (p.fabricName || '').toLowerCase().includes('crepe'));
+    }
+
     if (collection.category === 'All') return allProducts;
+    
     return allProducts.filter(p =>
       (p.type || '').toLowerCase() === collection.category.toLowerCase() ||
       (p.suitType || '').toLowerCase() === collection.category.toLowerCase() ||
@@ -204,7 +233,7 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
           animate={{ scale: 1, opacity: 0.03 }}
           transition={{ duration: 2 }}
         >
-          <h1 className="text-[20vw] font-black uppercase tracking-tighter text-black whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <h1 className="font-black uppercase tracking-tighter text-black whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: `${Math.min(24, 130 / collection.title.length)}vw` }}>
             {collection.title}
           </h1>
         </motion.div>

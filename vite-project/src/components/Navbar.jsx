@@ -4,7 +4,21 @@ import { useState, useEffect } from 'react';
 import gurnaazLogo from '../assets/gurnaaz.png';
 import { getAllProducts } from '../utils/adminStore';
 
-export default function Navbar({ cart = [], removeFromCart, updateCartQty, favorites = {}, toggleFavorite, addToCart, setView, setSelectedCategory, setSelectedProduct, setSelectedBoutique, user, handleLogout }) {
+export default function Navbar({ 
+  cart = [], 
+  removeFromCart, 
+  updateCartQty,
+  favorites = {},
+  toggleFavorite,
+  addToCart,
+  setView, 
+  setSelectedCategory, 
+  setSelectedProduct, 
+  setSelectedBoutique, 
+  setSelectedCollectionSlug,
+  user, 
+  handleLogout 
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -141,14 +155,14 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
         <div className={`hidden md:flex justify-center border-t transition-colors duration-500 ${scrolled ? 'border-[#BCA58A]/10 py-1.5' : 'border-[#111111]/10 py-2'}`}>
           <ul className="flex items-center gap-8 lg:gap-14">
             {['Home', 'Collection', 'Boutiques', 'About Us', 'Contact'].map((item) => (
-              <li key={item} className={`group ${item === 'Collection' ? 'static' : 'relative'}`}>
+              <li key={item} className={`group ${['Collection', 'Boutiques'].includes(item) ? 'static' : 'relative'}`}>
                 <a 
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     if (item === 'Home') window.location.href = '/sell';
                     else if (item === 'Collection') { window.location.href = '/collections'; }
-                    else if (item === 'Boutiques') { setView('seller-shop'); }
+                    else if (item === 'Boutiques') { window.location.href = '/boutiques'; }
                     else if (item === 'Contact') { setView('contact'); }
                     else if (item === 'About Us') { setView('about'); }
                     else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -160,47 +174,59 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   <span className="absolute bottom-1 left-0 w-0 h-[1px] transition-all duration-300 group-hover:w-full bg-[#BCA58A]" />
                 </a>
 
-                {/* Cinematic Full-Width Megamenu */}
+                {/* Cinematic Floating Megamenu for Collection */}
                 {item === 'Collection' && (
-                  <div className="absolute top-full left-0 w-full bg-[#FAF9F6]/95 backdrop-blur-2xl border-t border-[#BCA58A]/20 shadow-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 overflow-hidden h-[450px]">
-                    <div className="max-w-[1600px] mx-auto w-full px-6 md:px-12 py-10 h-full flex gap-12">
+                  <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-[#FAF9F6]/95 backdrop-blur-3xl border border-[#BCA58A]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 h-[420px] p-3 transform origin-top group-hover:translate-y-0 translate-y-4 scale-95 group-hover:scale-100">
+                    <div className="w-full h-full flex gap-8 p-8 bg-white/50 rounded-xl">
                       
                       {/* Col 1: Shop By Category */}
-                      <div className="w-1/5 flex flex-col">
-                        <span className="text-[10px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-6">Shop by Category</span>
-                        <div className="flex flex-col gap-4">
-                          {['Anarkali', 'Sharara', 'Banarasi', 'Chikankari', 'Patiala', 'Pakistani'].map((cat) => (
+                      <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 pr-6">
+                        <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Shop by Category</span>
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-2">
+                          {['Anarkali', 'Sharara', 'Banarasi', 'Chikankari', 'Patiala', 'Pakistani', 'Cotton', 'Silk', 'Velvet', 'Bridal'].map((cat) => (
                             <a
                               key={cat}
                               href="#"
                               onClick={(e) => {
                                 e.preventDefault();
-                                setSelectedCategory(cat);
+                                setSelectedCategory(cat === 'Bridal' ? 'bridal' : cat);
                                 setView('category');
                               }}
-                              className="text-[12px] text-[#111111]/70 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-medium tracking-[0.1em] uppercase w-max"
+                              className="text-[12px] text-[#111111]/80 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide w-max relative group/cat"
                               style={{ fontFamily: "'DM Sans', sans-serif" }}
                             >
                               {cat}
+                              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#BCA58A] transition-all duration-300 group-hover/cat:w-full opacity-50" />
                             </a>
                           ))}
                         </div>
                       </div>
 
                       {/* Col 2: Curated Edits */}
-                      <div className="w-1/5 flex flex-col border-l border-[#BCA58A]/10 pl-12">
-                        <span className="text-[10px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-6">Curated Edits</span>
-                        <div className="flex flex-col gap-4">
-                          {['The Wedding Edit', 'Summer Pastels', 'Artisan Heritage', 'Minimalist Luxury', 'Velvet Collection'].map((edit) => (
+                      <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 px-6">
+                        <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Curated Edits</span>
+                        <div className="flex flex-col gap-3.5 mt-2">
+                          {['The Wedding Edit', 'Summer Pastels', 'Artisan Heritage', 'Minimalist Luxury', 'Velvet Collection', 'The Black Edit'].map((edit) => (
                             <a
                               key={edit}
                               href="#"
                               onClick={(e) => {
                                 e.preventDefault();
-                                setSelectedCategory('All');
-                                setView('category');
+                                let editSlug = 'luxury';
+                                if (edit === 'The Wedding Edit') editSlug = 'wedding';
+                                else if (edit === 'Summer Pastels') editSlug = 'pastel';
+                                else if (edit === 'Artisan Heritage') editSlug = 'chikankari';
+                                else if (edit === 'Velvet Collection') editSlug = 'velvet';
+                                else if (edit === 'The Black Edit') editSlug = 'black';
+                                
+                                if (setSelectedCollectionSlug) {
+                                  setSelectedCollectionSlug(editSlug);
+                                  setView('collection-detail');
+                                } else {
+                                  window.location.href = `/collections/${editSlug}`;
+                                }
                               }}
-                              className="text-[13px] text-[#111111]/90 hover:text-[#BCA58A] transition-colors duration-300 font-light tracking-[0.05em]"
+                              className="text-[15px] text-[#111111]/90 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-light tracking-wide relative w-max"
                               style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}
                             >
                               {edit}
@@ -208,29 +234,129 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                           ))}
                         </div>
                         <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('All'); setView('category'); }}
-                          className="mt-auto text-[10px] font-bold text-[#111111] hover:text-[#BCA58A] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
-                          View All Pieces <ArrowRight size={14} className="group-hover/link:translate-x-1 transition-transform" />
+                          className="mt-auto text-[9px] font-bold text-[#111111] hover:text-[#BCA58A] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
+                          View All Pieces <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
                         </a>
                       </div>
 
                       {/* Col 3: Featured Image 1 */}
-                      <div className="w-1/4 h-full relative overflow-hidden group/img cursor-pointer" onClick={() => { setSelectedCategory('Anarkali'); setView('category'); }}>
-                        <img src="/lavender_generated.png" alt="Lavender Edit" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/img:scale-105" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                        <div className="absolute bottom-6 left-6 text-white">
-                          <span className="text-[9px] tracking-[0.2em] font-bold uppercase mb-1 block">Trending Now</span>
+                      <div className="w-1/4 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-2 shadow-lg" onClick={() => {
+                        if (setSelectedCollectionSlug) {
+                          setSelectedCollectionSlug('pastel');
+                          setView('collection-detail');
+                        } else {
+                          window.location.href = '/collections/pastel';
+                        }
+                      }}>
+                        <img src="/lavender_generated.png" alt="Lavender Edit" className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        <div className="absolute bottom-5 left-5 text-white">
+                          <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#BCA58A]">Trending</span>
                           <h3 className="text-2xl font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>The Lavender Edit</h3>
                         </div>
                       </div>
 
                       {/* Col 4: Featured Image 2 */}
-                      <div className="w-[35%] h-full relative overflow-hidden group/img cursor-pointer" onClick={() => { setSelectedCategory('Sharara'); setView('category'); }}>
-                        <img src="/black_edit.png" alt="Evening Glamour" className="w-full h-full object-cover object-top transition-transform duration-700 group-hover/img:scale-105" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                        <div className="absolute bottom-6 left-6 text-white">
-                          <span className="text-[9px] tracking-[0.2em] font-bold uppercase mb-1 block">New Arrival</span>
-                          <h3 className="text-3xl font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Midnight Velvet</h3>
-                          <p className="text-[11px] tracking-wider mt-2 opacity-80" style={{ fontFamily: "'Montserrat', sans-serif" }}>Shop the exclusive dark romance collection.</p>
+                      <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg" onClick={() => {
+                        if (setSelectedCollectionSlug) {
+                          setSelectedCollectionSlug('velvet');
+                          setView('collection-detail');
+                        } else {
+                          window.location.href = '/collections/velvet';
+                        }
+                      }}>
+                        <img src="/black_edit.png" alt="Evening Glamour" className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        <div className="absolute bottom-5 left-5 text-white pr-4">
+                          <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#BCA58A]">New Arrival</span>
+                          <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Midnight Velvet</h3>
+                          <p className="text-[10px] tracking-wider opacity-80" style={{ fontFamily: "'Montserrat', sans-serif" }}>Dark romance collection.</p>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+
+                {/* Cinematic Floating Megamenu for Boutiques */}
+                {item === 'Boutiques' && (
+                  <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-[#FAF9F6]/95 backdrop-blur-3xl border border-[#BCA58A]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 h-[420px] p-3 transform origin-top group-hover:translate-y-0 translate-y-4 scale-95 group-hover:scale-100">
+                    <div className="w-full h-full flex gap-8 p-8 bg-white/50 rounded-xl">
+                      
+                      {/* Col 1: Top Boutiques */}
+                      <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 pr-6">
+                        <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Top Boutiques</span>
+                        <div className="flex flex-col gap-3.5 mt-2">
+                          {['Badshah Designer Fabrics', 'Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Awadh Kraft'].map((btq) => (
+                            <a
+                              key={btq}
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (setSelectedBoutique) {
+                                  setSelectedBoutique(btq);
+                                  setView('seller-shop');
+                                } else {
+                                  window.location.href = `/boutiques/${btq.toLowerCase().replace(/ /g, '-')}`;
+                                }
+                              }}
+                              className="text-[16px] text-[#111111]/90 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
+                              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                            >
+                              {btq}
+                              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#BCA58A] transition-all duration-300 group-hover/btq:w-full opacity-50" />
+                            </a>
+                          ))}
+                        </div>
+                        <a href="/boutiques" onClick={(e) => { e.preventDefault(); window.location.href='/boutiques'; }}
+                          className="mt-auto text-[9px] font-bold text-[#111111] hover:text-[#BCA58A] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
+                          View All Boutiques <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
+                        </a>
+                      </div>
+
+                      {/* Col 2: Featured Boutique Visual 1 */}
+                      <div className="w-[35%] h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-2 shadow-lg" onClick={() => {
+                        if (setSelectedBoutique) {
+                          setSelectedBoutique('Badshah Designer Fabrics');
+                          setView('seller-shop');
+                        } else {
+                          window.location.href = `/boutiques/badshah-designer-fabrics`;
+                        }
+                      }}>
+                        <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" alt="Badshah Designer Fabrics" className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover/img:scale-110" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        <div className="absolute inset-y-0 left-0 p-6 flex flex-col justify-end text-white">
+                          <span className="text-[8px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-1 block">Premium Partner</span>
+                          <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Badshah Fabrics</h3>
+                          <p className="text-[10px] tracking-wider opacity-90 leading-relaxed font-light mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                            Exclusive silk suits & heavy bridal wear.
+                          </p>
+                          <div className="flex items-center gap-2 text-[9px] font-bold tracking-[0.2em] uppercase w-max group-hover/img:text-[#BCA58A] transition-colors">
+                            Visit Shop <ArrowRight size={12} className="group-hover/img:translate-x-1 transition-transform" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Col 3: Featured Boutique Visual 2 */}
+                      <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg" onClick={() => {
+                        if (setSelectedBoutique) {
+                          setSelectedBoutique('Kala Mandir');
+                          setView('seller-shop');
+                        } else {
+                          window.location.href = `/boutiques/kala-mandir`;
+                        }
+                      }}>
+                        <img src="/designer_suit_1.png" alt="Kala Mandir" className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        <div className="absolute inset-y-0 left-0 p-6 flex flex-col justify-end text-white">
+                          <span className="text-[8px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-1 block">Trending</span>
+                          <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Kala Mandir</h3>
+                          <p className="text-[10px] tracking-wider opacity-90 leading-relaxed font-light mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                            Curated bridal collections.
+                          </p>
+                          <div className="flex items-center gap-2 text-[9px] font-bold tracking-[0.2em] uppercase w-max group-hover/img:text-[#BCA58A] transition-colors">
+                            Visit Shop <ArrowRight size={12} className="group-hover/img:translate-x-1 transition-transform" />
+                          </div>
                         </div>
                       </div>
 
@@ -329,15 +455,18 @@ export default function Navbar({ cart = [], removeFromCart, updateCartQty, favor
                   <div className="space-y-2">
                     <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">SHOP CATEGORIES</span>
                     <div className="pl-4 flex flex-col gap-3">
-                      {['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi'].map((cat) => (
+                      {['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi', 'Cotton', 'Silk', 'Velvet', 'Bridal', 'Georgette', 'Organza', 'Designer', 'Casual', 'Party Wear'].map((cat) => (
                         <a key={cat} href="#" onClick={(e) => {
                           e.preventDefault();
-                          setSelectedCategory(cat);
+                          let targetCat = cat;
+                          if (cat === 'Bridal') targetCat = 'bridal';
+                          if (cat === 'Party Wear') targetCat = 'party';
+                          setSelectedCategory(targetCat);
                           setView('category');
                           setIsOpen(false);
                         }}
                           className="text-[10px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors uppercase font-medium">
-                          {cat} Suits
+                          {cat} {['Bridal', 'Casual', 'Party Wear', 'Designer'].includes(cat) ? 'Collection' : 'Suits'}
                         </a>
                       ))}
                     </div>
