@@ -49,6 +49,9 @@ function App() {
     if (path === '/about') return 'about';
     if (path === '/privacy') return 'privacy';
     if (path === '/faq') return 'faq';
+    if (path === '/cart') return 'cart';
+    if (path === '/checkout') return 'checkout';
+    if (path === '/login' || path === '/signup') return 'login';
     return 'home';
   };
 
@@ -106,6 +109,9 @@ function App() {
       'about': '/about',
       'privacy': '/privacy',
       'faq': '/faq',
+      'cart': '/cart',
+      'checkout': '/checkout',
+      'login': '/login',
       'home': '/sell',
     };
     if (pathMap[view] && window.location.pathname !== pathMap[view]) {

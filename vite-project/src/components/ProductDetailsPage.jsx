@@ -129,7 +129,6 @@ function ImageSlider({ images, badge, videoUrl, reelUrl, onReelOpen }) {
 
 /* ─── MAIN PAGE ─── */
 export default function ProductDetailsPage({ product, setView, setSelectedCategory, setSelectedBoutique, addToCart, favorites = {}, toggleFavorite }) {
-  const [selectedSize, setSelectedSize] = useState('');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [reviewsList, setReviewsList] = useState([]);
   const [reviewName, setReviewName] = useState('');
@@ -137,7 +136,6 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
   const [reviewComment, setReviewComment] = useState('');
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [openAccordions, setOpenAccordions] = useState({ details: true, fabric: false, shipping: false, care: false });
-  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [reelOpen, setReelOpen] = useState(false);
   const [reelMuted, setReelMuted] = useState(true);
   const [reelProgress, setReelProgress] = useState(0);
@@ -164,7 +162,6 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
     if (product?.id) {
       setReviewsList(getReviews(product.id));
       setActiveImageIndex(0);
-      setSelectedSize('');
       syncProductReviews(product.id, (r) => setReviewsList(r));
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -197,39 +194,6 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen text-[#111111] pt-24 pb-20" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-
-      {/* SIZE GUIDE MODAL */}
-      <AnimatePresence>
-        {sizeGuideOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setSizeGuideOpen(false)} className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer" />
-            <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-              className="relative bg-[#FAF9F6] p-8 max-w-lg w-full shadow-2xl z-10 rounded-2xl text-left border border-[#BCA58A]/20">
-              <button onClick={() => setSizeGuideOpen(false)} className="absolute top-4 right-4 cursor-pointer"><X size={18} className="text-[#6B6B6B]" /></button>
-              <h3 className="text-2xl font-light mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Size Guide</h3>
-              <p className="text-xs text-[#6B6B6B] mb-6">Standard body measurements in inches.</p>
-              <table className="w-full text-xs border-collapse">
-                <thead><tr className="border-b border-[#BCA58A]/15">
-                  <th className="p-2.5 text-left font-bold uppercase tracking-wider text-[9px]">Size</th>
-                  <th className="p-2.5 text-left font-bold uppercase tracking-wider text-[9px]">Bust</th>
-                  <th className="p-2.5 text-left font-bold uppercase tracking-wider text-[9px]">Waist</th>
-                  <th className="p-2.5 text-left font-bold uppercase tracking-wider text-[9px]">Hips</th>
-                </tr></thead>
-                <tbody className="divide-y divide-[#BCA58A]/8">
-                  {[{ s: 'S (36)', b: '36"', w: '32"', h: '39"' }, { s: 'M (38)', b: '38"', w: '34"', h: '41"' },
-                    { s: 'L (40)', b: '40"', w: '36"', h: '43"' }, { s: 'XL (42)', b: '42"', w: '38"', h: '45"' },
-                    { s: 'XXL (44)', b: '44"', w: '40"', h: '47"' }
-                  ].map(r => <tr key={r.s} className="hover:bg-[#E8DDD0]/10">
-                    <td className="p-2.5 font-semibold">{r.s}</td><td className="p-2.5">{r.b}</td><td className="p-2.5">{r.w}</td><td className="p-2.5">{r.h}</td>
-                  </tr>)}
-                </tbody>
-              </table>
-              <p className="text-[10px] text-[#6B6B6B] mt-4 leading-relaxed">Order one size larger if between sizes.</p>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-10">
 
@@ -299,30 +263,9 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
               </div>
             </div>
 
-            {/* Sizes */}
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <label className="text-[9px] uppercase tracking-[0.2em] text-[#6B6B6B] font-bold">Size</label>
-                <button onClick={() => setSizeGuideOpen(true)}
-                  className="text-[9px] uppercase tracking-[0.15em] text-[#BCA58A] font-bold hover:text-[#111111] cursor-pointer flex items-center gap-1">
-                  <Ruler size={11} /> Size Guide
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {sizes.map((s) => (
-                  <button key={s} onClick={() => setSelectedSize(s)}
-                    className={`min-w-[48px] py-2 px-3 text-[11px] font-semibold transition-all rounded-lg cursor-pointer ${
-                      selectedSize === s
-                        ? 'bg-[#111111] text-white shadow'
-                        : 'bg-white border border-[#BCA58A]/12 text-[#111111]/50 hover:border-[#BCA58A]'
-                    }`}>
-                    {s.split(' ')[0]}
-                  </button>
-                ))}
-              </div>
-              {selectedSize && (
-                <p className="text-[9px] text-emerald-600 font-semibold uppercase tracking-wider">Size {selectedSize.split(' ')[0]} selected · In stock</p>
-              )}
+            {/* Unstitched Note */}
+            <div className="py-2">
+              <p className="text-[9px] text-[#BCA58A] font-bold uppercase tracking-widest bg-[#BCA58A]/10 inline-block px-2.5 py-1 rounded-sm">Unstitched Fabric Set</p>
             </div>
 
             {/* Shipping info */}
@@ -336,9 +279,8 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
             <div className="space-y-2.5 pt-1">
               <div className="flex gap-3">
                 <motion.button whileTap={{ scale: 0.98 }} onClick={() => {
-                  if (!selectedSize) { alert('Please select a size.'); return; }
-                  addToCart(product, selectedSize.split(' ')[0]);
-                  alert(`Added ${product.name} (Size ${selectedSize.split(' ')[0]}) to your bag!`);
+                  addToCart(product, 'Unstitched');
+                  alert(`Added ${product.name} to your bag!`);
                 }} className="flex-1 bg-[#BCA58A] hover:bg-[#A89070] text-white py-3.5 text-[9px] font-bold tracking-[0.25em] uppercase flex items-center justify-center gap-2 transition-all shadow-lg cursor-pointer rounded-xl">
                   <ShoppingBag size={13} /> ADD TO BAG
                 </motion.button>
@@ -350,8 +292,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                 </motion.button>
               </div>
               <motion.button whileTap={{ scale: 0.98 }} onClick={() => {
-                if (!selectedSize) { alert('Please select a size.'); return; }
-                addToCart(product, selectedSize.split(' ')[0]);
+                addToCart(product, 'Unstitched');
                 setView('checkout');
               }} className="w-full bg-[#111111] hover:bg-[#BCA58A] text-white py-3.5 text-[9px] font-bold tracking-[0.25em] uppercase transition-all shadow-lg cursor-pointer rounded-xl">
                 BUY NOW
@@ -566,7 +507,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                 <span className="text-[8px] tracking-widest text-[#BCA58A] uppercase font-bold">{product.boutique}</span>
                 <h3 className="text-base font-light text-white leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
                 <p className="text-sm font-semibold text-[#BCA58A]">{product.price}</p>
-                <button onClick={() => { addToCart(product, 'M'); setReelOpen(false); }}
+                <button onClick={() => { addToCart(product, 'Unstitched'); setReelOpen(false); }}
                   className="w-full bg-[#BCA58A] hover:bg-[#A89070] text-white py-2.5 text-[9px] font-bold tracking-[0.25em] uppercase flex items-center justify-center gap-2 rounded-lg cursor-pointer">
                   <ShoppingBag size={11} /> ADD TO BAG
                 </button>

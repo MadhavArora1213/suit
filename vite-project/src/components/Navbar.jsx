@@ -119,7 +119,7 @@ export default function Navbar({
               </button>
 
               <button 
-                onClick={() => setView('cart')}
+                onClick={() => setCartOpen(true)}
                 className={`cursor-pointer transition-colors relative text-[#111111] hover:text-[#BCA58A]`}>
                 <ShoppingBag strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
                 {cartItemCount > 0 && (
@@ -160,9 +160,9 @@ export default function Navbar({
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    if (item === 'Home') window.location.href = '/sell';
-                    else if (item === 'Collection') { window.location.href = '/collections'; }
-                    else if (item === 'Boutiques') { window.location.href = '/boutiques'; }
+                    if (item === 'Home') { setView('home'); }
+                    else if (item === 'Collection') { setView('collections'); }
+                    else if (item === 'Boutiques') { setView('boutiques'); }
                     else if (item === 'Contact') { setView('contact'); }
                     else if (item === 'About Us') { setView('about'); }
                     else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
