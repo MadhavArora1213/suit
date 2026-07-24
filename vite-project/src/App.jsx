@@ -46,6 +46,7 @@ function App() {
     if (path.startsWith('/category/')) return 'category';
     if (path === '/boutiques') return 'boutiques';
     if (path.startsWith('/boutiques/')) return 'seller-shop';
+    if (path.startsWith('/shop/')) return 'seller-shop';
     if (path === '/contact') return 'contact';
     if (path === '/about') return 'about';
     if (path === '/privacy') return 'privacy';
@@ -70,6 +71,10 @@ function App() {
     const path = window.location.pathname;
     if (path.startsWith('/boutiques/')) {
       const slug = path.replace('/boutiques/', '');
+      return decodeURIComponent(slug).replace(/-/g, ' ');
+    }
+    if (path.startsWith('/shop/')) {
+      const slug = path.replace('/shop/', '');
       return decodeURIComponent(slug).replace(/-/g, ' ');
     }
     return null;
@@ -107,7 +112,9 @@ function App() {
       'collection-detail': `/collections/${selectedCollectionSlug || ''}`,
       'category': `/category/${(selectedCategory || '').toLowerCase()}`,
       'boutiques': '/boutiques',
-      'seller-shop': `/boutiques/${(selectedBoutique || '').toLowerCase().replace(/ /g, '-')}`,
+      'seller-shop': ['Rivaaj Store', 'Pehnawa', 'Ludhiana Silks', 'Amritsar Textiles', 'The Heritage Store'].includes(selectedBoutique) 
+          ? `/shop/${(selectedBoutique || '').toLowerCase().replace(/ /g, '-')}` 
+          : `/boutiques/${(selectedBoutique || '').toLowerCase().replace(/ /g, '-')}`,
       'contact': '/contact',
       'about': '/about',
       'privacy': '/privacy',

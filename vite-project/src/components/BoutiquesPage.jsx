@@ -91,7 +91,7 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
         
         <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }}
           className="text-5xl md:text-6xl lg:text-7xl font-light text-[#111111] tracking-tight leading-tight mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          Explore Curated <span className="italic text-[#BCA58A]">Shops</span>
+          Explore Shops <span className="italic text-[#BCA58A]">& Boutiques</span>
         </motion.h1>
 
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.4 }} className="max-w-2xl text-gray-500 text-sm md:text-base font-light">

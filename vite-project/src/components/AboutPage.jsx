@@ -74,17 +74,12 @@ export default function AboutPage({ setView }) {
 
         {/* Rotated GURNAAZ text behind */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
-          <p className="text-[18vw] font-bold text-[#111111]/[0.03] uppercase tracking-widest select-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <p className="text-[15vw] scale-y-150 transform font-bold text-[#111111]/[0.03] uppercase tracking-widest select-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             GURNAAZ
           </p>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }}
-          className="absolute bottom-10 left-10 z-20 flex flex-col items-start gap-2">
-          <span className="text-[8px] tracking-[0.3em] text-[#111111]/40 uppercase">Scroll to discover</span>
-          <div className="h-10 w-px bg-gradient-to-b from-[#BCA58A] to-transparent" />
-        </motion.div>
+
       </section>
 
       {/* ═══════════════════════════════════════════════════════════

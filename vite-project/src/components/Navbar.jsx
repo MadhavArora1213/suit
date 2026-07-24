@@ -28,6 +28,7 @@ export default function Navbar({
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [orderId, setOrderId] = useState('');
   const [allProducts, setAllProducts] = useState([]);
+  const [navKey, setNavKey] = useState(0);
 
   useEffect(() => {
     setAllProducts(getAllProducts());
@@ -153,17 +154,16 @@ export default function Navbar({
 
         {/* Row 2: Top-Level Pages & Megamenu (Desktop Only) */}
         <div className={`hidden md:flex justify-center border-t transition-colors duration-500 ${scrolled ? 'border-[#BCA58A]/10 py-1.5' : 'border-[#111111]/10 py-2'}`}>
-          <ul className="flex items-center gap-8 lg:gap-14">
-            {['Home', 'Shop', 'Collection', 'Boutiques', 'About Us', 'Contact'].map((item) => (
-              <li key={item} className={`group ${['Collection', 'Boutiques'].includes(item) ? 'static' : 'relative'}`}>
+          <ul key={navKey} onClick={() => setNavKey(k => k + 1)} className="flex items-center gap-8 lg:gap-14">
+            {['Home', 'Shop & Boutiques', 'Collection', 'About Us', 'Contact'].map((item) => (
+              <li key={item} className={`group ${['Collection', 'Shop & Boutiques'].includes(item) ? 'static' : 'relative'}`}>
                 <a 
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     if (item === 'Home') { setView('home'); }
-                    else if (item === 'Shop') { setView('shop'); setSelectedCategory('All'); }
+                    else if (item === 'Shop & Boutiques') { setView('boutiques'); }
                     else if (item === 'Collection') { setView('collections'); }
-                    else if (item === 'Boutiques') { setView('boutiques'); }
                     else if (item === 'Contact') { setView('contact'); }
                     else if (item === 'About Us') { setView('about'); }
                     else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -280,12 +280,39 @@ export default function Navbar({
                 )}
 
                 {/* Cinematic Floating Megamenu for Boutiques */}
-                {item === 'Boutiques' && (
+                {item === 'Shop & Boutiques' && (
                   <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-[#FAF9F6]/95 backdrop-blur-3xl border border-[#BCA58A]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 h-[420px] p-3 transform origin-top group-hover:translate-y-0 translate-y-4 scale-95 group-hover:scale-100">
                     <div className="w-full h-full flex gap-8 p-8 bg-white/50 rounded-xl">
                       
-                      {/* Col 1: Top Boutiques */}
+                      {/* Col 1: Top Shops */}
                       <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 pr-6">
+                        <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Top Shops</span>
+                        <div className="flex flex-col gap-3.5 mt-2">
+                          {['Rivaaj Store', 'Pehnawa', 'Ludhiana Silks', 'Amritsar Textiles', 'The Heritage Store'].map((shop) => (
+                            <a
+                              key={shop}
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (setSelectedBoutique) {
+                                  setSelectedBoutique(shop);
+                                  setView('seller-shop');
+                                } else {
+                                  window.location.href = `/shop/${shop.toLowerCase().replace(/ /g, '-')}`;
+                                }
+                              }}
+                              className="text-[16px] text-[#111111]/90 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
+                              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                            >
+                              {shop}
+                              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#BCA58A] transition-all duration-300 group-hover/btq:w-full opacity-50" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Col 2: Top Boutiques */}
+                      <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 px-6">
                         <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Top Boutiques</span>
                         <div className="flex flex-col gap-3.5 mt-2">
                           {['Badshah Designer Fabrics', 'Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Awadh Kraft'].map((btq) => (
@@ -315,8 +342,8 @@ export default function Navbar({
                         </a>
                       </div>
 
-                      {/* Col 2: Featured Boutique Visual 1 */}
-                      <div className="w-[35%] h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-2 shadow-lg" onClick={() => {
+                      {/* Col 3: Featured Boutique Visual 1 */}
+                      <div className="w-1/4 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-2 shadow-lg" onClick={() => {
                         if (setSelectedBoutique) {
                           setSelectedBoutique('Badshah Designer Fabrics');
                           setView('seller-shop');
@@ -338,7 +365,7 @@ export default function Navbar({
                         </div>
                       </div>
 
-                      {/* Col 3: Featured Boutique Visual 2 */}
+                      {/* Col 4: Featured Boutique Visual 2 */}
                       <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg" onClick={() => {
                         if (setSelectedBoutique) {
                           setSelectedBoutique('Kala Mandir');
@@ -490,10 +517,10 @@ export default function Navbar({
                     </div>
                   </div>
 
-                  {['SHOP', 'COLLECTIONS', 'ABOUT US', 'CONTACT'].map((item, i) => (
+                  {['SHOP & BOUTIQUES', 'COLLECTIONS', 'ABOUT US', 'CONTACT'].map((item, i) => (
                     <a key={i} href="#" onClick={(e) => {
                       e.preventDefault();
-                      if (item === 'SHOP') { setView('shop'); setSelectedCategory('All'); }
+                      if (item === 'SHOP & BOUTIQUES') { setView('boutiques'); }
                       else if (item === 'COLLECTIONS') { window.location.href = '/collections'; }
                       else if (item === 'CONTACT') { setView('contact'); }
                       else { window.location.href = '/sell'; }
