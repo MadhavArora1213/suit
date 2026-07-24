@@ -200,7 +200,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [favorites, setFavorites] = useState({});
   const [sortBy, setSortBy] = useState('default');
-  const [filters, setFilters] = useState({ fabric: 'All', occasion: 'All', color: 'All', price: 'All' });
+  const [filters, setFilters] = useState({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' });
 
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -227,12 +227,26 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     setProfile(richProfile || prof);
 
     const allProds = getAllProducts();
+    
+    const suitImages = [
+      '/custom_suit_1.png',
+      '/custom_suit_2.png',
+      '/custom_suit_3.png',
+      '/custom_suit_4.png',
+      '/custom_suit_5.png',
+      '/custom_suit_6.png'
+    ];
+
     const boutiqueProds = allProds.filter(p => {
       if (!p.boutique || !boutiqueName) return false;
       const pb = p.boutique.trim().toLowerCase();
       const bn = boutiqueName.trim().toLowerCase();
       return pb.includes(bn) || bn.includes(pb);
-    });
+    }).map((prod, index) => ({
+      ...prod,
+      image: suitImages[index % suitImages.length]
+    }));
+    
     setProducts(boutiqueProds);
     setFilteredProducts(boutiqueProds);
     const savedFavs = localStorage.getItem('gurnaaz_favorites');
@@ -250,6 +264,8 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     if (filters.fabric !== 'All') result = result.filter(p => p.fabric === filters.fabric);
     if (filters.occasion !== 'All') result = result.filter(p => p.occasion === filters.occasion);
     if (filters.color !== 'All') result = result.filter(p => p.color === filters.color);
+    if (filters.size !== 'All') result = result.filter(p => p.sizes && p.sizes.includes(filters.size));
+    if (filters.work !== 'All') result = result.filter(p => p.work === filters.work || (p.description && p.description.includes(filters.work)));
     if (filters.price !== 'All') {
       result = result.filter(p => {
         const price = parseInt(p.price.replace(/[^0-9]/g, ''));
@@ -265,10 +281,12 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     setFilteredProducts(result);
   }, [filters, sortBy, products]);
 
-  const fabricOptions = [{ value: 'All', label: 'All Fabrics' }, { value: 'Silk', label: 'Pure Silk' }, { value: 'Georgette', label: 'Georgette' }, { value: 'Cotton', label: 'Cotton' }, { value: 'Banarasi', label: 'Banarasi' }];
+  const fabricOptions = [{ value: 'All', label: 'All Fabrics' }, { value: 'Silk', label: 'Pure Silk' }, { value: 'Georgette', label: 'Georgette' }, { value: 'Cotton', label: 'Cotton' }, { value: 'Banarasi', label: 'Banarasi' }, { value: 'Chiffon', label: 'Chiffon' }];
   const occasionOptions = [{ value: 'All', label: 'All Occasions' }, { value: 'Festive', label: 'Festive Wear' }, { value: 'Wedding', label: 'Wedding Guest' }, { value: 'Casual', label: 'Casual Wear' }];
-  const colorOptions = [{ value: 'All', label: 'All Colors' }, { value: 'Red', label: 'Red' }, { value: 'Blue', label: 'Blue' }, { value: 'Green', label: 'Green' }, { value: 'Pink', label: 'Pink' }];
+  const colorOptions = [{ value: 'All', label: 'All Colors' }, { value: 'Red', label: 'Red' }, { value: 'Blue', label: 'Blue' }, { value: 'Green', label: 'Green' }, { value: 'Pink', label: 'Pink' }, { value: 'Black', label: 'Black' }];
   const priceOptions = [{ value: 'All', label: 'Any Price' }, { value: 'Under 5K', label: 'Under ₹5,000' }, { value: '5K - 10K', label: '₹5,000 - ₹10,000' }, { value: 'Over 10K', label: 'Over ₹10,000' }];
+  const sizeOptions = [{ value: 'All', label: 'All Sizes' }, { value: 'XS', label: 'XS' }, { value: 'S', label: 'S' }, { value: 'M', label: 'M' }, { value: 'L', label: 'L' }, { value: 'XL', label: 'XL' }];
+  const workOptions = [{ value: 'All', label: 'All Work' }, { value: 'Embroidery', label: 'Hand Embroidery' }, { value: 'Zari', label: 'Zari Work' }, { value: 'Gota Patti', label: 'Gota Patti' }, { value: 'Printed', label: 'Printed' }];
 
   if (!profile) return null;
 
@@ -291,12 +309,12 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
           
           {/* Left Floating Image */}
           <motion.div style={{ y: collageY1 }} className="hidden md:block w-1/4 max-w-[220px] aspect-[4/5] rounded-[24px] overflow-hidden shadow-2xl rotate-[-8deg] border-[6px] border-[#FAF9F6] translate-x-16 z-0">
-            <img src={products[1]?.image || profile.coverImage} className="w-full h-full object-cover saturate-[0.8]" />
+            <img src="/custom_suit_1.png" className="w-full h-full object-cover saturate-[0.8]" alt="Custom Bridal Suit" />
           </motion.div>
           
           {/* Center Main Image */}
           <motion.div style={{ scale: collageScale }} className="w-[95%] md:w-[65%] max-w-[700px] aspect-[16/10] rounded-[32px] overflow-hidden shadow-[0_30px_60px_rgba(188,165,138,0.25)] border-[8px] border-[#FAF9F6] z-10 relative">
-            <img src={profile.coverImage} className="w-full h-full object-cover filter brightness-[0.8]" />
+            <img src={profile.coverImage} className="w-full h-full object-cover filter brightness-[0.8]" alt="Boutique Cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#111111]/80 via-[#111111]/30 to-transparent" />
             
             {/* Embedded Text inside Main Image */}
@@ -321,7 +339,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
 
           {/* Right Floating Image */}
           <motion.div style={{ y: collageY2 }} className="hidden lg:block w-1/4 max-w-[220px] aspect-[4/5] rounded-[24px] overflow-hidden shadow-2xl rotate-[8deg] border-[6px] border-[#FAF9F6] -translate-x-16 z-0">
-            <img src={products[2]?.image || profile.coverImage} className="w-full h-full object-cover saturate-[0.8]" />
+            <img src="/custom_suit_2.png" className="w-full h-full object-cover saturate-[0.8]" alt="Custom Ethnic Suit" />
           </motion.div>
 
         </div>
@@ -351,13 +369,16 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
         
         {/* SIDEBAR */}
         <div className="hidden xl:block w-64 flex-shrink-0">
-          <div className="sticky top-28 bg-white/50 p-6 rounded-3xl border border-[#BCA58A]/15 shadow-[0_8px_30px_rgba(188,165,138,0.05)]">
+          <div className="sticky top-28 bg-white/50 p-6 rounded-3xl border border-[#BCA58A]/15 shadow-[0_8px_30px_rgba(188,165,138,0.05)] max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#BCA58A]/20">
             <div className="flex items-center justify-between mb-6 border-b border-[#BCA58A]/15 pb-4">
               <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#111111]">Refine</h3>
-              <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All' })} className="text-[9px] uppercase font-bold tracking-wider text-[#BCA58A] hover:text-[#111111] transition-colors">Clear</button>
+              <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' })} className="text-[9px] uppercase font-bold tracking-wider text-[#BCA58A] hover:text-[#111111] transition-colors">Clear</button>
             </div>
             <FilterSection title="Fabric" options={fabricOptions} selected={filters.fabric} onSelect={(v) => setFilters(f => ({ ...f, fabric: v }))} />
+            <FilterSection title="Color" options={colorOptions} selected={filters.color} onSelect={(v) => setFilters(f => ({ ...f, color: v }))} />
+            <FilterSection title="Work / Pattern" options={workOptions} selected={filters.work} onSelect={(v) => setFilters(f => ({ ...f, work: v }))} />
             <FilterSection title="Occasion" options={occasionOptions} selected={filters.occasion} onSelect={(v) => setFilters(f => ({ ...f, occasion: v }))} />
+            <FilterSection title="Size" options={sizeOptions} selected={filters.size} onSelect={(v) => setFilters(f => ({ ...f, size: v }))} />
             <FilterSection title="Price" options={priceOptions} selected={filters.price} onSelect={(v) => setFilters(f => ({ ...f, price: v }))} />
           </div>
         </div>
