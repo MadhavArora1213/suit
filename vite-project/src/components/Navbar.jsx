@@ -154,13 +154,14 @@ export default function Navbar({
         {/* Row 2: Top-Level Pages & Megamenu (Desktop Only) */}
         <div className={`hidden md:flex justify-center border-t transition-colors duration-500 ${scrolled ? 'border-[#BCA58A]/10 py-1.5' : 'border-[#111111]/10 py-2'}`}>
           <ul className="flex items-center gap-8 lg:gap-14">
-            {['Home', 'Collection', 'Boutiques', 'About Us', 'Contact'].map((item) => (
+            {['Home', 'Shop', 'Collection', 'Boutiques', 'About Us', 'Contact'].map((item) => (
               <li key={item} className={`group ${['Collection', 'Boutiques'].includes(item) ? 'static' : 'relative'}`}>
                 <a 
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
                     if (item === 'Home') { setView('home'); }
+                    else if (item === 'Shop') { setView('shop'); setSelectedCategory('All'); }
                     else if (item === 'Collection') { setView('collections'); }
                     else if (item === 'Boutiques') { setView('boutiques'); }
                     else if (item === 'Contact') { setView('contact'); }
@@ -489,10 +490,11 @@ export default function Navbar({
                     </div>
                   </div>
 
-                  {['COLLECTIONS', 'ABOUT US', 'CONTACT'].map((item, i) => (
+                  {['SHOP', 'COLLECTIONS', 'ABOUT US', 'CONTACT'].map((item, i) => (
                     <a key={i} href="#" onClick={(e) => {
                       e.preventDefault();
-                      if (item === 'COLLECTIONS') { window.location.href = '/collections'; }
+                      if (item === 'SHOP') { setView('shop'); setSelectedCategory('All'); }
+                      else if (item === 'COLLECTIONS') { window.location.href = '/collections'; }
                       else if (item === 'CONTACT') { setView('contact'); }
                       else { window.location.href = '/sell'; }
                       setIsOpen(false);

@@ -72,7 +72,7 @@ export default function Footer({ setView }) {
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }} viewport={{ once: true }}>
               <h4 className="text-[#111111] text-[14px] font-bold mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>Help</h4>
               <ul className="space-y-4">
-                {[{ label: 'Shipping', view: 'faq' }, { label: 'Returns', view: 'faq' }, { label: 'FAQ', view: 'faq' }, { label: 'Privacy Policy', view: 'privacy' }].map((l) => (
+                {[{ label: 'Shipping', view: 'shipping' }, { label: 'FAQ', view: 'faq' }, { label: 'Privacy Policy', view: 'privacy' }].map((l) => (
                   <li key={l.label}><a href="#" onClick={(e) => { e.preventDefault(); if (l.view) navigate(l.view); }} className="text-[#111111]/50 text-[13px] hover:text-[#111111] transition-colors duration-300" style={{ fontFamily: "'DM Sans', sans-serif" }}>{l.label}</a></li>
                 ))}
               </ul>

@@ -10,10 +10,10 @@ const TRUST = [
   },
   {
     num: '02',
-    title: 'Risk-Free Trial',
-    desc: 'Not the right fit? Send it back within 7 days. We want you to absolutely love every piece.',
-    stat: '7',
-    statLabel: 'Day Returns',
+    title: 'Quality Assured',
+    desc: 'Every unstitched fabric set undergoes a rigorous 3-point quality inspection before being shipped to you.',
+    stat: '3',
+    statLabel: 'Point Check',
   },
   {
     num: '03',

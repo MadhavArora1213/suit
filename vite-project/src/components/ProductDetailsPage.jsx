@@ -272,7 +272,6 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
             <div className="flex flex-wrap gap-4 text-[10px] text-[#6B6B6B] font-medium">
               <span className="flex items-center gap-1"><Clock size={12} className="text-[#BCA58A]" /> Dispatch 2-4 days</span>
               <span className="flex items-center gap-1"><Truck size={12} className="text-[#BCA58A]" /> Free shipping</span>
-              <span className="flex items-center gap-1"><RefreshCw size={12} className="text-[#BCA58A]" /> 7-day returns</span>
             </div>
 
             {/* Buttons */}
@@ -345,9 +344,8 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                   <p className="font-semibold text-[#111111] mb-0.5">{product.fabricName || 'Pure Silk'}</p>
                   <p>{product.fabricDesc || 'High-density handwoven fabric with silver and gold threads.'}</p>
                 </div>},
-                { key: 'shipping', title: 'Shipping & Returns', content: <div className="space-y-2">
+                { key: 'shipping', title: 'Shipping Info', content: <div className="space-y-2">
                   <div className="flex gap-2 items-start"><Truck size={13} className="text-[#BCA58A] mt-0.5 flex-shrink-0" /><p>Free shipping across India. 4-7 business days.</p></div>
-                  <div className="flex gap-2 items-start"><RefreshCw size={13} className="text-[#BCA58A] mt-0.5 flex-shrink-0" /><p>7-day returns. Free pick-up.</p></div>
                 </div>},
                 { key: 'care', title: 'Care Instructions', content: <ul className="list-disc pl-4 space-y-0.5 font-medium text-[#111111]">
                   {product.care?.map((c, i) => <li key={i}>{c}</li>) || <><li>Dry Clean Only</li><li>Do Not Bleach</li><li>Iron on Low Heat</li></>}

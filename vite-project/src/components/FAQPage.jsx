@@ -63,19 +63,19 @@ const faqCategories = [
     ],
   },
   {
-    category: 'Returns & Refunds',
+    category: 'Cancellations',
     items: [
       {
         q: 'What is your return policy?',
-        a: 'We accept returns within 7 days of delivery for items in unworn, pristine condition with all original tags and packaging intact. Custom-tailored and personalized items are non-returnable.',
+        a: 'Since all our suits are premium unstitched fabric sets sourced directly from heritage boutiques, all sales are final. We do not accept returns or exchanges. Please review product details carefully before purchasing.',
       },
       {
-        q: 'How do I initiate a return?',
-        a: 'Contact our support team via WhatsApp or email at support@gurnaaz.com with your order ID and reason for return. We\'ll arrange a free pickup within 48 hours.',
+        q: 'Can I cancel my order?',
+        a: 'Orders can only be cancelled within 2 hours of placement. After this window, the order moves to processing and cannot be cancelled.',
       },
       {
-        q: 'How long does the refund take?',
-        a: 'Refunds are processed within 3-5 business days after we receive and inspect the returned item. The amount is credited to your original payment method. COD refunds are transferred via UPI or bank transfer.',
+        q: 'What if I receive a damaged product?',
+        a: 'If you receive a damaged item, please contact us within 24 hours of delivery with photos of the package and the item. We will review your case and get back to you with the next steps.',
       },
     ],
   },

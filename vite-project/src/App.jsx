@@ -25,6 +25,7 @@ import CustomerHomePage from './components/CustomerHomePage'
 import ContactPage from './components/ContactPage'
 import AboutPage from './components/AboutPage'
 import PrivacyPolicy from './components/PrivacyPolicy'
+import ShippingPolicy from './components/ShippingPolicy'
 import FAQPage from './components/FAQPage'
 import CollectionsPage from './components/CollectionsPage'
 import CollectionDetailPage from './components/CollectionDetailPage'
@@ -48,10 +49,12 @@ function App() {
     if (path === '/contact') return 'contact';
     if (path === '/about') return 'about';
     if (path === '/privacy') return 'privacy';
+    if (path === '/shipping') return 'shipping';
     if (path === '/faq') return 'faq';
     if (path === '/cart') return 'cart';
     if (path === '/checkout') return 'checkout';
     if (path === '/login' || path === '/signup') return 'login';
+    if (path === '/shop') return 'shop';
     return 'home';
   };
 
@@ -108,10 +111,12 @@ function App() {
       'contact': '/contact',
       'about': '/about',
       'privacy': '/privacy',
+      'shipping': '/shipping',
       'faq': '/faq',
       'cart': '/cart',
       'checkout': '/checkout',
       'login': '/login',
+      'shop': '/shop',
       'home': '/sell',
     };
     if (pathMap[view] && window.location.pathname !== pathMap[view]) {
@@ -229,6 +234,15 @@ function App() {
         </>
       )}
 
+      {view === 'shop' && (
+        <CategoryPage 
+          categoryName="All"
+          setView={setView}
+          setSelectedProduct={setSelectedProduct}
+          addToCart={addToCart}
+        />
+      )}
+
       {view === 'category' && (
         <CategoryPage 
           categoryName={selectedCategory}
@@ -321,6 +335,10 @@ function App() {
 
       {view === 'privacy' && (
         <PrivacyPolicy setView={setView} />
+      )}
+
+      {view === 'shipping' && (
+        <ShippingPolicy setView={setView} />
       )}
 
       {view === 'faq' && (

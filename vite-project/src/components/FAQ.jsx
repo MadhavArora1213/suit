@@ -21,7 +21,7 @@ const faqs = [
   },
   {
     question: "Can I return products?",
-    answer: "We offer a curated luxury experience. Returns are accepted within 7 days of delivery for items in unworn, pristine condition with all original tags and premium packaging intact. Custom-tailored pieces are non-returnable."
+    answer: "Currently, we do not accept returns. Since all our suits are premium unstitched fabric sets sourced directly from heritage boutiques, all sales are final. Please review product details carefully before purchasing."
   }
 ];
 
