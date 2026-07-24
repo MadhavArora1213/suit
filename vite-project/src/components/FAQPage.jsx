@@ -12,7 +12,7 @@ const faqCategories = [
       },
       {
         q: 'Can I modify or cancel my order after placing it?',
-        a: 'You can modify or cancel your order within 2 hours of placing it. After that, the order moves to processing and changes may not be possible. Please contact support@gurnaaz.com immediately if you need to make changes.',
+        a: 'You can modify or cancel your order within 2 hours of placing it. After that, the order moves to processing and changes may not be possible. Please contact madhavarora132005@gmail.com immediately if you need to make changes.',
       },
       {
         q: 'Do you offer COD (Cash on Delivery)?',
@@ -109,7 +109,7 @@ const faqCategories = [
       },
       {
         q: 'How do I contact customer support?',
-        a: 'You can reach us via WhatsApp at +91 XXXXX XXXXX, email at support@gurnaaz.com, or use the contact form on our Contact page. Our team responds within 2 hours during business hours (10 AM - 8 PM IST).',
+        a: 'You can reach us via WhatsApp at +91 XXXXX XXXXX, email at madhavarora132005@gmail.com, or use the contact form on our Contact page. Our team responds within 2 hours during business hours (10 AM - 8 PM IST).',
       },
       {
         q: 'Do you offer gift cards?',
@@ -262,10 +262,10 @@ export default function FAQPage({ setView }) {
               Contact Us
             </button>
             <a
-              href="mailto:support@gurnaaz.com"
+              href="mailto:madhavarora132005@gmail.com"
               className="border border-white/20 text-white px-8 py-3.5 text-[10px] tracking-[0.2em] font-bold uppercase hover:border-[#BCA58A] hover:text-[#BCA58A] transition-colors"
             >
-              support@gurnaaz.com
+              madhavarora132005@gmail.com
             </a>
           </div>
         </div>

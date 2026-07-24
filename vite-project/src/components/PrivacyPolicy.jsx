@@ -47,11 +47,11 @@ However, no method of transmission over the Internet or electronic storage is 10
   },
   {
     title: '7. Contact Us',
-    content: `For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by email at support@gurnaaz.com or by mail using the details provided below:
+    content: `For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by email at madhavarora132005@gmail.com or by mail using the details provided below:
 
 Gurnaaz
 Madhav Arora, Founder
-India`,
+Hoshiarpur, Punjab`,
   },
 ];
 
@@ -151,7 +151,7 @@ export default function PrivacyPolicy({ setView }) {
               Questions about this policy? Reach out anytime.
             </p>
             <p className="text-[13px] text-[#BCA58A] font-medium mt-1">
-              support@gurnaaz.com
+              madhavarora132005@gmail.com
             </p>
           </div>
           <button

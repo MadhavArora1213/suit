@@ -140,8 +140,8 @@ export default function ContactPage({ setView }) {
               >
                 {[
                   { label: 'Call Us', value: '+91 98772 75894' },
-                  { label: 'Email', value: 'concierge@gurnaaz.com' },
-                  { label: 'Visit', value: 'Bandra, Mumbai' },
+                  { label: 'Email', value: 'madhavarora132005@gmail.com' },
+                  { label: 'Visit', value: 'Hoshiarpur, Punjab' },
                 ].map((item) => (
                   <div
                     key={item.label}

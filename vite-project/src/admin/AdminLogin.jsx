@@ -16,10 +16,10 @@ export default function AdminLogin({ onLogin }) {
     setError('');
     setLoading(true);
     setTimeout(() => {
-      if (email === 'admin@gurnaaz.com' && password === 'admin123') {
+      if (email === 'madhavarora132005@gmail.com' && password === 'admin123') {
         onLogin();
       } else {
-        setError('Invalid credentials. Use admin@gurnaaz.com / admin123');
+        setError('Invalid credentials. Use madhavarora132005@gmail.com / admin123');
         setLoading(false);
       }
     }, 1000);
@@ -73,7 +73,7 @@ export default function AdminLogin({ onLogin }) {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="admin@gurnaaz.com"
+                  placeholder="madhavarora132005@gmail.com"
                   required
                   className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] border border-[#C8E8EC] bg-[#F5FCFD] focus:outline-none transition-all"
                   onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.12)`; e.target.style.background = '#fff'; }}

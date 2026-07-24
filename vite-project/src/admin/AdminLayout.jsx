@@ -112,7 +112,7 @@ export default function AdminLayout({ children, activePage, setActivePage, onLog
               <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">G</div>
               <div className="min-w-0">
                 <p className="text-sm font-semibold text-white truncate">Admin User</p>
-                <p className="text-xs text-white/50 truncate">admin@gurnaaz.com</p>
+                <p className="text-xs text-white/50 truncate">madhavarora132005@gmail.com</p>
               </div>
             </div>
           )}

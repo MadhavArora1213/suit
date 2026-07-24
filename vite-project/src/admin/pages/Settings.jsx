@@ -65,7 +65,7 @@ export default function Settings() {
   const [general, setGeneral] = useState({
     siteName: 'Gurnaaz Ethnic Wear',
     tagline: 'Heritage Craftsmanship · Modern Luxury',
-    email: 'admin@gurnaaz.com',
+    email: 'madhavarora132005@gmail.com',
     phone: '+91 98765 43210',
     instagram: '@gurnaazethnicwear',
     website: 'https://gurnaaz.com',

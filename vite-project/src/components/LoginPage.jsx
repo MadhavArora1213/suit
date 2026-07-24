@@ -29,7 +29,7 @@ export default function LoginPage({ setView, onLoginSuccess }) {
           const userProfile = {
             name: isRegister ? name : (data.user_first_name ? `${data.user_first_name} ${data.user_last_name}` : 'Gurnaaz Member'),
             phone: verifiedPhone,
-            email: isRegister ? email : 'member@gurnaaz.com',
+            email: isRegister ? email : 'madhavarora132005@gmail.com',
           };
           saveUserData(userProfile).then(() => {
             onLoginSuccess(userProfile);
@@ -41,7 +41,7 @@ export default function LoginPage({ setView, onLoginSuccess }) {
           const userProfile = {
             name: isRegister ? name : 'Gurnaaz Member',
             phone: 'Verified Phone',
-            email: isRegister ? email : 'member@gurnaaz.com',
+            email: isRegister ? email : 'madhavarora132005@gmail.com',
           };
           saveUserData(userProfile).then(() => {
             onLoginSuccess(userProfile);
@@ -210,7 +210,7 @@ export default function LoginPage({ setView, onLoginSuccess }) {
                         required
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="e.g. name@gurnaaz.com"
+                        placeholder="e.g. madhavarora132005@gmail.com"
                         className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none pl-11 pr-4 py-3.5 text-sm transition-colors rounded"
                       />
                     </div>
@@ -244,7 +244,7 @@ export default function LoginPage({ setView, onLoginSuccess }) {
                           required
                           value={loginEmail} 
                           onChange={(e) => setLoginEmail(e.target.value)}
-                          placeholder="e.g. name@gurnaaz.com"
+                          placeholder="e.g. madhavarora132005@gmail.com"
                           className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none pl-11 pr-4 py-3.5 text-sm transition-colors rounded"
                         />
                       </div>

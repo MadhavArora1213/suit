@@ -127,7 +127,7 @@ export default function ShippingPolicy({ setView }) {
               Have a question about your shipment?
             </p>
             <p className="text-[13px] text-[#BCA58A] font-medium mt-1">
-              support@gurnaaz.com
+              madhavarora132005@gmail.com
             </p>
           </div>
           <button
