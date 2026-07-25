@@ -505,12 +505,22 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                           {p.name}
                         </h3>
                         <div className="flex items-center justify-between">
-                          <span
-                            className="text-[#6B6B6B] text-[13px] font-medium"
-                            style={{ fontFamily: "'DM Sans', sans-serif" }}
-                          >
-                            {p.price}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-[#6B6B6B] text-[13px] font-medium"
+                              style={{ fontFamily: "'DM Sans', sans-serif" }}
+                            >
+                              {p.price}
+                            </span>
+                            {p.originalPrice && (
+                              <span
+                                className="text-[#A8A8A8] text-[11px] line-through font-medium"
+                                style={{ fontFamily: "'DM Sans', sans-serif" }}
+                              >
+                                {p.originalPrice}
+                              </span>
+                            )}
+                          </div>
                           {p.rating && (
                             <div className="flex items-center gap-1 bg-[#FAF9F6] px-2 py-1 rounded-full border border-[#BCA58A]/20">
                               <span className="text-[#BCA58A] text-[9px]">★</span>

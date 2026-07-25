@@ -38,6 +38,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
   const [form, setForm] = useState({
     name: editProduct?.name || '',
     price: editProduct?.price?.replace('₹', '').replace(',', '') || '',
+    originalPrice: editProduct?.originalPrice?.replace('₹', '').replace(',', '') || '',
     boutique: editProduct?.boutique || '',
     badge: editProduct?.badge || '',
     collection: editProduct?.collection || 'Trending',
@@ -91,6 +92,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       name: form.name,
       price: `₹${Number(form.price).toLocaleString('en-IN')}`,
       priceNum: Number(form.price),
+      originalPrice: form.originalPrice ? `₹${Number(form.originalPrice).toLocaleString('en-IN')}` : null,
       boutique: form.boutique,
       badge: form.badge,
       collection: form.collection,
@@ -163,10 +165,14 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 <Label required>Product Name</Label>
                 <Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="e.g. Embroidered Silk Suit Set" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <Label required>Price (₹)</Label>
+                  <Label required>Selling Price (₹)</Label>
                   <Input type="number" value={form.price} onChange={e => update('price', e.target.value)} placeholder="e.g. 4299" />
+                </div>
+                <div>
+                  <Label>Original MRP (₹)</Label>
+                  <Input type="number" value={form.originalPrice} onChange={e => update('originalPrice', e.target.value)} placeholder="e.g. 5999" />
                 </div>
                 <div>
                   <Label required>Boutique / Seller</Label>

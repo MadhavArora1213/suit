@@ -243,8 +243,15 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
             </div>
 
             {/* Price */}
-            <div className="py-3 border-y border-[#BCA58A]/8">
+            <div className="flex items-center gap-3 mt-4">
               <p className="text-2xl font-light text-[#BCA58A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.price}</p>
+              {product.originalPrice && (
+                <p className="text-lg font-light text-[#A8A8A8] line-through" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  {product.originalPrice}
+                </p>
+              )}
+            </div>
+            <div className="py-3 border-y border-[#BCA58A]/8">
               <p className="text-[9px] text-[#6B6B6B] uppercase font-semibold tracking-wider mt-0.5">Inclusive of all taxes · Free shipping</p>
             </div>
 
