@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, Sparkles } from 'lucide-react';
 
-const P = '#005461';
+const P = '#111111';
 
 export default function AdminLogin({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -28,7 +28,7 @@ export default function AdminLogin({ onLogin }) {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-6"
-      style={{ fontFamily: "'DM Sans', sans-serif", background: '#F5FCFD' }}
+      style={{ fontFamily: "'DM Sans', sans-serif", background: '#FAF9F6' }}
     >
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -40,7 +40,7 @@ export default function AdminLogin({ onLogin }) {
         <div className="flex flex-col items-center mb-8">
           <div
             className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 shadow-lg"
-            style={{ background: `linear-gradient(135deg, ${P}, #003D47)`, boxShadow: `0 8px 24px rgba(0,84,97,0.3)` }}
+            style={{ background: `linear-gradient(135deg, ${P}, #111111)`, boxShadow: `0 8px 24px rgba(17,17,17,0.3)` }}
           >
             <Sparkles size={26} className="text-white" />
           </div>
@@ -55,8 +55,8 @@ export default function AdminLogin({ onLogin }) {
 
         {/* Card */}
         <div
-          className="bg-white rounded-3xl p-8 shadow-xl border border-[#C8E8EC]/60"
-          style={{ boxShadow: '0 20px 60px rgba(0,84,97,0.1)' }}
+          className="bg-white rounded-3xl p-8 shadow-xl border border-[#E8DDD0]/60"
+          style={{ boxShadow: '0 20px 60px rgba(17,17,17,0.1)' }}
         >
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
@@ -75,9 +75,9 @@ export default function AdminLogin({ onLogin }) {
                   onChange={e => setEmail(e.target.value)}
                   placeholder="madhavarora132005@gmail.com"
                   required
-                  className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] border border-[#C8E8EC] bg-[#F5FCFD] focus:outline-none transition-all"
-                  onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.12)`; e.target.style.background = '#fff'; }}
-                  onBlur={e => { e.target.style.borderColor = '#C8E8EC'; e.target.style.boxShadow = 'none'; e.target.style.background = '#F5FCFD'; }}
+                  className="w-full pl-11 pr-4 py-3.5 rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] border border-[#E8DDD0] bg-[#FAF9F6] focus:outline-none transition-all"
+                  onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.12)`; e.target.style.background = '#fff'; }}
+                  onBlur={e => { e.target.style.borderColor = '#E8DDD0'; e.target.style.boxShadow = 'none'; e.target.style.background = '#FAF9F6'; }}
                 />
               </div>
             </div>
@@ -98,9 +98,9 @@ export default function AdminLogin({ onLogin }) {
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
-                  className="w-full pl-11 pr-12 py-3.5 rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] border border-[#C8E8EC] bg-[#F5FCFD] focus:outline-none transition-all"
-                  onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.12)`; e.target.style.background = '#fff'; }}
-                  onBlur={e => { e.target.style.borderColor = '#C8E8EC'; e.target.style.boxShadow = 'none'; e.target.style.background = '#F5FCFD'; }}
+                  className="w-full pl-11 pr-12 py-3.5 rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] border border-[#E8DDD0] bg-[#FAF9F6] focus:outline-none transition-all"
+                  onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.12)`; e.target.style.background = '#fff'; }}
+                  onBlur={e => { e.target.style.borderColor = '#E8DDD0'; e.target.style.boxShadow = 'none'; e.target.style.background = '#FAF9F6'; }}
                 />
                 <button
                   type="button"
@@ -132,8 +132,8 @@ export default function AdminLogin({ onLogin }) {
               whileTap={{ scale: 0.98 }}
               className="w-full py-4 rounded-xl text-xs font-bold tracking-[0.2em] uppercase text-white flex items-center justify-center gap-2 disabled:opacity-70 transition-all mt-2"
               style={{
-                background: `linear-gradient(135deg, ${P}, #003D47)`,
-                boxShadow: `0 6px 24px rgba(0,84,97,0.35)`,
+                background: `linear-gradient(135deg, ${P}, #111111)`,
+                boxShadow: `0 6px 24px rgba(17,17,17,0.35)`,
               }}
             >
               {loading ? (
@@ -148,7 +148,7 @@ export default function AdminLogin({ onLogin }) {
             </motion.button>
           </form>
 
-          <div className="mt-7 pt-5 border-t border-[#EBF6F8] text-center">
+          <div className="mt-7 pt-5 border-t border-[#E8DDD0] text-center">
             <p className="text-xs text-[#A8BCBE] tracking-widest uppercase">
               Gurnaaz Ethnic Wear · Admin Portal
             </p>

@@ -25,6 +25,7 @@ const KEYS = {
   lookbook:     'gurnaaz_lookbook',
   reviews:      'gurnaaz_reviews',
   orders:       'gurnaaz_orders',
+  discounts:    'gurnaaz_discounts',
 };
 
 // ── Static Products Definition ────────────────────────────────
@@ -1270,7 +1271,17 @@ export const saveGallery   = (arr)        => set(KEYS.gallery, arr);
 export const addGalleryItem= (item)       => { const arr = getGallery(); arr.unshift(item); saveGallery(arr); };
 export const deleteGallery = (id)         => saveGallery(getGallery().filter(g => g.id !== id));
 
-// ── HERO ─────────────────────────────────────────────────────
+// ── Discounts ───────────────────────────────────────────────────
+export const getDiscounts = () => {
+  const data = localStorage.getItem(KEYS.discounts);
+  return data ? JSON.parse(data) : [];
+};
+
+export const saveDiscounts = (discounts) => {
+  localStorage.setItem(KEYS.discounts, JSON.stringify(discounts));
+};
+
+// ── Sync Helper ─────────────────────────────────────────────────────
 export const getHero  = (fallback) => get(KEYS.hero, fallback);
 export const saveHero = (data)     => set(KEYS.hero, data);
 

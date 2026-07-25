@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { syncProducts } from './utils/adminStore'
+import { syncProducts, getAllProducts } from './utils/adminStore'
 import './App.css'
 import LoadingScreen from './LoadingScreen'
 import Navbar from './components/Navbar'
@@ -30,6 +30,7 @@ import FAQPage from './components/FAQPage'
 import CollectionsPage from './components/CollectionsPage'
 import CollectionDetailPage from './components/CollectionDetailPage'
 import BoutiquesPage from './components/BoutiquesPage'
+import WishlistPage from './components/WishlistPage'
 
 function App() {
   const isHomeRoute = window.location.pathname === '/' || window.location.pathname === '';
@@ -38,6 +39,8 @@ function App() {
   const [contentVisible, setContentVisible] = useState(isHomeRoute ? false : true)
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState({})
+  const allProducts = getAllProducts();
+
   const getInitialView = () => {
     const path = window.location.pathname;
     if (path === '/') return 'customer-home';
@@ -55,6 +58,7 @@ function App() {
     if (path === '/cart') return 'cart';
     if (path === '/checkout') return 'checkout';
     if (path === '/login' || path === '/signup') return 'login';
+    if (path === '/wishlist') return 'wishlist';
     if (path === '/shop') return 'shop';
     return 'home';
   };
@@ -123,6 +127,7 @@ function App() {
       'cart': '/cart',
       'checkout': '/checkout',
       'login': '/login',
+      'wishlist': '/wishlist',
       'shop': '/shop',
       'home': '/sell',
     };
@@ -350,6 +355,16 @@ function App() {
 
       {view === 'faq' && (
         <FAQPage setView={setView} />
+      )}
+
+      {view === 'wishlist' && (
+        <WishlistPage
+          allProducts={allProducts}
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
+          addToCart={addToCart}
+          setView={setView}
+        />
       )}
 
       <Footer setView={setView} />

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Package, ShoppingBag, Image, Star,
   Settings, LogOut, ChevronRight, Sparkles, Layers,
-  Film, Megaphone, FolderOpen, ChevronLeft, Menu
+  Film, Megaphone, FolderOpen, ChevronLeft, Menu, Tag
 } from 'lucide-react';
 
 const navItems = [
@@ -15,12 +15,13 @@ const navItems = [
   { id: 'hero',         label: 'Hero Section', icon: Film },
   { id: 'lookbook',     label: 'Lookbook',     icon: Layers },
   { id: 'promotions',   label: 'Promotions',   icon: Megaphone },
+  { id: 'discounts',    label: 'Discounts',    icon: Tag },
   { id: 'testimonials', label: 'Testimonials', icon: Star },
   { id: 'settings',     label: 'Settings',     icon: Settings },
 ];
 
-const PURPLE = '#005461';
-const PURPLE_DARK = '#003D47';
+const PURPLE = '#111111';
+const PURPLE_DARK = '#111111';
 const PURPLE_DEEP = '#002830';
 
 export default function AdminLayout({ children, activePage, setActivePage, onLogout }) {
@@ -43,7 +44,7 @@ export default function AdminLayout({ children, activePage, setActivePage, onLog
       <motion.aside
         animate={{ width: collapsed ? 76 : 256 }}
         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 h-full z-50 flex flex-col overflow-hidden shadow-[4px_0_24px_rgba(0,84,97,0.15)]
+        className={`fixed top-0 left-0 h-full z-50 flex flex-col overflow-hidden shadow-[4px_0_24px_rgba(17,17,17,0.15)]
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
         style={{ background: `linear-gradient(180deg, ${PURPLE} 0%, ${PURPLE_DARK} 55%, ${PURPLE_DEEP} 100%)`, minWidth: collapsed ? 76 : 256 }}
       >
@@ -133,29 +134,29 @@ export default function AdminLayout({ children, activePage, setActivePage, onLog
       <div className="flex-1 flex flex-col min-w-0 transition-all duration-300"
         style={{ marginLeft: collapsed ? 76 : 256 }}>
         {/* Topbar */}
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-[#C8E8EC]/60 px-6 py-4 flex items-center gap-4 shadow-sm">
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-[#E8DDD0]/60 px-6 py-4 flex items-center gap-4 shadow-sm">
           <button onClick={() => setMobileOpen(true)}
-            className="lg:hidden p-2 rounded-xl hover:bg-[#EBF6F8] transition-colors" style={{ color: '#005461' }}>
+            className="lg:hidden p-2 rounded-xl hover:bg-[#E8DDD0] transition-colors" style={{ color: '#111111' }}>
             <Menu size={20} />
           </button>
           <div>
             <h2 className="text-lg font-semibold text-[#1A1A1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               {activeItem?.label || 'Dashboard'}
             </h2>
-            <p className="text-xs tracking-wider uppercase" style={{ color: '#005461', opacity: 0.7 }}>
+            <p className="text-xs tracking-wider uppercase" style={{ color: '#111111', opacity: 0.7 }}>
               Gurnaaz Ethnic Wear · Admin
             </p>
           </div>
           {/* Breadcrumb dot */}
           <div className="ml-4 hidden sm:flex items-center gap-2">
-            <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#005461' }} />
+            <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#111111' }} />
             <span className="text-xs text-[#9E9189] font-medium">{activeItem?.label}</span>
           </div>
 
           <div className="ml-auto flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2.5 rounded-xl px-4 py-2 border border-[#C8E8EC]" style={{ background: '#F5FCFD' }}>
+            <div className="hidden sm:flex items-center gap-2.5 rounded-xl px-4 py-2 border border-[#E8DDD0]" style={{ background: '#FAF9F6' }}>
               <div className="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold"
-                style={{ background: 'linear-gradient(135deg, #005461, #003D47)' }}>G</div>
+                style={{ background: 'linear-gradient(135deg, #111111, #111111)' }}>G</div>
               <div>
                 <p className="text-xs font-semibold text-[#1A1A1A]">Admin</p>
                 <p className="text-xs text-[#9E9189]">Super Admin</p>

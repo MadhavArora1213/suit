@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Upload, Plus, X, Check, Star } from 'lucide-react';
 import { addProduct, updateProduct, fileToBase64, notifyWebsite } from '../../utils/adminStore';
 
-const P = '#005461';
+const P = '#111111';
 
 const sizes = ['S (36)', 'M (38)', 'L (40)', 'XL (42)', 'XXL (44)'];
 const occasions = ['Festive', 'Wedding', 'Casual', 'Party', 'Daily Wear'];
@@ -18,15 +18,15 @@ const Label = ({ children, required }) => (
 
 const Input = ({ value, onChange, placeholder, type = 'text', ...rest }) => (
   <input type={type} value={value} onChange={onChange} placeholder={placeholder}
-    className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] focus:outline-none transition-all"
-    onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.1)`; e.target.style.background = '#fff'; }}
-    onBlur={e => { e.target.style.borderColor = '#C8E8EC'; e.target.style.boxShadow = 'none'; e.target.style.background = '#F5FCFD'; }}
+    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] focus:outline-none transition-all"
+    onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.1)`; e.target.style.background = '#fff'; }}
+    onBlur={e => { e.target.style.borderColor = '#E8DDD0'; e.target.style.boxShadow = 'none'; e.target.style.background = '#FAF9F6'; }}
     {...rest} />
 );
 
 const Card = ({ title, subtitle, children }) => (
-  <div className="bg-white rounded-2xl border border-[#C8E8EC]/60 overflow-hidden shadow-sm">
-    <div className="px-6 py-4 border-b border-[#EBF6F8]" style={{ background: '#F5FCFD' }}>
+  <div className="bg-white rounded-2xl border border-[#E8DDD0]/60 overflow-hidden shadow-sm">
+    <div className="px-6 py-4 border-b border-[#E8DDD0]" style={{ background: '#FAF9F6' }}>
       <h3 className="text-lg font-semibold text-[#1A1A1A]">{title}</h3>
       {subtitle && <p className="text-xs text-[#6B8C90] mt-0.5">{subtitle}</p>}
     </div>
@@ -133,7 +133,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       {/* Header — full width */}
       <div className="flex items-center gap-4">
         <button type="button" onClick={() => setActivePage('products')}
-          className="w-10 h-10 rounded-xl bg-white border border-[#C8E8EC] flex items-center justify-center hover:bg-[#EBF6F8] transition-colors shadow-sm">
+          className="w-10 h-10 rounded-xl bg-white border border-[#E8DDD0] flex items-center justify-center hover:bg-[#E8DDD0] transition-colors shadow-sm">
           <ArrowLeft size={18} className="text-[#6B8C90]" />
         </button>
         <div>
@@ -143,7 +143,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
         <motion.button type="submit" disabled={saving}
           whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
           className="ml-auto flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-bold text-white shadow-md disabled:opacity-70 transition-all"
-          style={{ background: saved ? '#10B981' : `linear-gradient(135deg, ${P}, #003D47)`, boxShadow: saved ? '0 4px 16px rgba(16,185,129,0.3)' : `0 4px 16px rgba(0,84,97,0.3)` }}>
+          style={{ background: saved ? '#10B981' : `linear-gradient(135deg, ${P}, #111111)`, boxShadow: saved ? '0 4px 16px rgba(16,185,129,0.3)' : `0 4px 16px rgba(17,17,17,0.3)` }}>
           {saving ? <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full" />
            : saved ? <><Check size={16} /> Saved to Website!</>
            : 'Save Product'}
@@ -181,7 +181,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                       className="px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all"
                       style={form.badge === b
                         ? { background: P, color: '#fff', borderColor: P }
-                        : { background: '#F5FCFD', borderColor: '#C8E8EC', color: '#4A6A70' }}>
+                        : { background: '#FAF9F6', borderColor: '#E8DDD0', color: '#4A6A70' }}>
                       {b}
                     </button>
                   ))}
@@ -201,9 +201,9 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 <div key={key}>
                   <Label required>{label}</Label>
                   <select value={form[key]} onChange={e => update(key, e.target.value)}
-                    className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] focus:outline-none appearance-none cursor-pointer transition-all"
+                    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none appearance-none cursor-pointer transition-all"
                     onFocus={e => { e.target.style.borderColor = P; }}
-                    onBlur={e => { e.target.style.borderColor = '#C8E8EC'; }}>
+                    onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }}>
                     {options.map(o => <option key={o}>{o}</option>)}
                   </select>
                 </div>
@@ -216,8 +216,8 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                   <button key={o} type="button" onClick={() => toggleArr(selectedOccasions, setSelectedOccasions, o)}
                     className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold border transition-all"
                     style={selectedOccasions.includes(o)
-                      ? { background: '#EBF6F8', borderColor: P, color: P }
-                      : { background: '#F5FCFD', borderColor: '#C8E8EC', color: '#4A6A70' }}>
+                      ? { background: '#E8DDD0', borderColor: P, color: P }
+                      : { background: '#FAF9F6', borderColor: '#E8DDD0', color: '#4A6A70' }}>
                     {selectedOccasions.includes(o) && <Check size={12} />} {o}
                   </button>
                 ))}
@@ -232,17 +232,17 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 <Label>Short Description</Label>
                 <textarea rows={2} value={form.shortDesc} onChange={e => update('shortDesc', e.target.value)}
                   placeholder="Brief product summary..."
-                  className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] focus:outline-none transition-all resize-none"
-                  onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.08)`; }}
-                  onBlur={e => { e.target.style.borderColor = '#C8E8EC'; e.target.style.boxShadow = 'none'; }} />
+                  className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] focus:outline-none transition-all resize-none"
+                  onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.08)`; }}
+                  onBlur={e => { e.target.style.borderColor = '#E8DDD0'; e.target.style.boxShadow = 'none'; }} />
               </div>
               <div>
                 <Label>Fabric & Design Details</Label>
                 <textarea rows={3} value={form.fabricDetails} onChange={e => update('fabricDetails', e.target.value)}
                   placeholder="Handcrafted from premium salwar suit fabric blend..."
-                  className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] focus:outline-none transition-all resize-none"
-                  onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.08)`; }}
-                  onBlur={e => { e.target.style.borderColor = '#C8E8EC'; e.target.style.boxShadow = 'none'; }} />
+                  className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] focus:outline-none transition-all resize-none"
+                  onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.08)`; }}
+                  onBlur={e => { e.target.style.borderColor = '#E8DDD0'; e.target.style.boxShadow = 'none'; }} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -261,8 +261,8 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                     <button key={c} type="button" onClick={() => toggleArr(selectedCare, setSelectedCare, c)}
                       className="px-3 py-2 rounded-lg text-sm font-semibold border transition-all"
                       style={selectedCare.includes(c)
-                        ? { background: '#EBF6F8', borderColor: P, color: P }
-                        : { background: '#F5FCFD', borderColor: '#C8E8EC', color: '#4A6A70' }}>
+                        ? { background: '#E8DDD0', borderColor: P, color: P }
+                        : { background: '#FAF9F6', borderColor: '#E8DDD0', color: '#4A6A70' }}>
                       {c}
                     </button>
                   ))}
@@ -277,7 +277,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
               {sizes.map(size => (
                 <div key={size}
                   className="flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer"
-                  style={{ borderColor: selectedSizes.includes(size) ? P : '#C8E8EC', background: selectedSizes.includes(size) ? '#EBF6F8' : '#F5FCFD' }}
+                  style={{ borderColor: selectedSizes.includes(size) ? P : '#E8DDD0', background: selectedSizes.includes(size) ? '#E8DDD0' : '#FAF9F6' }}
                   onClick={() => toggleArr(selectedSizes, setSelectedSizes, size)}>
                   <div className="w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all"
                     style={{ borderColor: selectedSizes.includes(size) ? P : '#A8BCBE', background: selectedSizes.includes(size) ? P : 'transparent' }}>
@@ -289,9 +289,9 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                       onChange={e => { e.stopPropagation(); setStockQty(prev => ({ ...prev, [size]: e.target.value })); }}
                       onClick={e => e.stopPropagation()}
                       placeholder="Qty"
-                      className="ml-auto w-16 px-2 py-1 border border-[#C8E8EC] rounded-lg text-sm text-center focus:outline-none bg-white"
+                      className="ml-auto w-16 px-2 py-1 border border-[#E8DDD0] rounded-lg text-sm text-center focus:outline-none bg-white"
                       onFocus={e => { e.stopPropagation(); e.target.style.borderColor = P; }}
-                      onBlur={e => { e.target.style.borderColor = '#C8E8EC'; }} />
+                      onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }} />
                   )}
                 </div>
               ))}
@@ -308,7 +308,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
               onDrop={e => { e.preventDefault(); handleMainImage(e); }}
               onDragOver={e => e.preventDefault()}
               className="relative rounded-xl overflow-hidden border-2 border-dashed transition-all cursor-pointer group"
-              style={{ borderColor: mainImage ? P : '#C8E8EC' }}>
+              style={{ borderColor: mainImage ? P : '#E8DDD0' }}>
               {mainImage ? (
                 <div className="relative">
                   <img src={mainImage} alt="Preview" className="w-full aspect-[3/4] object-cover" />
@@ -321,9 +321,9 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                   </div>
                 </div>
               ) : (
-                <label className="flex flex-col items-center justify-center aspect-[3/4] cursor-pointer hover:bg-[#EBF6F8] transition-colors">
+                <label className="flex flex-col items-center justify-center aspect-[3/4] cursor-pointer hover:bg-[#E8DDD0] transition-colors">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-colors group-hover:scale-110"
-                    style={{ background: '#EBF6F8' }}>
+                    style={{ background: '#E8DDD0' }}>
                     <Upload size={24} style={{ color: P }} />
                   </div>
                   <p className="text-sm font-semibold text-[#1A1A1A]">Drop image here</p>
@@ -339,7 +339,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
           <Card title="Additional Images" subtitle="Shown in product gallery / carousel">
             <div className="grid grid-cols-3 gap-3 mb-3">
               {additionalImages.map((img, i) => (
-                <div key={i} className="relative rounded-xl overflow-hidden aspect-square border border-[#C8E8EC]">
+                <div key={i} className="relative rounded-xl overflow-hidden aspect-square border border-[#E8DDD0]">
                   <img src={img} alt={`Additional ${i + 1}`} className="w-full h-full object-cover" />
                   <button type="button" onClick={() => setAdditionalImages(prev => prev.filter((_, idx) => idx !== i))}
                     className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center">
@@ -347,7 +347,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                   </button>
                 </div>
               ))}
-              <label className="aspect-square border-2 border-dashed border-[#C8E8EC] rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-[#EBF6F8] transition-colors">
+              <label className="aspect-square border-2 border-dashed border-[#E8DDD0] rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-[#E8DDD0] transition-colors">
                 <Plus size={20} style={{ color: P }} />
                 <span className="text-xs text-[#6B8C90] mt-1">Add</span>
                 <input type="file" accept="image/*" multiple onChange={handleAdditionalImages} className="hidden" />
@@ -380,7 +380,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                   {[1, 2, 3, 4, 5].map(n => (
                     <button key={n} type="button" onClick={() => update('rating', String(n))}
                       className="transition-transform hover:scale-110 active:scale-95">
-                      <Star size={28} className={parseFloat(form.rating) >= n ? 'fill-amber-400 text-amber-400' : 'text-[#C8E8EC]'} />
+                      <Star size={28} className={parseFloat(form.rating) >= n ? 'fill-amber-400 text-amber-400' : 'text-[#E8DDD0]'} />
                     </button>
                   ))}
                   <span className="text-lg font-bold text-[#1A1A1A] ml-2">{form.rating}</span>
@@ -400,7 +400,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
           </Card>
 
           {/* Live Summary */}
-          <div className="rounded-2xl p-5 border border-[#C8E8EC]" style={{ background: 'linear-gradient(135deg, #EBF6F8, #F5FCFD)' }}>
+          <div className="rounded-2xl p-5 border border-[#E8DDD0]" style={{ background: 'linear-gradient(135deg, #E8DDD0, #FAF9F6)' }}>
             <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: P }}>Product Summary</p>
             <div className="space-y-2.5 text-sm">
               {[
@@ -420,7 +420,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
             <motion.button type="submit" disabled={saving}
               whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }}
               className="w-full mt-5 py-3 rounded-xl text-sm font-bold text-white transition-all"
-              style={{ background: saved ? '#10B981' : `linear-gradient(135deg, ${P}, #003D47)` }}>
+              style={{ background: saved ? '#10B981' : `linear-gradient(135deg, ${P}, #111111)` }}>
               {saving ? 'Saving...' : saved ? '✓ Saved — Visible on Website!' : 'Save & Publish to Website'}
             </motion.button>
           </div>

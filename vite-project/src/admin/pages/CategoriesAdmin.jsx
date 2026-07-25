@@ -80,7 +80,7 @@ export default function CategoriesAdmin() {
           <p className="text-sm text-[#9E9189]">{categories.filter(c => c.active).length} active · {categories.filter(c => !c.active).length} hidden</p>
         </div>
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={openAdd}
-          className="flex items-center gap-2 bg-gradient-to-r from-[#005461] to-[#003D47] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#005461]/25">
+          className="flex items-center gap-2 bg-[#111111] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#111111]/25">
           <Plus size={16} /> Add Category
         </motion.button>
       </div>
@@ -92,13 +92,13 @@ export default function CategoriesAdmin() {
             <motion.div key={cat.id} layout
               initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }} transition={{ delay: i * 0.05 }}
-              className={`bg-white rounded-2xl border overflow-hidden group hover:shadow-lg transition-all duration-300 ${cat.active ? 'border-[#C8E8EC] hover:border-[#005461]/30' : 'border-dashed border-[#D0C8C0] opacity-60'}`}>
+              className={`bg-white rounded-2xl border overflow-hidden group hover:shadow-lg transition-all duration-300 ${cat.active ? 'border-[#E8DDD0] hover:border-[#111111]/30' : 'border-dashed border-[#D0C8C0] opacity-60'}`}>
               {/* Image */}
               <div className="relative h-40 overflow-hidden bg-[#F8F4F9]">
                 <img src={cat.image} alt={cat.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                 {/* Order badge */}
-                <div className="absolute top-3 left-3 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-xs font-bold text-[#005461] shadow">
+                <div className="absolute top-3 left-3 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-xs font-bold text-[#111111] shadow">
                   {cat.order}
                 </div>
                 {/* Active badge */}
@@ -121,7 +121,7 @@ export default function CategoriesAdmin() {
                   </button>
                   <div className="ml-auto flex gap-2">
                     <button onClick={() => openEdit(cat)}
-                      className="w-8 h-8 rounded-lg bg-[#C8E8EC] flex items-center justify-center hover:bg-[#B8DEE4] transition-colors">
+                      className="w-8 h-8 rounded-lg bg-[#E8DDD0] flex items-center justify-center hover:bg-[#B8DEE4] transition-colors">
                       <Edit2 size={14} className="text-[#6B6B6B]" />
                     </button>
                     <button onClick={() => setDeleteId(cat.id)}
@@ -137,8 +137,8 @@ export default function CategoriesAdmin() {
 
         {/* Add Card */}
         <motion.button onClick={openAdd} whileHover={{ scale: 1.01 }}
-          className="h-full min-h-[230px] border-2 border-dashed border-[#005461]/30 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-[#005461] hover:bg-[#EBF6F8] transition-all text-[#005461]">
-          <div className="w-10 h-10 bg-[#C8E8EC] rounded-xl flex items-center justify-center">
+          className="h-full min-h-[230px] border-2 border-dashed border-[#111111]/30 rounded-2xl flex flex-col items-center justify-center gap-3 hover:border-[#111111] hover:bg-[#E8DDD0] transition-all text-[#111111]">
+          <div className="w-10 h-10 bg-[#E8DDD0] rounded-xl flex items-center justify-center">
             <Plus size={20} />
           </div>
           <span className="text-sm font-semibold">Add Category</span>
@@ -153,21 +153,21 @@ export default function CategoriesAdmin() {
             onClick={() => setShowModal(false)}>
             <motion.div initial={{ scale: 0.94, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.94, y: 20 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl border border-[#C8E8EC] shadow-2xl w-full max-w-md overflow-hidden">
-              <div className="flex items-center justify-between p-5 border-b border-[#C8E8EC]">
+              className="bg-white rounded-2xl border border-[#E8DDD0] shadow-2xl w-full max-w-md overflow-hidden">
+              <div className="flex items-center justify-between p-5 border-b border-[#E8DDD0]">
                 <h3 className="text-lg font-semibold text-[#1A1A1A]">{editingId ? 'Edit Category' : 'Add Category'}</h3>
-                <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg hover:bg-[#C8E8EC] flex items-center justify-center text-[#6B6B6B]"><X size={16} /></button>
+                <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg hover:bg-[#E8DDD0] flex items-center justify-center text-[#6B6B6B]"><X size={16} /></button>
               </div>
               <div className="p-5 space-y-4">
                 {/* Image */}
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Category Image</label>
-                  <label className="block border-2 border-dashed border-[#A8D4DA] rounded-xl overflow-hidden cursor-pointer hover:border-[#005461] transition-colors">
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Category Image</label>
+                  <label className="block border-2 border-dashed border-[#BCA58A] rounded-xl overflow-hidden cursor-pointer hover:border-[#111111] transition-colors">
                     {form.imagePreview ? (
                       <img src={form.imagePreview} alt="Preview" className="w-full h-32 object-cover" />
                     ) : (
                       <div className="h-32 flex flex-col items-center justify-center text-[#9E9189] gap-2">
-                        <Upload size={22} className="text-[#005461]" />
+                        <Upload size={22} className="text-[#111111]" />
                         <span className="text-xs">Upload category image</span>
                       </div>
                     )}
@@ -180,20 +180,20 @@ export default function CategoriesAdmin() {
                   { label: 'Tagline', key: 'tagline', placeholder: 'e.g. Flowing elegance for every occasion' },
                 ].map(({ label, key, placeholder }) => (
                   <div key={key}>
-                    <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">{label}</label>
+                    <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">{label}</label>
                     <input value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} placeholder={placeholder}
-                      className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all" />
+                      className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all" />
                   </div>
                 ))}
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Display Order</label>
+                    <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Display Order</label>
                     <input type="number" min="1" value={form.order} onChange={e => setForm(f => ({ ...f, order: Number(e.target.value) }))}
-                      className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] focus:outline-none focus:border-[#005461] transition-all" />
+                      className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none focus:border-[#111111] transition-all" />
                   </div>
                   <div className="flex flex-col justify-end">
-                    <div className="flex items-center justify-between p-3 bg-[#FDFBF9] rounded-xl border border-[#C8E8EC]">
+                    <div className="flex items-center justify-between p-3 bg-[#FDFBF9] rounded-xl border border-[#E8DDD0]">
                       <span className="text-sm font-semibold text-[#1A1A1A]">Active</span>
                       <button type="button" onClick={() => setForm(f => ({ ...f, active: !f.active }))}>
                         {form.active ? <ToggleRight size={24} className="text-[#10B981]" /> : <ToggleLeft size={24} className="text-[#D0C8C0]" />}
@@ -202,10 +202,10 @@ export default function CategoriesAdmin() {
                   </div>
                 </div>
               </div>
-              <div className="p-5 border-t border-[#C8E8EC] flex gap-3">
-                <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-[#C8E8EC] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
+              <div className="p-5 border-t border-[#E8DDD0] flex gap-3">
+                <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
                 <button onClick={handleSave}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-green-500 text-white' : 'bg-gradient-to-r from-[#005461] to-[#003D47] text-white shadow-md'}`}>
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-green-500 text-white' : 'bg-[#111111] text-white shadow-md'}`}>
                   {saved ? <><Check size={15} /> Saved!</> : 'Save Category'}
                 </button>
               </div>
@@ -222,12 +222,12 @@ export default function CategoriesAdmin() {
             onClick={() => setDeleteId(null)}>
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl p-7 max-w-sm w-full mx-4 shadow-2xl border border-[#C8E8EC] text-center">
+              className="bg-white rounded-2xl p-7 max-w-sm w-full mx-4 shadow-2xl border border-[#E8DDD0] text-center">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"><Trash2 size={22} className="text-red-500" /></div>
               <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2">Delete Category?</h3>
               <p className="text-sm text-[#9E9189] mb-6">All products in this category may become uncategorized.</p>
               <div className="flex gap-3">
-                <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 border border-[#C8E8EC] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
+                <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
                 <button onClick={() => handleDelete(deleteId)} className="flex-1 py-2.5 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600 transition-colors">Delete</button>
               </div>
             </motion.div>

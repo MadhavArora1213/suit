@@ -11,6 +11,7 @@ import LookbookAdmin from './pages/LookbookAdmin';
 import Promotions from './pages/Promotions';
 import TestimonialsAdmin from './pages/TestimonialsAdmin';
 import CategoriesAdmin from './pages/CategoriesAdmin';
+import DiscountsAdmin from './pages/DiscountsAdmin';
 import Settings from './pages/Settings';
 
 export default function AdminApp() {
@@ -32,6 +33,7 @@ export default function AdminApp() {
       case 'lookbook':     return <LookbookAdmin />;
       case 'promotions':   return <Promotions />;
       case 'testimonials': return <TestimonialsAdmin />;
+      case 'discounts':    return <DiscountsAdmin />;
       case 'categories':   return <CategoriesAdmin />;
       case 'settings':     return <Settings />;
       default:             return <Dashboard setActivePage={setActivePage} />;
