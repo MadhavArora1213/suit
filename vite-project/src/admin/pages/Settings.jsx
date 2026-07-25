@@ -10,13 +10,13 @@ const Instagram = ({ size = 16, className = '' }) => (
   </svg>
 );
 
-const P = '#005461';
-const PD = '#003D47';
+const P = '#111111';
+const PD = '#111111';
 
 const SectionCard = ({ title, subtitle, icon: Icon, children }) => (
-  <div className="bg-white rounded-2xl border border-[#C8E8EC]/60 overflow-hidden shadow-sm">
-    <div className="flex items-center gap-3 px-6 py-4 border-b border-[#EBF6F8]" style={{ background: '#F5FCFD' }}>
-      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#EBF6F8' }}>
+  <div className="bg-white rounded-2xl border border-[#E8DDD0]/60 overflow-hidden shadow-sm">
+    <div className="flex items-center gap-3 px-6 py-4 border-b border-[#E8DDD0]" style={{ background: '#FAF9F6' }}>
+      <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: '#E8DDD0' }}>
         <Icon size={18} style={{ color: P }} />
       </div>
       <div>
@@ -42,20 +42,20 @@ const StyledInput = ({ value, onChange, placeholder, type = 'text', icon: Icon, 
   <div className="relative">
     {Icon && <Icon size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2" style={{ color: P }} />}
     <input type={type} value={value} onChange={onChange} placeholder={placeholder}
-      className="w-full py-3 pr-4 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] transition-all focus:outline-none"
+      className="w-full py-3 pr-4 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] transition-all focus:outline-none"
       style={{ paddingLeft: Icon ? '2.5rem' : '1rem' }}
-      onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.1)`; e.target.style.background = '#fff'; }}
-      onBlur={e => { e.target.style.borderColor = '#C8E8EC'; e.target.style.boxShadow = 'none'; e.target.style.background = '#F5FCFD'; }}
+      onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.1)`; e.target.style.background = '#fff'; }}
+      onBlur={e => { e.target.style.borderColor = '#E8DDD0'; e.target.style.boxShadow = 'none'; e.target.style.background = '#FAF9F6'; }}
     />
     {suffix}
   </div>
 );
 
 const SaveBtn = ({ section, savedSection, onSave }) => (
-  <div className="flex justify-end mt-5 pt-4 border-t border-[#EBF6F8]">
+  <div className="flex justify-end mt-5 pt-4 border-t border-[#E8DDD0]">
     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => onSave(section)}
       className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-all"
-      style={{ background: savedSection === section ? '#10B981' : `linear-gradient(135deg, ${P}, ${PD})`, boxShadow: savedSection === section ? '0 4px 16px rgba(16,185,129,0.3)' : `0 4px 16px rgba(0,84,97,0.25)` }}>
+      style={{ background: savedSection === section ? '#10B981' : `linear-gradient(135deg, ${P}, ${PD})`, boxShadow: savedSection === section ? '0 4px 16px rgba(16,185,129,0.3)' : `0 4px 16px rgba(17,17,17,0.25)` }}>
       {savedSection === section ? <><Check size={15} /> Saved!</> : <><Save size={15} /> Save Changes</>}
     </motion.button>
   </div>
@@ -138,8 +138,8 @@ export default function Settings() {
           {/* Branding */}
           <SectionCard title="Branding" subtitle="Logo and site identity" icon={Palette}>
             {/* Logo */}
-            <div className="flex items-center gap-5 mb-5 pb-5 border-b border-[#EBF6F8]">
-              <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#C8E8EC] flex items-center justify-center overflow-hidden flex-shrink-0 bg-[#F5FCFD]">
+            <div className="flex items-center gap-5 mb-5 pb-5 border-b border-[#E8DDD0]">
+              <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#E8DDD0] flex items-center justify-center overflow-hidden flex-shrink-0 bg-[#FAF9F6]">
                 {logoPreview
                   ? <img src={logoPreview} alt="Logo" className="w-full h-full object-cover" />
                   : <span className="text-3xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: P }}>G</span>
@@ -149,7 +149,7 @@ export default function Settings() {
                 <p className="text-lg font-semibold text-[#1A1A1A] mb-1">Store Logo</p>
                 <p className="text-sm text-[#6B7A7C] mb-3">PNG or SVG · transparent bg · 200×200px</p>
                 <label className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl cursor-pointer border transition-colors"
-                  style={{ background: '#EBF6F8', color: P, borderColor: '#C8E8EC' }}>
+                  style={{ background: '#E8DDD0', color: P, borderColor: '#E8DDD0' }}>
                   <Upload size={14} /> Upload Logo
                   <input type="file" accept="image/*" onChange={handleLogo} className="hidden" />
                 </label>
@@ -207,9 +207,9 @@ export default function Settings() {
                   <label className="block text-sm font-semibold text-[#1A1A1A] mb-1.5">{label}</label>
                   <input value={firebase[key]} onChange={e => setFirebase(p => ({ ...p, [key]: e.target.value }))}
                     placeholder={placeholder} type="text"
-                    className="w-full px-4 py-2.5 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] font-mono placeholder-[#A8BCBE] focus:outline-none transition-all"
-                    onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.1)`; }}
-                    onBlur={e => { e.target.style.borderColor = '#C8E8EC'; e.target.style.boxShadow = 'none'; }} />
+                    className="w-full px-4 py-2.5 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] font-mono placeholder-[#A8BCBE] focus:outline-none transition-all"
+                    onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.1)`; }}
+                    onBlur={e => { e.target.style.borderColor = '#E8DDD0'; e.target.style.boxShadow = 'none'; }} />
                 </div>
               ))}
             </div>
@@ -231,9 +231,9 @@ export default function Settings() {
                     <input type={showPasswords[key] ? 'text' : 'password'}
                       value={security[key]} onChange={e => setSecurity(p => ({ ...p, [key]: e.target.value }))}
                       placeholder="••••••••"
-                      className="w-full pl-10 pr-11 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] focus:outline-none transition-all"
-                      onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.1)`; }}
-                      onBlur={e => { e.target.style.borderColor = '#C8E8EC'; e.target.style.boxShadow = 'none'; }} />
+                      className="w-full pl-10 pr-11 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#A8BCBE] focus:outline-none transition-all"
+                      onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.1)`; }}
+                      onBlur={e => { e.target.style.borderColor = '#E8DDD0'; e.target.style.boxShadow = 'none'; }} />
                     <button type="button" onClick={() => togglePass(key)}
                       className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
                       style={{ color: showPasswords[key] ? P : '#9EA8A9' }}>

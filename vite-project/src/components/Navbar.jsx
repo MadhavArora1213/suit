@@ -4,20 +4,20 @@ import { useState, useEffect } from 'react';
 import gurnaazLogo from '../assets/gurnaaz.png';
 import { getAllProducts } from '../utils/adminStore';
 
-export default function Navbar({ 
-  cart = [], 
-  removeFromCart, 
+export default function Navbar({
+  cart = [],
+  removeFromCart,
   updateCartQty,
   favorites = {},
   toggleFavorite,
   addToCart,
-  setView, 
-  setSelectedCategory, 
-  setSelectedProduct, 
-  setSelectedBoutique, 
+  setView,
+  setSelectedCategory,
+  setSelectedProduct,
+  setSelectedBoutique,
   setSelectedCollectionSlug,
-  user, 
-  handleLogout 
+  user,
+  handleLogout
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -71,22 +71,22 @@ export default function Navbar({
       <div className={`transition-all duration-500 flex flex-col ${scrolled
         ? 'bg-[#FAF9F6]/95 backdrop-blur-2xl border-b border-[#BCA58A]/15 shadow-sm'
         : 'bg-[#FAF9F6] border-b border-[#BCA58A]/10 shadow-sm'
-      }`}>
+        }`}>
         {/* Row 1: Top Bar (Logo & Icons) */}
         <div className={`max-w-[1600px] mx-auto w-full px-6 md:px-12 transition-all duration-500 ${scrolled ? 'pt-2 pb-1' : 'pt-3 pb-2'}`}>
           <div className="relative flex items-center justify-between">
-            
+
             {/* Left: Mobile Hamburger & Desktop Search */}
             <div className="flex items-center gap-4 w-1/3">
-              <button 
+              <button
                 className={`md:hidden flex flex-col justify-center gap-1.5 w-6 h-6 cursor-pointer text-[#111111]`}
                 onClick={() => setIsOpen(!isOpen)}>
                 <span className={`w-5 h-px bg-current transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
                 <span className={`w-4 h-px bg-current transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
                 <span className={`w-5 h-px bg-current transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[5px]' : ''}`} />
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className={`hidden md:flex items-center gap-2 cursor-pointer transition-colors text-[#111111] hover:text-[#BCA58A]`}>
                 <Search strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
@@ -103,15 +103,15 @@ export default function Navbar({
 
             {/* Right: Icons */}
             <div className="flex items-center justify-end gap-4 lg:gap-6 w-1/3">
-              
-              <button 
+
+              <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 className={`md:hidden cursor-pointer transition-colors text-[#111111] hover:text-[#BCA58A]`}>
                 <Search strokeWidth={1.5} className="w-5 h-5" />
               </button>
 
-              <button 
-                onClick={() => setWishlistOpen(true)}
+              <button
+                onClick={() => setView('wishlist')}
                 className={`hidden sm:block cursor-pointer transition-colors relative text-[#111111] hover:text-[#BCA58A]`}>
                 <Heart strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
                 {favoriteCount > 0 && (
@@ -119,7 +119,7 @@ export default function Navbar({
                 )}
               </button>
 
-              <button 
+              <button
                 onClick={() => setCartOpen(true)}
                 className={`cursor-pointer transition-colors relative text-[#111111] hover:text-[#BCA58A]`}>
                 <ShoppingBag strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
@@ -132,7 +132,7 @@ export default function Navbar({
               </button>
 
               {user ? (
-                <button 
+                <button
                   onClick={handleLogout}
                   title="Log Out"
                   className="hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#BCA58A] cursor-pointer ml-2 hover:scale-105 transition-transform"
@@ -140,7 +140,7 @@ export default function Navbar({
                   <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
                 </button>
               ) : (
-                <button 
+                <button
                   onClick={() => setView('login')}
                   className={`hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#111111]/20 hover:border-[#111111] cursor-pointer ml-2 transition-all`}
                   title="Login / Register"
@@ -157,7 +157,7 @@ export default function Navbar({
           <ul key={navKey} onClick={() => setNavKey(k => k + 1)} className="flex items-center gap-8 lg:gap-14">
             {['Home', 'Shop & Boutiques', 'Collection', 'About Us', 'Contact'].map((item) => (
               <li key={item} className={`group ${['Collection', 'Shop & Boutiques'].includes(item) ? 'static' : 'relative'}`}>
-                <a 
+                <a
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
@@ -179,7 +179,7 @@ export default function Navbar({
                 {item === 'Collection' && (
                   <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-[#FAF9F6]/95 backdrop-blur-3xl border border-[#BCA58A]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 h-[420px] p-3 transform origin-top group-hover:translate-y-0 translate-y-4 scale-95 group-hover:scale-100">
                     <div className="w-full h-full flex gap-8 p-8 bg-white/50 rounded-xl">
-                      
+
                       {/* Col 1: Shop By Category */}
                       <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 pr-6">
                         <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Shop by Category</span>
@@ -187,7 +187,7 @@ export default function Navbar({
                           {['Anarkali', 'Sharara', 'Banarasi', 'Chikankari', 'Patiala', 'Pakistani', 'Cotton', 'Silk', 'Velvet', 'Bridal'].map((cat) => (
                             <a
                               key={cat}
-                              href="#"
+                              href={`/category/${(cat === 'Bridal' ? 'bridal' : cat).toLowerCase()}`}
                               onClick={(e) => {
                                 e.preventDefault();
                                 setSelectedCategory(cat === 'Bridal' ? 'bridal' : cat);
@@ -210,7 +210,7 @@ export default function Navbar({
                           {['The Wedding Edit', 'Summer Pastels', 'Artisan Heritage', 'Minimalist Luxury', 'Velvet Collection', 'The Black Edit'].map((edit) => (
                             <a
                               key={edit}
-                              href="#"
+                              href={`/collections/${edit === 'The Wedding Edit' ? 'wedding' : edit === 'Summer Pastels' ? 'pastel' : edit === 'Artisan Heritage' ? 'chikankari' : edit === 'Velvet Collection' ? 'velvet' : edit === 'The Black Edit' ? 'black' : 'luxury'}`}
                               onClick={(e) => {
                                 e.preventDefault();
                                 let editSlug = 'luxury';
@@ -219,7 +219,7 @@ export default function Navbar({
                                 else if (edit === 'Artisan Heritage') editSlug = 'chikankari';
                                 else if (edit === 'Velvet Collection') editSlug = 'velvet';
                                 else if (edit === 'The Black Edit') editSlug = 'black';
-                                
+
                                 if (setSelectedCollectionSlug) {
                                   setSelectedCollectionSlug(editSlug);
                                   setView('collection-detail');
@@ -234,7 +234,7 @@ export default function Navbar({
                             </a>
                           ))}
                         </div>
-                        <a href="#" onClick={(e) => { e.preventDefault(); setSelectedCategory('All'); setView('category'); }}
+                        <a href="/shop" onClick={(e) => { e.preventDefault(); setSelectedCategory('All'); setView('category'); }}
                           className="mt-auto text-[9px] font-bold text-[#111111] hover:text-[#BCA58A] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
                           View All Pieces <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
                         </a>
@@ -283,7 +283,7 @@ export default function Navbar({
                 {item === 'Shop & Boutiques' && (
                   <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-[#FAF9F6]/95 backdrop-blur-3xl border border-[#BCA58A]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 h-[420px] p-3 transform origin-top group-hover:translate-y-0 translate-y-4 scale-95 group-hover:scale-100">
                     <div className="w-full h-full flex gap-8 p-8 bg-white/50 rounded-xl">
-                      
+
                       {/* Col 1: Top Shops */}
                       <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 pr-6">
                         <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Top Shops</span>
@@ -336,7 +336,7 @@ export default function Navbar({
                             </a>
                           ))}
                         </div>
-                        <a href="/boutiques" onClick={(e) => { e.preventDefault(); window.location.href='/boutiques'; }}
+                        <a href="/boutiques" onClick={(e) => { e.preventDefault(); window.location.href = '/boutiques'; }}
                           className="mt-auto text-[9px] font-bold text-[#111111] hover:text-[#BCA58A] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
                           View All Boutiques <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
                         </a>
@@ -397,143 +397,143 @@ export default function Navbar({
         </div>
       </div>
 
-          {/* Search Panel */}
-          <AnimatePresence>
-            {searchOpen && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden mt-4">
-                <div className="border-t border-[#BCA58A]/15 pt-4 pb-3">
-                  <div className="flex items-center gap-3">
-                    <input type="text" placeholder="Search for suits, anarkalis, dupattas…"
-                      value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full bg-[#E8DDD0] text-[#111111] placeholder-[#6B6B6B] border border-[#BCA58A]/20 rounded-none px-5 py-3 text-sm focus:outline-none focus:border-[#BCA58A] transition-colors"
-                      style={{ fontFamily: "'DM Sans', sans-serif" }} autoFocus />
-                    <motion.button whileHover={{ scale: 1.05 }} onClick={() => setSearchOpen(false)}
-                      className="text-[#6B6B6B] p-1.5 hover:text-[#111111] cursor-pointer">
-                      <X size={20} />
-                    </motion.button>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2 mt-3 pl-1">
-                    <span className="text-[9px] tracking-[0.2em] text-[#BCA58A] font-semibold uppercase mr-1">Trending:</span>
-                    {suggestions.map((sug) => (
-                      <button key={sug} onClick={() => setSearchQuery(sug)}
-                        className="text-[10px] font-medium bg-[#E8DDD0] border border-[#BCA58A]/20 text-[#111111]/70 hover:border-[#BCA58A] hover:text-[#BCA58A] px-3 py-1 transition-colors cursor-pointer">
-                        {sug}
-                      </button>
+      {/* Search Panel */}
+      <AnimatePresence>
+        {searchOpen && (
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} className="overflow-hidden mt-4">
+            <div className="border-t border-[#BCA58A]/15 pt-4 pb-3">
+              <div className="flex items-center gap-3">
+                <input type="text" placeholder="Search for suits, anarkalis, dupattas…"
+                  value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-[#E8DDD0] text-[#111111] placeholder-[#6B6B6B] border border-[#BCA58A]/20 rounded-none px-5 py-3 text-sm focus:outline-none focus:border-[#BCA58A] transition-colors"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }} autoFocus />
+                <motion.button whileHover={{ scale: 1.05 }} onClick={() => setSearchOpen(false)}
+                  className="text-[#6B6B6B] p-1.5 hover:text-[#111111] cursor-pointer">
+                  <X size={20} />
+                </motion.button>
+              </div>
+              <div className="flex flex-wrap items-center gap-2 mt-3 pl-1">
+                <span className="text-[9px] tracking-[0.2em] text-[#BCA58A] font-semibold uppercase mr-1">Trending:</span>
+                {suggestions.map((sug) => (
+                  <button key={sug} onClick={() => setSearchQuery(sug)}
+                    className="text-[10px] font-medium bg-[#E8DDD0] border border-[#BCA58A]/20 text-[#111111]/70 hover:border-[#BCA58A] hover:text-[#BCA58A] px-3 py-1 transition-colors cursor-pointer">
+                    {sug}
+                  </button>
+                ))}
+              </div>
+
+              {/* Search Results Preview */}
+              {searchQuery.trim().length > 0 && (
+                <div className="mt-4 max-h-[300px] overflow-y-auto border border-[#BCA58A]/15 bg-white divide-y divide-[#BCA58A]/10 shadow-lg">
+                  {allProducts
+                    .filter(p =>
+                      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      (p.type || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                      (p.boutique || '').toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                    .slice(0, 5)
+                    .map(p => (
+                      <div
+                        key={p.id}
+                        onClick={() => {
+                          setSelectedProduct(p);
+                          setView('product-details');
+                          setSearchOpen(false);
+                          setSearchQuery('');
+                        }}
+                        className="flex items-center gap-4 p-3 hover:bg-[#E8DDD0]/10 cursor-pointer transition-all text-left animate-fadeIn"
+                      >
+                        <img src={p.image} alt={p.name} className="w-10 h-12 object-cover object-top border border-[#BCA58A]/10" />
+                        <div>
+                          <p className="text-xs font-semibold text-[#111111]">{p.name}</p>
+                          <p className="text-[10px] text-[#BCA58A] font-semibold mt-0.5">{p.boutique} · {p.price}</p>
+                        </div>
+                      </div>
                     ))}
-                  </div>
-
-                  {/* Search Results Preview */}
-                  {searchQuery.trim().length > 0 && (
-                    <div className="mt-4 max-h-[300px] overflow-y-auto border border-[#BCA58A]/15 bg-white divide-y divide-[#BCA58A]/10 shadow-lg">
-                      {allProducts
-                        .filter(p => 
-                          p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          (p.type || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          (p.boutique || '').toLowerCase().includes(searchQuery.toLowerCase())
-                        )
-                        .slice(0, 5)
-                        .map(p => (
-                          <div 
-                            key={p.id} 
-                            onClick={() => {
-                              setSelectedProduct(p);
-                              setView('product-details');
-                              setSearchOpen(false);
-                              setSearchQuery('');
-                            }}
-                            className="flex items-center gap-4 p-3 hover:bg-[#E8DDD0]/10 cursor-pointer transition-all text-left animate-fadeIn"
-                          >
-                            <img src={p.image} alt={p.name} className="w-10 h-12 object-cover object-top border border-[#BCA58A]/10" />
-                            <div>
-                              <p className="text-xs font-semibold text-[#111111]">{p.name}</p>
-                              <p className="text-[10px] text-[#BCA58A] font-semibold mt-0.5">{p.boutique} · {p.price}</p>
-                            </div>
-                          </div>
-                        ))}
-                      {allProducts.filter(p => 
-                        p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                        (p.type || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        (p.boutique || '').toLowerCase().includes(searchQuery.toLowerCase())
-                      ).length === 0 && (
-                        <p className="text-xs text-[#6B6B6B] p-4 text-center">No products found matching "{searchQuery}"</p>
-                      )}
-                    </div>
-                  )}
+                  {allProducts.filter(p =>
+                    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (p.type || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (p.boutique || '').toLowerCase().includes(searchQuery.toLowerCase())
+                  ).length === 0 && (
+                      <p className="text-xs text-[#6B6B6B] p-4 text-center">No products found matching "{searchQuery}"</p>
+                    )}
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          {/* Mobile Drawer */}
-          <AnimatePresence>
-            {isOpen && (
-              <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: '100%' }} transition={{ type: 'tween', duration: 0.3 }}
-                className="fixed inset-y-0 right-0 w-64 bg-[#FAF9F6] border-l border-[#BCA58A]/10 shadow-2xl z-50 p-8 flex flex-col gap-6 md:hidden">
-                <div className="flex justify-between items-center border-b border-[#BCA58A]/15 pb-4">
-                  <span className="text-lg tracking-[0.2em] text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>MENU</span>
-                  <button onClick={() => setIsOpen(false)} className="text-[#6B6B6B] hover:text-[#111111] cursor-pointer"><X size={20} /></button>
-                </div>
-                <div className="flex flex-col gap-5 text-left">
-                  <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = '/sell'; setIsOpen(false); }}
-                    className="text-[11px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors py-1 border-b border-[#BCA58A]/10 uppercase font-semibold">
-                    HOME
-                  </a>
-                  <div className="space-y-2">
-                    <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">SHOP CATEGORIES</span>
-                    <div className="pl-4 flex flex-col gap-3">
-                      {['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi', 'Cotton', 'Silk', 'Velvet', 'Bridal', 'Georgette', 'Organza', 'Designer', 'Casual', 'Party Wear'].map((cat) => (
-                        <a key={cat} href="#" onClick={(e) => {
-                          e.preventDefault();
-                          let targetCat = cat;
-                          if (cat === 'Bridal') targetCat = 'bridal';
-                          if (cat === 'Party Wear') targetCat = 'party';
-                          setSelectedCategory(targetCat);
-                          setView('category');
-                          setIsOpen(false);
-                        }}
-                          className="text-[10px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors uppercase font-medium">
-                          {cat} {['Bridal', 'Casual', 'Party Wear', 'Designer'].includes(cat) ? 'Collection' : 'Suits'}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">BOUTIQUE SHOPS</span>
-                    <div className="pl-4 flex flex-col gap-3">
-                      {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft', 'Badshah Designer Fabrics'].map((bt) => (
-                        <a key={bt} href="#" onClick={(e) => {
-                          e.preventDefault();
-                          setSelectedBoutique(bt);
-                          setView('seller-shop');
-                          setIsOpen(false);
-                        }}
-                          className="text-[10px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors uppercase font-medium">
-                          {bt}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-
-                  {['SHOP & BOUTIQUES', 'COLLECTIONS', 'ABOUT US', 'CONTACT'].map((item, i) => (
-                    <a key={i} href="#" onClick={(e) => {
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }} transition={{ type: 'tween', duration: 0.3 }}
+            className="fixed inset-y-0 right-0 w-64 bg-[#FAF9F6] border-l border-[#BCA58A]/10 shadow-2xl z-50 p-8 flex flex-col gap-6 md:hidden">
+            <div className="flex justify-between items-center border-b border-[#BCA58A]/15 pb-4">
+              <span className="text-lg tracking-[0.2em] text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>MENU</span>
+              <button onClick={() => setIsOpen(false)} className="text-[#6B6B6B] hover:text-[#111111] cursor-pointer"><X size={20} /></button>
+            </div>
+            <div className="flex flex-col gap-5 text-left">
+              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = '/sell'; setIsOpen(false); }}
+                className="text-[11px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors py-1 border-b border-[#BCA58A]/10 uppercase font-semibold">
+                HOME
+              </a>
+              <div className="space-y-2">
+                <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">SHOP CATEGORIES</span>
+                <div className="pl-4 flex flex-col gap-3">
+                  {['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi', 'Cotton', 'Silk', 'Velvet', 'Bridal', 'Georgette', 'Organza', 'Designer', 'Casual', 'Party Wear'].map((cat) => (
+                    <a key={cat} href="#" onClick={(e) => {
                       e.preventDefault();
-                      if (item === 'SHOP & BOUTIQUES') { setView('boutiques'); }
-                      else if (item === 'COLLECTIONS') { window.location.href = '/collections'; }
-                      else if (item === 'CONTACT') { setView('contact'); }
-                      else { window.location.href = '/sell'; }
+                      let targetCat = cat;
+                      if (cat === 'Bridal') targetCat = 'bridal';
+                      if (cat === 'Party Wear') targetCat = 'party';
+                      setSelectedCategory(targetCat);
+                      setView('category');
                       setIsOpen(false);
                     }}
-                      className="text-[11px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors py-1 border-b border-[#BCA58A]/10 uppercase font-semibold">
-                      {item}
+                      className="text-[10px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors uppercase font-medium">
+                      {cat} {['Bridal', 'Casual', 'Party Wear', 'Designer'].includes(cat) ? 'Collection' : 'Suits'}
                     </a>
                   ))}
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+
+              <div className="space-y-2">
+                <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">BOUTIQUE SHOPS</span>
+                <div className="pl-4 flex flex-col gap-3">
+                  {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft', 'Badshah Designer Fabrics'].map((bt) => (
+                    <a key={bt} href="#" onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedBoutique(bt);
+                      setView('seller-shop');
+                      setIsOpen(false);
+                    }}
+                      className="text-[10px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors uppercase font-medium">
+                      {bt}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              {['SHOP & BOUTIQUES', 'COLLECTIONS', 'ABOUT US', 'CONTACT'].map((item, i) => (
+                <a key={i} href="#" onClick={(e) => {
+                  e.preventDefault();
+                  if (item === 'SHOP & BOUTIQUES') { setView('boutiques'); }
+                  else if (item === 'COLLECTIONS') { window.location.href = '/collections'; }
+                  else if (item === 'CONTACT') { setView('contact'); }
+                  else { window.location.href = '/sell'; }
+                  setIsOpen(false);
+                }}
+                  className="text-[11px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors py-1 border-b border-[#BCA58A]/10 uppercase font-semibold">
+                  {item}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Cart Drawer */}
       <AnimatePresence>
@@ -682,21 +682,21 @@ export default function Navbar({
       <AnimatePresence>
         {checkoutOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} 
-              animate={{ opacity: 1 }} 
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setCheckoutOpen(false)} 
-              className="absolute inset-0 bg-black/75 backdrop-blur-sm cursor-pointer" 
+              onClick={() => setCheckoutOpen(false)}
+              className="absolute inset-0 bg-black/75 backdrop-blur-sm cursor-pointer"
             />
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0 }} 
-              animate={{ scale: 1, opacity: 1 }} 
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               className="relative bg-[#FAF9F6] border border-[#BCA58A]/30 p-8 md:p-10 max-w-md w-full shadow-2xl z-10 text-center"
             >
-              <button 
-                onClick={() => setCheckoutOpen(false)} 
+              <button
+                onClick={() => setCheckoutOpen(false)}
                 className="absolute top-4 right-4 text-[#6B6B6B] hover:text-[#111111] cursor-pointer"
               >
                 <X size={20} />
@@ -708,7 +708,7 @@ export default function Navbar({
                   Complete Your Order
                 </h3>
                 <div className="w-12 h-px bg-[#BCA58A]/30 my-2" />
-                
+
                 <p className="text-xs text-[#6B6B6B] leading-relaxed mb-4">
                   Please scan the Google Pay UPI QR code below to complete the payment for your premium Gurnaaz order.
                 </p>

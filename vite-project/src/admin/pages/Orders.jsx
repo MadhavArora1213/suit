@@ -86,7 +86,7 @@ export default function Orders() {
             key={s}
             onClick={() => setFilterStatus(s)}
             className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
-              filterStatus === s ? 'bg-[#005461] text-white shadow-md shadow-[#005461]/20' : 'bg-white border border-[#C8E8EC] text-[#6B6B6B] hover:bg-[#F8F4F9]'
+              filterStatus === s ? 'bg-[#111111] text-white shadow-md shadow-[#111111]/20' : 'bg-white border border-[#E8DDD0] text-[#6B6B6B] hover:bg-[#F8F4F9]'
             }`}
           >
             {s !== 'All' && s in statusConfig && (
@@ -98,29 +98,29 @@ export default function Orders() {
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-2xl border border-[#C8E8EC] p-4">
+      <div className="bg-white rounded-2xl border border-[#E8DDD0] p-4">
         <div className="relative">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#005461]" />
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#111111]" />
           <input
             value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search by customer name or order ID..."
-            className="w-full pl-10 pr-4 py-2.5 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#B0A99F] focus:outline-none focus:border-[#005461] focus:shadow-[0_0_0_3px_rgba(0,84,97,0.1)] transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#B0A99F] focus:outline-none focus:border-[#111111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.1)] transition-all"
           />
         </div>
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-2xl border border-[#C8E8EC] overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[800px]">
             <thead>
-              <tr className="bg-[#FDFBF8] border-b border-[#C8E8EC]">
+              <tr className="bg-[#FDFBF8] border-b border-[#E8DDD0]">
                 {['Order ID', 'Customer', 'Product', 'Amount', 'Status', 'Date', 'Actions'].map(h => (
                   <th key={h} className="text-left px-5 py-3.5 text-xs font-bold tracking-widest text-[#9E9189] uppercase">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#C8E8EC]">
+            <tbody className="divide-y divide-[#E8DDD0]">
               <AnimatePresence>
                 {filtered.map((order, i) => {
                   const sc = statusConfig[order.status] || statusConfig.Pending;
@@ -140,11 +140,11 @@ export default function Orders() {
                         className="hover:bg-[#FDFBF9] transition-colors text-left"
                       >
                         <td className="px-5 py-4">
-                          <span className="text-sm font-bold text-[#005461]">{ordId}</span>
+                          <span className="text-sm font-bold text-[#111111]">{ordId}</span>
                         </td>
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-lg bg-[#C8E8EC] flex items-center justify-center text-xs font-bold text-[#005461] flex-shrink-0">
+                            <div className="w-8 h-8 rounded-lg bg-[#E8DDD0] flex items-center justify-center text-xs font-bold text-[#111111] flex-shrink-0">
                               {(order.customer || 'C').charAt(0)}
                             </div>
                             <div>
@@ -178,7 +178,7 @@ export default function Orders() {
                         <td className="px-5 py-4">
                           <button
                             onClick={() => setExpandedId(isExpanded ? null : ordId)}
-                            className="w-8 h-8 rounded-lg bg-[#C8E8EC] flex items-center justify-center hover:bg-[#C8E8EC] transition-colors cursor-pointer"
+                            className="w-8 h-8 rounded-lg bg-[#E8DDD0] flex items-center justify-center hover:bg-[#E8DDD0] transition-colors cursor-pointer"
                           >
                             <Eye size={14} className="text-[#6B6B6B]" />
                           </button>
@@ -193,7 +193,7 @@ export default function Orders() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                           >
-                            <td colSpan={7} className="px-5 py-4 bg-[#FDFBF8] border-b border-[#C8E8EC]">
+                            <td colSpan={7} className="px-5 py-4 bg-[#FDFBF8] border-b border-[#E8DDD0]">
                               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-left">
                                 {[
                                   { label: 'Email', value: order.email || 'N/A' },
@@ -201,19 +201,19 @@ export default function Orders() {
                                   { label: 'Shipping City', value: order.city || 'N/A' },
                                   { label: 'Order Date', value: order.date || 'N/A' },
                                 ].map(({ label, value }) => (
-                                  <div key={label} className="bg-white rounded-xl p-3 border border-[#C8E8EC]">
+                                  <div key={label} className="bg-white rounded-xl p-3 border border-[#E8DDD0]">
                                     <p className="text-xs text-[#9E9189] uppercase tracking-wider mb-1">{label}</p>
                                     <p className="font-semibold text-[#1A1A1A]">{value}</p>
                                   </div>
                                 ))}
 
                                 {order.items && order.items.length > 0 && (
-                                  <div className="col-span-2 sm:col-span-4 mt-2 border-t border-[#C8E8EC] pt-4">
+                                  <div className="col-span-2 sm:col-span-4 mt-2 border-t border-[#E8DDD0] pt-4">
                                     <p className="text-xs text-[#9E9189] uppercase tracking-wider mb-2 font-bold">Ordered Items</p>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                       {order.items.map((item, idx) => (
-                                        <div key={idx} className="bg-white rounded-xl p-3 border border-[#C8E8EC] flex items-center gap-3">
-                                          <div className="w-10 h-13 overflow-hidden bg-white border border-[#C8E8EC] flex-shrink-0">
+                                        <div key={idx} className="bg-white rounded-xl p-3 border border-[#E8DDD0] flex items-center gap-3">
+                                          <div className="w-10 h-13 overflow-hidden bg-white border border-[#E8DDD0] flex-shrink-0">
                                             <img src={item.image} alt={item.name} className="w-full h-full object-cover object-top" />
                                           </div>
                                           <div className="flex-1 min-w-0">

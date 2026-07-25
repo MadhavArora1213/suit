@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Upload, Plus, Trash2, Check, Copy, Clock, Tag, Percent } from 'lucide-react';
 import { getPromo, savePromo, fileToBase64, notifyWebsite } from '../../utils/adminStore';
 
-const P = '#005461';
+const P = '#111111';
 
 const initialFabrics = [
   { id: 1, name: 'Heritage Banarasi Silk', image: '/banarasi_suit.png', desc: 'Handwoven pure zari panels.' },
@@ -26,9 +26,9 @@ const InputField = ({ label, value, onChange, placeholder, type = 'text', icon: 
     <div className="relative">
       {Icon && <Icon size={16} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: P }} />}
       <input type={type} value={value} onChange={onChange} placeholder={placeholder}
-        className={`w-full ${Icon ? 'pl-11' : 'pl-4'} pr-4 py-3.5 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-base text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all`}
-        onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(0,84,97,0.1)`; }}
-        onBlur={e => { e.target.style.borderColor = '#C8E8EC'; e.target.style.boxShadow = 'none'; }} />
+        className={`w-full ${Icon ? 'pl-11' : 'pl-4'} pr-4 py-3.5 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-base text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all`}
+        onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.1)`; }}
+        onBlur={e => { e.target.style.borderColor = '#E8DDD0'; e.target.style.boxShadow = 'none'; }} />
     </div>
   </div>
 );
@@ -109,7 +109,7 @@ export default function Promotions() {
           <p className="text-sm text-[#9E9189]">Manage coupon codes, countdown timer, and featured fabrics</p>
         </div>
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleSave}
-          className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all ${saved ? 'bg-green-500 text-white shadow-green-200' : 'bg-gradient-to-r from-[#005461] to-[#003D47] text-white shadow-[#005461]/25'}`}>
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all ${saved ? 'bg-green-500 text-white shadow-green-200' : 'bg-[#111111] text-white shadow-[#111111]/25'}`}>
           {saved ? <><Check size={15} /> Saved!</> : 'Save Changes'}
         </motion.button>
       </div>
@@ -117,7 +117,7 @@ export default function Promotions() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Promo Details */}
         <div className="space-y-5">
-          <div className="bg-white rounded-2xl border border-[#C8E8EC] p-6">
+          <div className="bg-white rounded-2xl border border-[#E8DDD0] p-6">
             <h3 className="text-lg font-semibold text-[#1A1A1A] mb-5">Offer Details</h3>
             <div className="space-y-4">
               <InputField label="Promotion Title" value={promo.title} onChange={e => setPromo(p => ({ ...p, title: e.target.value }))} placeholder="e.g. Festive Season Sale" icon={Tag} />
@@ -125,14 +125,14 @@ export default function Promotions() {
 
               {/* Coupon Code */}
               <div>
-                <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Coupon Code</label>
+                <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Coupon Code</label>
                 <div className="flex gap-2">
                   <div className="flex-1 relative">
-                    <Tag size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#005461]" />
+                    <Tag size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#111111]" />
                     <input value={promo.couponCode} onChange={e => setPromo(p => ({ ...p, couponCode: e.target.value.toUpperCase() }))} placeholder="e.g. FESTIVE40"
-                      className="w-full pl-10 pr-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm font-bold text-[#005461] tracking-widest placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all" />
+                      className="w-full pl-10 pr-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm font-bold text-[#111111] tracking-widest placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all" />
                   </div>
-                  <button onClick={handleCopy} className={`px-4 py-3 rounded-xl text-sm font-semibold border flex items-center gap-1.5 transition-all ${copied ? 'bg-green-500 text-white border-green-500' : 'border-[#C8E8EC] text-[#6B6B6B] hover:bg-[#F8F4F9]'}`}>
+                  <button onClick={handleCopy} className={`px-4 py-3 rounded-xl text-sm font-semibold border flex items-center gap-1.5 transition-all ${copied ? 'bg-green-500 text-white border-green-500' : 'border-[#E8DDD0] text-[#6B6B6B] hover:bg-[#F8F4F9]'}`}>
                     {copied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
                   </button>
                 </div>
@@ -141,21 +141,21 @@ export default function Promotions() {
               {/* End Date & Time */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">End Date</label>
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">End Date</label>
                   <input type="date" value={promo.endDate} onChange={e => setPromo(p => ({ ...p, endDate: e.target.value }))}
-                    className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] focus:outline-none focus:border-[#005461] transition-all" />
+                    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none focus:border-[#111111] transition-all" />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">End Time</label>
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">End Time</label>
                   <input type="time" value={promo.endTime} onChange={e => setPromo(p => ({ ...p, endTime: e.target.value }))}
-                    className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] focus:outline-none focus:border-[#005461] transition-all" />
+                    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none focus:border-[#111111] transition-all" />
                 </div>
               </div>
             </div>
           </div>
 
           {/* Live Countdown Preview */}
-          <div className="bg-gradient-to-br from-[#005461] to-[#003D47] rounded-2xl p-6 text-white relative overflow-hidden shadow-lg shadow-[#005461]/20">
+          <div className="bg-[#111111] rounded-2xl p-6 text-white relative overflow-hidden shadow-lg shadow-[#111111]/20">
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-8 translate-x-8" />
             <div className="relative z-10">
               <div className="flex items-center gap-2 mb-3">
@@ -177,14 +177,14 @@ export default function Promotions() {
         </div>
 
         {/* Featured Fabrics */}
-        <div className="bg-white rounded-2xl border border-[#C8E8EC] p-6">
+        <div className="bg-white rounded-2xl border border-[#E8DDD0] p-6">
           <div className="flex items-center justify-between mb-5">
             <div>
               <h3 className="text-lg font-semibold text-[#1A1A1A]">Featured Fabrics Carousel</h3>
               <p className="text-xs text-[#9E9189]">Up to 3 fabrics shown in special offer section</p>
             </div>
             {fabrics.length < 3 && (
-              <button onClick={addFabric} className="flex items-center gap-1.5 text-xs font-semibold text-[#005461] hover:text-[#003D47] border border-[#005461]/30 px-3 py-2 rounded-xl hover:bg-[#EBF6F8] transition-all">
+              <button onClick={addFabric} className="flex items-center gap-1.5 text-xs font-semibold text-[#111111] hover:text-[#111111] border border-[#111111]/30 px-3 py-2 rounded-xl hover:bg-[#E8DDD0] transition-all">
                 <Plus size={13} /> Add
               </button>
             )}
@@ -193,8 +193,8 @@ export default function Promotions() {
           <div className="space-y-4">
             {fabrics.map((fabric, i) => (
               <motion.div key={fabric.id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                className="flex items-start gap-3 p-4 bg-[#FDFBF9] rounded-xl border border-[#C8E8EC]">
-                <label className="w-14 h-18 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer group relative border border-[#C8E8EC]">
+                className="flex items-start gap-3 p-4 bg-[#FDFBF9] rounded-xl border border-[#E8DDD0]">
+                <label className="w-14 h-18 rounded-lg overflow-hidden flex-shrink-0 cursor-pointer group relative border border-[#E8DDD0]">
                   <img src={fabric.image} alt={fabric.name} className="w-14 h-16 object-cover" />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <Upload size={14} className="text-white" />
@@ -203,9 +203,9 @@ export default function Promotions() {
                 </label>
                 <div className="flex-1 space-y-2">
                   <input value={fabric.name} onChange={e => updateFabric(fabric.id, 'name', e.target.value)} placeholder="Fabric name"
-                    className="w-full px-3 py-2 bg-white border border-[#C8E8EC] rounded-lg text-sm font-semibold text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all" />
+                    className="w-full px-3 py-2 bg-white border border-[#E8DDD0] rounded-lg text-sm font-semibold text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all" />
                   <input value={fabric.desc} onChange={e => updateFabric(fabric.id, 'desc', e.target.value)} placeholder="Short description"
-                    className="w-full px-3 py-2 bg-white border border-[#C8E8EC] rounded-lg text-xs text-[#6B6B6B] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all" />
+                    className="w-full px-3 py-2 bg-white border border-[#E8DDD0] rounded-lg text-xs text-[#6B6B6B] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all" />
                 </div>
                 <button onClick={() => removeFabric(fabric.id)} className="w-7 h-7 rounded-lg bg-red-50 flex items-center justify-center hover:bg-red-100 transition-colors flex-shrink-0 mt-1">
                   <Trash2 size={13} className="text-red-500" />
@@ -215,7 +215,7 @@ export default function Promotions() {
 
             {fabrics.length === 0 && (
               <button onClick={addFabric}
-                className="w-full py-8 border-2 border-dashed border-[#005461]/30 rounded-xl text-sm text-[#005461] font-semibold hover:border-[#005461] hover:bg-[#EBF6F8] transition-all">
+                className="w-full py-8 border-2 border-dashed border-[#111111]/30 rounded-xl text-sm text-[#111111] font-semibold hover:border-[#111111] hover:bg-[#E8DDD0] transition-all">
                 + Add Featured Fabric
               </button>
             )}

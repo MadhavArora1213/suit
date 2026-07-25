@@ -76,7 +76,7 @@ export default function TestimonialsAdmin() {
           <p className="text-sm text-[#9E9189]">{items.filter(t => t.published).length} published · {items.filter(t => !t.published).length} hidden</p>
         </div>
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={openAdd}
-          className="flex items-center gap-2 bg-gradient-to-r from-[#005461] to-[#003D47] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#005461]/25">
+          className="flex items-center gap-2 bg-[#111111] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#111111]/25">
           <Plus size={16} /> Add Review
         </motion.button>
       </div>
@@ -88,16 +88,16 @@ export default function TestimonialsAdmin() {
             <motion.div key={item.id} layout
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9 }} transition={{ delay: i * 0.06 }}
-              className={`bg-white rounded-2xl border p-5 transition-all ${item.published ? 'border-[#C8E8EC]' : 'border-dashed border-[#D0C8C0] opacity-70'}`}>
+              className={`bg-white rounded-2xl border p-5 transition-all ${item.published ? 'border-[#E8DDD0]' : 'border-dashed border-[#D0C8C0] opacity-70'}`}>
               {/* Header */}
               <div className="flex items-start justify-between gap-3 mb-4">
                 <div className="flex items-center gap-3">
                   {/* Avatar */}
-                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#005461]/30 to-[#005461]/10 flex items-center justify-center flex-shrink-0 border border-[#C8E8EC] overflow-hidden">
+                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[#111111]/30 to-[#111111]/10 flex items-center justify-center flex-shrink-0 border border-[#E8DDD0] overflow-hidden">
                     {item.photo ? (
                       <img src={item.photo} alt={item.name} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-base font-bold text-[#005461]">{item.name.charAt(0)}</span>
+                      <span className="text-base font-bold text-[#111111]">{item.name.charAt(0)}</span>
                     )}
                   </div>
                   <div>
@@ -131,9 +131,9 @@ export default function TestimonialsAdmin() {
               <p className="text-sm text-[#6B6B6B] leading-relaxed mb-4 line-clamp-3">"{item.review}"</p>
 
               {/* Actions */}
-              <div className="flex gap-2 pt-3 border-t border-[#C8E8EC]">
+              <div className="flex gap-2 pt-3 border-t border-[#E8DDD0]">
                 <button onClick={() => openEdit(item)}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-[#C8E8EC] rounded-xl text-xs font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] hover:text-[#005461] hover:border-[#005461]/30 transition-all">
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 border border-[#E8DDD0] rounded-xl text-xs font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] hover:text-[#111111] hover:border-[#111111]/30 transition-all">
                   <Edit2 size={12} /> Edit
                 </button>
                 <button onClick={() => setDeleteId(item.id)}
@@ -154,19 +154,19 @@ export default function TestimonialsAdmin() {
             onClick={() => setShowModal(false)}>
             <motion.div initial={{ scale: 0.94, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.94, y: 20 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl border border-[#C8E8EC] shadow-2xl w-full max-w-md overflow-hidden">
-              <div className="flex items-center justify-between p-5 border-b border-[#C8E8EC]">
+              className="bg-white rounded-2xl border border-[#E8DDD0] shadow-2xl w-full max-w-md overflow-hidden">
+              <div className="flex items-center justify-between p-5 border-b border-[#E8DDD0]">
                 <h3 className="text-lg font-semibold text-[#1A1A1A]">{editingId ? 'Edit Review' : 'Add Review'}</h3>
-                <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg hover:bg-[#C8E8EC] flex items-center justify-center text-[#6B6B6B]"><X size={16} /></button>
+                <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg hover:bg-[#E8DDD0] flex items-center justify-center text-[#6B6B6B]"><X size={16} /></button>
               </div>
               <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
                 {/* Photo upload */}
                 <div className="flex items-center gap-4">
-                  <label className="w-16 h-16 rounded-full overflow-hidden bg-[#C8E8EC] border-2 border-dashed border-[#A8D4DA] flex items-center justify-center cursor-pointer hover:border-[#005461] transition-colors flex-shrink-0">
+                  <label className="w-16 h-16 rounded-full overflow-hidden bg-[#E8DDD0] border-2 border-dashed border-[#BCA58A] flex items-center justify-center cursor-pointer hover:border-[#111111] transition-colors flex-shrink-0">
                     {form.photoPreview ? (
                       <img src={form.photoPreview} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
-                      <Upload size={18} className="text-[#005461]" />
+                      <Upload size={18} className="text-[#111111]" />
                     )}
                     <input type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
                   </label>
@@ -181,22 +181,22 @@ export default function TestimonialsAdmin() {
                   { label: 'Location', key: 'location', placeholder: 'e.g. Delhi, India' },
                 ].map(({ label, key, placeholder }) => (
                   <div key={key}>
-                    <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">{label}</label>
+                    <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">{label}</label>
                     <input value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))} placeholder={placeholder}
-                      className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all" />
+                      className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all" />
                   </div>
                 ))}
 
                 {/* Review Text */}
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Review Text</label>
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Review Text</label>
                   <textarea rows={3} value={form.review} onChange={e => setForm(f => ({ ...f, review: e.target.value }))} placeholder="Customer's review..."
-                    className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all resize-none" />
+                    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all resize-none" />
                 </div>
 
                 {/* Star Rating */}
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Star Rating</label>
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Star Rating</label>
                   <div className="flex gap-2">
                     {[1, 2, 3, 4, 5].map(n => (
                       <button key={n} type="button" onClick={() => setForm(f => ({ ...f, rating: n }))}
@@ -208,7 +208,7 @@ export default function TestimonialsAdmin() {
                 </div>
 
                 {/* Published toggle */}
-                <div className="flex items-center justify-between p-4 bg-[#FDFBF9] rounded-xl border border-[#C8E8EC]">
+                <div className="flex items-center justify-between p-4 bg-[#FDFBF9] rounded-xl border border-[#E8DDD0]">
                   <div>
                     <p className="text-sm font-semibold text-[#1A1A1A]">Publish Review</p>
                     <p className="text-xs text-[#9E9189]">Show this review on the homepage</p>
@@ -220,10 +220,10 @@ export default function TestimonialsAdmin() {
                   </button>
                 </div>
               </div>
-              <div className="p-5 border-t border-[#C8E8EC] flex gap-3">
-                <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-[#C8E8EC] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
+              <div className="p-5 border-t border-[#E8DDD0] flex gap-3">
+                <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
                 <button onClick={handleSave}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-green-500 text-white' : 'bg-gradient-to-r from-[#005461] to-[#003D47] text-white shadow-md'}`}>
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-green-500 text-white' : 'bg-[#111111] text-white shadow-md'}`}>
                   {saved ? <><Check size={15} /> Saved!</> : 'Save Review'}
                 </button>
               </div>
@@ -240,12 +240,12 @@ export default function TestimonialsAdmin() {
             onClick={() => setDeleteId(null)}>
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl p-7 max-w-sm w-full mx-4 shadow-2xl border border-[#C8E8EC] text-center">
+              className="bg-white rounded-2xl p-7 max-w-sm w-full mx-4 shadow-2xl border border-[#E8DDD0] text-center">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"><Trash2 size={22} className="text-red-500" /></div>
               <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2">Delete Review?</h3>
               <p className="text-sm text-[#9E9189] mb-6">This review will be permanently removed.</p>
               <div className="flex gap-3">
-                <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 border border-[#C8E8EC] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
+                <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
                 <button onClick={() => handleDelete(deleteId)} className="flex-1 py-2.5 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600 transition-colors">Delete</button>
               </div>
             </motion.div>

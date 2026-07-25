@@ -79,7 +79,7 @@ export default function GalleryAdmin() {
         </div>
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
           onClick={openAdd}
-          className="flex items-center gap-2 bg-gradient-to-r from-[#005461] to-[#003D47] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#005461]/25">
+          className="flex items-center gap-2 bg-[#111111] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#111111]/25">
           <Plus size={16} /> Add Gallery Item
         </motion.button>
       </div>
@@ -89,7 +89,7 @@ export default function GalleryAdmin() {
           {items.map((item, i) => (
             <motion.div key={item.id} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.85 }} transition={{ delay: i * 0.04 }}
-              className="group relative rounded-2xl overflow-hidden bg-[#F8F4F9] border border-[#C8E8EC] aspect-square cursor-pointer hover:shadow-lg transition-shadow"
+              className="group relative rounded-2xl overflow-hidden bg-[#F8F4F9] border border-[#E8DDD0] aspect-square cursor-pointer hover:shadow-lg transition-shadow"
             >
               <img src={item.image} alt={item.caption} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               {/* Overlay */}
@@ -100,7 +100,7 @@ export default function GalleryAdmin() {
                 <div>
                   <p className="text-white text-xs line-clamp-2 mb-2">{item.caption}</p>
                   <div className="flex gap-2">
-                    <button onClick={() => openEdit(item)} className="flex-1 bg-white/20 backdrop-blur-sm text-white text-xs font-bold py-1.5 rounded-lg hover:bg-[#005461] transition-colors flex items-center justify-center gap-1">
+                    <button onClick={() => openEdit(item)} className="flex-1 bg-white/20 backdrop-blur-sm text-white text-xs font-bold py-1.5 rounded-lg hover:bg-[#111111] transition-colors flex items-center justify-center gap-1">
                       <Edit2 size={10} /> Edit
                     </button>
                     <button onClick={() => setDeleteId(item.id)} className="bg-red-500/80 backdrop-blur-sm text-white p-1.5 rounded-lg hover:bg-red-600 transition-colors">
@@ -119,7 +119,7 @@ export default function GalleryAdmin() {
 
         {/* Add card */}
         <motion.button onClick={openAdd} whileHover={{ scale: 1.02 }}
-          className="aspect-square border-2 border-dashed border-[#005461]/30 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-[#005461] hover:bg-[#EBF6F8] transition-all text-[#005461]">
+          className="aspect-square border-2 border-dashed border-[#111111]/30 rounded-2xl flex flex-col items-center justify-center gap-2 hover:border-[#111111] hover:bg-[#E8DDD0] transition-all text-[#111111]">
           <Plus size={24} />
           <span className="text-xs font-semibold">Add New</span>
         </motion.button>
@@ -134,22 +134,22 @@ export default function GalleryAdmin() {
           >
             <motion.div initial={{ scale: 0.94, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.94, y: 20 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl border border-[#C8E8EC] shadow-2xl w-full max-w-lg overflow-hidden"
+              className="bg-white rounded-2xl border border-[#E8DDD0] shadow-2xl w-full max-w-lg overflow-hidden"
             >
-              <div className="flex items-center justify-between p-5 border-b border-[#C8E8EC]">
+              <div className="flex items-center justify-between p-5 border-b border-[#E8DDD0]">
                 <h3 className="text-lg font-semibold text-[#1A1A1A]">{editingItem ? 'Edit Gallery Item' : 'Add Gallery Item'}</h3>
-                <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg hover:bg-[#C8E8EC] flex items-center justify-center text-[#6B6B6B]"><X size={16} /></button>
+                <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg hover:bg-[#E8DDD0] flex items-center justify-center text-[#6B6B6B]"><X size={16} /></button>
               </div>
               <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
                 {/* Image Upload */}
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Gallery Image</label>
-                  <label className="block w-full border-2 border-dashed border-[#A8D4DA] rounded-xl overflow-hidden cursor-pointer hover:border-[#005461] transition-colors">
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Gallery Image</label>
+                  <label className="block w-full border-2 border-dashed border-[#BCA58A] rounded-xl overflow-hidden cursor-pointer hover:border-[#111111] transition-colors">
                     {form.imagePreview ? (
                       <img src={form.imagePreview} alt="Preview" className="w-full h-32 object-cover" />
                     ) : (
                       <div className="h-32 flex flex-col items-center justify-center text-[#9E9189] gap-2">
-                        <Upload size={22} className="text-[#005461]" />
+                        <Upload size={22} className="text-[#111111]" />
                         <span className="text-xs">Click to upload image</span>
                       </div>
                     )}
@@ -159,11 +159,11 @@ export default function GalleryAdmin() {
 
                 {/* Category */}
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Style Category</label>
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Style Category</label>
                   <div className="flex gap-2 flex-wrap">
                     {categories.map(c => (
                       <button key={c} type="button" onClick={() => setForm(f => ({ ...f, category: c }))}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${form.category === c ? 'bg-[#005461] text-white border-[#005461]' : 'border-[#C8E8EC] text-[#6B6B6B] hover:border-[#005461]'}`}>
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${form.category === c ? 'bg-[#111111] text-white border-[#111111]' : 'border-[#E8DDD0] text-[#6B6B6B] hover:border-[#111111]'}`}>
                         {c}
                       </button>
                     ))}
@@ -172,20 +172,20 @@ export default function GalleryAdmin() {
 
                 {/* Caption */}
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Caption</label>
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Caption</label>
                   <textarea rows={2} value={form.caption} onChange={e => setForm(f => ({ ...f, caption: e.target.value }))}
                     placeholder="Instagram-style caption..."
-                    className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all resize-none" />
+                    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all resize-none" />
                 </div>
 
                 {/* Hashtags */}
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Hashtags</label>
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Hashtags</label>
                   <div className="relative">
-                    <Hash size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#005461]" />
+                    <Hash size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#111111]" />
                     <input value={form.hashtags} onChange={e => setForm(f => ({ ...f, hashtags: e.target.value }))}
                       placeholder="#ethnicwear #salwarsuits"
-                      className="w-full pl-10 pr-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all" />
+                      className="w-full pl-10 pr-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all" />
                   </div>
                 </div>
 
@@ -193,18 +193,18 @@ export default function GalleryAdmin() {
                 <div className="grid grid-cols-3 gap-3">
                   {[{ label: 'Likes', key: 'likes', placeholder: '1.2k' }, { label: 'Comments', key: 'comments', placeholder: '142' }, { label: 'Product ID', key: 'productId', placeholder: 't1' }].map(({ label, key, placeholder }) => (
                     <div key={key}>
-                      <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">{label}</label>
+                      <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">{label}</label>
                       <input value={form[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.value }))}
                         placeholder={placeholder}
-                        className="w-full px-3 py-2.5 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all" />
+                        className="w-full px-3 py-2.5 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all" />
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="p-5 border-t border-[#C8E8EC] flex gap-3">
-                <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-[#C8E8EC] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
+              <div className="p-5 border-t border-[#E8DDD0] flex gap-3">
+                <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
                 <button onClick={handleSave}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-green-500 text-white' : 'bg-gradient-to-r from-[#005461] to-[#003D47] text-white shadow-md'}`}>
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-green-500 text-white' : 'bg-[#111111] text-white shadow-md'}`}>
                   {saved ? <><Check size={15} /> Saved!</> : 'Save Item'}
                 </button>
               </div>
@@ -221,12 +221,12 @@ export default function GalleryAdmin() {
             onClick={() => setDeleteId(null)}>
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl p-7 max-w-sm w-full mx-4 shadow-2xl border border-[#C8E8EC] text-center">
+              className="bg-white rounded-2xl p-7 max-w-sm w-full mx-4 shadow-2xl border border-[#E8DDD0] text-center">
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"><Trash2 size={22} className="text-red-500" /></div>
               <h3 className="text-lg font-semibold text-[#1A1A1A] mb-2">Remove Gallery Item?</h3>
               <p className="text-sm text-[#9E9189] mb-6">This will remove it from the Instagram gallery section.</p>
               <div className="flex gap-3">
-                <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 border border-[#C8E8EC] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
+                <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
                 <button onClick={() => handleDelete(deleteId)} className="flex-1 py-2.5 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600 transition-colors">Remove</button>
               </div>
             </motion.div>

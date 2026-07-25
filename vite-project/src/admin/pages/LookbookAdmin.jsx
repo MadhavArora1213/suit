@@ -87,16 +87,16 @@ export default function LookbookAdmin() {
           <p className="text-sm text-[#9E9189]">Manage campaign image and product hotspots</p>
         </div>
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={openAdd}
-          className="flex items-center gap-2 bg-gradient-to-r from-[#005461] to-[#003D47] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#005461]/25">
+          className="flex items-center gap-2 bg-[#111111] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#111111]/25">
           <Plus size={16} /> Add Hotspot
         </motion.button>
       </div>
 
       {/* Background Image */}
-      <div className="bg-white rounded-2xl border border-[#C8E8EC] p-6">
+      <div className="bg-white rounded-2xl border border-[#E8DDD0] p-6">
         <h3 className="text-lg font-semibold text-[#1A1A1A] mb-4">Campaign Background Image</h3>
         <div className="flex items-start gap-5">
-          <div className="relative w-32 h-44 rounded-xl overflow-hidden border border-[#C8E8EC] flex-shrink-0 bg-[#F8F4F9]">
+          <div className="relative w-32 h-44 rounded-xl overflow-hidden border border-[#E8DDD0] flex-shrink-0 bg-[#F8F4F9]">
             <img src={bgImage} alt="Background" className="w-full h-full object-cover" />
             <label className="absolute inset-0 bg-black/40 flex items-center justify-center cursor-pointer opacity-0 hover:opacity-100 transition-opacity">
               <Upload size={20} className="text-white" />
@@ -106,7 +106,7 @@ export default function LookbookAdmin() {
           <div className="flex-1">
             <p className="text-sm font-medium text-[#1A1A1A] mb-1">Lookbook Campaign Image</p>
             <p className="text-xs text-[#9E9189] mb-4">Full-screen editorial image. Recommended: 1920×1080px or larger. The hotspots are positioned as percentage coordinates over this image.</p>
-            <label className="inline-flex items-center gap-2 bg-[#C8E8EC] text-[#003D47] text-xs font-semibold px-4 py-2.5 rounded-xl cursor-pointer hover:bg-[#B8DEE4] transition-colors border border-[#A8D4DA]">
+            <label className="inline-flex items-center gap-2 bg-[#E8DDD0] text-[#111111] text-xs font-semibold px-4 py-2.5 rounded-xl cursor-pointer hover:bg-[#B8DEE4] transition-colors border border-[#BCA58A]">
               <Upload size={14} /> Change Background
               <input type="file" accept="image/*" onChange={handleBgChange} className="hidden" />
             </label>
@@ -115,8 +115,8 @@ export default function LookbookAdmin() {
       </div>
 
       {/* Interactive Preview */}
-      <div className="bg-white rounded-2xl border border-[#C8E8EC] overflow-hidden">
-        <div className="p-5 border-b border-[#C8E8EC]">
+      <div className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden">
+        <div className="p-5 border-b border-[#E8DDD0]">
           <h3 className="text-lg font-semibold text-[#1A1A1A]">Hotspot Preview</h3>
           <p className="text-xs text-[#9E9189]">Glowing dots show where hotspots are positioned</p>
         </div>
@@ -127,8 +127,8 @@ export default function LookbookAdmin() {
             <div key={h.id} className="absolute" style={{ top: h.top, left: h.left, transform: 'translate(-50%, -50%)' }}>
               <div className="relative">
                 <motion.div animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0, 0.6] }} transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute inset-0 w-8 h-8 bg-[#005461] rounded-full" />
-                <div className="w-8 h-8 bg-[#005461] rounded-full border-2 border-white shadow-lg flex items-center justify-center cursor-pointer">
+                  className="absolute inset-0 w-8 h-8 bg-[#111111] rounded-full" />
+                <div className="w-8 h-8 bg-[#111111] rounded-full border-2 border-white shadow-lg flex items-center justify-center cursor-pointer">
                   <Plus size={14} className="text-white" />
                 </div>
               </div>
@@ -138,26 +138,26 @@ export default function LookbookAdmin() {
       </div>
 
       {/* Hotspots Table */}
-      <div className="bg-white rounded-2xl border border-[#C8E8EC] overflow-hidden">
-        <div className="p-5 border-b border-[#C8E8EC]">
+      <div className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden">
+        <div className="p-5 border-b border-[#E8DDD0]">
           <h3 className="text-lg font-semibold text-[#1A1A1A]">Hotspots ({hotspots.length})</h3>
         </div>
-        <div className="divide-y divide-[#C8E8EC]">
+        <div className="divide-y divide-[#E8DDD0]">
           {hotspots.map((h, i) => (
             <motion.div key={h.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.07 }}
               className="flex items-center gap-4 px-5 py-4 hover:bg-[#FDFBF9] transition-colors">
-              <div className="w-9 h-9 bg-[#005461] rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">{i + 1}</div>
-              <img src={h.image} alt={h.productName} className="w-10 h-12 object-cover rounded-lg flex-shrink-0 border border-[#C8E8EC]" />
+              <div className="w-9 h-9 bg-[#111111] rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">{i + 1}</div>
+              <img src={h.image} alt={h.productName} className="w-10 h-12 object-cover rounded-lg flex-shrink-0 border border-[#E8DDD0]" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-[#1A1A1A] truncate">{h.productName}</p>
                 <p className="text-xs text-[#9E9189] truncate">{h.desc}</p>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="text-sm font-bold text-[#005461]">{h.price}</p>
+                <p className="text-sm font-bold text-[#111111]">{h.price}</p>
                 <p className="text-xs text-[#9E9189]">Top: {h.top} · Left: {h.left}</p>
               </div>
               <div className="flex gap-2 flex-shrink-0">
-                <button onClick={() => openEdit(h)} className="w-8 h-8 rounded-lg bg-[#C8E8EC] flex items-center justify-center hover:bg-[#B8DEE4] transition-colors">
+                <button onClick={() => openEdit(h)} className="w-8 h-8 rounded-lg bg-[#E8DDD0] flex items-center justify-center hover:bg-[#B8DEE4] transition-colors">
                   <Edit2 size={14} className="text-[#6B6B6B]" />
                 </button>
                 <button onClick={() => removeHotspot(h.id)} className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center hover:bg-red-100 transition-colors">
@@ -180,21 +180,21 @@ export default function LookbookAdmin() {
             onClick={() => setShowModal(false)}>
             <motion.div initial={{ scale: 0.94, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.94, y: 20 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl border border-[#C8E8EC] shadow-2xl w-full max-w-lg overflow-hidden">
-              <div className="flex items-center justify-between p-5 border-b border-[#C8E8EC]">
+              className="bg-white rounded-2xl border border-[#E8DDD0] shadow-2xl w-full max-w-lg overflow-hidden">
+              <div className="flex items-center justify-between p-5 border-b border-[#E8DDD0]">
                 <h3 className="text-lg font-semibold text-[#1A1A1A]">{editingId ? 'Edit Hotspot' : 'Add Hotspot'}</h3>
-                <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg hover:bg-[#C8E8EC] flex items-center justify-center text-[#6B6B6B]"><X size={16} /></button>
+                <button onClick={() => setShowModal(false)} className="w-8 h-8 rounded-lg hover:bg-[#E8DDD0] flex items-center justify-center text-[#6B6B6B]"><X size={16} /></button>
               </div>
               <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
                 {/* Product Image */}
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Product Image</label>
-                  <label className="block border-2 border-dashed border-[#A8D4DA] rounded-xl overflow-hidden cursor-pointer hover:border-[#005461] transition-colors">
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Product Image</label>
+                  <label className="block border-2 border-dashed border-[#BCA58A] rounded-xl overflow-hidden cursor-pointer hover:border-[#111111] transition-colors">
                     {form.imagePreview ? (
                       <img src={form.imagePreview} alt="Preview" className="w-full h-28 object-cover" />
                     ) : (
                       <div className="h-28 flex flex-col items-center justify-center text-[#9E9189] gap-2">
-                        <Upload size={20} className="text-[#005461]" />
+                        <Upload size={20} className="text-[#111111]" />
                         <span className="text-xs">Upload product image</span>
                       </div>
                     )}
@@ -208,27 +208,27 @@ export default function LookbookAdmin() {
                   { label: 'Linked Product ID', key: 'productId', placeholder: 'e.g. t1, n1' },
                 ].map(({ label, key, placeholder }) => (
                   <div key={key}>
-                    <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">{label}</label>
+                    <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">{label}</label>
                     <input value={form[key]} onChange={e => updateForm(key, e.target.value)} placeholder={placeholder}
-                      className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all" />
+                      className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all" />
                   </div>
                 ))}
 
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Description</label>
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Description</label>
                   <textarea rows={2} value={form.desc} onChange={e => updateForm('desc', e.target.value)} placeholder="Short product description..."
-                    className="w-full px-4 py-3 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all resize-none" />
+                    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all resize-none" />
                 </div>
 
                 {/* Position */}
                 <div>
-                  <label className="block text-xs font-semibold tracking-widest text-[#003D47] uppercase mb-2">Position on Image</label>
+                  <label className="block text-xs font-semibold tracking-widest text-[#111111] uppercase mb-2">Position on Image</label>
                   <div className="grid grid-cols-2 gap-3">
                     {[{ label: 'Top (%)', key: 'top' }, { label: 'Left (%)', key: 'left' }].map(({ label, key }) => (
                       <div key={key}>
                         <label className="text-xs text-[#9E9189] mb-1 block">{label}</label>
                         <input type="text" value={form[key]} onChange={e => updateForm(key, e.target.value)} placeholder="e.g. 45%"
-                          className="w-full px-3 py-2.5 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#005461] transition-all" />
+                          className="w-full px-3 py-2.5 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#C0B8B0] focus:outline-none focus:border-[#111111] transition-all" />
                       </div>
                     ))}
                   </div>
@@ -237,10 +237,10 @@ export default function LookbookAdmin() {
                   </p>
                 </div>
               </div>
-              <div className="p-5 border-t border-[#C8E8EC] flex gap-3">
-                <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-[#C8E8EC] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
+              <div className="p-5 border-t border-[#E8DDD0] flex gap-3">
+                <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
                 <button onClick={handleSave}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-green-500 text-white' : 'bg-gradient-to-r from-[#005461] to-[#003D47] text-white shadow-md'}`}>
+                  className={`flex-1 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${saved ? 'bg-green-500 text-white' : 'bg-[#111111] text-white shadow-md'}`}>
                   {saved ? <><Check size={15} /> Saved!</> : 'Save Hotspot'}
                 </button>
               </div>

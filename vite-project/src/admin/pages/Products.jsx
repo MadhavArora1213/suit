@@ -59,22 +59,22 @@ export default function Products({ setActivePage }) {
         <motion.button
           whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
           onClick={() => setActivePage('add-product')}
-          className="flex items-center gap-2 bg-gradient-to-r from-[#005461] to-[#003D47] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#005461]/25 hover:shadow-lg transition-shadow"
+          className="flex items-center gap-2 bg-[#111111] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#111111]/25 hover:shadow-lg transition-shadow"
         >
           <Plus size={16} /> Add Product
         </motion.button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-[#C8E8EC] p-4 flex flex-col sm:flex-row gap-3">
+      <div className="bg-white rounded-2xl border border-[#E8DDD0] p-4 flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#005461]" />
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#111111]" />
           <input
             type="text"
             placeholder="Search products or boutique..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-[#F5FCFD] border border-[#C8E8EC] rounded-xl text-sm text-[#1A1A1A] placeholder-[#B0A99F] focus:outline-none focus:border-[#005461] focus:shadow-[0_0_0_3px_rgba(0,84,97,0.1)] transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#B0A99F] focus:outline-none focus:border-[#111111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.1)] transition-all"
           />
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -84,7 +84,7 @@ export default function Products({ setActivePage }) {
               onClick={() => setFilterCat(cat)}
               className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
                 filterCat === cat
-                  ? 'bg-[#005461] text-white shadow-sm'
+                  ? 'bg-[#111111] text-white shadow-sm'
                   : 'bg-[#F8F4F9] text-[#6B6B6B] hover:bg-[#F0EAE2]'
               }`}
             >
@@ -105,12 +105,12 @@ export default function Products({ setActivePage }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ delay: i * 0.04, duration: 0.35 }}
-              className="bg-white rounded-2xl border border-[#C8E8EC] overflow-hidden group hover:shadow-lg hover:shadow-[#005461]/10 hover:border-[#005461]/30 transition-all duration-300"
+              className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden group hover:shadow-lg hover:shadow-[#111111]/10 hover:border-[#111111]/30 transition-all duration-300"
             >
               {/* Image */}
               <div className="relative h-44 bg-[#F8F4F9] overflow-hidden">
                 <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#005461] text-[11px] font-bold tracking-wider px-2 py-1 rounded-lg border border-[#005461]/20">
+                <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#111111] text-[11px] font-bold tracking-wider px-2 py-1 rounded-lg border border-[#111111]/20">
                   {product.badge}
                 </span>
                 <span className={`absolute top-2 right-2 text-[11px] font-bold px-2 py-1 rounded-lg ${product.stock <= 3 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
@@ -124,7 +124,7 @@ export default function Products({ setActivePage }) {
                   </motion.button>
                   <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
                     onClick={() => setActivePage('add-product')}
-                    className="w-9 h-9 bg-[#005461] rounded-full flex items-center justify-center text-white shadow-md">
+                    className="w-9 h-9 bg-[#111111] rounded-full flex items-center justify-center text-white shadow-md">
                     <Edit2 size={15} />
                   </motion.button>
                   <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
@@ -137,16 +137,16 @@ export default function Products({ setActivePage }) {
 
               {/* Info */}
               <div className="p-4">
-                <p className="text-xs text-[#005461] font-semibold tracking-wider uppercase mb-1">{product.boutique} · {product.type}</p>
+                <p className="text-xs text-[#111111] font-semibold tracking-wider uppercase mb-1">{product.boutique} · {product.type}</p>
                 <h4 className="text-sm font-semibold text-[#1A1A1A] leading-snug mb-2 line-clamp-2">{product.name}</h4>
                 <div className="flex items-center justify-between">
-                  <p className="text-base font-bold text-[#005461]">{product.price}</p>
+                  <p className="text-base font-bold text-[#111111]">{product.price}</p>
                   <div className="flex items-center gap-1">
                     <Star size={11} className="text-amber-400 fill-amber-400" />
                     <span className="text-xs text-[#6B6B6B]">{product.rating}</span>
                   </div>
                 </div>
-                <span className="inline-block mt-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-[#C8E8EC] text-[#003D47]">{product.category}</span>
+                <span className="inline-block mt-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E8DDD0] text-[#111111]">{product.category}</span>
               </div>
             </motion.div>
           ))}
@@ -164,7 +164,7 @@ export default function Products({ setActivePage }) {
             <motion.div
               initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-2xl p-7 max-w-sm w-full mx-4 shadow-2xl border border-[#C8E8EC]"
+              className="bg-white rounded-2xl p-7 max-w-sm w-full mx-4 shadow-2xl border border-[#E8DDD0]"
             >
               <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Trash2 size={22} className="text-red-500" />
@@ -172,7 +172,7 @@ export default function Products({ setActivePage }) {
               <h3 className="text-lg font-semibold text-center text-[#1A1A1A] mb-2">Delete Product?</h3>
               <p className="text-sm text-center text-[#9E9189] mb-6">This action cannot be undone.</p>
               <div className="flex gap-3">
-                <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 border border-[#C8E8EC] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
+                <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
                 <button onClick={() => handleDelete(deleteId)} className="flex-1 py-2.5 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600 transition-colors">Delete</button>
               </div>
             </motion.div>

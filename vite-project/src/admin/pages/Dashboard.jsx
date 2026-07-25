@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import { Package, ShoppingBag, TrendingUp, Users, ArrowUpRight, ArrowRight, Star, Eye } from 'lucide-react';
 
-const P = '#005461';
-const PL = '#EBF6F8';
+const P = '#111111';
+const PL = '#E8DDD0';
 
 const stats = [
-  { label: 'Total Products', value: '124', change: '+12', icon: Package, color: '#005461', bg: '#EBF6F8' },
+  { label: 'Total Products', value: '124', change: '+12', icon: Package, color: '#111111', bg: '#E8DDD0' },
   { label: 'Orders Today', value: '38', change: '+7', icon: ShoppingBag, color: '#10B981', bg: '#F0FDF8' },
   { label: 'Revenue (Month)', value: '₹2.4L', change: '+18%', icon: TrendingUp, color: '#6366F1', bg: '#F5F3FF' },
   { label: 'Active Customers', value: '892', change: '+34', icon: Users, color: '#F59E0B', bg: '#FFFBEB' },
@@ -43,25 +43,25 @@ function LineChart() {
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="none">
       <defs>
         <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#005461" stopOpacity="0.25" />
-          <stop offset="100%" stopColor="#005461" stopOpacity="0.01" />
+          <stop offset="0%" stopColor="#111111" stopOpacity="0.25" />
+          <stop offset="100%" stopColor="#111111" stopOpacity="0.01" />
         </linearGradient>
       </defs>
       {/* Grid lines */}
       {[0.25, 0.5, 0.75, 1].map(t => (
         <line key={t} x1={pad.l} y1={pad.t + (1 - t) * (H - pad.t - pad.b)}
           x2={W - pad.r} y2={pad.t + (1 - t) * (H - pad.t - pad.b)}
-          stroke="#C8E8EC" strokeWidth="1" />
+          stroke="#E8DDD0" strokeWidth="1" />
       ))}
       {/* Area fill */}
       <path d={areaPath} fill="url(#lineGrad)" />
       {/* Line */}
-      <motion.path d={linePath} fill="none" stroke="#005461" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+      <motion.path d={linePath} fill="none" stroke="#111111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
         initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: 1 }}
         transition={{ duration: 1.4, ease: 'easeOut' }} />
       {/* Dots */}
       {xs.map((x, i) => (
-        <motion.circle key={i} cx={x} cy={ys[i]} r="4" fill="white" stroke="#005461" strokeWidth="2.5"
+        <motion.circle key={i} cx={x} cy={ys[i]} r="4" fill="white" stroke="#111111" strokeWidth="2.5"
           initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.9 + i * 0.08 }} />
       ))}
@@ -86,18 +86,18 @@ function BarChart() {
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="none">
       <defs>
         <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#005461" />
+          <stop offset="0%" stopColor="#111111" />
           <stop offset="100%" stopColor="#0A7A8C" />
         </linearGradient>
         <linearGradient id="barGradHover" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#BCA58A" />
-          <stop offset="100%" stopColor="#005461" />
+          <stop offset="100%" stopColor="#111111" />
         </linearGradient>
       </defs>
       {[0.33, 0.66, 1].map(t => (
         <line key={t} x1={pad.l} y1={pad.t + (1 - t) * (H - pad.t - pad.b)}
           x2={W - pad.r} y2={pad.t + (1 - t) * (H - pad.t - pad.b)}
-          stroke="#C8E8EC" strokeWidth="1" />
+          stroke="#E8DDD0" strokeWidth="1" />
       ))}
       {orderData.map((v, i) => {
         const x = pad.l + i * bw + gap / 2;
@@ -112,7 +112,7 @@ function BarChart() {
               style={{ transformOrigin: `${x}px ${H - pad.b}px` }}
               transition={{ delay: i * 0.08, duration: 0.5, ease: 'backOut' }} />
             <text x={x + (bw - gap) / 2} y={H - 8} textAnchor="middle" fontSize="9" fill="#9E9189">{days[i]}</text>
-            <motion.text x={x + (bw - gap) / 2} y={y - 4} textAnchor="middle" fontSize="9" fill="#005461" fontWeight="600"
+            <motion.text x={x + (bw - gap) / 2} y={y - 4} textAnchor="middle" fontSize="9" fill="#111111" fontWeight="600"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 + i * 0.08 }}>{v}</motion.text>
           </g>
         );
@@ -123,7 +123,7 @@ function BarChart() {
 
 // ── Donut Chart (Categories) ──────────────────────────────────
 const categoryData = [
-  { label: 'Anarkali', value: 32, color: '#005461' },
+  { label: 'Anarkali', value: 32, color: '#111111' },
   { label: 'Sharara', value: 24, color: '#0A7A8C' },
   { label: 'Banarasi', value: 18, color: '#BCA58A' },
   { label: 'Chikankari', value: 14, color: '#34A8B8' },
@@ -139,7 +139,7 @@ function DonutChart() {
   return (
     <div className="flex items-center gap-4">
       <svg width="160" height="150" viewBox="0 0 160 150">
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#EBF6F8" strokeWidth={stroke} />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#E8DDD0" strokeWidth={stroke} />
         {categoryData.map((d, i) => {
           const pct = d.value / total;
           const offset = circumference * (1 - pct);
@@ -157,7 +157,7 @@ function DonutChart() {
               transition={{ delay: 0.3 + i * 0.15, duration: 0.7, ease: 'easeOut' }} />
           );
         })}
-        <text x={cx} y={cy - 8} textAnchor="middle" fontSize="18" fontWeight="700" fill="#005461">{total}</text>
+        <text x={cx} y={cy - 8} textAnchor="middle" fontSize="18" fontWeight="700" fill="#111111">{total}</text>
         <text x={cx} y={cy + 8} textAnchor="middle" fontSize="9" fill="#9E9189">Products</text>
       </svg>
       <div className="flex flex-col gap-1.5 flex-1 min-w-0">
@@ -179,7 +179,7 @@ function RadialProgress({ value, label, color }) {
   return (
     <div className="flex flex-col items-center gap-1">
       <svg width="72" height="72" viewBox="0 0 72 72">
-        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#EBF6F8" strokeWidth="6" />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#E8DDD0" strokeWidth="6" />
         <motion.circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth="6"
           strokeLinecap="round" strokeDasharray={`${circ * value / 100} ${circ * (1 - value / 100)}`}
           strokeDashoffset={circ * 0.25}
@@ -200,7 +200,7 @@ export default function Dashboard({ setActivePage }) {
       {/* Welcome Banner */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
         className="rounded-2xl p-7 text-white relative overflow-hidden shadow-lg"
-        style={{ background: 'linear-gradient(135deg, #005461 0%, #003D47 60%, #002830 100%)' }}>
+        style={{ background: 'linear-gradient(135deg, #111111 0%, #111111 60%, #002830 100%)' }}>
         <div className="absolute right-0 top-0 w-56 h-full opacity-10 pointer-events-none">
           <svg viewBox="0 0 200 200" className="w-full h-full"><circle cx="160" cy="60" r="100" fill="white" /><circle cx="40" cy="170" r="70" fill="white" /></svg>
         </div>
@@ -233,8 +233,8 @@ export default function Dashboard({ setActivePage }) {
             <motion.div key={s.label}
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.07, duration: 0.5 }}
-              whileHover={{ y: -4, boxShadow: '0 12px 40px rgba(0,84,97,0.12)' }}
-              className="bg-white rounded-2xl p-5 border border-[#C8E8EC]/60 transition-all duration-300 cursor-default">
+              whileHover={{ y: -4, boxShadow: '0 12px 40px rgba(17,17,17,0.12)' }}
+              className="bg-white rounded-2xl p-5 border border-[#E8DDD0]/60 transition-all duration-300 cursor-default">
               <div className="flex items-start justify-between mb-4">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: s.bg }}>
                   <Icon size={20} style={{ color: s.color }} />
@@ -254,13 +254,13 @@ export default function Dashboard({ setActivePage }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Revenue Line Chart */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="lg:col-span-2 bg-white rounded-2xl border border-[#C8E8EC]/60 p-5">
+          className="lg:col-span-2 bg-white rounded-2xl border border-[#E8DDD0]/60 p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-semibold text-[#1A1A1A]">Revenue Trend</h3>
               <p className="text-xs text-[#9E9189]">Last 7 days · Total ₹1,99,000</p>
             </div>
-            <span className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: '#EBF6F8', color: '#005461' }}>
+            <span className="text-xs font-bold px-3 py-1.5 rounded-full" style={{ background: '#E8DDD0', color: '#111111' }}>
               +18% vs last week
             </span>
           </div>
@@ -271,7 +271,7 @@ export default function Dashboard({ setActivePage }) {
 
         {/* Donut Chart */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-          className="bg-white rounded-2xl border border-[#C8E8EC]/60 p-5">
+          className="bg-white rounded-2xl border border-[#E8DDD0]/60 p-5">
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-[#1A1A1A]">Product Mix</h3>
             <p className="text-xs text-[#9E9189]">By suit category</p>
@@ -284,7 +284,7 @@ export default function Dashboard({ setActivePage }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Bar Chart */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-          className="bg-white rounded-2xl border border-[#C8E8EC]/60 p-5">
+          className="bg-white rounded-2xl border border-[#E8DDD0]/60 p-5">
           <div className="mb-3">
             <h3 className="text-lg font-semibold text-[#1A1A1A]">Daily Orders</h3>
             <p className="text-xs text-[#9E9189]">This week · 133 total</p>
@@ -296,13 +296,13 @@ export default function Dashboard({ setActivePage }) {
 
         {/* Satisfaction Radials */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}
-          className="bg-white rounded-2xl border border-[#C8E8EC]/60 p-5">
+          className="bg-white rounded-2xl border border-[#E8DDD0]/60 p-5">
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-[#1A1A1A]">Performance</h3>
             <p className="text-xs text-[#9E9189]">Key metrics at a glance</p>
           </div>
           <div className="flex justify-around">
-            <RadialProgress value={94} label="Satisfaction" color="#005461" />
+            <RadialProgress value={94} label="Satisfaction" color="#111111" />
             <RadialProgress value={78} label="Delivery Rate" color="#10B981" />
             <RadialProgress value={86} label="Return Rate" color="#F59E0B" />
           </div>
@@ -310,15 +310,15 @@ export default function Dashboard({ setActivePage }) {
 
         {/* Recent Orders */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
-          className="bg-white rounded-2xl border border-[#C8E8EC]/60 overflow-hidden">
-          <div className="flex items-center justify-between p-5 border-b border-[#EBF6F8]">
+          className="bg-white rounded-2xl border border-[#E8DDD0]/60 overflow-hidden">
+          <div className="flex items-center justify-between p-5 border-b border-[#E8DDD0]">
             <div>
               <h3 className="text-lg font-semibold text-[#1A1A1A]">Recent Orders</h3>
               <p className="text-xs text-[#9E9189]">Latest transactions</p>
             </div>
             <button onClick={() => setActivePage('orders')}
               className="flex items-center gap-1 text-xs font-semibold transition-colors"
-              style={{ color: '#005461' }}>
+              style={{ color: '#111111' }}>
               View all <ArrowRight size={13} />
             </button>
           </div>
@@ -327,9 +327,9 @@ export default function Dashboard({ setActivePage }) {
               const sc = statusColors[o.status];
               return (
                 <motion.div key={o.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 + i * 0.05 }}
-                  className="flex items-center gap-3 px-5 py-3 hover:bg-[#F5FCFD] transition-colors">
+                  className="flex items-center gap-3 px-5 py-3 hover:bg-[#FAF9F6] transition-colors">
                   <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-                    style={{ background: 'linear-gradient(135deg, #005461, #0A7A8C)' }}>
+                    style={{ background: 'linear-gradient(135deg, #111111, #0A7A8C)' }}>
                     {o.customer.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -349,9 +349,9 @@ export default function Dashboard({ setActivePage }) {
           <div className="p-4">
             <button onClick={() => setActivePage('add-product')}
               className="w-full py-2.5 rounded-xl text-xs font-semibold border-2 border-dashed transition-all"
-              style={{ borderColor: 'rgba(0,84,97,0.3)', color: '#005461' }}
-              onMouseEnter={e => { e.target.style.background = '#EBF6F8'; e.target.style.borderColor = '#005461'; }}
-              onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.borderColor = 'rgba(0,84,97,0.3)'; }}>
+              style={{ borderColor: 'rgba(17,17,17,0.3)', color: '#111111' }}
+              onMouseEnter={e => { e.target.style.background = '#E8DDD0'; e.target.style.borderColor = '#111111'; }}
+              onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.borderColor = 'rgba(17,17,17,0.3)'; }}>
               + Add New Product
             </button>
           </div>
@@ -360,14 +360,14 @@ export default function Dashboard({ setActivePage }) {
 
       {/* Top Products */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}
-        className="bg-white rounded-2xl border border-[#C8E8EC]/60 overflow-hidden">
-        <div className="flex items-center justify-between p-5 border-b border-[#EBF6F8]">
+        className="bg-white rounded-2xl border border-[#E8DDD0]/60 overflow-hidden">
+        <div className="flex items-center justify-between p-5 border-b border-[#E8DDD0]">
           <div>
             <h3 className="text-lg font-semibold text-[#1A1A1A]">Top Selling Products</h3>
             <p className="text-xs text-[#9E9189]">This month by revenue</p>
           </div>
           <button onClick={() => setActivePage('products')}
-            className="text-xs font-semibold flex items-center gap-1 transition-colors" style={{ color: '#005461' }}>
+            className="text-xs font-semibold flex items-center gap-1 transition-colors" style={{ color: '#111111' }}>
             View all <ArrowRight size={13} />
           </button>
         </div>
@@ -383,17 +383,17 @@ export default function Dashboard({ setActivePage }) {
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
                     <span className="w-5 h-5 rounded-lg flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
-                      style={{ background: 'linear-gradient(135deg, #005461, #0A7A8C)' }}>{i + 1}</span>
+                      style={{ background: 'linear-gradient(135deg, #111111, #0A7A8C)' }}>{i + 1}</span>
                     <span className="text-sm font-medium text-[#1A1A1A]">{p.name}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-[#9E9189]">{p.sales} sold</span>
-                    <span className="text-sm font-bold" style={{ color: '#005461' }}>{p.revenue}</span>
+                    <span className="text-sm font-bold" style={{ color: '#111111' }}>{p.revenue}</span>
                   </div>
                 </div>
-                <div className="h-2 bg-[#EBF6F8] rounded-full overflow-hidden">
+                <div className="h-2 bg-[#E8DDD0] rounded-full overflow-hidden">
                   <motion.div className="h-full rounded-full"
-                    style={{ background: 'linear-gradient(90deg, #005461, #0A7A8C)' }}
+                    style={{ background: 'linear-gradient(90deg, #111111, #0A7A8C)' }}
                     initial={{ width: 0 }} animate={{ width: `${p.pct}%` }}
                     transition={{ delay: 0.7 + i * 0.1, duration: 0.8, ease: 'easeOut' }} />
                 </div>

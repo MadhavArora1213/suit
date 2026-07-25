@@ -1,68 +1,99 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, SlidersHorizontal, ArrowUpDown, ChevronDown, Check, Star, ShoppingBag, Eye } from 'lucide-react';
+import { ArrowRight, ShoppingBag, Eye, SlidersHorizontal, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { getAllProducts } from '../utils/adminStore';
 
 const categoryBanners = {
   Anarkali: {
-    title: 'Anarkali Suits',
-    tagline: 'Regal Flares & Majestic Silhouettes',
+    title: 'Anarkali',
+    subtitle: 'The Royal Edit',
     desc: 'Indulge in high-volume silhouettes, royal kali cuts, and handloomed silk weaves. Inspired by Mughal heritage and re-imagined for modern celebrations.',
-    bgImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1600&q=80'
+    bgImage: '/anarkali_suit.png',
+    bgImage2: '/designer_suit_1.png'
   },
   Sharara: {
-    title: 'Sharara Suits',
-    tagline: 'Playful Tiers & Festive Drama',
+    title: 'Sharara',
+    subtitle: 'The Festive Edit',
     desc: 'Traditional three-piece sets featuring heavily flared sharara trousers, shorter designer kurtis, and matching embellished dupattas for timeless elegance.',
-    bgImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1600&q=80'
+    bgImage: '/sharara_suit.png',
+    bgImage2: '/pakistani_suit.png'
   },
   Patiala: {
-    title: 'Patiala Suits',
-    tagline: 'Vibrant Salwars & Classic Gathering',
+    title: 'Patiala',
+    subtitle: 'Heritage Weaves',
     desc: 'Representing rich Punjabi heritage with dense, hand-folded salwar pleats, short kurtas, and heavily embroidered phulkari dupattas.',
-    bgImage: 'https://images.unsplash.com/photo-1605784401368-5af1d9d6c4dc?auto=format&fit=crop&w=1600&q=80'
+    bgImage: '/cotton_suit.png',
+    bgImage2: '/designer_suit_1.png'
   },
   Pakistani: {
-    title: 'Pakistani Suits',
-    tagline: 'Straight Elegance & Intricate Laces',
+    title: 'Pakistani',
+    subtitle: 'Straight Elegance',
     desc: 'Contemporary long straight-cut silhouettes adorned with soft organza inserts, delicate shadow work, and premium thread laces.',
-    bgImage: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=1600&q=80'
+    bgImage: '/pakistani_suit.png',
+    bgImage2: '/sharara_suit.png'
   },
   Chikankari: {
-    title: 'Chikankari Suits',
-    tagline: 'Shadow Embroidery & Lucknowi Art',
+    title: 'Chikankari',
+    subtitle: 'Artisan Crafted',
     desc: 'Delicate hand-knotted shadow embroidery on breezy georgette and premium modal cotton. Perfect pastel hues with authentic handloom artistry.',
-    bgImage: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1600&q=80'
+    bgImage: '/cotton_suit.png',
+    bgImage2: '/anarkali_suit.png'
   },
   Banarasi: {
-    title: 'Banarasi Suits',
-    tagline: 'Katan Silk Brocades & Golden Zari',
+    title: 'Banarasi',
+    subtitle: 'Golden Brocades',
     desc: 'Opulent suit sets handwoven in Varanasi using katan silk threads and metallic zari. Exudes grandeur and heritage luxury, ideal for grand weddings.',
-    bgImage: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=1600&q=80'
+    bgImage: '/designer_suit_1.png',
+    bgImage2: '/cotton_suit.png'
   }
 };
 
+function FilterAccordion({ title, children, defaultOpen = true }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  return (
+    <div className="border-b border-[#111111]/10 pb-5 mb-5">
+      <button onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-between w-full text-left group cursor-pointer">
+        <h4 className="text-[12px] font-bold tracking-[0.15em] text-[#111111] uppercase group-hover:text-[#BCA58A] transition-colors" style={{ fontFamily: "'DM Sans', sans-serif" }}>{title}</h4>
+        {isOpen ? <ChevronUp size={14} className="text-[#BCA58A] transition-colors" /> : <ChevronDown size={14} className="text-[#111111]/50 group-hover:text-[#BCA58A] transition-colors" />}
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+            <div className="pt-5">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function CategoryPage({ categoryName, setView, setSelectedProduct, addToCart }) {
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [selectedBoutique, setSelectedBoutique] = useState('All');
-  const [selectedPriceRange, setSelectedPriceRange] = useState('All');
+  
+  // Sort
   const [sortOption, setSortOption] = useState('newest');
-  const [filterOpen, setFilterOpen] = useState(false);
 
+  // Advanced Filters
+  const [selectedBoutiques, setSelectedBoutiques] = useState([]);
+  const [selectedPrices, setSelectedPrices] = useState([]);
+  const [selectedFabrics, setSelectedFabrics] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedOccasions, setSelectedOccasions] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  
   const banner = categoryBanners[categoryName] || {
-    title: `${categoryName} Collection`,
-    tagline: 'Luxury Heritage Collection',
+    title: categoryName,
+    subtitle: 'Curated Collection',
     desc: 'Browse our exclusive, handcrafted selection of designer ethnic wear, curated from India’s finest heritage boutiques.',
-    bgImage: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1600&q=80'
+    bgImage: '/designer_suit_1.png',
+    bgImage2: '/anarkali_suit.png'
   };
 
-  // Load products matching this category
   useEffect(() => {
+    window.scrollTo(0, 0);
     const all = getAllProducts();
     if (categoryName === 'All') {
       setProducts(all);
-      setFilteredProducts(all);
       return;
     }
     const categoryFiltered = all.filter(p => {
@@ -72,54 +103,86 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
       return typeMatch || colMatch || catMatch;
     });
     setProducts(categoryFiltered);
-    setFilteredProducts(categoryFiltered);
   }, [categoryName]);
 
-  // Unique boutiques for filter dropdown
-  const boutiques = ['All', ...new Set(products.map(p => p.boutique).filter(Boolean))];
+  const boutiques = useMemo(() => [...new Set(products.map(p => p.boutique).filter(Boolean))], [products]);
+  
+  const fabricsList = ['Cotton', 'Silk', 'Georgette', 'Velvet', 'Organza', 'Chanderi'];
+  const occasionsList = ['Casual', 'Festive', 'Wedding', 'Party'];
+  const sizesList = ['Unstitched']; // Temporarily only showing Unstitched
+  const pricesList = [
+    { id: 'under5k', label: 'Under ₹5,000' },
+    { id: '5k-10k', label: '₹5,000 - ₹10,000' },
+    { id: 'over10k', label: 'Over ₹10,000' }
+  ];
+  const colorsList = [
+    { name: 'Red', hex: '#E74C3C' },
+    { name: 'Blue', hex: '#3498DB' },
+    { name: 'Green', hex: '#2ECC71' },
+    { name: 'Pink', hex: '#F1948A' },
+    { name: 'Black', hex: '#111111' },
+    { name: 'White', hex: '#FFFFFF' },
+    { name: 'Yellow', hex: '#F1C40F' },
+    { name: 'Wine', hex: '#722F37' }
+  ];
 
-  // Apply filters and sorting
-  useEffect(() => {
+  const toggleFilter = (setter, value) => {
+    setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
+  };
+
+  const clearAllFilters = () => {
+    setSelectedBoutiques([]);
+    setSelectedPrices([]);
+    setSelectedFabrics([]);
+    setSelectedColors([]);
+    setSelectedOccasions([]);
+    setSelectedSizes([]);
+  };
+
+  const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    // Boutique Filter
-    if (selectedBoutique !== 'All') {
-      result = result.filter(p => p.boutique === selectedBoutique);
-    }
-
-    // Price Range Filter
-    if (selectedPriceRange !== 'All') {
+    if (selectedBoutiques.length > 0) result = result.filter(p => selectedBoutiques.includes(p.boutique));
+    
+    if (selectedPrices.length > 0) {
       result = result.filter(p => {
         const price = p.priceNum || parseInt(p.price.replace(/[^\d]/g, ''), 10);
-        if (selectedPriceRange === 'under-5k') return price < 5000;
-        if (selectedPriceRange === '5k-10k') return price >= 5000 && price <= 10000;
-        if (selectedPriceRange === 'above-10k') return price > 10000;
-        return true;
+        if (selectedPrices.includes('under5k') && price < 5000) return true;
+        if (selectedPrices.includes('5k-10k') && price >= 5000 && price <= 10000) return true;
+        if (selectedPrices.includes('over10k') && price > 10000) return true;
+        return false;
       });
     }
 
-    // Sorting
+    const getText = (p) => `${p.name} ${p.desc} ${p.type} ${p.collection} ${p.fabricDetails || ''}`.toLowerCase();
+
+    if (selectedFabrics.length > 0) {
+      result = result.filter(p => selectedFabrics.some(f => getText(p).includes(f.toLowerCase())));
+    }
+    if (selectedColors.length > 0) {
+      result = result.filter(p => selectedColors.some(c => getText(p).includes(c.toLowerCase())));
+    }
+    if (selectedOccasions.length > 0) {
+      result = result.filter(p => selectedOccasions.some(o => getText(p).includes(o.toLowerCase())));
+    }
+    if (selectedSizes.length > 0) {
+      result = result.filter(p => selectedSizes.some(s => getText(p).includes(s.toLowerCase())));
+    }
+
     if (sortOption === 'price-low') {
-      result.sort((a, b) => {
-        const priceA = a.priceNum || parseInt(a.price.replace(/[^\d]/g, ''), 10);
-        const priceB = b.priceNum || parseInt(b.price.replace(/[^\d]/g, ''), 10);
-        return priceA - priceB;
-      });
+      result.sort((a, b) => (a.priceNum || parseInt(a.price.replace(/[^\d]/g, ''), 10)) - (b.priceNum || parseInt(b.price.replace(/[^\d]/g, ''), 10)));
     } else if (sortOption === 'price-high') {
-      result.sort((a, b) => {
-        const priceA = a.priceNum || parseInt(a.price.replace(/[^\d]/g, ''), 10);
-        const priceB = b.priceNum || parseInt(b.price.replace(/[^\d]/g, ''), 10);
-        return priceB - priceA;
-      });
+      result.sort((a, b) => (b.priceNum || parseInt(b.price.replace(/[^\d]/g, ''), 10)) - (a.priceNum || parseInt(a.price.replace(/[^\d]/g, ''), 10)));
     } else if (sortOption === 'rating') {
       result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     } else {
-      // Newest
       result.sort((a, b) => new Date(b.addedAt || 0) - new Date(a.addedAt || 0));
     }
 
-    setFilteredProducts(result);
-  }, [products, selectedBoutique, selectedPriceRange, sortOption]);
+    return result;
+  }, [products, selectedBoutiques, selectedPrices, selectedFabrics, selectedColors, selectedOccasions, selectedSizes, sortOption]);
+
+  const activeFilterCount = selectedBoutiques.length + selectedPrices.length + selectedFabrics.length + selectedColors.length + selectedOccasions.length + selectedSizes.length;
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -127,230 +190,345 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   };
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen text-[#111111] pb-24" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-screen bg-[#FAF9F6] mt-[110px] selection:bg-[#BCA58A] selection:text-white">
       
-      {/* Editorial Header Banner */}
-      <div className="relative h-[55vh] md:h-[60vh] overflow-hidden flex items-center justify-center pt-20">
-        <div className="absolute inset-0 bg-black/40 z-10" />
-        <img 
-          src={banner.bgImage} 
-          alt={banner.title} 
-          className="absolute inset-0 w-full h-full object-cover object-center scale-102"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#FAF9F6] via-transparent to-transparent z-15" />
-        
-        <div className="relative z-20 text-center px-6 max-w-3xl space-y-4">
-          <button 
-            onClick={() => window.location.href = '/sell'}
-            className="inline-flex items-center gap-2 text-xs tracking-widest text-[#BCA58A] hover:text-[#FAF9F6] uppercase font-bold transition-colors cursor-pointer mb-2"
-          >
-            <ArrowLeft size={13} />
-            <span>Back to Home</span>
-          </button>
+      {/* ── 10/10 Avant-Garde Hero Section (Compact & Uncropped) ── */}
+      <div className="relative w-full max-w-[1800px] mx-auto px-6 md:px-12 pt-4 pb-6 overflow-hidden">
+        <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-12 relative">
           
-          <span className="text-[10px] tracking-[0.4em] uppercase text-[#BCA58A] font-bold block">
-            {banner.tagline}
-          </span>
-          <h1 className="text-4xl md:text-6xl font-light text-white tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            {banner.title}
-          </h1>
-          <p className="text-[#FAF9F6]/80 text-xs md:text-sm leading-relaxed max-w-xl mx-auto font-medium">
-            {banner.desc}
-          </p>
-        </div>
-      </div>
-
-      {/* Main Grid Section */}
-      <div className="max-w-[1600px] mx-auto px-6 md:px-14 mt-12">
-        
-        {/* Filters Top Bar */}
-        <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 border-b border-[#BCA58A]/15 pb-6 mb-10">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold text-[#111111]/70">{filteredProducts.length} Luxury Creations Found</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4">
-            {/* Filter Toggle Button */}
-            <button 
-              onClick={() => setFilterOpen(!filterOpen)}
-              className="flex items-center gap-2 border border-[#BCA58A]/30 px-5 py-3 text-xs tracking-wider font-bold uppercase hover:border-[#111111] transition-all cursor-pointer bg-white"
-            >
-              <SlidersHorizontal size={14} className="text-[#BCA58A]" />
-              <span>Filter By</span>
-            </button>
-
-            {/* Sorting Dropdown */}
-            <div className="relative flex items-center border border-[#BCA58A]/30 bg-white px-4 py-3">
-              <ArrowUpDown size={14} className="text-[#BCA58A] mr-2" />
-              <select 
-                value={sortOption} 
-                onChange={(e) => setSortOption(e.target.value)}
-                className="bg-transparent text-xs tracking-wider font-bold uppercase outline-none cursor-pointer appearance-none pr-6"
-              >
-                <option value="newest">New Arrivals</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="rating">Top Rated</option>
-              </select>
-              <ChevronDown size={12} className="absolute right-4 pointer-events-none text-[#BCA58A]" />
-            </div>
-          </div>
-        </div>
-
-        {/* Filter Drawer / Accordion */}
-        <AnimatePresence>
-          {filterOpen && (
+          {/* Typography / Left Side */}
+          <div className="w-full lg:w-1/2 flex flex-col justify-center z-20">
             <motion.div 
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden bg-[#E8DDD0]/15 border border-[#BCA58A]/20 p-6 mb-10 rounded text-left grid grid-cols-1 md:grid-cols-2 gap-8"
+              initial={{ opacity: 0, y: 30 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
-              {/* Boutique filter */}
-              <div className="space-y-3">
-                <span className="text-xs uppercase tracking-widest text-[#BCA58A] font-bold block">Heritage Boutique</span>
-                <div className="flex flex-wrap gap-2">
-                  {boutiques.map(bt => (
-                    <button 
-                      key={bt} 
-                      onClick={() => setSelectedBoutique(bt)}
-                      className={`px-4 py-2 border text-xs font-semibold tracking-wider transition-all uppercase rounded cursor-pointer ${
-                        selectedBoutique === bt 
-                          ? 'bg-[#BCA58A] text-[#FAF9F6] border-transparent shadow' 
-                          : 'border-[#BCA58A]/30 bg-white hover:border-[#111111] text-[#111111]/70'
-                      }`}
-                    >
-                      {bt === 'All' ? 'All Boutiques' : bt}
-                    </button>
-                  ))}
-                </div>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-12 h-px bg-[#BCA58A]" />
+                <span className="text-[#BCA58A] text-[10px] tracking-[0.4em] uppercase font-bold" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  {banner.subtitle}
+                </span>
               </div>
 
-              {/* Price filter */}
-              <div className="space-y-3">
-                <span className="text-xs uppercase tracking-widest text-[#BCA58A] font-bold block">Price Filter</span>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { id: 'All', label: 'All Prices' },
-                    { id: 'under-5k', label: 'Under ₹5,000' },
-                    { id: '5k-10k', label: '₹5,000 - ₹10,000' },
-                    { id: 'above-10k', label: 'Above ₹10,000' }
-                  ].map(pr => (
-                    <button 
-                      key={pr.id} 
-                      onClick={() => setSelectedPriceRange(pr.id)}
-                      className={`px-4 py-2 border text-xs font-semibold tracking-wider transition-all uppercase rounded cursor-pointer ${
-                        selectedPriceRange === pr.id 
-                          ? 'bg-[#BCA58A] text-[#FAF9F6] border-transparent shadow' 
-                          : 'border-[#BCA58A]/30 bg-white hover:border-[#111111] text-[#111111]/70'
-                      }`}
-                    >
-                      {pr.label}
-                    </button>
-                  ))}
+              <h1 className="text-6xl md:text-[80px] font-light text-[#111111] leading-[0.85] tracking-tight mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                {banner.title}
+              </h1>
+
+              <p className="text-[#111111]/70 text-xs md:text-sm leading-relaxed mb-8 max-w-md font-light line-clamp-3" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                {banner.desc}
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                <button
+                  onClick={() => document.getElementById('collection-start')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="group relative inline-flex items-center gap-4 w-max cursor-pointer"
+                >
+                  <div className="w-10 h-10 rounded-full border border-[#BCA58A] flex items-center justify-center group-hover:bg-[#BCA58A] transition-colors duration-500">
+                    <ArrowRight size={14} className="text-[#BCA58A] group-hover:text-white transition-colors duration-500" />
+                  </div>
+                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#111111] group-hover:text-[#BCA58A] transition-colors duration-500">
+                    Explore Collection
+                  </span>
+                </button>
+                <div className="hidden sm:flex items-center gap-2 text-[#111111]/30 animate-bounce mt-1">
+                  <ChevronDown size={14} />
+                  <span className="text-[8px] tracking-[0.2em] uppercase font-bold">Scroll</span>
                 </div>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
+          </div>
 
-        {/* Products Grid */}
-        {filteredProducts.length === 0 ? (
-          <div className="py-24 text-center border border-[#BCA58A]/15 bg-white rounded p-12">
-            <h3 className="text-2xl font-light text-[#111111] mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              No Collections Found
-            </h3>
-            <p className="text-sm text-[#6B6B6B] max-w-sm mx-auto mb-6">
-              There are currently no products in {categoryName} matching your active filters. Try clearing filters.
-            </p>
-            <button 
-              onClick={() => { setSelectedBoutique('All'); setSelectedPriceRange('All'); }}
-              className="bg-[#BCA58A] text-[#FAF9F6] px-8 py-3 text-xs tracking-widest font-bold uppercase hover:bg-[#9A8268] transition-colors"
+          {/* Imagery / Right Side (Dual Portrait Layout to prevent cropping) */}
+          <div className="w-full lg:w-1/2 flex justify-end gap-3 md:gap-4 pl-4 md:pl-0">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              className="w-1/2 md:w-[180px] lg:w-[200px] aspect-[3/4] overflow-hidden bg-[#E8DDD0]"
             >
-              Reset Filters
-            </button>
+              <img src={banner.bgImage} alt="Hero Main" className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700" />
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+              className="w-1/2 md:w-[180px] lg:w-[200px] aspect-[3/4] overflow-hidden bg-[#E8DDD0] mt-6 md:mt-8"
+            >
+              <img src={banner.bgImage2} alt="Hero Sub" className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700" />
+            </motion.div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {filteredProducts.map((p, idx) => (
-              <motion.div 
-                key={p.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.05 }}
-                className="group relative cursor-pointer text-left flex flex-col justify-between"
-                onClick={() => handleProductClick(p)}
-              >
-                <div>
-                  {/* Photo container */}
-                  <div className="aspect-[3/4] overflow-hidden bg-white border border-[#BCA58A]/10 group-hover:border-[#BCA58A]/45 relative mb-4 rounded shadow-sm transition-all duration-300">
-                    <img 
-                      src={p.image} 
-                      alt={p.name} 
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
-                    />
 
-                    {p.badge && (
-                      <span className="absolute top-3 left-3 bg-[#FAF9F6]/85 backdrop-blur-sm text-[#BCA58A] text-[8px] font-bold tracking-widest uppercase px-2.5 py-1.5 border border-[#BCA58A]/25 rounded-sm">
-                        {p.badge}
-                      </span>
-                    )}
+        </div>
+      </div>
 
-                    {/* Quick overlay buttons */}
-                    <div className="absolute inset-0 bg-[#FAF9F6]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4 z-10">
-                      <div className="w-full flex gap-2">
-                        <motion.button 
-                          whileHover={{ scale: 1.02 }} 
-                          whileTap={{ scale: 0.98 }}
-                          onClick={(e) => { 
-                            e.stopPropagation(); 
-                            addToCart(p, 'M');
-                            alert(`Added ${p.name} (Size M) to bag!`);
-                          }}
-                          className="flex-1 bg-[#BCA58A] text-white text-[9px] font-bold tracking-widest uppercase py-3 flex items-center justify-center gap-1.5 hover:bg-[#9A8268] transition-colors cursor-pointer shadow-lg"
-                        >
-                          <ShoppingBag size={11} /> ADD TO BAG
-                        </motion.button>
-                        <motion.button 
-                          whileHover={{ scale: 1.02 }} 
-                          whileTap={{ scale: 0.98 }}
-                          onClick={(e) => { e.stopPropagation(); handleProductClick(p); }}
-                          className="bg-white border border-[#BCA58A]/35 text-[#111111] hover:bg-[#111111] hover:text-white p-3 transition-all cursor-pointer shadow-lg rounded-sm"
-                        >
-                          <Eye size={12} />
-                        </motion.button>
+      {/* ── Main Collection Layout ── */}
+      <div id="collection-start" className="max-w-[1800px] mx-auto px-6 md:px-12 pt-2 pb-32">
+        <div className="flex flex-col lg:flex-row gap-16 xl:gap-24">
+          
+          {/* ── Minimalist Left Sidebar Filters ── */}
+          <div className="w-full lg:w-[260px] shrink-0">
+            <div className="sticky top-[120px] max-h-[calc(100vh-140px)] overflow-y-auto pr-4 pb-10 scrollbar-thin scrollbar-thumb-[#BCA58A]/30 scrollbar-track-transparent">
+              
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex items-center gap-3">
+                  <SlidersHorizontal size={14} className="text-[#BCA58A]" />
+                  <h3 className="text-[11px] tracking-[0.3em] uppercase font-bold text-[#111111]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    Refine By
+                  </h3>
+                </div>
+                {activeFilterCount > 0 && (
+                  <button onClick={clearAllFilters} className="text-[9px] text-[#111111] font-bold uppercase tracking-wider hover:text-[#BCA58A] cursor-pointer">
+                    Clear All
+                  </button>
+                )}
+              </div>
+
+              {/* Accordion: Sort */}
+              <FilterAccordion title="Sort Collection" defaultOpen={true}>
+                <div className="flex flex-col gap-4">
+                  {[
+                    { id: 'newest', label: 'Latest Arrivals' },
+                    { id: 'price-low', label: 'Price: Ascending' },
+                    { id: 'price-high', label: 'Price: Descending' },
+                    { id: 'rating', label: 'Most Loved' }
+                  ].map((sort) => (
+                    <label key={sort.id} className="flex items-center gap-4 cursor-pointer group">
+                      <div className="relative flex items-center justify-center">
+                        <div className={`w-[14px] h-[14px] rounded-full border transition-all duration-300 ${sortOption === sort.id ? 'border-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`} />
+                        <div className={`absolute w-1.5 h-1.5 rounded-full bg-[#BCA58A] transition-all duration-300 ${sortOption === sort.id ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Info details */}
-                  <div className="space-y-1.5 pl-1">
-                    <span className="inline-block text-[#BCA58A] text-[8px] font-bold tracking-widest uppercase border border-[#BCA58A]/25 px-2 py-0.5 rounded-sm">
-                      ✓ {p.boutique}
-                    </span>
-                    <h3 className="text-sm font-medium text-[#111111]/85 group-hover:text-[#BCA58A] transition-colors duration-300 leading-snug line-clamp-1" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px' }}>
-                      {p.name}
-                    </h3>
-                  </div>
+                      <span className={`text-[13px] transition-colors duration-300 ${sortOption === sort.id ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {sort.label}
+                      </span>
+                      <input type="radio" className="hidden" checked={sortOption === sort.id} onChange={() => setSortOption(sort.id)} />
+                    </label>
+                  ))}
                 </div>
+              </FilterAccordion>
 
-                <div className="flex items-center justify-between mt-2 pl-1">
-                  <span className="text-base font-medium text-[#BCA58A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                    {p.price}
-                  </span>
-                  
-                  {p.rating && (
-                    <div className="flex items-center gap-1">
-                      <Star size={11} className="fill-amber-400 text-amber-400" />
-                      <span className="text-[10px] font-semibold text-[#111111]/70">{p.rating}</span>
-                    </div>
-                  )}
+              {/* Accordion: Price */}
+              <FilterAccordion title="Price Point" defaultOpen={false}>
+                <div className="space-y-4">
+                  {pricesList.map(p => (
+                    <label key={p.id} className="flex items-center gap-4 cursor-pointer group">
+                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedPrices.includes(p.id) ? 'border-[#BCA58A] bg-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`}>
+                        <Check size={10} className={`text-white transition-opacity ${selectedPrices.includes(p.id) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
+                      </div>
+                      <span className={`text-[13px] transition-colors duration-300 ${selectedPrices.includes(p.id) ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {p.label}
+                      </span>
+                      <input type="checkbox" className="hidden" checked={selectedPrices.includes(p.id)} onChange={() => toggleFilter(setSelectedPrices, p.id)} />
+                    </label>
+                  ))}
                 </div>
-              </motion.div>
-            ))}
+              </FilterAccordion>
+
+              {/* Accordion: Size */}
+              <FilterAccordion title="Size" defaultOpen={false}>
+                <div className="flex flex-wrap gap-2">
+                  {sizesList.map(s => (
+                    <button key={s} onClick={() => toggleFilter(setSelectedSizes, s)}
+                      className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${selectedSizes.includes(s) ? 'border-[#111111] bg-[#111111] text-white' : 'border-[#BCA58A]/30 text-[#6B6B6B] hover:border-[#111111]'}`}>
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </FilterAccordion>
+
+              {/* Accordion: Fabric */}
+              <FilterAccordion title="Fabric" defaultOpen={false}>
+                <div className="space-y-4">
+                  {fabricsList.map(f => (
+                    <label key={f} className="flex items-center gap-4 cursor-pointer group">
+                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedFabrics.includes(f) ? 'border-[#BCA58A] bg-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`}>
+                        <Check size={10} className={`text-white transition-opacity ${selectedFabrics.includes(f) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
+                      </div>
+                      <span className={`text-[13px] transition-colors duration-300 ${selectedFabrics.includes(f) ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {f}
+                      </span>
+                      <input type="checkbox" className="hidden" checked={selectedFabrics.includes(f)} onChange={() => toggleFilter(setSelectedFabrics, f)} />
+                    </label>
+                  ))}
+                </div>
+              </FilterAccordion>
+
+              {/* Accordion: Color */}
+              <FilterAccordion title="Color" defaultOpen={false}>
+                <div className="flex flex-wrap gap-3">
+                  {colorsList.map(c => {
+                    const isSelected = selectedColors.includes(c.name);
+                    return (
+                      <button key={c.name} onClick={() => toggleFilter(setSelectedColors, c.name)} title={c.name}
+                        className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all cursor-pointer ${isSelected ? 'border-gray-400 scale-110 shadow-md' : 'border-gray-200 hover:border-gray-300'}`}
+                        style={{ backgroundColor: c.hex }}>
+                        {isSelected && <Check size={12} className={c.name === 'White' || c.name === 'Yellow' ? 'text-black' : 'text-white'} />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </FilterAccordion>
+
+              {/* Accordion: Occasion */}
+              <FilterAccordion title="Occasion" defaultOpen={false}>
+                <div className="space-y-4">
+                  {occasionsList.map(o => (
+                    <label key={o} className="flex items-center gap-4 cursor-pointer group">
+                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedOccasions.includes(o) ? 'border-[#BCA58A] bg-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`}>
+                        <Check size={10} className={`text-white transition-opacity ${selectedOccasions.includes(o) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
+                      </div>
+                      <span className={`text-[13px] transition-colors duration-300 ${selectedOccasions.includes(o) ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {o}
+                      </span>
+                      <input type="checkbox" className="hidden" checked={selectedOccasions.includes(o)} onChange={() => toggleFilter(setSelectedOccasions, o)} />
+                    </label>
+                  ))}
+                </div>
+              </FilterAccordion>
+
+              {/* Accordion: Boutiques */}
+              {boutiques.length > 0 && (
+                <FilterAccordion title="Boutique and Shop" defaultOpen={false}>
+                  <div className="space-y-4">
+                    {boutiques.map((btq) => (
+                      <label key={btq} className="flex items-center gap-4 cursor-pointer group">
+                        <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedBoutiques.includes(btq) ? 'border-[#BCA58A] bg-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`}>
+                          <Check size={10} className={`text-white transition-opacity ${selectedBoutiques.includes(btq) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
+                        </div>
+                        <span className={`text-[13px] transition-colors duration-300 ${selectedBoutiques.includes(btq) ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                          {btq}
+                        </span>
+                        <input type="checkbox" className="hidden" checked={selectedBoutiques.includes(btq)} onChange={() => toggleFilter(setSelectedBoutiques, btq)} />
+                      </label>
+                    ))}
+                  </div>
+                </FilterAccordion>
+              )}
+
+            </div>
           </div>
-        )}
 
+          {/* ── 10/10 Premium Product Grid ── */}
+          <div className="flex-1 min-w-0">
+            
+            <div className="flex items-end justify-between mb-12">
+              <span className="text-[10px] font-bold text-[#111111]/40 tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                {filteredProducts.length} Results
+              </span>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {filteredProducts.length === 0 ? (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="py-32 flex flex-col items-center justify-center text-center bg-white border border-[#BCA58A]/10 shadow-sm"
+                >
+                  <div className="w-16 h-16 rounded-full bg-[#FAF9F6] flex items-center justify-center mb-6">
+                    <SlidersHorizontal size={24} className="text-[#BCA58A]/60" />
+                  </div>
+                  <h3 className="text-3xl font-light text-[#111111] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    No Styles Found
+                  </h3>
+                  <p className="text-[#111111]/50 text-sm max-w-sm mx-auto mb-8 font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    Your refined criteria yielded no results. Try removing some filters to discover our beautiful collection.
+                  </p>
+                  <button 
+                    onClick={clearAllFilters}
+                    className="border border-[#111111] text-[#111111] px-8 py-3 text-[10px] tracking-[0.25em] font-bold uppercase hover:bg-[#111111] hover:text-white transition-colors cursor-pointer"
+                  >
+                    Clear All Filters
+                  </button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={activeFilterCount + sortOption}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
+                >
+                  {filteredProducts.map((p, index) => (
+                    <motion.div
+                      key={p.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: (index % 6) * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                      onClick={() => handleProductClick(p)}
+                      className="group flex flex-col cursor-pointer"
+                    >
+                      {/* Taller Aspect Ratio Image Container */}
+                      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#F5F3F0] mb-5 group-hover:shadow-[0_10px_40px_rgb(0,0,0,0.08)] transition-all duration-500 border border-[#111111]/5">
+                        <img
+                          src={p.image}
+                          alt={p.name}
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
+                        />
+                        
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
+                        
+                        {/* Elegant floating boutique badge */}
+                        <div className="absolute top-4 left-4 z-10">
+                          <span className="bg-white/95 backdrop-blur-md px-3.5 py-1.5 text-[9px] font-bold tracking-[0.2em] uppercase text-[#111111] rounded-full shadow-sm">
+                            {p.badge || 'Exquisite'}
+                          </span>
+                        </div>
+
+                        {/* Quick View & Add to Bag Drawer overlay */}
+                        <div className="absolute inset-x-3 bottom-3 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20 flex gap-2">
+                          <button 
+                            onClick={(e) => { 
+                              e.stopPropagation(); 
+                              addToCart(p, 'M');
+                            }}
+                            className="flex-1 bg-white/95 backdrop-blur-md text-[#111111] py-3.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#111111] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
+                          >
+                             <ShoppingBag size={14} /> Add to Bag
+                          </button>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); handleProductClick(p); }}
+                            className="w-12 h-12 bg-white/95 backdrop-blur-md text-[#111111] flex items-center justify-center rounded-full hover:bg-[#BCA58A] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
+                          >
+                             <Eye size={16} />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Typographic Content Below */}
+                      <div className="flex flex-col text-left px-2">
+                        <h3
+                          className="text-[20px] font-medium text-[#111111] leading-tight mb-2 group-hover:text-[#BCA58A] transition-colors truncate"
+                          style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                        >
+                          {p.name}
+                        </h3>
+                        <div className="flex items-center justify-between">
+                          <span
+                            className="text-[#6B6B6B] text-[13px] font-medium"
+                            style={{ fontFamily: "'DM Sans', sans-serif" }}
+                          >
+                            {p.price}
+                          </span>
+                          {p.rating && (
+                            <div className="flex items-center gap-1 bg-[#FAF9F6] px-2 py-1 rounded-full border border-[#BCA58A]/20">
+                              <span className="text-[#BCA58A] text-[9px]">★</span>
+                              <span className="text-[10px] font-bold text-[#111111]/80 pt-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                                {p.rating}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+        </div>
       </div>
     </div>
   );

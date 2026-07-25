@@ -114,7 +114,7 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
   const categoriesList = ['Anarkali', 'Straight Suit', 'Sharara', 'Patiala', 'Lehenga'];
   const fabricsList = ['Cotton', 'Silk', 'Georgette', 'Velvet', 'Organza', 'Chanderi'];
   const occasionsList = ['Casual', 'Festive', 'Wedding', 'Party'];
-  const sizesList = ['S', 'M', 'L', 'XL', 'XXL', 'Unstitched'];
+  const sizesList = ['Unstitched']; // Temporarily only showing Unstitched
   const patternsList = ['Solid', 'Printed', 'Embroidered', 'Floral', 'Geometric', 'Zari Work'];
   const stylesList = ['Straight', 'A-Line', 'Flared', 'Asymmetric'];
   const sleevesList = ['Sleeveless', 'Short Sleeves', '3/4 Sleeves', 'Full Sleeves'];
@@ -433,7 +433,7 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
               </div>
             </FilterAccordion>
 
-            <FilterAccordion title="Boutique" defaultOpen={false}>
+            <FilterAccordion title="Boutique and Shop" defaultOpen={false}>
               <div className="space-y-3">
                 {boutiques.map(b => (
                   <label key={b} className="flex items-center gap-3 cursor-pointer group">
