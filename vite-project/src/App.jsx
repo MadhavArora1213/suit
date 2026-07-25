@@ -338,7 +338,7 @@ function App() {
       )}
 
       {view === 'contact' && (
-        <ContactPage setView={setView} />
+        <ContactPage setView={setView} user={user} />
       )}
 
       {view === 'about' && (

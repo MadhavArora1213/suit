@@ -12,7 +12,7 @@ const floatingImages = [
   { src: '/pastel_edit.png', style: { bottom: '3%', right: '2%', width: '175px', rotate: '-5deg' } },
 ];
 
-export default function ContactPage({ setView }) {
+export default function ContactPage({ setView, user }) {
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -28,6 +28,17 @@ export default function ContactPage({ setView }) {
 
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [errorMsg, setErrorMsg] = useState('');
+
+  // Auto-fill form if user is logged in
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.displayName || prev.name,
+        email: user.email || prev.email
+      }));
+    }
+  }, [user]);
 
   // Very basic spam filter check
   const hasSpamKeywords = (text) => {
@@ -87,20 +98,103 @@ export default function ContactPage({ setView }) {
     const cleanMessage = formData.message.replace(/<[^>]*>?/gm, '');
     const cleanName = formData.name.replace(/<[^>]*>?/gm, '');
 
-    // 4. Submit
+    // 4. Submit to Database
     addSupportTicket({
       name: cleanName,
       email: formData.email,
       message: cleanMessage,
     });
     setSubmitted(true);
+
+    // 5. Send Auto-Responder via Brevo API
+    const brevoKey = import.meta.env.VITE_BREVO_API_KEY;
+    if (brevoKey) {
+      fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'api-key': brevoKey,
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: { name: "Gurnaaz Support", email: "madhavarora132005@gmail.com" }, // Using your email as sender to avoid verification issues for now
+          to: [{ email: formData.email, name: cleanName }],
+          subject: "Gurnaaz Private Suite - We received your inquiry",
+          htmlContent: `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            </head>
+            <body style="margin: 0; padding: 0; background-color: #f7f5f2; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
+              <div style="background-color: #f7f5f2; padding: 60px 20px; min-height: 100vh;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e8e3dc; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                  
+                  <!-- Elegant Header (Light) -->
+                  <tr>
+                    <td style="padding: 40px; text-align: center; border-bottom: 1px solid #f0ebe4; background-color: #ffffff;">
+                      <!-- NOTE: This logo will only appear once the website is hosted on a live URL. Email providers block localhost images. -->
+                      <img src="https://your-domain.com/assets/gurnaaz.png" alt="GURNAAZ" style="height: 40px; width: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;" />
+                      <div style="font-size: 9px; letter-spacing: 5px; color: #BCA58A; text-transform: uppercase; font-weight: bold;">Client Services</div>
+                    </td>
+                  </tr>
+                  
+                  <!-- Body Content (Light) -->
+                  <tr>
+                    <td style="padding: 50px 40px; color: #554d45; font-size: 14px; line-height: 1.8;">
+                      <h2 style="margin-top: 0; color: #221f1c; font-size: 20px; font-weight: 400; font-family: Georgia, serif; font-style: italic; margin-bottom: 30px;">Dear ${cleanName},</h2>
+                      <p style="margin-bottom: 20px;">Thank you for getting in touch with Gurnaaz. This email is to confirm that we have safely received your inquiry.</p>
+                      <p style="margin-bottom: 40px;">Our dedicated client support team reviews every message personally to ensure you receive the highest level of service. A representative will be in touch with you shortly.</p>
+                      
+                      <!-- Quote Box -->
+                      <div style="margin: 40px 0; padding: 30px; background-color: #faf9f6; border-left: 2px solid #BCA58A; border-radius: 2px;">
+                        <div style="font-size: 10px; letter-spacing: 2px; color: #8a7c6e; text-transform: uppercase; margin-bottom: 15px; font-weight: bold;">Your Inquiry</div>
+                        <div style="color: #332d28; font-style: italic; font-family: Georgia, serif; font-size: 15px; line-height: 1.6;">"${cleanMessage}"</div>
+                      </div>
+                      
+                      <p style="margin-bottom: 0;">We sincerely appreciate your patience and look forward to assisting you.</p>
+                    </td>
+                  </tr>
+                  
+                  <!-- Footer (Light) -->
+                  <tr>
+                    <td style="padding: 40px; text-align: center; background-color: #faf9f6; border-top: 1px solid #f0ebe4;">
+                      <p style="margin: 0; color: #BCA58A; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">The Gurnaaz Team</p>
+                      <p style="margin: 15px 0 0 0; color: #8a7c6e; font-size: 10px; letter-spacing: 1px;">Excellence in every thread.</p>
+                      
+                      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #f0ebe4;">
+                        <p style="margin: 0; color: #a39c94; font-size: 9px; letter-spacing: 1px; text-transform: uppercase;">© ${new Date().getFullYear()} Gurnaaz. All rights reserved.</p>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </body>
+            </html>
+          `
+        })
+      })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errData = await res.json();
+          console.error("Brevo API Error:", errData);
+          alert("Failed to send email. Check browser console for Brevo error.");
+        } else {
+          console.log("Brevo email sent successfully!");
+        }
+      })
+      .catch(err => console.error("Brevo Network Error:", err));
+    } else {
+      console.warn("No Brevo API key found in .env");
+    }
   };
 
   return (
     <div
       ref={containerRef}
       className="min-h-screen relative overflow-hidden flex items-center justify-center"
-      style={{ background: 'radial-gradient(ellipse at 40% 40%, #1a1209 0%, #0a0806 60%, #0e0c0a 100%)' }}
+      style={{ background: '#000000' }}
     >
       {/* Animated Grain Overlay */}
       <div
@@ -174,7 +268,7 @@ export default function ContactPage({ setView }) {
                 >
                   <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#BCA58A]" />
                   <span className="text-[9px] tracking-[0.4em] text-[#BCA58A] uppercase font-bold" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-                    Gurnaaz Private Suite
+                    Gurnaaz Support
                   </span>
                   <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#BCA58A]" />
                 </motion.div>
@@ -193,7 +287,7 @@ export default function ContactPage({ setView }) {
                   transition={{ delay: 0.9 }}
                   className="text-sm text-white/40 mt-4 leading-relaxed"
                 >
-                  Our concierge team replies personally within 24 hours.
+                  Our support team replies personally within 24 hours.
                 </motion.p>
               </div>
 
@@ -240,34 +334,39 @@ export default function ContactPage({ setView }) {
                 className="space-y-8"
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {['Full Name', 'Email Address'].map((placeholder) => (
-                    <div key={placeholder} className="relative">
-                      <input
-                        required
-                        type={placeholder.includes('Email') ? 'email' : 'text'}
-                        placeholder=" "
-                        value={placeholder.includes('Email') ? formData.email : formData.name}
-                        onChange={(e) => setFormData({ ...formData, [placeholder.includes('Email') ? 'email' : 'name']: e.target.value })}
-                        onFocus={() => setFocused(placeholder)}
-                        onBlur={() => setFocused(null)}
-                        className="w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors peer"
-                        style={{ borderColor: focused === placeholder ? '#BCA58A' : 'rgba(255,255,255,0.12)' }}
-                      />
-                      <label
-                        className="absolute left-0 text-xs transition-all duration-300 pointer-events-none"
-                        style={{
-                          top: focused === placeholder ? '-16px' : '12px',
-                          fontSize: focused === placeholder ? '9px' : '13px',
-                          letterSpacing: focused === placeholder ? '0.2em' : '0',
-                          color: focused === placeholder ? '#BCA58A' : 'rgba(255,255,255,0.35)',
-                          textTransform: focused === placeholder ? 'uppercase' : 'none',
-                          fontWeight: focused === placeholder ? '700' : '400',
-                        }}
-                      >
-                        {placeholder}
-                      </label>
-                    </div>
-                  ))}
+                  {['Full Name', 'Email Address'].map((placeholder) => {
+                    const isEmail = placeholder.includes('Email');
+                    const value = isEmail ? formData.email : formData.name;
+                    const isActive = focused === placeholder || value.trim() !== '';
+                    return (
+                      <div key={placeholder} className="relative">
+                        <input
+                          required
+                          type={isEmail ? 'email' : 'text'}
+                          placeholder=" "
+                          value={value}
+                          onChange={(e) => setFormData({ ...formData, [isEmail ? 'email' : 'name']: e.target.value })}
+                          onFocus={() => setFocused(placeholder)}
+                          onBlur={() => setFocused(null)}
+                          className="w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors peer"
+                          style={{ borderColor: focused === placeholder ? '#BCA58A' : 'rgba(255,255,255,0.12)' }}
+                        />
+                        <label
+                          className="absolute left-0 text-xs transition-all duration-300 pointer-events-none"
+                          style={{
+                            top: isActive ? '-16px' : '12px',
+                            fontSize: isActive ? '9px' : '13px',
+                            letterSpacing: isActive ? '0.2em' : '0',
+                            color: focused === placeholder ? '#BCA58A' : 'rgba(255,255,255,0.35)',
+                            textTransform: isActive ? 'uppercase' : 'none',
+                            fontWeight: isActive ? '700' : '400',
+                          }}
+                        >
+                          {placeholder}
+                        </label>
+                      </div>
+                    );
+                  })}
                 </div>
 
                 <div className="relative">
@@ -284,12 +383,12 @@ export default function ContactPage({ setView }) {
                   <label
                     className="absolute left-0 pointer-events-none transition-all duration-300"
                     style={{
-                      top: focused === 'message' ? '-16px' : '12px',
-                      fontSize: focused === 'message' ? '9px' : '13px',
-                      letterSpacing: focused === 'message' ? '0.2em' : '0',
+                      top: (focused === 'message' || formData.message.trim() !== '') ? '-16px' : '12px',
+                      fontSize: (focused === 'message' || formData.message.trim() !== '') ? '9px' : '13px',
+                      letterSpacing: (focused === 'message' || formData.message.trim() !== '') ? '0.2em' : '0',
                       color: focused === 'message' ? '#BCA58A' : 'rgba(255,255,255,0.35)',
-                      textTransform: focused === 'message' ? 'uppercase' : 'none',
-                      fontWeight: focused === 'message' ? '700' : '400',
+                      textTransform: (focused === 'message' || formData.message.trim() !== '') ? 'uppercase' : 'none',
+                      fontWeight: (focused === 'message' || formData.message.trim() !== '') ? '700' : '400',
                     }}
                   >
                     Your Message
@@ -306,7 +405,7 @@ export default function ContactPage({ setView }) {
                     style={{ background: 'linear-gradient(90deg, transparent, rgba(188,165,138,0.2), rgba(188,165,138,0.4))' }}
                   />
                   <span className="relative flex items-center justify-center gap-4 text-[10px] tracking-[0.3em] text-white/80 group-hover:text-white font-bold uppercase transition-colors">
-                    Send to Concierge
+                    Send Message
                     <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform text-[#BCA58A]" />
                   </span>
                 </button>
@@ -314,30 +413,52 @@ export default function ContactPage({ setView }) {
             </>
           ) : (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="py-16 text-center"
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="pt-0 pb-8 text-center flex flex-col items-center justify-start relative -mt-8"
             >
+              {/* Glowing Background Effect */}
+              <div 
+                className="absolute inset-0 opacity-50 blur-2xl pointer-events-none" 
+                style={{ background: 'radial-gradient(circle at center, rgba(188,165,138,0.15) 0%, transparent 60%)' }}
+              />
+              
+              {/* Success Image (No Text) */}
               <motion.div
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                className="w-20 h-20 mx-auto border border-[#BCA58A]/50 rounded-full flex items-center justify-center mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.2 }}
+                className="relative mb-8 flex justify-center w-full"
               >
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#BCA58A" strokeWidth="1.5">
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
+                <div className="w-80 h-80 md:w-[500px] md:h-[500px] relative group-hover:scale-105 transition-transform duration-700 ease-out z-10">
+                  <img 
+                    src="/Images/contact.png" 
+                    alt="Success Character" 
+                    className="w-full h-full object-contain object-bottom relative z-10"
+                    style={{ filter: 'drop-shadow(0px 10px 20px rgba(0,0,0,0.5))' }}
+                  />
+                </div>
               </motion.div>
-              <h2 className="text-4xl font-light text-white mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Message Sent</h2>
-              <p className="text-sm text-white/40 max-w-xs mx-auto leading-relaxed">
-                Thank you for reaching out. A member of our concierge team will respond within 24 hours.
-              </p>
-              <button
-                onClick={() => setView('home')}
-                className="mt-10 text-[9px] tracking-[0.3em] uppercase text-[#BCA58A] hover:text-white transition-colors border-b border-[#BCA58A]/40 pb-1 cursor-pointer"
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="relative z-0"
               >
-                Return to Gurnaaz
-              </button>
+
+                <button
+                  onClick={() => setView('home')}
+                  className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-transparent border border-[#BCA58A]/30 hover:border-[#BCA58A] transition-colors duration-500 overflow-hidden cursor-pointer"
+                >
+                  <div className="absolute inset-0 bg-[#BCA58A]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                  <span className="relative text-[10px] tracking-[0.3em] uppercase text-white font-semibold">
+                    Return to Store
+                  </span>
+                  <ArrowRight size={14} className="relative text-[#BCA58A] group-hover:translate-x-1 transition-transform duration-500" />
+                </button>
+              </motion.div>
             </motion.div>
           )}
         </div>
