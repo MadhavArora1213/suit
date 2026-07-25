@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react'
+import { auth, db } from './firebase'
+import { signOut, onAuthStateChanged } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import { syncProducts, getAllProducts } from './utils/adminStore'
 import './App.css'
 import LoadingScreen from './LoadingScreen'
@@ -31,6 +34,7 @@ import CollectionsPage from './components/CollectionsPage'
 import CollectionDetailPage from './components/CollectionDetailPage'
 import BoutiquesPage from './components/BoutiquesPage'
 import WishlistPage from './components/WishlistPage'
+import ProfilePage from './components/ProfilePage'
 
 function App() {
   const isHomeRoute = window.location.pathname === '/' || window.location.pathname === '';
@@ -110,6 +114,32 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+          if (userDoc.exists()) {
+            setUser(userDoc.data());
+          } else {
+            setUser({
+              uid: currentUser.uid,
+              name: currentUser.displayName || 'User',
+              email: currentUser.email,
+              phone: currentUser.phoneNumber || '',
+              role: 'customer'
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        }
+      } else {
+        setUser(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
     const pathMap = {
       'customer-home': '/',
       'collections': '/collections',
@@ -128,6 +158,7 @@ function App() {
       'checkout': '/checkout',
       'login': '/login',
       'wishlist': '/wishlist',
+      'profile': '/profile',
       'shop': '/shop',
       'home': '/sell',
     };
@@ -143,13 +174,29 @@ function App() {
 
   const handleLoginSuccess = (userProfile) => {
     setUser(userProfile)
-    window.location.href = '/sell'
+    const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+    if (redirectPath) {
+      sessionStorage.removeItem('redirectAfterLogin');
+      window.history.pushState(null, '', redirectPath);
+    } else {
+      window.history.pushState(null, '', '/');
+    }
+    
+    // Update the app state based on the newly pushed URL so we don't reload
+    setSelectedCategory(getCategoryFromPath());
+    setSelectedBoutique(getBoutiqueFromPath());
+    setSelectedCollectionSlug(getCollectionFromPath());
+    setView(getInitialView());
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.error("Logout error", e);
+    }
     setUser(null)
-    window.location.href = '/sell'
-    alert('Logged out successfully.')
+    window.location.href = '/'
   }
 
   const addToCart = (product, size = 'M') => {
@@ -359,11 +406,18 @@ function App() {
 
       {view === 'wishlist' && (
         <WishlistPage
-          allProducts={allProducts}
+          setView={setView}
           favorites={favorites}
           toggleFavorite={toggleFavorite}
           addToCart={addToCart}
+        />
+      )}
+
+      {view === 'profile' && (
+        <ProfilePage
+          user={user}
           setView={setView}
+          handleLogout={handleLogout}
         />
       )}
 

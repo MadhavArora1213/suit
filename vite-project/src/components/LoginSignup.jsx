@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, Phone, Check, ArrowRight } from 'lucide-react';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 
 export default function LoginSignup({ setView, onLoginSuccess }) {
   const [mode, setMode] = useState(window.location.pathname === '/signup' ? 'signup' : 'login');
@@ -12,7 +15,46 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
   const [focusedField, setFocusedField] = useState(null);
 
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
-  const update = (key, val) => setForm(prev => ({ ...prev, [key]: val }));
+  const [errors, setErrors] = useState({});
+  const [loginAttempts, setLoginAttempts] = useState(() => parseInt(localStorage.getItem('gurnaaz_login_attempts') || '0'));
+  const [lockoutUntil, setLockoutUntil] = useState(() => parseInt(localStorage.getItem('gurnaaz_lockout_until') || '0'));
+
+  const update = (key, val) => {
+    setForm(prev => ({ ...prev, [key]: val }));
+    if (errors[key]) setErrors(prev => ({ ...prev, [key]: '' }));
+  };
+
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validatePhone = (phone) => /^\d{10}$/.test(phone);
+  const validatePassword = (password) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+
+  const handleRateLimitFail = () => {
+    const newAttempts = loginAttempts + 1;
+    setLoginAttempts(newAttempts);
+    localStorage.setItem('gurnaaz_login_attempts', newAttempts.toString());
+    
+    if (newAttempts >= 5) {
+      const lockoutTime = Date.now() + 15 * 60 * 1000; // 15 minutes
+      setLockoutUntil(lockoutTime);
+      localStorage.setItem('gurnaaz_lockout_until', lockoutTime.toString());
+    }
+  };
+
+  const checkRateLimit = () => {
+    if (lockoutUntil > Date.now()) {
+      const remainingMins = Math.ceil((lockoutUntil - Date.now()) / 60000);
+      alert(`Too many failed attempts. Please try again in ${remainingMins} minutes.`);
+      return false;
+    }
+    return true;
+  };
+
+  const handleSuccessAuth = (profile) => {
+    setLoginAttempts(0);
+    localStorage.removeItem('gurnaaz_login_attempts');
+    localStorage.removeItem('gurnaaz_lockout_until');
+    onLoginSuccess(profile);
+  };
 
   useEffect(() => {
     let interval;
@@ -34,43 +76,135 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (!form.email || !form.password) return;
+    if (!checkRateLimit()) return;
+
+    const sanitizedEmail = form.email.trim();
+    if (!validateEmail(sanitizedEmail)) {
+      setErrors({ email: 'Please enter a valid email address.' });
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, sanitizedEmail, form.password);
+      
+      // Fetch user profile from Firestore
+      const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+      let userProfile = { name: form.email.split('@')[0], email: form.email, phone: '' };
+      
+      if (userDoc.exists()) {
+        userProfile = userDoc.data();
+      }
+      
+      handleSuccessAuth(userProfile);
+    } catch (error) {
+      console.error("Login error:", error);
+      handleRateLimitFail();
+      setErrors({ form: 'Invalid email or password.' });
+    } finally {
       setLoading(false);
-      onLoginSuccess({ name: form.email.split('@')[0], email: form.email, phone: '' });
-    }, 1200);
+    }
   };
 
   const handleSignup = (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.password) return;
+    if (!checkRateLimit()) return;
+
+    const sanitizedEmail = form.email.trim();
+    const sanitizedName = form.name.trim();
+    const newErrors = {};
+
+    if (!sanitizedName) newErrors.name = 'Full name is required.';
+    if (!validateEmail(sanitizedEmail)) newErrors.email = 'Please enter a valid email address.';
+    if (!validatePhone(form.phone)) newErrors.phone = 'Please enter a valid 10-digit phone number.';
+    if (!validatePassword(form.password)) {
+      newErrors.password = 'Password must be at least 8 characters, include uppercase, lowercase, number, and special character.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Update form state with sanitized values before OTP
+    setForm(prev => ({ ...prev, email: sanitizedEmail, name: sanitizedName }));
+
+    // We proceed to OTP screen as a mock security step before actually creating the user
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setOtpSent(true);
       setTimer(30);
-    }, 1000);
+    }, 500);
   };
 
-  const handleVerifyOtp = () => {
+  const handleVerifyOtp = async () => {
     const code = otpCode.join('');
     if (code.length !== 4) return;
     setLoading(true);
-    setTimeout(() => {
+    
+    try {
+      // Actually create the user in Firebase now that "OTP" is verified
+      const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password);
+      
+      const userProfile = {
+        uid: userCredential.user.uid,
+        name: form.name,
+        email: form.email,
+        phone: form.phone || '',
+        role: 'customer',
+        createdAt: serverTimestamp()
+      };
+
+      // Store in Firestore
+      await setDoc(doc(db, 'users', userCredential.user.uid), userProfile);
+      
+      handleSuccessAuth(userProfile);
+    } catch (error) {
+      console.error("Signup error:", error);
+      handleRateLimitFail();
+      setErrors({ form: error.message });
+    } finally {
       setLoading(false);
-      onLoginSuccess({ name: form.name, email: form.email, phone: form.phone });
-    }, 1000);
+    }
   };
 
-  const handleGoogle = () => {
+  const handleGoogle = async () => {
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      
+      // Check if user exists in Firestore
+      const userRef = doc(db, 'users', userCredential.user.uid);
+      const userDoc = await getDoc(userRef);
+      
+      let userProfile = {
+        uid: userCredential.user.uid,
+        name: userCredential.user.displayName || 'Google User',
+        email: userCredential.user.email,
+        phone: userCredential.user.phoneNumber || '',
+        role: 'customer'
+      };
+
+      if (!userDoc.exists()) {
+        // Create new user profile if first time logging in
+        userProfile.createdAt = serverTimestamp();
+        await setDoc(userRef, userProfile);
+      } else {
+        userProfile = userDoc.data();
+      }
+      
+      handleSuccessAuth(userProfile);
+    } catch (error) {
+      console.error("Google Auth error:", error);
+      handleRateLimitFail();
+      setErrors({ form: "Google Login failed. Please try again." });
+    } finally {
       setLoading(false);
-      onLoginSuccess({ name: 'Google User', email: 'user@gmail.com', phone: '' });
-    }, 1500);
+    }
   };
 
   return (
@@ -145,49 +279,64 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
 
                 {/* Form */}
                 <form onSubmit={mode === 'login' ? handleLogin : handleSignup} className="space-y-5">
-                  <AnimatePresence>
-                    {mode === 'signup' && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }}>
-                        <input
-                          type="text"
-                          value={form.name}
-                          onChange={e => update('name', e.target.value)}
-                          onFocus={() => setFocusedField('name')}
-                          onBlur={() => setFocusedField(null)}
-                          placeholder="Full Name"
-                          className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
-                        />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  <input
-                    type="email"
-                    value={form.email}
-                    onChange={e => update('email', e.target.value)}
-                    onFocus={() => setFocusedField('email')}
-                    onBlur={() => setFocusedField(null)}
-                    placeholder="Email Address"
-                    className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
-                  />
+                  {errors.form && (
+                    <div className="text-red-500 text-xs text-center p-2 bg-red-50 rounded-md border border-red-100">
+                      {errors.form}
+                    </div>
+                  )}
 
                   <AnimatePresence>
                     {mode === 'signup' && (
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }}>
-                        <input
-                          type="tel"
-                          value={form.phone}
-                          onChange={e => update('phone', e.target.value)}
-                          onFocus={() => setFocusedField('phone')}
-                          onBlur={() => setFocusedField(null)}
-                          placeholder="Phone Number"
-                          className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
-                        />
+                        <div className="relative">
+                          <input
+                            type="text"
+                            value={form.name}
+                            onChange={e => update('name', e.target.value)}
+                            onFocus={() => setFocusedField('name')}
+                            onBlur={() => setFocusedField(null)}
+                            placeholder="Full Name"
+                            className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
+                          />
+                          {errors.name && <span className="text-red-500 text-xs absolute -bottom-5 left-0">{errors.name}</span>}
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
 
                   <div className="relative">
+                    <input
+                      type="email"
+                      value={form.email}
+                      onChange={e => update('email', e.target.value)}
+                      onFocus={() => setFocusedField('email')}
+                      onBlur={() => setFocusedField(null)}
+                      placeholder="Email Address"
+                      className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
+                    />
+                    {errors.email && <span className="text-red-500 text-xs absolute -bottom-5 left-0">{errors.email}</span>}
+                  </div>
+
+                  <AnimatePresence>
+                    {mode === 'signup' && (
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }}>
+                        <div className="relative">
+                          <input
+                            type="tel"
+                            value={form.phone}
+                            onChange={e => update('phone', e.target.value)}
+                            onFocus={() => setFocusedField('phone')}
+                            onBlur={() => setFocusedField(null)}
+                            placeholder="Phone Number (10 digits)"
+                            className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
+                          />
+                          {errors.phone && <span className="text-red-500 text-xs absolute -bottom-5 left-0">{errors.phone}</span>}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <div className="relative mb-6">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={form.password}
@@ -201,6 +350,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
                       className="absolute right-0 top-1/2 -translate-y-1/2 text-[#111111]/15 hover:text-[#BCA58A] transition-colors cursor-pointer p-1">
                       {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                     </button>
+                    {errors.password && <span className="text-red-500 text-xs absolute -bottom-5 left-0 leading-tight">{errors.password}</span>}
                   </div>
 
                   {mode === 'login' && (

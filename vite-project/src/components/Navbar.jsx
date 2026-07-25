@@ -133,15 +133,18 @@ export default function Navbar({
 
               {user ? (
                 <button
-                  onClick={handleLogout}
-                  title="Log Out"
+                  onClick={() => setView('profile')}
+                  title="My Profile"
                   className="hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#BCA58A] cursor-pointer ml-2 hover:scale-105 transition-transform"
                 >
                   <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
                 </button>
               ) : (
                 <button
-                  onClick={() => setView('login')}
+                  onClick={() => {
+                    sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
+                    setView('login');
+                  }}
                   className={`hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#111111]/20 hover:border-[#111111] cursor-pointer ml-2 transition-all`}
                   title="Login / Register"
                 >

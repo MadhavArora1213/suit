@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, User } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { addSupportTicket } from '../utils/adminStore';
 
@@ -13,6 +13,7 @@ const floatingImages = [
 ];
 
 export default function ContactPage({ setView, user }) {
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -63,6 +64,12 @@ export default function ContactPage({ setView, user }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setShowAuthModal(true);
+      return;
+    }
+
     setErrorMsg('');
 
     // 1. Validation
@@ -466,6 +473,61 @@ export default function ContactPage({ setView, user }) {
         {/* Bottom Gold Trim */}
         <div className="h-px w-full bg-gradient-to-r from-transparent via-[#BCA58A] to-transparent" />
       </motion.div>
+
+      {/* Auth Required Modal */}
+      <AnimatePresence>
+        {showAuthModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-[#FAF9F6] p-8 md:p-12 max-w-[400px] w-full border border-[#BCA58A]/30 text-center relative overflow-hidden"
+              style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }}
+            >
+              {/* Modal Background Glow */}
+              <div 
+                className="absolute inset-0 opacity-20 pointer-events-none" 
+                style={{ background: 'radial-gradient(circle at top center, #BCA58A 0%, transparent 70%)' }}
+              />
+
+              <div className="w-16 h-16 rounded-full bg-[#111111]/5 flex items-center justify-center text-[#BCA58A] mx-auto mb-6 relative z-10 border border-[#BCA58A]/20">
+                <User size={28} strokeWidth={1.5} />
+              </div>
+              
+              <h3 className="text-3xl font-light text-[#111111] mb-3 relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Login Required
+              </h3>
+              <p className="text-[13px] text-[#111111]/60 mb-8 relative z-10 leading-relaxed font-light">
+                Please sign in to your Gurnaaz account to send us a message. It helps us serve you better!
+              </p>
+              
+              <div className="flex flex-col gap-3 relative z-10">
+                <button
+                  onClick={() => {
+                    sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
+                    setView('login');
+                  }}
+                  className="w-full bg-[#111111] text-white py-3.5 text-[11px] uppercase tracking-[0.2em] font-semibold hover:bg-[#BCA58A] transition-colors duration-300"
+                >
+                  Log In Now
+                </button>
+                <button
+                  onClick={() => setShowAuthModal(false)}
+                  className="w-full py-3.5 text-[11px] uppercase tracking-[0.2em] text-[#111111]/40 font-semibold hover:text-[#111111] transition-colors duration-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

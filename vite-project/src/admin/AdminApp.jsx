@@ -15,6 +15,7 @@ import TestimonialsAdmin from './pages/TestimonialsAdmin';
 import CategoriesAdmin from './pages/CategoriesAdmin';
 import DiscountsAdmin from './pages/DiscountsAdmin';
 import SupportAdmin from './pages/SupportAdmin';
+import UsersAdmin from './pages/UsersAdmin';
 import Settings from './pages/Settings';
 
 export default function AdminApp() {
@@ -83,6 +84,7 @@ export default function AdminApp() {
       case 'testimonials': return <TestimonialsAdmin />;
       case 'discounts':    return <DiscountsAdmin />;
       case 'support':      return <SupportAdmin />;
+      case 'users':        return <UsersAdmin />;
       case 'categories':   return <CategoriesAdmin />;
       case 'settings':     return <Settings />;
       default:             return <Dashboard setActivePage={setActivePage} />;
