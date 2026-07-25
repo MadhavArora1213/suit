@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { addSupportTicket } from '../utils/adminStore';
 
 const floatingImages = [
   { src: '/monsoon_edit.png', style: { top: '140px', left: '2%', width: '190px', rotate: '-6deg' } },
@@ -25,8 +26,73 @@ export default function ContactPage({ setView }) {
     return () => window.removeEventListener('mousemove', handleMove);
   }, []);
 
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [errorMsg, setErrorMsg] = useState('');
+
+  // Very basic spam filter check
+  const hasSpamKeywords = (text) => {
+    const spamWords = ['buy cheap', 'casino', 'viagra', 'crypto', 'investment', 'http://', 'https://'];
+    return spamWords.some(word => text.toLowerCase().includes(word));
+  };
+
+  const checkRateLimit = () => {
+    try {
+      const history = JSON.parse(localStorage.getItem('gurnaaz_contact_history') || '[]');
+      const oneHourAgo = Date.now() - (60 * 60 * 1000);
+      const recentSubmissions = history.filter(time => time > oneHourAgo);
+      if (recentSubmissions.length >= 3) return false;
+      
+      recentSubmissions.push(Date.now());
+      localStorage.setItem('gurnaaz_contact_history', JSON.stringify(recentSubmissions));
+      return true;
+    } catch {
+      return true;
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMsg('');
+
+    // 1. Validation
+    if (formData.name.length < 3) {
+      setErrorMsg('Name must be at least 3 characters long.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setErrorMsg('Please enter a valid email address.');
+      return;
+    }
+    if (formData.message.length < 10) {
+      setErrorMsg('Message must be at least 10 characters long.');
+      return;
+    }
+    if (formData.message.length > 1000) {
+      setErrorMsg('Message cannot exceed 1000 characters.');
+      return;
+    }
+    if (hasSpamKeywords(formData.message)) {
+      setErrorMsg('Your message triggered our spam filters. Please remove links and try again.');
+      return;
+    }
+
+    // 2. Rate Limiting
+    if (!checkRateLimit()) {
+      setErrorMsg('You have reached the maximum number of inquiries per hour. Please try again later.');
+      return;
+    }
+
+    // 3. Clean Input to prevent basic XSS (strip script tags)
+    const cleanMessage = formData.message.replace(/<[^>]*>?/gm, '');
+    const cleanName = formData.name.replace(/<[^>]*>?/gm, '');
+
+    // 4. Submit
+    addSupportTicket({
+      name: cleanName,
+      email: formData.email,
+      message: cleanMessage,
+    });
     setSubmitted(true);
   };
 
@@ -154,6 +220,17 @@ export default function ContactPage({ setView }) {
                 ))}
               </motion.div>
 
+              {/* Error Message */}
+              {errorMsg && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }} 
+                  animate={{ opacity: 1, y: 0 }} 
+                  className="mb-8 p-4 border border-red-500/30 bg-red-500/10 rounded-xl text-center"
+                >
+                  <p className="text-xs text-red-300 font-bold uppercase tracking-widest">{errorMsg}</p>
+                </motion.div>
+              )}
+
               {/* Form */}
               <motion.form
                 onSubmit={handleSubmit}
@@ -169,6 +246,8 @@ export default function ContactPage({ setView }) {
                         required
                         type={placeholder.includes('Email') ? 'email' : 'text'}
                         placeholder=" "
+                        value={placeholder.includes('Email') ? formData.email : formData.name}
+                        onChange={(e) => setFormData({ ...formData, [placeholder.includes('Email') ? 'email' : 'name']: e.target.value })}
                         onFocus={() => setFocused(placeholder)}
                         onBlur={() => setFocused(null)}
                         className="w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors peer"
@@ -195,6 +274,8 @@ export default function ContactPage({ setView }) {
                   <textarea
                     required rows="4"
                     placeholder=" "
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     onFocus={() => setFocused('message')}
                     onBlur={() => setFocused(null)}
                     className="w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors resize-none peer"

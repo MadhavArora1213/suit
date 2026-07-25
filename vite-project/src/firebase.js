@@ -1,5 +1,7 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getFirestore, doc, setDoc, getDocs, collection, query, where, deleteDoc, onSnapshot } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 // Helper to get Firebase configuration dynamically from localStorage
 function getFirebaseConfig() {
@@ -30,6 +32,7 @@ function getFirebaseConfig() {
 
 let app;
 export let db = null;
+export let auth = null;
 
 function initFirebase() {
   const firebaseConfig = getFirebaseConfig();
@@ -40,9 +43,27 @@ function initFirebase() {
       app = getApp();
     }
     db = getFirestore(app);
+    auth = getAuth(app);
+    
+    // Initialize App Check to protect against bots and unauthorized access
+    // This requires a ReCAPTCHA v3 site key to be added in your .env file
+    const recaptchaKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+    if (recaptchaKey && typeof window !== 'undefined') {
+      try {
+        initializeAppCheck(app, {
+          provider: new ReCaptchaV3Provider(recaptchaKey),
+          // Set to true to allow auto-refresh of App Check tokens
+          isTokenAutoRefreshEnabled: true
+        });
+        console.log("Firebase App Check initialized successfully.");
+      } catch (appCheckErr) {
+        console.warn("Failed to initialize Firebase App Check:", appCheckErr);
+      }
+    }
   } catch (err) {
     console.error("Firebase initialization failed:", err);
     db = null;
+    auth = null;
   }
 }
 
@@ -425,6 +446,55 @@ export function onWaitlistUpdate(onUpdate) {
   } catch (error) {
     console.error("Firestore waitlist listener error:", error);
     return () => {};
+  }
+}
+
+/**
+ * Generic fetch from any Firestore collection
+ */
+export async function fetchCollectionFromFirestore(collectionName) {
+  if (!isFirebaseConfigured() || !db) return [];
+  try {
+    const col = collection(db, collectionName);
+    const querySnapshot = await getDocs(col);
+    const results = [];
+    querySnapshot.forEach((docSnap) => {
+      results.push({ id: docSnap.id, ...docSnap.data() });
+    });
+    return results;
+  } catch (error) {
+    console.error(`Firestore fetch error for ${collectionName}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Generic save to any Firestore collection
+ */
+export async function saveDocumentToFirestore(collectionName, docId, data) {
+  if (!isFirebaseConfigured() || !db) return false;
+  try {
+    const ref = doc(db, collectionName, docId);
+    await setDoc(ref, data);
+    return true;
+  } catch (error) {
+    console.error(`Firestore save error for ${collectionName}:`, error);
+    return false;
+  }
+}
+
+/**
+ * Generic delete from any Firestore collection
+ */
+export async function deleteDocumentFromFirestore(collectionName, docId) {
+  if (!isFirebaseConfigured() || !db) return false;
+  try {
+    const ref = doc(db, collectionName, docId);
+    await deleteDoc(ref);
+    return true;
+  } catch (error) {
+    console.error(`Firestore delete error for ${collectionName}:`, error);
+    return false;
   }
 }
 

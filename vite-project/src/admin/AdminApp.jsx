@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '../firebase';
 import AdminLogin from './AdminLogin';
 import AdminLayout from './AdminLayout';
 import Dashboard from './pages/Dashboard';
@@ -12,11 +14,57 @@ import Promotions from './pages/Promotions';
 import TestimonialsAdmin from './pages/TestimonialsAdmin';
 import CategoriesAdmin from './pages/CategoriesAdmin';
 import DiscountsAdmin from './pages/DiscountsAdmin';
+import SupportAdmin from './pages/SupportAdmin';
 import Settings from './pages/Settings';
 
 export default function AdminApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [activePage, setActivePage] = useState('dashboard');
+  const [authLoading, setAuthLoading] = useState(true);
+  const getInitialAdminPage = () => {
+    const path = window.location.pathname;
+    if (path.startsWith('/admin/')) {
+      const page = path.replace('/admin/', '');
+      return page || 'dashboard';
+    }
+    return 'dashboard';
+  };
+
+  const [activePage, setActivePage] = useState(getInitialAdminPage());
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setActivePage(getInitialAdminPage());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    if (!auth) {
+      setAuthLoading(false);
+      return;
+    }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    if (auth) {
+      await signOut(auth);
+    }
+    setIsLoggedIn(false);
+  };
+
+  if (authLoading) {
+    return <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center">Loading Admin...</div>;
+  }
 
   if (!isLoggedIn) {
     return <AdminLogin onLogin={() => setIsLoggedIn(true)} />;
@@ -34,6 +82,7 @@ export default function AdminApp() {
       case 'promotions':   return <Promotions />;
       case 'testimonials': return <TestimonialsAdmin />;
       case 'discounts':    return <DiscountsAdmin />;
+      case 'support':      return <SupportAdmin />;
       case 'categories':   return <CategoriesAdmin />;
       case 'settings':     return <Settings />;
       default:             return <Dashboard setActivePage={setActivePage} />;
@@ -44,7 +93,7 @@ export default function AdminApp() {
     <AdminLayout
       activePage={activePage}
       setActivePage={setActivePage}
-      onLogout={() => setIsLoggedIn(false)}
+      onLogout={handleLogout}
     >
       {renderPage()}
     </AdminLayout>

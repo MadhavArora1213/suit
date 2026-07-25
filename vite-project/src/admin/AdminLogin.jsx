@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebase';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, Sparkles } from 'lucide-react';
 
@@ -11,18 +13,23 @@ export default function AdminLogin({ onLogin }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!auth) {
+      setError('Firebase Authentication is not configured. Please check your .env file.');
+      return;
+    }
     setError('');
     setLoading(true);
-    setTimeout(() => {
-      if (email === 'madhavarora132005@gmail.com' && password === 'admin123') {
-        onLogin();
-      } else {
-        setError('Invalid credentials. Use madhavarora132005@gmail.com / admin123');
-        setLoading(false);
-      }
-    }, 1000);
+    
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      onLogin(); // Successful login
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Failed to authenticate. Please check your email and password.');
+      setLoading(false);
+    }
   };
 
   return (

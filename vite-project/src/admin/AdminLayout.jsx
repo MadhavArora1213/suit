@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Package, ShoppingBag, Image, Star,
   Settings, LogOut, ChevronRight, Sparkles, Layers,
-  Film, Megaphone, FolderOpen, ChevronLeft, Menu, Tag
+  Film, Megaphone, FolderOpen, ChevronLeft, Menu, Tag, MessageSquare
 } from 'lucide-react';
 
 const navItems = [
@@ -17,6 +17,7 @@ const navItems = [
   { id: 'promotions',   label: 'Promotions',   icon: Megaphone },
   { id: 'discounts',    label: 'Discounts',    icon: Tag },
   { id: 'testimonials', label: 'Testimonials', icon: Star },
+  { id: 'support',      label: 'Support Tickets', icon: MessageSquare },
   { id: 'settings',     label: 'Settings',     icon: Settings },
 ];
 
@@ -75,7 +76,11 @@ export default function AdminLayout({ children, activePage, setActivePage, onLog
             const isActive = activePage === item.id;
             return (
               <motion.button key={item.id}
-                onClick={() => { setActivePage(item.id); setMobileOpen(false); }}
+                onClick={() => { 
+                  window.history.pushState(null, '', '/admin/' + item.id);
+                  setActivePage(item.id); 
+                  setMobileOpen(false); 
+                }}
                 whileHover={{ x: collapsed ? 0 : 2 }}
                 className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all duration-200 group relative
                   ${isActive ? 'bg-white/20 text-white' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}>
