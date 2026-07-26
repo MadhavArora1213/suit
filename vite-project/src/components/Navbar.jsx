@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Search, User, ShoppingBag, X, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import gurnaazLogo from '../assets/gurnaaz.png';
-import { getAllProducts, getBoutiques } from '../utils/adminStore';
+import { getAllProducts, getBoutiques, getCategories } from '../utils/adminStore';
 
 export default function Navbar({
   cart = [],
@@ -31,6 +31,7 @@ export default function Navbar({
   const [navBoutiques, setNavBoutiques] = useState([]);
   const [navShops, setNavShops] = useState([]);
   const [navFeatured, setNavFeatured] = useState([]);
+  const [navCategories, setNavCategories] = useState([]);
   const [navKey, setNavKey] = useState(0);
 
   useEffect(() => {
@@ -39,6 +40,7 @@ export default function Navbar({
     setNavBoutiques(bts.filter(b => b.type !== 'Shop'));
     setNavShops(bts.filter(b => b.type === 'Shop'));
     setNavFeatured(bts.filter(b => b.isFeatured === true).slice(0, 2));
+    setNavCategories(getCategories().filter(c => c.active).sort((a,b) => a.order - b.order));
     
     const handleUpdate = () => {
       setAllProducts(getAllProducts());
@@ -46,6 +48,7 @@ export default function Navbar({
       setNavBoutiques(updatedBts.filter(b => b.type !== 'Shop'));
       setNavShops(updatedBts.filter(b => b.type === 'Shop'));
       setNavFeatured(updatedBts.filter(b => b.isFeatured === true).slice(0, 2));
+      setNavCategories(getCategories().filter(c => c.active).sort((a,b) => a.order - b.order));
     };
     window.addEventListener('admin-data-updated', handleUpdate);
     return () => window.removeEventListener('admin-data-updated', handleUpdate);
@@ -199,19 +202,19 @@ export default function Navbar({
                       <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 pr-6">
                         <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Shop by Category</span>
                         <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-2">
-                          {['Anarkali', 'Sharara', 'Banarasi', 'Chikankari', 'Patiala', 'Pakistani', 'Cotton', 'Silk', 'Velvet', 'Bridal'].map((cat) => (
+                          {navCategories.map((cat) => (
                             <a
-                              key={cat}
-                              href={`/category/${(cat === 'Bridal' ? 'bridal' : cat).toLowerCase()}`}
+                              key={cat.id || cat.name}
+                              href={`/category/${cat.name.toLowerCase().replace(/ /g, '-')}`}
                               onClick={(e) => {
                                 e.preventDefault();
-                                setSelectedCategory(cat === 'Bridal' ? 'bridal' : cat);
+                                setSelectedCategory(cat.name);
                                 setView('category');
                               }}
                               className="text-[12px] text-[#111111]/80 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide w-max relative group/cat"
                               style={{ fontFamily: "'DM Sans', sans-serif" }}
                             >
-                              {cat}
+                              {cat.name}
                               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#BCA58A] transition-all duration-300 group-hover/cat:w-full opacity-50" />
                             </a>
                           ))}
@@ -484,18 +487,15 @@ export default function Navbar({
               <div className="space-y-2">
                 <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">SHOP CATEGORIES</span>
                 <div className="pl-4 flex flex-col gap-3">
-                  {['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi', 'Cotton', 'Silk', 'Velvet', 'Bridal', 'Georgette', 'Organza', 'Designer', 'Casual', 'Party Wear'].map((cat) => (
-                    <a key={cat} href="#" onClick={(e) => {
+                  {navCategories.map((cat) => (
+                    <a key={cat.id || cat.name} href="#" onClick={(e) => {
                       e.preventDefault();
-                      let targetCat = cat;
-                      if (cat === 'Bridal') targetCat = 'bridal';
-                      if (cat === 'Party Wear') targetCat = 'party';
-                      setSelectedCategory(targetCat);
+                      setSelectedCategory(cat.name);
                       setView('category');
                       setIsOpen(false);
                     }}
                       className="text-[10px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors uppercase font-medium">
-                      {cat} {['Bridal', 'Casual', 'Party Wear', 'Designer'].includes(cat) ? 'Collection' : 'Suits'}
+                      {cat.name}
                     </a>
                   ))}
                 </div>

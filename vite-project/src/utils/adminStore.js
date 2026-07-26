@@ -290,8 +290,41 @@ export const savePromo = (data)     => set(KEYS.promotions, data);
 export const getTestimonials  = ()    => get(KEYS.testimonials, []);
 export const saveTestimonials = (arr) => set(KEYS.testimonials, arr);
 
-// ── CATEGORIES ───────────────────────────────────────────────
-export const getCategories  = ()    => get(KEYS.categories, []);
+export const getCategories = () => {
+  const dataStr = localStorage.getItem(KEYS.categories);
+  let data = dataStr ? JSON.parse(dataStr) : [];
+  
+  const hasSeeded = localStorage.getItem('gurnaaz_categories_seeded_v2');
+  
+  if (!hasSeeded) {
+    const defaults = [
+      { id: 1, name: 'Anarkali', subtitle: 'The Royal Edit', image: '/anarkali_suit.png', image2: '/designer_suit_1.png', tagline: 'Flowing elegance for every occasion', order: 1, active: true },
+      { id: 2, name: 'Sharara', subtitle: 'The Festive Edit', image: '/sharara_suit.png', image2: '/pakistani_suit.png', tagline: 'Modern silhouettes with traditional charm', order: 2, active: true },
+      { id: 3, name: 'Banarasi', subtitle: 'Golden Brocades', image: '/banarasi_suit.png', image2: '/cotton_suit.png', tagline: 'Heritage weaves from the holy city', order: 3, active: true },
+      { id: 4, name: 'Chikankari', subtitle: 'Artisan Crafted', image: '/chikankari_suit.png', image2: '/anarkali_suit.png', tagline: 'Lucknowi artistry in every thread', order: 4, active: true },
+      { id: 5, name: 'Patiala', subtitle: 'Heritage Weaves', image: '/patiala_suit.png', image2: '/designer_suit_1.png', tagline: 'Comfortable cuts with vibrant prints', order: 5, active: false },
+      { id: 6, name: 'Pakistani', subtitle: 'Straight Elegance', image: '/pakistani_suit.png', image2: '/sharara_suit.png', tagline: 'Contemporary styles with rich embroidery', order: 6, active: true },
+    ];
+    
+    let added = false;
+    defaults.forEach(def => {
+      // Add if category name doesn't exist yet
+      if (!data.some(c => c.name.toLowerCase() === def.name.toLowerCase())) {
+        data.push(def);
+        added = true;
+      }
+    });
+
+    if (added || data.length === 0) {
+      set(KEYS.categories, data);
+    }
+    
+    localStorage.setItem('gurnaaz_categories_seeded_v2', 'true');
+  }
+
+  return data;
+};
+
 export const saveCategories = (arr) => set(KEYS.categories, arr);
 
 // ── LOOKBOOK ─────────────────────────────────────────────────

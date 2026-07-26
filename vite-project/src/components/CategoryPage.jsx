@@ -1,52 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ShoppingBag, Eye, SlidersHorizontal, Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { getAllProducts } from '../utils/adminStore';
-
-const categoryBanners = {
-  Anarkali: {
-    title: 'Anarkali',
-    subtitle: 'The Royal Edit',
-    desc: 'Indulge in high-volume silhouettes, royal kali cuts, and handloomed silk weaves. Inspired by Mughal heritage and re-imagined for modern celebrations.',
-    bgImage: '/anarkali_suit.png',
-    bgImage2: '/designer_suit_1.png'
-  },
-  Sharara: {
-    title: 'Sharara',
-    subtitle: 'The Festive Edit',
-    desc: 'Traditional three-piece sets featuring heavily flared sharara trousers, shorter designer kurtis, and matching embellished dupattas for timeless elegance.',
-    bgImage: '/sharara_suit.png',
-    bgImage2: '/pakistani_suit.png'
-  },
-  Patiala: {
-    title: 'Patiala',
-    subtitle: 'Heritage Weaves',
-    desc: 'Representing rich Punjabi heritage with dense, hand-folded salwar pleats, short kurtas, and heavily embroidered phulkari dupattas.',
-    bgImage: '/cotton_suit.png',
-    bgImage2: '/designer_suit_1.png'
-  },
-  Pakistani: {
-    title: 'Pakistani',
-    subtitle: 'Straight Elegance',
-    desc: 'Contemporary long straight-cut silhouettes adorned with soft organza inserts, delicate shadow work, and premium thread laces.',
-    bgImage: '/pakistani_suit.png',
-    bgImage2: '/sharara_suit.png'
-  },
-  Chikankari: {
-    title: 'Chikankari',
-    subtitle: 'Artisan Crafted',
-    desc: 'Delicate hand-knotted shadow embroidery on breezy georgette and premium modal cotton. Perfect pastel hues with authentic handloom artistry.',
-    bgImage: '/cotton_suit.png',
-    bgImage2: '/anarkali_suit.png'
-  },
-  Banarasi: {
-    title: 'Banarasi',
-    subtitle: 'Golden Brocades',
-    desc: 'Opulent suit sets handwoven in Varanasi using katan silk threads and metallic zari. Exudes grandeur and heritage luxury, ideal for grand weddings.',
-    bgImage: '/designer_suit_1.png',
-    bgImage2: '/cotton_suit.png'
-  }
-};
+import { getAllProducts, getCategories } from '../utils/adminStore';
 
 function FilterAccordion({ title, children, defaultOpen = true }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -69,6 +24,7 @@ function FilterAccordion({ title, children, defaultOpen = true }) {
 
 export default function CategoryPage({ categoryName, setView, setSelectedProduct, addToCart }) {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   
   // Sort
   const [sortOption, setSortOption] = useState('newest');
@@ -81,12 +37,21 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   const [selectedOccasions, setSelectedOccasions] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   
-  const banner = categoryBanners[categoryName] || {
-    title: categoryName,
-    subtitle: 'Curated Collection',
-    desc: 'Browse our exclusive, handcrafted selection of designer ethnic wear, curated from India’s finest heritage boutiques.',
-    bgImage: '/designer_suit_1.png',
-    bgImage2: '/anarkali_suit.png'
+  useEffect(() => {
+    setCategories(getCategories());
+    const handleUpdate = () => setCategories(getCategories());
+    window.addEventListener('admin-data-updated', handleUpdate);
+    return () => window.removeEventListener('admin-data-updated', handleUpdate);
+  }, []);
+
+  const currentCat = categories.find(c => c.name.toLowerCase() === categoryName.toLowerCase());
+
+  const banner = {
+    title: currentCat?.name || categoryName,
+    subtitle: currentCat?.subtitle || 'Curated Collection',
+    desc: currentCat?.tagline || 'Browse our exclusive, handcrafted selection of designer ethnic wear, curated from India’s finest heritage boutiques.',
+    bgImage: currentCat?.image || '/designer_suit_1.png',
+    bgImage2: currentCat?.image2 || '/anarkali_suit.png'
   };
 
   useEffect(() => {

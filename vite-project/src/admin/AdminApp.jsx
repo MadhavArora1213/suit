@@ -13,6 +13,7 @@ import LookbookAdmin from './pages/LookbookAdmin';
 import Promotions from './pages/Promotions';
 import TestimonialsAdmin from './pages/TestimonialsAdmin';
 import CategoriesAdmin from './pages/CategoriesAdmin';
+import AddCategory from './pages/AddCategory';
 import DiscountsAdmin from './pages/DiscountsAdmin';
 import SupportAdmin from './pages/SupportAdmin';
 import UsersAdmin from './pages/UsersAdmin';
@@ -87,7 +88,9 @@ export default function AdminApp() {
       case 'discounts':    return <DiscountsAdmin />;
       case 'support':      return <SupportAdmin />;
       case 'users':        return <UsersAdmin />;
-      case 'categories':   return <CategoriesAdmin />;
+      case 'categories':   return <CategoriesAdmin setActivePage={setActivePage} />;
+      case 'add-category':
+      case 'edit-category':return <AddCategory setActivePage={setActivePage} />;
       case 'boutiques':    return <BoutiquesAdmin setActivePage={setActivePage} />;
       case 'add-boutique': 
       case 'edit-boutique':return <AddBoutique setActivePage={setActivePage} />;
