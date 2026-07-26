@@ -18,6 +18,7 @@ import SupportAdmin from './pages/SupportAdmin';
 import UsersAdmin from './pages/UsersAdmin';
 import Settings from './pages/Settings';
 import BoutiquesAdmin from './pages/BoutiquesAdmin';
+import AddBoutique from './pages/AddBoutique';
 
 export default function AdminApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -87,7 +88,9 @@ export default function AdminApp() {
       case 'support':      return <SupportAdmin />;
       case 'users':        return <UsersAdmin />;
       case 'categories':   return <CategoriesAdmin />;
-      case 'boutiques':    return <BoutiquesAdmin />;
+      case 'boutiques':    return <BoutiquesAdmin setActivePage={setActivePage} />;
+      case 'add-boutique': 
+      case 'edit-boutique':return <AddBoutique setActivePage={setActivePage} />;
       case 'settings':     return <Settings />;
       default:             return <Dashboard setActivePage={setActivePage} />;
     }

@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Search, User, ShoppingBag, X, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import gurnaazLogo from '../assets/gurnaaz.png';
-import { getAllProducts } from '../utils/adminStore';
+import { getAllProducts, getBoutiques } from '../utils/adminStore';
 
 export default function Navbar({
   cart = [],
@@ -28,12 +28,24 @@ export default function Navbar({
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [orderId, setOrderId] = useState('');
   const [allProducts, setAllProducts] = useState([]);
+  const [navBoutiques, setNavBoutiques] = useState([]);
+  const [navShops, setNavShops] = useState([]);
+  const [navFeatured, setNavFeatured] = useState([]);
   const [navKey, setNavKey] = useState(0);
 
   useEffect(() => {
     setAllProducts(getAllProducts());
+    const bts = getBoutiques().filter(b => b.showInNavbar !== false);
+    setNavBoutiques(bts.filter(b => b.type !== 'Shop'));
+    setNavShops(bts.filter(b => b.type === 'Shop'));
+    setNavFeatured(bts.filter(b => b.isFeatured === true).slice(0, 2));
+    
     const handleUpdate = () => {
       setAllProducts(getAllProducts());
+      const updatedBts = getBoutiques().filter(b => b.showInNavbar !== false);
+      setNavBoutiques(updatedBts.filter(b => b.type !== 'Shop'));
+      setNavShops(updatedBts.filter(b => b.type === 'Shop'));
+      setNavFeatured(updatedBts.filter(b => b.isFeatured === true).slice(0, 2));
     };
     window.addEventListener('admin-data-updated', handleUpdate);
     return () => window.removeEventListener('admin-data-updated', handleUpdate);
@@ -290,24 +302,24 @@ export default function Navbar({
                       {/* Col 1: Top Shops */}
                       <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 pr-6">
                         <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Top Shops</span>
-                        <div className="flex flex-col gap-3.5 mt-2">
-                          {['Rivaaj Store', 'Pehnawa', 'Ludhiana Silks', 'Amritsar Textiles', 'The Heritage Store'].map((shop) => (
+                        <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
+                          {navShops.map((shop) => (
                             <a
-                              key={shop}
+                              key={shop.id}
                               href="#"
                               onClick={(e) => {
                                 e.preventDefault();
                                 if (setSelectedBoutique) {
-                                  setSelectedBoutique(shop);
+                                  setSelectedBoutique(shop.name);
                                   setView('seller-shop');
                                 } else {
-                                  window.location.href = `/shop/${shop.toLowerCase().replace(/ /g, '-')}`;
+                                  window.location.href = `/shop/${shop.name.toLowerCase().replace(/ /g, '-')}`;
                                 }
                               }}
                               className="text-[16px] text-[#111111]/90 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
                               style={{ fontFamily: "'Cormorant Garamond', serif" }}
                             >
-                              {shop}
+                              {shop.name}
                               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#BCA58A] transition-all duration-300 group-hover/btq:w-full opacity-50" />
                             </a>
                           ))}
@@ -317,24 +329,24 @@ export default function Navbar({
                       {/* Col 2: Top Boutiques */}
                       <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 px-6">
                         <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Top Boutiques</span>
-                        <div className="flex flex-col gap-3.5 mt-2">
-                          {['Badshah Designer Fabrics', 'Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Awadh Kraft'].map((btq) => (
+                        <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
+                          {navBoutiques.map((btq) => (
                             <a
-                              key={btq}
+                              key={btq.id}
                               href="#"
                               onClick={(e) => {
                                 e.preventDefault();
                                 if (setSelectedBoutique) {
-                                  setSelectedBoutique(btq);
+                                  setSelectedBoutique(btq.name);
                                   setView('seller-shop');
                                 } else {
-                                  window.location.href = `/boutiques/${btq.toLowerCase().replace(/ /g, '-')}`;
+                                  window.location.href = `/boutiques/${btq.name.toLowerCase().replace(/ /g, '-')}`;
                                 }
                               }}
                               className="text-[16px] text-[#111111]/90 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
                               style={{ fontFamily: "'Cormorant Garamond', serif" }}
                             >
-                              {btq}
+                              {btq.name}
                               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#BCA58A] transition-all duration-300 group-hover/btq:w-full opacity-50" />
                             </a>
                           ))}
@@ -345,51 +357,37 @@ export default function Navbar({
                         </a>
                       </div>
 
-                      {/* Col 3: Featured Boutique Visual 1 */}
-                      <div className="w-1/4 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-2 shadow-lg" onClick={() => {
-                        if (setSelectedBoutique) {
-                          setSelectedBoutique('Badshah Designer Fabrics');
-                          setView('seller-shop');
-                        } else {
-                          window.location.href = `/boutiques/badshah-designer-fabrics`;
-                        }
-                      }}>
-                        <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" alt="Badshah Designer Fabrics" className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover/img:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                        <div className="absolute inset-y-0 left-0 p-6 flex flex-col justify-end text-white">
-                          <span className="text-[8px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-1 block">Premium Partner</span>
-                          <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Badshah Fabrics</h3>
-                          <p className="text-[10px] tracking-wider opacity-90 leading-relaxed font-light mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                            Exclusive silk suits & heavy bridal wear.
-                          </p>
-                          <div className="flex items-center gap-2 text-[9px] font-bold tracking-[0.2em] uppercase w-max group-hover/img:text-[#BCA58A] transition-colors">
-                            Visit Shop <ArrowRight size={12} className="group-hover/img:translate-x-1 transition-transform" />
+                      {navFeatured.map((feat, index) => (
+                        <div key={feat.id} className={`${index === 0 ? 'w-1/4 ml-2' : 'flex-1'} h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg`} onClick={() => {
+                          if (setSelectedBoutique) {
+                            setSelectedBoutique(feat.name);
+                            setView('seller-shop');
+                          } else {
+                            window.location.href = `/${feat.type === 'Shop' ? 'shop' : 'boutiques'}/${feat.name.toLowerCase().replace(/ /g, '-')}`;
+                          }
+                        }}>
+                          <img src={feat.coverImage || (index === 0 ? "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" : "/designer_suit_1.png")} alt={feat.name} className={`w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-110 ${index === 0 ? 'object-center' : 'object-top'}`} />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute inset-y-0 left-0 p-6 flex flex-col justify-end text-white">
+                            <span className="text-[8px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-1 block">
+                              {feat.gstVerified ? 'Premium Partner' : 'Trending'}
+                            </span>
+                            <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{feat.name}</h3>
+                            <p className="text-[10px] tracking-wider opacity-90 leading-relaxed font-light mb-4 line-clamp-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                              {feat.description || 'Exclusive collections and designer wear.'}
+                            </p>
+                            <div className="flex items-center gap-2 text-[9px] font-bold tracking-[0.2em] uppercase w-max group-hover/img:text-[#BCA58A] transition-colors">
+                              Visit {feat.type || 'Shop'} <ArrowRight size={12} className="group-hover/img:translate-x-1 transition-transform" />
+                            </div>
                           </div>
                         </div>
-                      </div>
-
-                      {/* Col 4: Featured Boutique Visual 2 */}
-                      <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg" onClick={() => {
-                        if (setSelectedBoutique) {
-                          setSelectedBoutique('Kala Mandir');
-                          setView('seller-shop');
-                        } else {
-                          window.location.href = `/boutiques/kala-mandir`;
-                        }
-                      }}>
-                        <img src="/designer_suit_1.png" alt="Kala Mandir" className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                        <div className="absolute inset-y-0 left-0 p-6 flex flex-col justify-end text-white">
-                          <span className="text-[8px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-1 block">Trending</span>
-                          <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Kala Mandir</h3>
-                          <p className="text-[10px] tracking-wider opacity-90 leading-relaxed font-light mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                            Curated bridal collections.
-                          </p>
-                          <div className="flex items-center gap-2 text-[9px] font-bold tracking-[0.2em] uppercase w-max group-hover/img:text-[#BCA58A] transition-colors">
-                            Visit Shop <ArrowRight size={12} className="group-hover/img:translate-x-1 transition-transform" />
-                          </div>
+                      ))}
+                      
+                      {navFeatured.length === 0 && (
+                        <div className="flex-1 h-full flex items-center justify-center text-center p-8 bg-white/30 border border-dashed border-[#BCA58A]/30 rounded-xl ml-2 text-[#111111]/50 text-xs font-medium uppercase tracking-widest">
+                          Set featured shops/boutiques in Admin panel to display photos here.
                         </div>
-                      </div>
+                      )}
 
                     </div>
                   </div>
@@ -504,17 +502,34 @@ export default function Navbar({
               </div>
 
               <div className="space-y-2">
-                <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">BOUTIQUE SHOPS</span>
+                <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">TOP SHOPS</span>
                 <div className="pl-4 flex flex-col gap-3">
-                  {['Kala Mandir', 'Zari Heritage', 'Gulabo Jaipur', 'Nazraana', 'Vastra', 'Awadh Kraft', 'Badshah Designer Fabrics'].map((bt) => (
-                    <a key={bt} href="#" onClick={(e) => {
+                  {navShops.slice(0, 5).map((bt) => (
+                    <a key={bt.id} href="#" onClick={(e) => {
                       e.preventDefault();
-                      setSelectedBoutique(bt);
+                      setSelectedBoutique(bt.name);
                       setView('seller-shop');
                       setIsOpen(false);
                     }}
                       className="text-[10px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors uppercase font-medium">
-                      {bt}
+                      {bt.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <span className="text-[11px] tracking-[0.2em] text-[#111111]/40 uppercase font-bold block">TOP BOUTIQUES</span>
+                <div className="pl-4 flex flex-col gap-3">
+                  {navBoutiques.slice(0, 5).map((bt) => (
+                    <a key={bt.id} href="#" onClick={(e) => {
+                      e.preventDefault();
+                      setSelectedBoutique(bt.name);
+                      setView('seller-shop');
+                      setIsOpen(false);
+                    }}
+                      className="text-[10px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors uppercase font-medium">
+                      {bt.name}
                     </a>
                   ))}
                 </div>

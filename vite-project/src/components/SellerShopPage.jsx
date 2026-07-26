@@ -256,7 +256,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
           
           {/* Left Floating Image */}
           <motion.div style={{ y: collageY1 }} className="hidden md:block w-1/4 max-w-[220px] aspect-[4/5] rounded-[24px] overflow-hidden shadow-2xl rotate-[-8deg] border-[6px] border-[#FAF9F6] translate-x-16 z-0">
-            <img src="/custom_suit_1.png" className="w-full h-full object-cover saturate-[0.8]" alt="Custom Bridal Suit" />
+            <img src={profile.leftImage || "/custom_suit_1.png"} className="w-full h-full object-cover saturate-[0.8]" alt="Left image" />
           </motion.div>
           
           {/* Center Main Image */}
@@ -278,7 +278,12 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
                   <span className="hidden md:block w-1.5 h-1.5 bg-[#BCA58A] rounded-full shadow-lg" />
                   <span className="flex items-center gap-1.5"><Star size={12} className="text-[#BCA58A] fill-current" /> {profile.rating || 4.8}</span>
                   <span className="hidden md:block w-1.5 h-1.5 bg-[#BCA58A] rounded-full shadow-lg" />
-                  <span className="flex items-center gap-1.5"><BadgeCheck size={12} className="text-[#BCA58A]"/> Verified Partner</span>
+                  
+                  {profile.gstVerified ? (
+                    <span className="flex items-center gap-1.5"><BadgeCheck size={12} className="text-[#10B981]"/> Verified Partner</span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 opacity-80"><BadgeCheck size={12} className="text-[#FAF9F6]/60"/> Unverified</span>
+                  )}
                 </div>
               </motion.div>
             </div>
@@ -286,7 +291,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
 
           {/* Right Floating Image */}
           <motion.div style={{ y: collageY2 }} className="hidden lg:block w-1/4 max-w-[220px] aspect-[4/5] rounded-[24px] overflow-hidden shadow-2xl rotate-[8deg] border-[6px] border-[#FAF9F6] -translate-x-16 z-0">
-            <img src="/custom_suit_2.png" className="w-full h-full object-cover saturate-[0.8]" alt="Custom Ethnic Suit" />
+            <img src={profile.rightImage || "/custom_suit_2.png"} className="w-full h-full object-cover saturate-[0.8]" alt="Right image" />
           </motion.div>
 
         </div>
@@ -298,15 +303,20 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
           <div className="text-[11px] tracking-widest uppercase text-[#6B6B6B] font-semibold w-full md:w-auto text-center md:text-left">
             Showing <span className="text-[#BCA58A]">{filteredProducts.length}</span> curated pieces
           </div>
-          <div className="flex items-center w-full md:w-auto h-full gap-3">
-            <MagneticButton as="a" href={`https://wa.me/${(profile.whatsapp || '919876543210').replace(/[^0-9]/g, '')}`} 
-               className="flex items-center justify-center w-full gap-2 bg-[#25D366] hover:bg-[#1DA851] text-white px-8 py-2.5 text-[10px] font-bold tracking-widest uppercase rounded-xl transition-colors shadow-md">
-               <MessageCircle size={14} /> WhatsApp
-            </MagneticButton>
-            <MagneticButton as="a" href={`tel:${(profile.contact || '+919876543210').replace(/[^0-9+]/g, '')}`}
-               className="flex items-center justify-center w-full gap-2 bg-[#111111] hover:bg-[#BCA58A] text-[#FAF9F6] px-8 py-2.5 text-[10px] font-bold tracking-widest uppercase rounded-xl transition-colors shadow-md">
-               <Phone size={14} /> Call Shop
-            </MagneticButton>
+          <div className="flex items-center w-full md:w-auto h-full gap-3 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
+            {profile.whatsapp && profile.whatsapp.split(',').map((num, idx, arr) => (
+              <MagneticButton key={`wa-${idx}`} as="a" href={`https://wa.me/${num.trim().replace(/[^0-9]/g, '')}`} 
+                 className="flex-shrink-0 flex items-center justify-center w-auto min-w-[140px] md:min-w-0 md:w-full gap-2 bg-[#25D366] hover:bg-[#1DA851] text-white px-6 py-2.5 text-[10px] font-bold tracking-widest uppercase rounded-xl transition-colors shadow-md">
+                 <MessageCircle size={14} /> WhatsApp {arr.length > 1 ? idx + 1 : ''}
+              </MagneticButton>
+            ))}
+
+            {profile.contact && profile.contact.split(',').map((num, idx, arr) => (
+              <MagneticButton key={`call-${idx}`} as="a" href={`tel:${num.trim().replace(/[^0-9+]/g, '')}`}
+                 className="flex-shrink-0 flex items-center justify-center w-auto min-w-[140px] md:min-w-0 md:w-full gap-2 bg-[#111111] hover:bg-[#BCA58A] text-[#FAF9F6] px-6 py-2.5 text-[10px] font-bold tracking-widest uppercase rounded-xl transition-colors shadow-md">
+                 <Phone size={14} /> Call Shop {arr.length > 1 ? idx + 1 : ''}
+              </MagneticButton>
+            ))}
           </div>
         </div>
       </div>
