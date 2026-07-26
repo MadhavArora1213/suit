@@ -53,7 +53,7 @@ export default function ContactPage({ setView, user }) {
       const oneHourAgo = Date.now() - (60 * 60 * 1000);
       const recentSubmissions = history.filter(time => time > oneHourAgo);
       if (recentSubmissions.length >= 3) return false;
-      
+
       recentSubmissions.push(Date.now());
       localStorage.setItem('gurnaaz_contact_history', JSON.stringify(recentSubmissions));
       return true;
@@ -182,16 +182,16 @@ export default function ContactPage({ setView, user }) {
           `
         })
       })
-      .then(async (res) => {
-        if (!res.ok) {
-          const errData = await res.json();
-          console.error("Brevo API Error:", errData);
-          alert("Failed to send email. Check browser console for Brevo error.");
-        } else {
-          console.log("Brevo email sent successfully!");
-        }
-      })
-      .catch(err => console.error("Brevo Network Error:", err));
+        .then(async (res) => {
+          if (!res.ok) {
+            const errData = await res.json();
+            console.error("Brevo API Error:", errData);
+            alert("Failed to send email. Check browser console for Brevo error.");
+          } else {
+            console.log("Brevo email sent successfully!");
+          }
+        })
+        .catch(err => console.error("Brevo Network Error:", err));
     } else {
       console.warn("No Brevo API key found in .env");
     }
@@ -323,9 +323,9 @@ export default function ContactPage({ setView, user }) {
 
               {/* Error Message */}
               {errorMsg && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }} 
-                  animate={{ opacity: 1, y: 0 }} 
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   className="mb-8 p-4 border border-red-500/30 bg-red-500/10 rounded-xl text-center"
                 >
                   <p className="text-xs text-red-300 font-bold uppercase tracking-widest">{errorMsg}</p>
@@ -426,11 +426,11 @@ export default function ContactPage({ setView, user }) {
               className="pt-0 pb-8 text-center flex flex-col items-center justify-start relative -mt-8"
             >
               {/* Glowing Background Effect */}
-              <div 
-                className="absolute inset-0 opacity-50 blur-2xl pointer-events-none" 
+              <div
+                className="absolute inset-0 opacity-50 blur-2xl pointer-events-none"
                 style={{ background: 'radial-gradient(circle at center, rgba(188,165,138,0.15) 0%, transparent 60%)' }}
               />
-              
+
               {/* Success Image (No Text) */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -439,9 +439,9 @@ export default function ContactPage({ setView, user }) {
                 className="relative mb-8 flex justify-center w-full"
               >
                 <div className="w-80 h-80 md:w-[500px] md:h-[500px] relative group-hover:scale-105 transition-transform duration-700 ease-out z-10">
-                  <img 
-                    src="/Images/contact.png" 
-                    alt="Success Character" 
+                  <img
+                    src="/Images/contact.png"
+                    alt="Success Character"
                     className="w-full h-full object-contain object-bottom relative z-10"
                     style={{ filter: 'drop-shadow(0px 10px 20px rgba(0,0,0,0.5))' }}
                   />
@@ -491,22 +491,22 @@ export default function ContactPage({ setView, user }) {
               style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }}
             >
               {/* Modal Background Glow */}
-              <div 
-                className="absolute inset-0 opacity-20 pointer-events-none" 
+              <div
+                className="absolute inset-0 opacity-20 pointer-events-none"
                 style={{ background: 'radial-gradient(circle at top center, #BCA58A 0%, transparent 70%)' }}
               />
 
               <div className="w-16 h-16 rounded-full bg-[#111111]/5 flex items-center justify-center text-[#BCA58A] mx-auto mb-6 relative z-10 border border-[#BCA58A]/20">
                 <User size={28} strokeWidth={1.5} />
               </div>
-              
+
               <h3 className="text-3xl font-light text-[#111111] mb-3 relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Login Required
               </h3>
               <p className="text-[13px] text-[#111111]/60 mb-8 relative z-10 leading-relaxed font-light">
                 Please sign in to your Gurnaaz account to send us a message. It helps us serve you better!
               </p>
-              
+
               <div className="flex flex-col gap-3 relative z-10">
                 <button
                   onClick={() => {

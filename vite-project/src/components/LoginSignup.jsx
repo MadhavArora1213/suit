@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, Phone, Check, ArrowRight } from 'lucide-react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, Phone, Check, ArrowRight, AlertCircle, X } from 'lucide-react';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
@@ -10,9 +10,10 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
-  const [otpCode, setOtpCode] = useState(['', '', '', '']);
+  const [otpCode, setOtpCode] = useState(['', '', '', '', '', '']);
   const [timer, setTimer] = useState(30);
   const [focusedField, setFocusedField] = useState(null);
+  const [generatedOtp, setGeneratedOtp] = useState('');
 
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
   const [errors, setErrors] = useState({});
@@ -22,6 +23,15 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
   const update = (key, val) => {
     setForm(prev => ({ ...prev, [key]: val }));
     if (errors[key]) setErrors(prev => ({ ...prev, [key]: '' }));
+  };
+
+  const getErrorImage = (errorText) => {
+    if (!errorText) return "/Images/error_character.png";
+    if (errorText.includes("already have an account")) return "/Images/error_registered.png";
+    if (errorText.includes("Incorrect email")) return "/Images/error_invalid_credentials.png";
+    if (errorText.includes("code you entered is incorrect")) return "/Images/error_invalid_otp.png";
+    if (errorText.includes("valid email")) return "/Images/error_invalid_email.png";
+    return "/Images/error_character.png"; // Fallback
   };
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -67,7 +77,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     const next = [...otpCode];
     next[index] = val;
     setOtpCode(next);
-    if (val && index < 3) document.getElementById(`otp-${index + 1}`)?.focus();
+    if (val && index < 5) document.getElementById(`otp-${index + 1}`)?.focus();
   };
 
   const handleOtpKeyDown = (index, e) => {
@@ -102,13 +112,13 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     } catch (error) {
       console.error("Login error:", error);
       handleRateLimitFail();
-      setErrors({ form: 'Invalid email or password.' });
+      setErrors({ form: 'Incorrect email or password. Please try again.' });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
     if (!checkRateLimit()) return;
 
@@ -131,18 +141,100 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     // Update form state with sanitized values before OTP
     setForm(prev => ({ ...prev, email: sanitizedEmail, name: sanitizedName }));
 
-    // We proceed to OTP screen as a mock security step before actually creating the user
     setLoading(true);
-    setTimeout(() => {
+
+    // Check if email already exists in Firebase Auth before sending OTP
+    try {
+      const signInMethods = await fetchSignInMethodsForEmail(auth, sanitizedEmail);
+      if (signInMethods && signInMethods.length > 0) {
+        setErrors({ form: 'Looks like you already have an account! Please log in instead.' });
+        setLoading(false);
+        return; // STOP execution
+      }
+    } catch (error) {
+      console.error("Email check error:", error);
+      setErrors({ form: 'Firebase Security Error: Please disable "Email Enumeration Protection" in your Firebase Authentication Settings to allow sign-ups.' });
       setLoading(false);
-      setOtpSent(true);
-      setTimer(30);
-    }, 500);
+      return; // STOP execution so OTP is NEVER sent
+    }
+
+    // Generate a random 6 digit OTP
+    const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    setGeneratedOtp(newOtp);
+    
+    fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': import.meta.env.VITE_BREVO_API_KEY,
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        sender: { name: 'Gurnaaz', email: 'madhavarora132005@gmail.com' }, // Make sure this is a verified sender in Brevo
+        to: [{ email: sanitizedEmail, name: sanitizedName }],
+        subject: 'Your Gurnaaz Verification Code',
+        htmlContent: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+          <style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #FAF9F6; margin: 0; padding: 40px 20px; color: #111111; }
+            .container { max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 40px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); text-align: center; border-top: 4px solid #BCA58A; }
+            .logo { font-size: 20px; font-weight: 700; letter-spacing: 0.2em; color: #111111; margin-bottom: 30px; text-transform: uppercase; }
+            .title { font-size: 22px; font-weight: 300; margin-bottom: 15px; color: #111111; }
+            .text { color: #666666; font-size: 14px; line-height: 1.6; margin-bottom: 25px; }
+            .otp-box { background-color: #FAF9F6; border: 1px solid #EAEAEA; padding: 24px; font-size: 38px; font-weight: 600; letter-spacing: 0.15em; color: #BCA58A; margin: 30px 0; border-radius: 6px; }
+            .footer { margin-top: 40px; font-size: 11px; color: #999999; line-height: 1.6; text-transform: uppercase; letter-spacing: 0.1em; }
+          </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="logo">Gurnaaz</div>
+              <div class="title">Email Verification</div>
+              <div class="text">
+                Welcome to Gurnaaz! To complete your registration and discover our premium handcrafted ethnic wear, please use the following verification code:
+              </div>
+              <div class="otp-box">${newOtp}</div>
+              <div class="text" style="font-size: 13px;">
+                This code is valid for the next 10 minutes. If you did not request this, please safely ignore this email.
+              </div>
+              <div class="footer">
+                &copy; 2026 Gurnaaz. All rights reserved.
+              </div>
+            </div>
+          </body>
+          </html>
+        `
+      })
+    })
+    .then(async (res) => {
+      if (res.ok) {
+        setOtpSent(true);
+        setTimer(60);
+      } else {
+        const errorData = await res.json();
+        console.error('Brevo Error:', errorData);
+        setErrors({ form: 'Oops! We had trouble sending the email. Please try again later.' });
+      }
+    })
+    .catch((err) => {
+      console.error('Network Error:', err);
+      setErrors({ form: 'Network error. Please check your internet connection and try again.' });
+    })
+    .finally(() => {
+      setLoading(false);
+    });
   };
 
   const handleVerifyOtp = async () => {
     const code = otpCode.join('');
-    if (code.length !== 4) return;
+    if (code.length !== 6) return;
+    
+    if (code !== generatedOtp) {
+      setErrors({ form: 'The code you entered is incorrect. Please check your email and try again.' });
+      return;
+    }
+    
     setLoading(true);
     
     try {
@@ -232,6 +324,43 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
 
       {/* Centered content */}
       <div className="flex-1 flex items-center justify-center px-6 pt-32 pb-20">
+        
+        {/* Centered Character Error Modal */}
+        <AnimatePresence>
+          {errors.form && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#111111]/30 backdrop-blur-sm"
+              onClick={() => setErrors(prev => ({ ...prev, form: '' }))}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="relative w-full max-w-[400px] aspect-square flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl bg-[#EBE4DC]"
+                onClick={e => e.stopPropagation()}
+              >
+                {/* The Character Image containing baked-in text */}
+                <img 
+                  src={getErrorImage(errors.form)} 
+                  alt="Notice" 
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+
+                {/* Close Button Floating Top Right */}
+                <button 
+                  onClick={() => setErrors(prev => ({ ...prev, form: '' }))}
+                  className="absolute top-4 right-4 bg-white/40 hover:bg-white/60 text-[#111111] rounded-full p-2 backdrop-blur-md shadow-sm transition-all"
+                >
+                  <X size={18} />
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="w-full max-w-[400px]">
 
           <AnimatePresence mode="wait">
@@ -279,11 +408,6 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
 
                 {/* Form */}
                 <form onSubmit={mode === 'login' ? handleLogin : handleSignup} className="space-y-5">
-                  {errors.form && (
-                    <div className="text-red-500 text-xs text-center p-2 bg-red-50 rounded-md border border-red-100">
-                      {errors.form}
-                    </div>
-                  )}
 
                   <AnimatePresence>
                     {mode === 'signup' && (
@@ -298,7 +422,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
                             placeholder="Full Name"
                             className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
                           />
-                          {errors.name && <span className="text-red-500 text-xs absolute -bottom-5 left-0">{errors.name}</span>}
+                          {errors.name && <span className="text-red-500 text-xs mt-1 block">{errors.name}</span>}
                         </div>
                       </motion.div>
                     )}
@@ -314,7 +438,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
                       placeholder="Email Address"
                       className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
                     />
-                    {errors.email && <span className="text-red-500 text-xs absolute -bottom-5 left-0">{errors.email}</span>}
+                    {errors.email && <span className="text-red-500 text-xs mt-1 block">{errors.email}</span>}
                   </div>
 
                   <AnimatePresence>
@@ -330,7 +454,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
                             placeholder="Phone Number (10 digits)"
                             className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
                           />
-                          {errors.phone && <span className="text-red-500 text-xs absolute -bottom-5 left-0">{errors.phone}</span>}
+                          {errors.phone && <span className="text-red-500 text-xs mt-1 block">{errors.phone}</span>}
                         </div>
                       </motion.div>
                     )}
@@ -350,7 +474,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
                       className="absolute right-0 top-1/2 -translate-y-1/2 text-[#111111]/15 hover:text-[#BCA58A] transition-colors cursor-pointer p-1">
                       {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                     </button>
-                    {errors.password && <span className="text-red-500 text-xs absolute -bottom-5 left-0 leading-tight">{errors.password}</span>}
+                    {errors.password && <span className="text-red-500 text-xs mt-1 block leading-tight">{errors.password}</span>}
                   </div>
 
                   {mode === 'login' && (
@@ -418,7 +542,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
                     Check Your Email
                   </h1>
                   <p className="text-[13px] text-[#111111]/30 font-light">
-                    We sent a 4-digit code to{' '}
+                    We sent a 6-digit code to{' '}
                     <span className="text-[#111111]/50">{form.email}</span>
                   </p>
                 </div>
@@ -446,7 +570,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
 
                 <motion.button
                   onClick={handleVerifyOtp}
-                  disabled={loading || otpCode.join('').length !== 4}
+                  disabled={loading || otpCode.join('').length !== 6}
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   className="w-full bg-[#111111] text-white py-4 rounded-full text-[10px] tracking-[0.3em] font-bold uppercase hover:bg-[#BCA58A] disabled:opacity-30 transition-all duration-500 cursor-pointer flex items-center justify-center gap-2"
@@ -471,7 +595,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
                     </button>
                   )}
                   <button
-                    onClick={() => { setOtpSent(false); setOtpCode(['', '', '', '']); }}
+                    onClick={() => { setOtpSent(false); setOtpCode(['', '', '', '', '', '']); }}
                     className="block w-full text-[11px] text-[#111111]/20 hover:text-[#BCA58A] transition-colors cursor-pointer"
                   >
                     Change Email
