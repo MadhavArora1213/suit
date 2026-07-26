@@ -31,6 +31,7 @@ const KEYS = {
   orders:       'gurnaaz_orders',
   discounts:    'gurnaaz_discounts',
   support:      'gurnaaz_support',
+  boutiques:    'gurnaaz_boutiques',
 };
 
 // ── Static Products Definition ────────────────────────────────
@@ -435,11 +436,70 @@ export const notifyWebsite = () => {
 
 export const staticBoutiques = {};
 
+// ── BOUTIQUES ────────────────────────────────────────────────
+export const getBoutiques = () => get(KEYS.boutiques, []);
+export const saveBoutiques = (arr) => set(KEYS.boutiques, arr);
+
+export const addBoutique = async (boutique) => {
+  const arr = getBoutiques();
+  arr.push(boutique);
+  saveBoutiques(arr);
+  if (isFirebaseConfigured()) {
+    try {
+      await saveDocumentToFirestore('boutiques', boutique.id, boutique);
+    } catch (err) {
+      console.error("Failed to save boutique to Firestore:", err);
+    }
+  }
+};
+
+export const updateBoutique = async (id, data) => {
+  const updatedList = getBoutiques().map(b => b.id === id ? { ...b, ...data } : b);
+  saveBoutiques(updatedList);
+  if (isFirebaseConfigured()) {
+    try {
+      const boutique = updatedList.find(b => b.id === id);
+      if (boutique) await saveDocumentToFirestore('boutiques', id, boutique);
+    } catch (err) {
+      console.error("Failed to update boutique in Firestore:", err);
+    }
+  }
+};
+
+export const deleteBoutique = async (id) => {
+  saveBoutiques(getBoutiques().filter(b => b.id !== id));
+  // Note: deletion from firestore can be handled if a deleteDocumentFromFirestore function is added later.
+};
+
+export const syncBoutiques = async () => {
+  if (!isFirebaseConfigured()) return;
+  try {
+    const dbBoutiques = await fetchCollectionFromFirestore('boutiques');
+    if (dbBoutiques && dbBoutiques.length > 0) {
+      saveBoutiques(dbBoutiques);
+      window.dispatchEvent(new Event('admin-data-updated'));
+    }
+  } catch (err) {
+    console.error("Failed to sync boutiques:", err);
+  }
+};
+
 export const getBoutiqueProfile = (boutiqueName) => {
   if (!boutiqueName) return null;
-  const name = boutiqueName.trim();
+  const name = boutiqueName.trim().toLowerCase();
+  const allBoutiques = getBoutiques();
+  
+  // Try to find a dynamic match first
+  const match = allBoutiques.find(b => {
+    const bn = (b.name || '').toLowerCase();
+    const slug = bn.replace(/ /g, '-');
+    return bn.includes(name) || name.includes(bn) || slug === name;
+  });
+
+  if (match) return match;
+
   return {
-    name: name,
+    name: boutiqueName.trim(),
     description: "",
     contact: "",
     address: "",
@@ -468,6 +528,8 @@ export const syncProducts = async (onSyncComplete) => {
     } catch (e) {
       console.error("Failed to fetch settings:", e);
     }
+
+    await syncBoutiques();
 
     if (onSyncComplete) {
       onSyncComplete(dbProducts);

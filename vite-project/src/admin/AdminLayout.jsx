@@ -3,13 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Package, ShoppingBag, Image, Star,
   Settings, LogOut, ChevronRight, Sparkles, Layers,
-  Film, Megaphone, FolderOpen, ChevronLeft, Menu, Tag, MessageSquare, Users
+  Film, Megaphone, FolderOpen, ChevronLeft, Menu, Tag, MessageSquare, Users, Store
 } from 'lucide-react';
 
 const navItems = [
   { id: 'dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
   { id: 'products',     label: 'Products',     icon: Package },
   { id: 'orders',       label: 'Orders',       icon: ShoppingBag },
+  { id: 'boutiques',    label: 'Boutiques',    icon: Store },
   { id: 'categories',   label: 'Categories',   icon: FolderOpen },
   { id: 'gallery',      label: 'Gallery',      icon: Image },
   { id: 'hero',         label: 'Hero Section', icon: Film },

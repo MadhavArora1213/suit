@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Store, Star, ArrowRight, MapPin, Award, ShieldCheck, Sparkles } from 'lucide-react';
+import { getBoutiques } from '../utils/adminStore';
 
-const topBoutiques = [
+const fallbackBoutiques = [
   {
     name: 'Badshah Designer Fabrics',
     established: 2008,
@@ -65,6 +67,17 @@ const topBoutiques = [
 ];
 
 export default function BoutiquesPage({ setView, setSelectedBoutique }) {
+  const [boutiquesList, setBoutiquesList] = useState([]);
+
+  useEffect(() => {
+    const dynamic = getBoutiques();
+    if (dynamic && dynamic.length > 0) {
+      setBoutiquesList(dynamic);
+    } else {
+      setBoutiquesList(fallbackBoutiques);
+    }
+  }, []);
+
   const handleBoutiqueClick = (name) => {
     if (setSelectedBoutique) {
       setSelectedBoutique(name);
@@ -128,9 +141,16 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
       {/* ─── EDITORIAL GRID (MIXED SIZES) ─── */}
       <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-          {topBoutiques.map((boutique, index) => {
+          {boutiquesList.map((boutique, index) => {
             // Make the 1st and 4th items "Featured" to break the grid and add a huge wow factor
             const isFeatured = index === 0 || index === 3;
+            
+            // Map dynamic fields to UI
+            const image = boutique.coverImage || boutique.image || 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=80';
+            const location = boutique.location || boutique.address || 'Unknown Location';
+            const orders = boutique.totalOrders || boutique.orders || '0';
+            const tags = boutique.tags || ['Premium Boutique'];
+            const tag = tags.length > 0 ? tags[0] : 'Premium Boutique';
 
             return (
               <motion.div
@@ -151,7 +171,7 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
                   ${isFeatured ? 'sm:w-[50%] min-h-[350px] lg:min-h-[450px]' : 'xl:w-[45%] min-h-[260px] lg:min-h-[300px]'}`}
                 >
                   <img 
-                    src={boutique.image} 
+                    src={image} 
                     alt={boutique.name}
                     className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-[2s] ease-out group-hover:scale-110"
                   />
@@ -168,7 +188,7 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
                   <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                     <div className="flex items-center gap-2">
                       <span className="bg-white/95 px-3 py-1.5 rounded-full text-[9px] font-extrabold tracking-widest uppercase text-[#BCA58A] shadow-sm border border-[#BCA58A]/20">
-                        {boutique.tags[0]}
+                        {tag}
                       </span>
                       {isFeatured && (
                         <span className="flex items-center gap-1 bg-[#111111] text-white px-3 py-1.5 rounded-full text-[9px] font-extrabold tracking-widest uppercase shadow-sm">
@@ -199,7 +219,7 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
                   <div className="mt-auto flex flex-col gap-5">
                     <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-[#888888]">
                       <span className="flex items-center gap-1.5">
-                        <MapPin size={14} className="text-[#BCA58A]" /> {boutique.location}
+                        <MapPin size={14} className="text-[#BCA58A]" /> {location}
                       </span>
                       <span className="w-1 h-1 rounded-full bg-[#D1C8C0]" />
                       <span className="flex items-center gap-1.5">
@@ -212,7 +232,7 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
                       <div className="flex items-center gap-2 sm:gap-2.5">
                         <Award size={16} className="text-[#BCA58A] flex-shrink-0" /> 
                         <div className="flex flex-col items-start justify-center">
-                          <span className="text-xs sm:text-sm font-extrabold text-[#111111] leading-none">{boutique.orders}</span>
+                          <span className="text-xs sm:text-sm font-extrabold text-[#111111] leading-none">{orders}</span>
                           <span className="text-[8px] sm:text-[9px] font-bold tracking-[0.15em] text-[#888888] uppercase mt-1">Orders</span>
                         </div>
                       </div>

@@ -3,6 +3,7 @@ import { auth, db } from './firebase'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { syncProducts, getAllProducts } from './utils/adminStore'
+import { motion, AnimatePresence } from 'framer-motion'
 import './App.css'
 import LoadingScreen from './LoadingScreen'
 import Navbar from './components/Navbar'
@@ -43,7 +44,13 @@ function App() {
   const [contentVisible, setContentVisible] = useState(isHomeRoute ? false : true)
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState({})
+  const [toastMessage, setToastMessage] = useState('')
   const allProducts = getAllProducts();
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 4000);
+  };
 
   const getInitialView = () => {
     const path = window.location.pathname;
@@ -174,6 +181,7 @@ function App() {
 
   const handleLoginSuccess = (userProfile) => {
     setUser(userProfile)
+    showToast(`Welcome back, ${userProfile.name}! Login successful.`);
     const redirectPath = sessionStorage.getItem('redirectAfterLogin');
     if (redirectPath) {
       sessionStorage.removeItem('redirectAfterLogin');
@@ -238,29 +246,49 @@ function App() {
 
   const clearCart = () => setCart([])
 
+  const Toast = () => (
+    <AnimatePresence>
+      {toastMessage && (
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] bg-[#111111] text-white px-6 py-3.5 rounded-full text-[12px] font-medium tracking-wide shadow-2xl flex items-center gap-3"
+        >
+          <div className="w-2 h-2 rounded-full bg-green-400" />
+          {toastMessage}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   if (!loadingComplete && isHomeRoute) return <LoadingScreen onComplete={handleLoadComplete} />
 
   if (view === 'customer-home') {
     return (
-      <CustomerHomePage 
-        setView={setView} 
-        cart={cart} 
-        favorites={favorites} 
-        addToCart={addToCart} 
-        removeFromCart={removeFromCart} 
-        updateCartQty={updateCartQty} 
-        toggleFavorite={toggleFavorite} 
-        setSelectedCategory={setSelectedCategory}
-        setSelectedProduct={setSelectedProduct}
-        setSelectedBoutique={setSelectedBoutique}
-        user={user}
-        handleLogout={handleLogout}
-      />
+      <>
+        <Toast />
+        <CustomerHomePage 
+          setView={setView} 
+          cart={cart} 
+          favorites={favorites} 
+          addToCart={addToCart} 
+          removeFromCart={removeFromCart} 
+          updateCartQty={updateCartQty} 
+          toggleFavorite={toggleFavorite} 
+          setSelectedCategory={setSelectedCategory}
+          setSelectedProduct={setSelectedProduct}
+          setSelectedBoutique={setSelectedBoutique}
+          user={user}
+          handleLogout={handleLogout}
+        />
+      </>
     )
   }
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]" style={{ opacity: contentVisible ? 1 : 0, transition: 'opacity 0.8s ease' }}>
+      <Toast />
       <Navbar 
         cart={cart} 
         removeFromCart={removeFromCart} 

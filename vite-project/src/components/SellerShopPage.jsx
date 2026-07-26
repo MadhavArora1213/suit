@@ -7,49 +7,7 @@ import {
 import { FaInstagram } from 'react-icons/fa';
 import { getAllProducts, getBoutiqueProfile } from '../utils/adminStore';
 
-/* ─── ENHANCED BOUTIQUE DATA ─── */
-const enhancedBoutiques = {
-  'Badshah Designer Fabrics Silk Store': {
-    name: 'Badshah Designer Fabrics',
-    owner: 'Rajesh & Priya Sharma',
-    established: 2008,
-    experience: '15+ Years',
-    gstVerified: true,
-    responseTime: 'Within 1 hour',
-    shippingTime: '2-4 Business Days',
-    returnPolicy: 'No Returns / All Sales Final',
-    description: 'For over 15 years we\'ve been bringing handcrafted Punjabi fashion to thousands of happy customers.',
-    welcomeMessage: 'Welcome to our boutique. Every piece we curate tells a story of heritage, craftsmanship, and timeless elegance.',
-    whatsapp: '+919876543210',
-    instagramUrl: 'https://instagram.com/badshah_designer_fabrics',
-    address: 'Guru Nanak Nagar, Model Town, Ludhiana, Punjab',
-    totalOrders: '25,000+',
-    rating: 4.8,
-    coverImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1400&q=85',
-    logo: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
-    story: 'Founded in 2008 in the heart of Ludhiana, Badshah Designer Fabrics Silk Store began as a small family-run boutique with a vision to bring authentic Punjabi silk craftsmanship to fashion-forward women across India.',
-  },
-  'Gulabo Jaipur': {
-    name: 'Gulabo Jaipur',
-    owner: 'Saloni Panwar',
-    established: 2015,
-    experience: '9+ Years',
-    gstVerified: true,
-    responseTime: 'Within 2 hours',
-    shippingTime: '3-5 Business Days',
-    returnPolicy: 'No Returns / All Sales Final',
-    description: 'Bringing the royal charm of Rajasthan to life with flowy pure georgette fabrics and hand-applied gota patti laces.',
-    welcomeMessage: 'Step into the world of Gulabo Jaipur, where every twist and twirl of our fabric echoes the vibrant colors of Rajasthan.',
-    whatsapp: '+919876501003',
-    instagramUrl: 'https://instagram.com/gulabo_jaipur',
-    address: 'B-4, Johari Bazar, Jaipur, Rajasthan',
-    totalOrders: '12,000+',
-    rating: 4.9,
-    coverImage: 'https://images.unsplash.com/photo-1605784401368-5af1d9d6c4dc?auto=format&fit=crop&w=1200&q=80',
-    logo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&q=80',
-    story: 'Gulabo Jaipur was born from a deep love for the traditional textiles of Rajasthan. What began as a celebration of vibrant colors and flowy silhouettes has become a beloved brand.',
-  }
-};
+/* ─── ENHANCED BOUTIQUE DATA (Now managed dynamically in Admin Store) ─── */
 
 /* ─── MAGNETIC BUTTON HOOK ─── */
 function MagneticButton({ children, className, onClick, href, as = 'button' }) {
@@ -213,18 +171,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     const prof = getBoutiqueProfile(boutiqueName);
-    
-    let richProfile = null;
-    if (boutiqueName) {
-      const bn = boutiqueName.trim().toLowerCase();
-      for (const key in enhancedBoutiques) {
-        if (key.toLowerCase().includes(bn) || bn.includes(key.toLowerCase())) {
-          richProfile = enhancedBoutiques[key];
-          break;
-        }
-      }
-    }
-    setProfile(richProfile || prof);
+    setProfile(prof);
 
     const allProds = getAllProducts();
     
@@ -314,7 +261,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
           
           {/* Center Main Image */}
           <motion.div style={{ scale: collageScale }} className="w-[95%] md:w-[65%] max-w-[700px] aspect-[16/10] rounded-[32px] overflow-hidden shadow-[0_30px_60px_rgba(188,165,138,0.25)] border-[8px] border-[#FAF9F6] z-10 relative">
-            <img src={profile.coverImage} className="w-full h-full object-cover filter brightness-[0.8]" alt="Boutique Cover" />
+            <img src={profile.coverImage || 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1400&q=85'} className="w-full h-full object-cover filter brightness-[0.8]" alt="Boutique Cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#111111]/80 via-[#111111]/30 to-transparent" />
             
             {/* Embedded Text inside Main Image */}

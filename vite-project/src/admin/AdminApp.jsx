@@ -17,6 +17,7 @@ import DiscountsAdmin from './pages/DiscountsAdmin';
 import SupportAdmin from './pages/SupportAdmin';
 import UsersAdmin from './pages/UsersAdmin';
 import Settings from './pages/Settings';
+import BoutiquesAdmin from './pages/BoutiquesAdmin';
 
 export default function AdminApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -86,6 +87,7 @@ export default function AdminApp() {
       case 'support':      return <SupportAdmin />;
       case 'users':        return <UsersAdmin />;
       case 'categories':   return <CategoriesAdmin />;
+      case 'boutiques':    return <BoutiquesAdmin />;
       case 'settings':     return <Settings />;
       default:             return <Dashboard setActivePage={setActivePage} />;
     }

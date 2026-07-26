@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, Phone, Check, ArrowRight, AlertCircle, X } from 'lucide-react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail, sendPasswordResetEmail } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
+import { isValidPhoneNumber } from 'libphonenumber-js';
 
 export default function LoginSignup({ setView, onLoginSuccess }) {
   const [mode, setMode] = useState(window.location.pathname === '/signup' ? 'signup' : 'login');
@@ -15,7 +16,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
   const [focusedField, setFocusedField] = useState(null);
   const [generatedOtp, setGeneratedOtp] = useState('');
 
-  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', countryCode: 'IN', password: '' });
   const [errors, setErrors] = useState({});
   const [loginAttempts, setLoginAttempts] = useState(() => parseInt(localStorage.getItem('gurnaaz_login_attempts') || '0'));
   const [lockoutUntil, setLockoutUntil] = useState(() => parseInt(localStorage.getItem('gurnaaz_lockout_until') || '0'));
@@ -35,7 +36,14 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
   };
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const validatePhone = (phone) => /^\d{10}$/.test(phone);
+  const validatePhone = (phone, countryCode) => {
+    if (!phone) return false;
+    try {
+      return isValidPhoneNumber(phone, countryCode);
+    } catch (error) {
+      return false;
+    }
+  };
   const validatePassword = (password) => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
 
   const handleRateLimitFail = () => {
@@ -118,6 +126,24 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     }
   };
 
+  const handleForgotPassword = async () => {
+    const sanitizedEmail = form.email.trim();
+    if (!validateEmail(sanitizedEmail)) {
+      setErrors({ email: 'Please enter your email address first to reset password.' });
+      return;
+    }
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, sanitizedEmail);
+      alert("Success! A password reset link has been sent to your email. Please check your inbox.");
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      setErrors({ form: "Error sending reset email. Please make sure you have an account." });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSignup = async (e) => {
     e.preventDefault();
     if (!checkRateLimit()) return;
@@ -128,7 +154,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
 
     if (!sanitizedName) newErrors.name = 'Full name is required.';
     if (!validateEmail(sanitizedEmail)) newErrors.email = 'Please enter a valid email address.';
-    if (!validatePhone(form.phone)) newErrors.phone = 'Please enter a valid 10-digit phone number.';
+    if (!validatePhone(form.phone, form.countryCode)) newErrors.phone = 'Please enter a valid phone number for the selected country.';
     if (!validatePassword(form.password)) {
       newErrors.password = 'Password must be at least 8 characters, include uppercase, lowercase, number, and special character.';
     }
@@ -444,18 +470,41 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
                   <AnimatePresence>
                     {mode === 'signup' && (
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }}>
-                        <div className="relative">
-                          <input
-                            type="tel"
-                            value={form.phone}
-                            onChange={e => update('phone', e.target.value)}
-                            onFocus={() => setFocusedField('phone')}
-                            onBlur={() => setFocusedField(null)}
-                            placeholder="Phone Number (10 digits)"
-                            className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
-                          />
-                          {errors.phone && <span className="text-red-500 text-xs mt-1 block">{errors.phone}</span>}
+                        <div className="relative flex gap-3">
+                          
+                          {/* Country Code Dropdown */}
+                          <div className="w-[100px] shrink-0 border-b border-[#111111]/8 focus-within:border-[#BCA58A] transition-colors relative">
+                            <select 
+                              value={form.countryCode} 
+                              onChange={e => update('countryCode', e.target.value)}
+                              className="w-full bg-transparent outline-none py-3.5 text-[14px] text-[#111111] appearance-none cursor-pointer pr-6"
+                            >
+                              <option value="IN">🇮🇳 +91</option>
+                              <option value="US">🇺🇸 +1</option>
+                              <option value="GB">🇬🇧 +44</option>
+                              <option value="AE">🇦🇪 +971</option>
+                              <option value="AU">🇦🇺 +61</option>
+                              <option value="CA">🇨🇦 +1</option>
+                            </select>
+                            <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-[#111111]/40 text-[10px]">
+                              ▼
+                            </div>
+                          </div>
+
+                          {/* Phone Input */}
+                          <div className="flex-1 relative">
+                            <input
+                              type="tel"
+                              value={form.phone}
+                              onChange={e => update('phone', e.target.value)}
+                              onFocus={() => setFocusedField('phone')}
+                              onBlur={() => setFocusedField(null)}
+                              placeholder="Phone Number"
+                              className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
+                            />
+                          </div>
                         </div>
+                        {errors.phone && <span className="text-red-500 text-xs mt-1 block">{errors.phone}</span>}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -479,7 +528,12 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
 
                   {mode === 'login' && (
                     <div className="flex justify-end -mt-1">
-                      <button type="button" className="text-[11px] text-[#111111]/25 hover:text-[#BCA58A] transition-colors cursor-pointer">
+                      <button 
+                        type="button" 
+                        onClick={handleForgotPassword}
+                        disabled={loading}
+                        className="text-[11px] text-[#111111]/25 hover:text-[#BCA58A] transition-colors cursor-pointer"
+                      >
                         Forgot Password?
                       </button>
                     </div>
