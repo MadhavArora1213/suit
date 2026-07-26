@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X, ShoppingBag, Info } from 'lucide-react';
-import { getLookbook, getAllProducts } from '../utils/adminStore';
+import { getAllProducts } from '../utils/adminStore';
 
 const initialHotspots = [
   {
@@ -48,9 +48,8 @@ export default function InteractiveLookbook({ addToCart, setView, setSelectedPro
   const [allProducts, setAllProducts] = useState([]);
 
   const loadLookbook = () => {
-    const data = getLookbook(defaultLookbook);
-    setBgImage(data.bgImage || defaultLookbook.bgImage);
-    setHotspots(data.hotspots || defaultLookbook.hotspots);
+    setBgImage(defaultLookbook.bgImage);
+    setHotspots(defaultLookbook.hotspots);
     setAllProducts(getAllProducts());
   };
 

@@ -1,32 +1,7 @@
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowLeft, ShoppingBag, Heart, Eye, SlidersHorizontal, ChevronDown, ChevronRight, ChevronUp, Star, X, Check, ArrowRight, ShieldCheck, Award } from 'lucide-react';
-import { useState, useMemo, useRef } from 'react';
-import { getAllProducts } from '../utils/adminStore';
-
-const collectionData = {
-  'summer': { title: 'Summer', subtitle: 'Collection', desc: 'Breezy cottons and light georgettes tailored for the warm sun. Embrace the season with breathable fabrics and vibrant prints that keep you cool while looking effortlessly elegant.', image: '/summer_edit.png', accent: '#D4A574', category: 'All', story: 'Inspired by sun-drenched Indian gardens and breezy terraces, this collection celebrates the joy of warm-weather dressing with lightweight fabrics and cheerful palettes.' },
-  'monsoon': { title: 'Monsoon', subtitle: 'Collection', desc: 'Vibrant hues and fluid silhouettes to brighten gray days.', image: '/monsoon_edit.png', accent: '#5B9AA0', category: 'All', story: 'When the rains arrive, so does our most colorful collection. Rich jewel tones and flowing fabrics that dance with the monsoon breeze.' },
-  'wedding': { title: 'Wedding', subtitle: 'Collection', desc: 'Heavy, regal bridal ensembles crafted for your biggest day.', image: '/wedding_edit.png', accent: '#C77B8A', category: 'All', story: 'For the most important day of your life, we bring you ensembles that carry centuries of bridal tradition, reimagined for the modern bride.' },
-  'pastel': { title: 'Pastel', subtitle: 'Collection', desc: 'Soft pinks, mints, and lilacs adorned with delicate threadwork.', image: '/pastel_edit.png', accent: '#B8A9C9', category: 'All', story: 'Whisper-soft hues meet intricate hand embroidery in a collection that celebrates understated elegance and feminine grace.' },
-  'black': { title: 'Black', subtitle: 'Collection', desc: 'Striking black suits with dramatic silver and gold accents.', image: '/black_edit.png', accent: '#BCA58A', category: 'All', story: 'Timeless, powerful, and always in style. Our black collection brings drama and sophistication to every occasion.' },
-  'luxury': { title: 'Luxury', subtitle: 'Collection', desc: 'Our most exclusive, hand-embroidered heritage pieces.', image: '/luxury_edit.png', accent: '#C5A55A', category: 'All', story: 'The pinnacle of Indian craftsmanship. Each piece in this collection takes weeks of dedicated handwork by master artisans.' },
-  'punjabi': { title: 'Punjabi', subtitle: 'Suits', desc: 'Rich Punjabi heritage with vibrant phulkari dupattas and bold silhouettes.', image: '/patiala_suit.png', accent: '#E07A5F', category: 'Patiala', story: 'Bold colors, generous silhouettes, and the exuberant spirit of Punjab come alive in these traditionally crafted suits.' },
-  'anarkali': { title: 'Anarkali', subtitle: 'Collection', desc: 'Regal flares and majestic silhouettes inspired by Mughal grandeur.', image: '/anarkali_suit.png', accent: '#81B29A', category: 'Anarkali', story: 'Named after the legendary court dancer, Anarkali suits feature voluminous flares that create a regal, princess-like silhouette.' },
-  'sharara': { title: 'Sharara', subtitle: 'Collection', desc: 'Playful tiers and festive drama with traditional three-piece elegance.', image: '/sharara_suit.png', accent: '#F2CC8F', category: 'Sharara', story: 'The three-piece ensemble that has been a staple of Indian celebrations for centuries, now reimagined with contemporary flair.' },
-  'chikankari': { title: 'Chikankari', subtitle: 'Collection', desc: 'Delicate shadow embroidery from Lucknow, woven with artisan heritage.', image: '/chikankari_suit.png', accent: '#9DB4C0', category: 'Chikankari', story: 'Born in the royal courts of Lucknow, Chikankari is one of India\'s most refined embroidery traditions, featuring delicate shadow work on sheer fabrics.' },
-  'banarasi': { title: 'Banarasi', subtitle: 'Collection', desc: 'Opulent katan silk brocades with golden zari from Varanasi looms.', image: '/banarasi_suit.png', accent: '#C9A96E', category: 'Banarasi', story: 'Handwoven in the ancient city of Varanasi, Banarasi silk is renowned for its gold and silver brocade, fine silk, and opulent embroidery.' },
-  'pakistani': { title: 'Pakistani', subtitle: 'Collection', desc: 'Contemporary straight-cut elegance with delicate laces and organza details.', image: '/pakistani_suit.png', accent: '#7EB8C9', category: 'Pakistani', story: 'Clean lines, elegant cuts, and meticulous attention to detail define this collection inspired by cross-border fashion sensibilities.' },
-  'designer': { title: 'Designer', subtitle: 'Edit', desc: 'Handpicked designer suits featuring premium fabrics and exclusive craftsmanship.', image: '/designer_suit_1.png', accent: '#D4A574', category: 'All', story: 'Curated from the studios of India\'s most talented designers, each piece is a wearable work of art.' },
-  'festive': { title: 'Festive', subtitle: 'Wear', desc: 'Celebratory ensembles with rich embroidery for festivals and puja ceremonies.', image: '/anarkali_suit.png', accent: '#D4574E', category: 'All', story: 'From Diwali to Eid, Navratri to Pongal — celebrate every festival in ensembles that match the joy of the occasion.' },
-  'party': { title: 'Party', subtitle: 'Wear', desc: 'Statement pieces with contemporary cuts and glamorous embellishments.', image: '/sharara_suit.png', accent: '#9B59B6', category: 'All', story: 'Make an entrance with bold silhouettes, shimmering fabrics, and statement embellishments designed for unforgettable evenings.' },
-  'bridal': { title: 'Bridal', subtitle: 'Collection', desc: 'Exquisite bridal lehengas and suits with heavy zardozi and danka work.', image: '/wedding_edit.png', accent: '#C0392B', category: 'All', story: 'For the bride who wants to honor tradition while embracing modernity, our bridal collection features the finest zardozi, danka, and gota patti work.' },
-  'casual': { title: 'Casual', subtitle: '& Daily Wear', desc: 'Comfortable everyday suits in breathable cottons and soft georgettes.', image: '/cotton_suit.png', accent: '#7DCEA0', category: 'Casual', story: 'Elegance doesn\'t need to be reserved for special occasions. Our casual collection brings comfort and style to your everyday wardrobe.' },
-  'velvet': { title: 'Velvet', subtitle: 'Collection', desc: 'Luxurious micro-velvet suits with heavy hand-applied zardozi work.', image: '/banarasi_suit.png', accent: '#6C3483', category: 'All', story: 'The richness of velvet meets the artistry of traditional Indian embroidery in this winter-perfect collection.' },
-  'silk': { title: 'Pure Silk', subtitle: 'Collection', desc: 'Handloomed silk suits with natural sheen and royal drape.', image: '/luxury_edit.png', accent: '#B7950B', category: 'All', story: 'There is nothing quite like the feel of pure silk against skin. Our silk collection celebrates this most regal of fabrics.' },
-  'cotton': { title: 'Cotton', subtitle: 'Collection', desc: 'Breathable handloom cotton suits with block prints and Chikankari.', image: '/cotton_suit.png', accent: '#45B39D', category: 'All', story: 'India\'s gift to the world, handloom cotton is celebrated for its breathability, durability, and the unique character of handwoven textiles.' },
-  'georgette': { title: 'Georgette', subtitle: 'Collection', desc: 'Flowy georgette suits with delicate threadwork and easy drape.', image: '/chikankari_suit.png', accent: '#AED6F1', category: 'All', story: 'Lightweight, flowy, and effortlessly elegant — georgette is the fabric of choice for those who love movement and grace.' },
-  'organza': { title: 'Organza', subtitle: 'Collection', desc: 'Sheer organza silk suits with intricate floral embroidery and volume.', image: '/pastel_edit.png', accent: '#F5B7B1', category: 'All', story: 'The ethereal sheerness of organza creates a dreamlike quality, perfect for those who love romantic, feminine silhouettes.' },
-};
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { getAllProducts, getCollections } from '../utils/adminStore';
 
 function FilterAccordion({ title, children, defaultOpen = true }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -64,7 +39,19 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
   const [selectedSleeves, setSelectedSleeves] = useState([]);
   const [selectedNecks, setSelectedNecks] = useState([]);
 
-  const collection = collectionData[slug];
+  const [collection, setCollection] = useState(null);
+
+  useEffect(() => {
+    const load = () => {
+      const allCols = getCollections();
+      const col = allCols.find(c => c.id === slug);
+      setCollection(col || null);
+    };
+    load();
+    window.addEventListener('admin-data-updated', load);
+    return () => window.removeEventListener('admin-data-updated', load);
+  }, [slug]);
+
   const allProducts = useMemo(() => getAllProducts(), []);
 
   const products = useMemo(() => {

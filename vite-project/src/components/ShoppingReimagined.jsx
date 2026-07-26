@@ -10,7 +10,7 @@ const CRAFTS = [
   { id: 'cotton', title: 'Breathable Cottons', subtitle: 'Minimalist, comfortable ethnic wear tailored for everyday luxury.', image: '/cotton_suit.png' }
 ];
 
-export default function ShoppingReimagined() {
+export default function ShoppingReimagined({ setView, setSelectedCategory }) {
   const targetRef = useRef(null);
   
   // The section is 300vh tall to allow for plenty of scrolling time
@@ -81,12 +81,18 @@ export default function ShoppingReimagined() {
                   <p className="text-white/70 text-sm leading-relaxed max-w-sm mb-8" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {craft.subtitle}
                   </p>
-                  <a href="#explore" className="inline-flex items-center gap-2 text-white/50 hover:text-white uppercase tracking-widest text-[10px] font-bold transition-colors">
+                  <button 
+                    onClick={() => {
+                      if (setSelectedCategory) setSelectedCategory(craft.title.includes('Banarasi') ? 'Banarasi' : craft.title.includes('Chikankari') ? 'Chikankari' : craft.title.includes('Pakistani') ? 'Pakistani' : craft.title.includes('Patiala') ? 'Patiala' : 'All');
+                      if (setView) setView('category');
+                    }} 
+                    className="inline-flex items-center gap-2 text-white/50 hover:text-white uppercase tracking-widest text-[10px] font-bold transition-colors cursor-pointer"
+                  >
                     Explore Collection
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
-                  </a>
+                  </button>
                 </div>
               </div>
             );

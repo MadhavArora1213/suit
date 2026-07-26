@@ -15,23 +15,20 @@ import {
   fetchProductsFromFirestore,
   fetchCollectionFromFirestore,
   saveDocumentToFirestore,
-  db
+  db,
+  auth
 } from '../firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 const KEYS = {
   products:     'gurnaaz_products',
-  gallery:      'gurnaaz_gallery',
-  hero:         'gurnaaz_hero',
-  promotions:   'gurnaaz_promotions',
-  testimonials: 'gurnaaz_testimonials',
   categories:   'gurnaaz_categories',
-  lookbook:     'gurnaaz_lookbook',
   reviews:      'gurnaaz_reviews',
   orders:       'gurnaaz_orders',
-  discounts:    'gurnaaz_discounts',
   support:      'gurnaaz_support',
   boutiques:    'gurnaaz_boutiques',
+  collections:  'gurnaaz_collections',
+  collectionTags: 'gurnaaz_collection_tags'
 };
 
 // ── Static Products Definition ────────────────────────────────
@@ -49,8 +46,7 @@ const set  = (key, value) => {
   // Also push to Firestore settings if it's one of the settings keys
   if (isFirebaseConfigured() && db) {
     const settingsKeys = [
-      KEYS.gallery, KEYS.hero, KEYS.promotions, KEYS.testimonials, 
-      KEYS.categories, KEYS.lookbook, KEYS.discounts
+      KEYS.categories, KEYS.collections
     ];
     if (settingsKeys.includes(key)) {
       // Find which generic name this key corresponds to
@@ -70,7 +66,38 @@ const set  = (key, value) => {
 export const fileToBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload  = () => resolve(reader.result);
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        const MAX_WIDTH = 1200;
+        const MAX_HEIGHT = 1200;
+        
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
@@ -263,32 +290,7 @@ export const syncProductReviews = async (productId, onSyncComplete) => {
 };
 
 // ── GALLERY ──────────────────────────────────────────────────
-export const getGallery    = ()           => get(KEYS.gallery, []);
-export const saveGallery   = (arr)        => set(KEYS.gallery, arr);
-export const addGalleryItem= (item)       => { const arr = getGallery(); arr.unshift(item); saveGallery(arr); };
-export const deleteGallery = (id)         => saveGallery(getGallery().filter(g => g.id !== id));
 
-// ── Discounts ───────────────────────────────────────────────────
-export const getDiscounts = () => {
-  const data = localStorage.getItem(KEYS.discounts);
-  return data ? JSON.parse(data) : [];
-};
-
-export const saveDiscounts = (discounts) => {
-  localStorage.setItem(KEYS.discounts, JSON.stringify(discounts));
-};
-
-// ── Sync Helper ─────────────────────────────────────────────────────
-export const getHero  = (fallback) => get(KEYS.hero, fallback);
-export const saveHero = (data)     => set(KEYS.hero, data);
-
-// ── PROMOTIONS ───────────────────────────────────────────────
-export const getPromo  = (fallback) => get(KEYS.promotions, fallback);
-export const savePromo = (data)     => set(KEYS.promotions, data);
-
-// ── TESTIMONIALS ─────────────────────────────────────────────
-export const getTestimonials  = ()    => get(KEYS.testimonials, []);
-export const saveTestimonials = (arr) => set(KEYS.testimonials, arr);
 
 export const getCategories = () => {
   const dataStr = localStorage.getItem(KEYS.categories);
@@ -327,9 +329,91 @@ export const getCategories = () => {
 
 export const saveCategories = (arr) => set(KEYS.categories, arr);
 
-// ── LOOKBOOK ─────────────────────────────────────────────────
-export const getLookbook  = (fallback) => get(KEYS.lookbook, fallback);
-export const saveLookbook = (data)     => set(KEYS.lookbook, data);
+// ── COLLECTIONS ──────────────────────────────────────────────
+export const getCollections = () => {
+  const dataStr = localStorage.getItem(KEYS.collections);
+  let data = dataStr ? JSON.parse(dataStr) : [];
+  
+  const hasSeeded = localStorage.getItem('gurnaaz_collections_seeded');
+  
+  if (!hasSeeded) {
+    const defaults = [
+      { id: 'summer', title: 'Summer', subtitle: 'Collection', desc: 'Breezy cottons and light georgettes tailored for the warm sun.', story: 'Inspired by sun-drenched Indian gardens and breezy terraces, this collection celebrates the joy of warm-weather dressing with lightweight fabrics and cheerful palettes.', image: '/summer_edit.png', accent: '#D4A574', category: 'All', tag: 'Seasonal', active: true, order: 1 },
+      { id: 'monsoon', title: 'Monsoon', subtitle: 'Collection', desc: 'Vibrant hues and fluid silhouettes to brighten gray days.', story: 'When the rains arrive, so does our most colorful collection. Rich jewel tones and flowing fabrics that dance with the monsoon breeze.', image: '/monsoon_edit.png', accent: '#5B9AA0', category: 'All', tag: 'Seasonal', active: true, order: 2 },
+      { id: 'wedding', title: 'Wedding', subtitle: 'Collection', desc: 'Heavy, regal bridal ensembles crafted for your biggest day.', story: 'For the most important day of your life, we bring you ensembles that carry centuries of bridal tradition, reimagined for the modern bride.', image: '/wedding_edit.png', accent: '#C77B8A', category: 'All', tag: 'Seasonal', active: true, order: 3 },
+      { id: 'pastel', title: 'Pastel', subtitle: 'Collection', desc: 'Soft pinks, mints, and lilacs adorned with delicate threadwork.', story: 'Whisper-soft hues meet intricate hand embroidery in a collection that celebrates understated elegance and feminine grace.', image: '/pastel_edit.png', accent: '#B8A9C9', category: 'All', tag: 'Seasonal', active: true, order: 4 },
+      { id: 'black', title: 'Black', subtitle: 'Collection', desc: 'Striking black suits with dramatic silver and gold accents.', story: 'Timeless, powerful, and always in style. Our black collection brings drama and sophistication to every occasion.', image: '/black_edit.png', accent: '#BCA58A', category: 'All', tag: 'Seasonal', active: true, order: 5 },
+      { id: 'luxury', title: 'Luxury', subtitle: 'Collection', desc: 'Our most exclusive, hand-embroidered heritage pieces.', story: 'The pinnacle of Indian craftsmanship. Each piece in this collection takes weeks of dedicated handwork by master artisans.', image: '/luxury_edit.png', accent: '#C5A55A', category: 'All', tag: 'Seasonal', active: true, order: 6 },
+      { id: 'punjabi', title: 'Punjabi', subtitle: 'Suits', desc: 'Rich Punjabi heritage with vibrant phulkari dupattas and bold silhouettes.', story: 'Bold colors, generous silhouettes, and the exuberant spirit of Punjab come alive in these traditionally crafted suits.', image: '/patiala_suit.png', accent: '#E07A5F', category: 'Patiala', tag: 'By Style', active: true, order: 7 },
+      { id: 'anarkali', title: 'Anarkali', subtitle: 'Collection', desc: 'Regal flares and majestic silhouettes inspired by Mughal grandeur.', story: 'Named after the legendary court dancer, Anarkali suits feature voluminous flares that create a regal, princess-like silhouette.', image: '/anarkali_suit.png', accent: '#81B29A', category: 'Anarkali', tag: 'By Style', active: true, order: 8 },
+      { id: 'sharara', title: 'Sharara', subtitle: 'Collection', desc: 'Playful tiers and festive drama with traditional three-piece elegance.', story: 'The three-piece ensemble that has been a staple of Indian celebrations for centuries, now reimagined with contemporary flair.', image: '/sharara_suit.png', accent: '#F2CC8F', category: 'Sharara', tag: 'By Style', active: true, order: 9 },
+      { id: 'chikankari', title: 'Chikankari', subtitle: 'Collection', desc: 'Delicate shadow embroidery from Lucknow, woven with artisan heritage.', story: 'Born in the royal courts of Lucknow, Chikankari is one of India\'s most refined embroidery traditions, featuring delicate shadow work on sheer fabrics.', image: '/chikankari_suit.png', accent: '#9DB4C0', category: 'Chikankari', tag: 'By Style', active: true, order: 10 },
+      { id: 'banarasi', title: 'Banarasi', subtitle: 'Collection', desc: 'Opulent katan silk brocades with golden zari from Varanasi looms.', story: 'Handwoven in the ancient city of Varanasi, Banarasi silk is renowned for its gold and silver brocade, fine silk, and opulent embroidery.', image: '/banarasi_suit.png', accent: '#C9A96E', category: 'Banarasi', tag: 'By Style', active: true, order: 11 },
+      { id: 'pakistani', title: 'Pakistani', subtitle: 'Collection', desc: 'Contemporary straight-cut elegance with delicate laces and organza details.', story: 'Clean lines, elegant cuts, and meticulous attention to detail define this collection inspired by cross-border fashion sensibilities.', image: '/pakistani_suit.png', accent: '#7EB8C9', category: 'Pakistani', tag: 'By Style', active: true, order: 12 },
+      { id: 'designer', title: 'Designer', subtitle: 'Edit', desc: 'Handpicked designer suits featuring premium fabrics and exclusive craftsmanship.', story: 'Curated from the studios of India\'s most talented designers, each piece is a wearable work of art.', image: '/designer_suit_1.png', accent: '#D4A574', category: 'All', tag: 'Curated', active: true, order: 13 },
+      { id: 'festive', title: 'Festive', subtitle: 'Wear', desc: 'Celebratory ensembles with rich embroidery for festivals and puja ceremonies.', story: 'From Diwali to Eid, Navratri to Pongal — celebrate every festival in ensembles that match the joy of the occasion.', image: '/anarkali_suit.png', accent: '#D4574E', category: 'All', tag: 'By Occasion', active: true, order: 14 },
+      { id: 'party', title: 'Party', subtitle: 'Wear', desc: 'Statement pieces with contemporary cuts and glamorous embellishments.', story: 'Make an entrance with bold silhouettes, shimmering fabrics, and statement embellishments designed for unforgettable evenings.', image: '/sharara_suit.png', accent: '#9B59B6', category: 'All', tag: 'By Occasion', active: true, order: 15 },
+      { id: 'bridal', title: 'Bridal', subtitle: 'Collection', desc: 'Exquisite bridal lehengas and suits with heavy zardozi and danka work.', story: 'For the bride who wants to honor tradition while embracing modernity, our bridal collection features the finest zardozi, danka, and gota patti work.', image: '/wedding_edit.png', accent: '#C0392B', category: 'All', tag: 'By Occasion', active: true, order: 16 },
+      { id: 'casual', title: 'Casual', subtitle: '& Daily Wear', desc: 'Comfortable everyday suits in breathable cottons and soft georgettes.', story: 'Elegance doesn\'t need to be reserved for special occasions. Our casual collection brings comfort and style to your everyday wardrobe.', image: '/cotton_suit.png', accent: '#7DCEA0', category: 'Casual', tag: 'By Occasion', active: true, order: 17 },
+      { id: 'velvet', title: 'Velvet', subtitle: 'Collection', desc: 'Luxurious micro-velvet suits with heavy hand-applied zardozi work.', story: 'The richness of velvet meets the artistry of traditional Indian embroidery in this winter-perfect collection.', image: '/banarasi_suit.png', accent: '#6C3483', category: 'All', tag: 'By Fabric', active: true, order: 18 },
+      { id: 'silk', title: 'Pure Silk', subtitle: 'Collection', desc: 'Handloomed silk suits with natural sheen and royal drape.', story: 'There is nothing quite like the feel of pure silk against skin. Our silk collection celebrates this most regal of fabrics.', image: '/luxury_edit.png', accent: '#B7950B', category: 'All', tag: 'By Fabric', active: true, order: 19 },
+      { id: 'cotton', title: 'Cotton', subtitle: 'Collection', desc: 'Breathable handloom cotton suits with block prints and Chikankari.', story: 'India\'s gift to the world, handloom cotton is celebrated for its breathability, durability, and the unique character of handwoven textiles.', image: '/cotton_suit.png', accent: '#45B39D', category: 'All', tag: 'By Fabric', active: true, order: 20 },
+      { id: 'georgette', title: 'Georgette', subtitle: 'Collection', desc: 'Flowy georgette suits with delicate threadwork and easy drape.', story: 'Lightweight, flowy, and effortlessly elegant — georgette is the fabric of choice for those who love movement and grace.', image: '/chikankari_suit.png', accent: '#AED6F1', category: 'All', tag: 'By Fabric', active: true, order: 21 },
+      { id: 'organza', title: 'Organza', subtitle: 'Collection', desc: 'Sheer organza silk suits with intricate floral embroidery and volume.', story: 'The ethereal sheerness of organza creates a dreamlike quality, perfect for those who love romantic, feminine silhouettes.', image: '/pastel_edit.png', accent: '#F5B7B1', category: 'All', tag: 'By Fabric', active: true, order: 22 },
+    ];
+    
+    let added = false;
+    defaults.forEach(def => {
+      if (!data.some(c => c.id === def.id)) {
+        data.push(def);
+        added = true;
+      }
+    });
+
+    if (added || data.length === 0) {
+      set(KEYS.collections, data);
+    }
+    
+    localStorage.setItem('gurnaaz_collections_seeded', 'true');
+  }
+
+  return data;
+};
+
+export const saveCollections = (arr) => set(KEYS.collections, arr);
+
+// --- COLLECTION TAGS ---
+export const getCollectionTags = () => {
+  const data = localStorage.getItem(KEYS.collectionTags);
+  if (!data) {
+    const initialTags = [
+      { id: 'seasonal', name: 'Seasonal', icon: '☀', order: 1, active: true },
+      { id: 'by-style', name: 'By Style', icon: '✦', order: 2, active: true },
+      { id: 'by-occasion', name: 'By Occasion', icon: '♦', order: 3, active: true },
+      { id: 'by-fabric', name: 'By Fabric', icon: '◎', order: 4, active: true },
+      { id: 'curated', name: 'Curated', icon: '❖', order: 5, active: true },
+    ];
+    localStorage.setItem(KEYS.collectionTags, JSON.stringify(initialTags));
+    
+    // Also save to firebase if you want, but local is fine for seeding
+    if (auth.currentUser) {
+      setDoc(doc(db, 'adminData', KEYS.collectionTags), { data: initialTags });
+    }
+    
+    return initialTags;
+  }
+  return JSON.parse(data);
+};
+
+export const saveCollectionTags = async (tags) => {
+  localStorage.setItem(KEYS.collectionTags, JSON.stringify(tags));
+  if (auth.currentUser) {
+    await setDoc(doc(db, 'adminData', KEYS.collectionTags), { data: tags });
+  }
+  notifyWebsite();
+};
+
+
 
 // ── ORDERS ───────────────────────────────────────────────────
 export const getOrders = () => get(KEYS.orders, []);
@@ -552,11 +636,23 @@ export const syncProducts = async (onSyncComplete) => {
       const data = await fetchCollectionFromFirestore('settings');
       const storeData = data.find(d => d.id === 'gurnaaz_store');
       if (storeData) {
-        for (const [key, value] of Object.entries(storeData)) {
-          if (key !== 'id' && KEYS[key]) {
-            set(KEYS[key], value);
+          const collectionsDoc = await getDoc(doc(db, 'adminData', KEYS.collections));
+          if (collectionsDoc.exists()) {
+            localStorage.setItem(KEYS.collections, JSON.stringify(collectionsDoc.data().data));
           }
-        }
+
+          const tagsDoc = await getDoc(doc(db, 'adminData', KEYS.collectionTags));
+          if (tagsDoc.exists()) {
+            localStorage.setItem(KEYS.collectionTags, JSON.stringify(tagsDoc.data().data));
+          }
+          
+          notifyWebsite();
+          
+          for (const [key, value] of Object.entries(storeData)) {
+            if (key !== 'id' && KEYS[key]) {
+              set(KEYS[key], value);
+            }
+          }
       }
     } catch (e) {
       console.error("Failed to fetch settings:", e);

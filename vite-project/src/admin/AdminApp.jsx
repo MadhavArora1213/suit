@@ -1,3 +1,4 @@
+// Force HMR trigger for new routes
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -7,14 +8,12 @@ import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import AddProduct from './pages/AddProduct';
 import Orders from './pages/Orders';
-import GalleryAdmin from './pages/GalleryAdmin';
-import HeroSection from './pages/HeroSection';
-import LookbookAdmin from './pages/LookbookAdmin';
-import Promotions from './pages/Promotions';
-import TestimonialsAdmin from './pages/TestimonialsAdmin';
 import CategoriesAdmin from './pages/CategoriesAdmin';
 import AddCategory from './pages/AddCategory';
-import DiscountsAdmin from './pages/DiscountsAdmin';
+import CollectionsAdmin from './pages/CollectionsAdmin';
+import AddCollection from './pages/AddCollection';
+import CollectionTagsAdmin from './pages/CollectionTagsAdmin';
+import AddCollectionTag from './pages/AddCollectionTag';
 import SupportAdmin from './pages/SupportAdmin';
 import UsersAdmin from './pages/UsersAdmin';
 import Settings from './pages/Settings';
@@ -80,14 +79,14 @@ export default function AdminApp() {
       case 'products':     return <Products setActivePage={setActivePage} />;
       case 'add-product':  return <AddProduct setActivePage={setActivePage} />;
       case 'orders':       return <Orders />;
-      case 'gallery':      return <GalleryAdmin />;
-      case 'hero':         return <HeroSection />;
-      case 'lookbook':     return <LookbookAdmin />;
-      case 'promotions':   return <Promotions />;
-      case 'testimonials': return <TestimonialsAdmin />;
-      case 'discounts':    return <DiscountsAdmin />;
       case 'support':      return <SupportAdmin />;
       case 'users':        return <UsersAdmin />;
+      case 'collections':  return <CollectionsAdmin setActivePage={setActivePage} />;
+      case 'add-collection':
+      case 'edit-collection':return <AddCollection setActivePage={setActivePage} />;
+      case 'collection-tags': return <CollectionTagsAdmin setActivePage={setActivePage} />;
+      case 'add-collection-tag':
+      case 'edit-collection-tag': return <AddCollectionTag setActivePage={setActivePage} />;
       case 'categories':   return <CategoriesAdmin setActivePage={setActivePage} />;
       case 'add-category':
       case 'edit-category':return <AddCategory setActivePage={setActivePage} />;

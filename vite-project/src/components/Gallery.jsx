@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Heart, MessageCircle, X, ShoppingBag } from 'lucide-react';
-import { getGallery, getProducts } from '../utils/adminStore';
+import { getProducts } from '../utils/adminStore';
 
 const Instagram = ({ size = 20, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -44,9 +44,7 @@ export default function Gallery({ addToCart }) {
   const [galleryItems, setGalleryItems] = useState(staticGalleryItems);
 
   const loadGallery = () => {
-    const adminGallery = getGallery();
-    const merged = [...adminGallery, ...staticGalleryItems.filter(s => !adminGallery.some(a => a.id === s.id))];
-    setGalleryItems(merged);
+    setGalleryItems(staticGalleryItems);
   };
 
   useEffect(() => {

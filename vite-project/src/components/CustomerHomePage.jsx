@@ -90,18 +90,18 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
       {/* Hero - The Discovery Ritual */}
       <HeroRitual onSelectFilter={handleRitualFilter} />
 
-
-
       {/* Shopping, Reimagined Occasion Cards */}
-      <ShoppingReimagined />
+      <ShoppingReimagined setView={setView} setSelectedCategory={setSelectedCategory} setSelectedCollectionSlug={setSelectedCategory} />
 
-      <ShopByColor />
-      <OccasionTimeline />
+      <ShopByColor setView={setView} setSelectedCategory={setSelectedCategory} />
+      <OccasionTimeline setView={setView} setSelectedCategory={setSelectedCategory} />
 
-      <AiOutfitFinder />
+      <AiOutfitFinder setView={setView} setSelectedProduct={setSelectedProduct} />
+      
       {/* Featured Sellers (Instagram Style) */}
-      <FeaturedSellers />
-      <EditorialCollections />
+      <FeaturedSellers setView={setView} setSelectedBoutique={setSelectedBoutique} />
+      
+      <EditorialCollections setView={setView} setSelectedCollectionSlug={setSelectedCategory} />
       <WhyGurnaaz />
       <PremiumPackaging />
 

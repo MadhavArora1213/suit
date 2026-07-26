@@ -39,7 +39,7 @@ const collections = [
   }
 ];
 
-export default function EditorialCollections() {
+export default function EditorialCollections({ setView, setSelectedCollectionSlug }) {
   return (
     <section className="relative w-full bg-[#111]">
       
@@ -148,13 +148,16 @@ export default function EditorialCollections() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.7 }}
               >
-                <a 
-                  href="#explore" 
-                  className="group inline-flex items-center gap-4 bg-black/30 backdrop-blur-sm border border-white/30 text-white px-10 py-4 hover:bg-white hover:text-black transition-all duration-300 text-xs font-bold tracking-[0.2em] uppercase"
+                <button 
+                  onClick={() => {
+                    if (setSelectedCollectionSlug) setSelectedCollectionSlug(collection.title.split(' ')[0].toLowerCase());
+                    if (setView) setView('collection-detail');
+                  }}
+                  className="group inline-flex items-center gap-4 bg-black/30 backdrop-blur-sm border border-white/30 text-white px-10 py-4 hover:bg-white hover:text-black transition-all duration-300 text-xs font-bold tracking-[0.2em] uppercase cursor-pointer"
                   style={{ fontFamily: "'Montserrat', sans-serif" }}
                 >
                   Explore Collection
-                </a>
+                </button>
               </motion.div>
               
             </div>

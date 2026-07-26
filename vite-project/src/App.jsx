@@ -71,6 +71,7 @@ function App() {
     if (path === '/login' || path === '/signup') return 'login';
     if (path === '/wishlist') return 'wishlist';
     if (path === '/shop') return 'shop';
+    if (path.startsWith('/product/')) return 'product-details';
     return 'home';
   };
 
@@ -105,10 +106,21 @@ function App() {
     return null;
   };
 
+  const getProductFromPath = () => {
+    const path = window.location.pathname;
+    if (path.startsWith('/product/')) {
+      const slug = decodeURIComponent(path.replace('/product/', ''));
+      const allProds = getAllProducts();
+      return allProds.find(p => p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === slug) || 
+             allProds.find(p => String(p.id) === slug) || null;
+    }
+    return null;
+  };
+
   const [view, setView] = useState(getInitialView());
   const [user, setUser] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState(getCategoryFromPath())
-  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedProduct, setSelectedProduct] = useState(getProductFromPath())
   const [selectedBoutique, setSelectedBoutique] = useState(getBoutiqueFromPath())
   const [selectedCollectionSlug, setSelectedCollectionSlug] = useState(getCollectionFromPath())
 
@@ -168,6 +180,7 @@ function App() {
       'profile': '/profile',
       'shop': '/shop',
       'home': '/sell',
+      'product-details': `/product/${selectedProduct?.name ? selectedProduct.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : ''}`,
     };
     if (pathMap[view] && window.location.pathname !== pathMap[view]) {
       window.history.pushState(null, '', pathMap[view]);
@@ -194,6 +207,7 @@ function App() {
     setSelectedCategory(getCategoryFromPath());
     setSelectedBoutique(getBoutiqueFromPath());
     setSelectedCollectionSlug(getCollectionFromPath());
+    setSelectedProduct(getProductFromPath());
     setView(getInitialView());
   }
 

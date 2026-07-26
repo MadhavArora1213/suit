@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Search, User, ShoppingBag, X, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import gurnaazLogo from '../assets/gurnaaz.png';
-import { getAllProducts, getBoutiques, getCategories } from '../utils/adminStore';
+import { getAllProducts, getBoutiques, getCategories, getCollections } from '../utils/adminStore';
 
 export default function Navbar({
   cart = [],
@@ -32,6 +32,7 @@ export default function Navbar({
   const [navShops, setNavShops] = useState([]);
   const [navFeatured, setNavFeatured] = useState([]);
   const [navCategories, setNavCategories] = useState([]);
+  const [dynamicCollections, setDynamicCollections] = useState([]);
   const [navKey, setNavKey] = useState(0);
 
   useEffect(() => {
@@ -41,6 +42,7 @@ export default function Navbar({
     setNavShops(bts.filter(b => b.type === 'Shop'));
     setNavFeatured(bts.filter(b => b.isFeatured === true).slice(0, 2));
     setNavCategories(getCategories().filter(c => c.active).sort((a,b) => a.order - b.order));
+    setDynamicCollections(getCollections().filter(c => c.active).sort((a,b) => a.order - b.order));
     
     const handleUpdate = () => {
       setAllProducts(getAllProducts());
@@ -49,6 +51,7 @@ export default function Navbar({
       setNavShops(updatedBts.filter(b => b.type === 'Shop'));
       setNavFeatured(updatedBts.filter(b => b.isFeatured === true).slice(0, 2));
       setNavCategories(getCategories().filter(c => c.active).sort((a,b) => a.order - b.order));
+      setDynamicCollections(getCollections().filter(c => c.active).sort((a,b) => a.order - b.order));
     };
     window.addEventListener('admin-data-updated', handleUpdate);
     return () => window.removeEventListener('admin-data-updated', handleUpdate);
@@ -74,6 +77,12 @@ export default function Navbar({
     setCartOpen(false);
     setView('checkout');
   };
+
+  const featuredCols = dynamicCollections.filter(c => c.isFeaturedMenu);
+  const fallbackCols = dynamicCollections.filter(c => c.image && !c.isFeaturedMenu);
+  const megamenuImages = [...featuredCols, ...fallbackCols].slice(0, 2);
+  const col3 = megamenuImages[0];
+  const col4 = megamenuImages[1];
 
   return (
     <motion.nav
@@ -225,73 +234,70 @@ export default function Navbar({
                       <div className="w-1/4 flex flex-col border-r border-[#BCA58A]/10 px-6">
                         <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#BCA58A]"></span> Curated Edits</span>
                         <div className="flex flex-col gap-3.5 mt-2">
-                          {['The Wedding Edit', 'Summer Pastels', 'Artisan Heritage', 'Minimalist Luxury', 'Velvet Collection', 'The Black Edit'].map((edit) => (
+                          {dynamicCollections.slice(0, 7).map((edit) => (
                             <a
-                              key={edit}
-                              href={`/collections/${edit === 'The Wedding Edit' ? 'wedding' : edit === 'Summer Pastels' ? 'pastel' : edit === 'Artisan Heritage' ? 'chikankari' : edit === 'Velvet Collection' ? 'velvet' : edit === 'The Black Edit' ? 'black' : 'luxury'}`}
+                              key={edit.id}
+                              href={`/collections/${edit.id}`}
                               onClick={(e) => {
                                 e.preventDefault();
-                                let editSlug = 'luxury';
-                                if (edit === 'The Wedding Edit') editSlug = 'wedding';
-                                else if (edit === 'Summer Pastels') editSlug = 'pastel';
-                                else if (edit === 'Artisan Heritage') editSlug = 'chikankari';
-                                else if (edit === 'Velvet Collection') editSlug = 'velvet';
-                                else if (edit === 'The Black Edit') editSlug = 'black';
-
                                 if (setSelectedCollectionSlug) {
-                                  setSelectedCollectionSlug(editSlug);
+                                  setSelectedCollectionSlug(edit.id);
                                   setView('collection-detail');
                                 } else {
-                                  window.location.href = `/collections/${editSlug}`;
+                                  window.location.href = `/collections/${edit.id}`;
                                 }
                               }}
                               className="text-[15px] text-[#111111]/90 hover:text-[#BCA58A] hover:translate-x-1 transition-all duration-300 font-light tracking-wide relative w-max"
                               style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}
                             >
-                              {edit}
+                              {edit.title}
                             </a>
                           ))}
                         </div>
-                        <a href="/shop" onClick={(e) => { e.preventDefault(); setSelectedCategory('All'); setView('category'); }}
+                        <a href="/collections" onClick={(e) => { e.preventDefault(); window.location.href = '/collections'; }}
                           className="mt-auto text-[9px] font-bold text-[#111111] hover:text-[#BCA58A] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
                           View All Pieces <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
                         </a>
                       </div>
 
                       {/* Col 3: Featured Image 1 */}
+                      {col3 && (
                       <div className="w-1/4 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-2 shadow-lg" onClick={() => {
                         if (setSelectedCollectionSlug) {
-                          setSelectedCollectionSlug('pastel');
+                          setSelectedCollectionSlug(col3.id);
                           setView('collection-detail');
                         } else {
-                          window.location.href = '/collections/pastel';
+                          window.location.href = `/collections/${col3.id}`;
                         }
                       }}>
-                        <img src="/lavender_generated.png" alt="Lavender Edit" className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
+                        <img src={col3.image} alt={col3.title} className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                         <div className="absolute bottom-5 left-5 text-white">
-                          <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#BCA58A]">Trending</span>
-                          <h3 className="text-2xl font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>The Lavender Edit</h3>
+                          <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#BCA58A]">{col3.tag || 'Featured'}</span>
+                          <h3 className="text-2xl font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{col3.title}</h3>
                         </div>
                       </div>
+                      )}
 
                       {/* Col 4: Featured Image 2 */}
+                      {col4 && (
                       <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg" onClick={() => {
                         if (setSelectedCollectionSlug) {
-                          setSelectedCollectionSlug('velvet');
+                          setSelectedCollectionSlug(col4.id);
                           setView('collection-detail');
                         } else {
-                          window.location.href = '/collections/velvet';
+                          window.location.href = `/collections/${col4.id}`;
                         }
                       }}>
-                        <img src="/black_edit.png" alt="Evening Glamour" className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
+                        <img src={col4.image} alt={col4.title} className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                         <div className="absolute bottom-5 left-5 text-white pr-4">
-                          <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#BCA58A]">New Arrival</span>
-                          <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Midnight Velvet</h3>
-                          <p className="text-[10px] tracking-wider opacity-80" style={{ fontFamily: "'Montserrat', sans-serif" }}>Dark romance collection.</p>
+                          <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#BCA58A]">{col4.tag || 'New Arrival'}</span>
+                          <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{col4.title}</h3>
+                          <p className="text-[10px] tracking-wider opacity-80 line-clamp-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>{col4.desc || col4.subtitle}</p>
                         </div>
                       </div>
+                      )}
 
                     </div>
                   </div>

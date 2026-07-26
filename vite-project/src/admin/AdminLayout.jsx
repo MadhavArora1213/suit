@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Package, ShoppingBag, Image, Star,
   Settings, LogOut, ChevronRight, Sparkles, Layers,
-  Film, Megaphone, FolderOpen, ChevronLeft, Menu, Tag, MessageSquare, Users, Store
+  Film, Megaphone, FolderOpen, ChevronLeft, Menu, Tag, MessageSquare, Users, Store, Grid
 } from 'lucide-react';
 
 const navItems = [
@@ -12,14 +12,9 @@ const navItems = [
   { id: 'orders',       label: 'Orders',       icon: ShoppingBag },
   { id: 'users',        label: 'Users',        icon: Users },
   { id: 'boutiques',    label: 'Shops & Boutiques',    icon: Store },
+  { id: 'collections',  label: 'Collections',  icon: Grid },
+  { id: 'collection-tags', label: 'Collection Tags', icon: Tag },
   { id: 'categories',   label: 'Categories',   icon: FolderOpen },
-  { id: 'gallery',      label: 'Gallery',      icon: Image },
-  { id: 'hero',         label: 'Hero Section', icon: Film },
-  { id: 'lookbook',     label: 'Lookbook',     icon: Layers },
-  { id: 'promotions',   label: 'Promotions',   icon: Megaphone },
-  { id: 'discounts',    label: 'Discounts',    icon: Tag },
-  { id: 'testimonials', label: 'Testimonials', icon: Star },
-  { id: 'users',        label: 'Login User',    icon: Users },
   { id: 'support',      label: 'Support Tickets', icon: MessageSquare },
   { id: 'settings',     label: 'Settings',     icon: Settings },
 ];

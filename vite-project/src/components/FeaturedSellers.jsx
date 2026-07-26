@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { staticBoutiques, getAllProducts } from '../utils/adminStore';
 
-export default function FeaturedSellers() {
+export default function FeaturedSellers({ setView, setSelectedBoutique }) {
   const allProducts = getAllProducts();
   const sellers = Object.values(staticBoutiques).slice(0, 6);
 
@@ -113,9 +113,12 @@ export default function FeaturedSellers() {
                     {seller.name}
                   </h3>
                   <div className="mt-4">
-                    <a href="#shop" className="text-[9px] text-[#111111]/60 font-bold tracking-[0.2em] uppercase border-b border-[#111111]/20 pb-1 group-hover:border-[#BCA58A] group-hover:text-[#BCA58A] transition-all duration-300" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    <button onClick={() => {
+                      if(setSelectedBoutique) setSelectedBoutique(seller.name);
+                      if(setView) setView('seller-shop');
+                    }} className="text-[9px] text-[#111111]/60 font-bold tracking-[0.2em] uppercase border-b border-[#111111]/20 pb-1 group-hover:border-[#BCA58A] group-hover:text-[#BCA58A] transition-all duration-300 cursor-pointer" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                       Visit Shop
-                    </a>
+                    </button>
                   </div>
                 </div>
 

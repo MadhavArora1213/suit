@@ -1,52 +1,38 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ShoppingBag, ArrowUpRight, ChevronRight } from 'lucide-react';
-import { useState, useMemo } from 'react';
-import { getAllProducts } from '../utils/adminStore';
+import { useState, useMemo, useEffect } from 'react';
+import { getAllProducts, getCollectionTags } from '../utils/adminStore';
 
-const collections = [
-  // Editorial / Seasonal Collections
-  { id: 'summer', title: 'Summer', subtitle: 'Collection', desc: 'Breezy cottons and light georgettes tailored for the warm sun.', image: '/summer_edit.png', accent: '#D4A574', category: 'All', tag: 'Seasonal' },
-  { id: 'monsoon', title: 'Monsoon', subtitle: 'Collection', desc: 'Vibrant hues and fluid silhouettes to brighten gray days.', image: '/monsoon_edit.png', accent: '#5B9AA0', category: 'All', tag: 'Seasonal' },
-  { id: 'wedding', title: 'Wedding', subtitle: 'Collection', desc: 'Heavy, regal bridal ensembles crafted for your biggest day.', image: '/wedding_edit.png', accent: '#C77B8A', category: 'All', tag: 'Seasonal' },
-  { id: 'pastel', title: 'Pastel', subtitle: 'Collection', desc: 'Soft pinks, mints, and lilacs adorned with delicate threadwork.', image: '/pastel_edit.png', accent: '#B8A9C9', category: 'All', tag: 'Seasonal' },
-  { id: 'black', title: 'Black', subtitle: 'Collection', desc: 'Striking black suits with dramatic silver and gold accents.', image: '/black_edit.png', accent: '#BCA58A', category: 'All', tag: 'Seasonal' },
-  { id: 'luxury', title: 'Luxury', subtitle: 'Collection', desc: 'Our most exclusive, hand-embroidered heritage pieces.', image: '/luxury_edit.png', accent: '#C5A55A', category: 'All', tag: 'Seasonal' },
-  // Suit Type Collections
-  { id: 'punjabi', title: 'Punjabi', subtitle: 'Suits', desc: 'Rich Punjabi heritage with vibrant phulkari dupattas and bold silhouettes.', image: '/patiala_suit.png', accent: '#E07A5F', category: 'Patiala', tag: 'By Style' },
-  { id: 'anarkali', title: 'Anarkali', subtitle: 'Collection', desc: 'Regal flares and majestic silhouettes inspired by Mughal grandeur.', image: '/anarkali_suit.png', accent: '#81B29A', category: 'Anarkali', tag: 'By Style' },
-  { id: 'sharara', title: 'Sharara', subtitle: 'Collection', desc: 'Playful tiers and festive drama with traditional three-piece elegance.', image: '/sharara_suit.png', accent: '#F2CC8F', category: 'Sharara', tag: 'By Style' },
-  { id: 'chikankari', title: 'Chikankari', subtitle: 'Collection', desc: 'Delicate shadow embroidery from Lucknow, woven with artisan heritage.', image: '/chikankari_suit.png', accent: '#9DB4C0', category: 'Chikankari', tag: 'By Style' },
-  { id: 'banarasi', title: 'Banarasi', subtitle: 'Collection', desc: 'Opulent katan silk brocades with golden zari from Varanasi looms.', image: '/banarasi_suit.png', accent: '#C9A96E', category: 'Banarasi', tag: 'By Style' },
-  { id: 'pakistani', title: 'Pakistani', subtitle: 'Collection', desc: 'Contemporary straight-cut elegance with delicate laces and organza details.', image: '/pakistani_suit.png', accent: '#7EB8C9', category: 'Pakistani', tag: 'By Style' },
-  { id: 'designer', title: 'Designer', subtitle: 'Edit', desc: 'Handpicked designer suits featuring premium fabrics and exclusive craftsmanship.', image: '/designer_suit_1.png', accent: '#D4A574', category: 'All', tag: 'Curated' },
-  // Occasion Collections
-  { id: 'festive', title: 'Festive', subtitle: 'Wear', desc: 'Celebratory ensembles with rich embroidery for festivals and puja ceremonies.', image: '/anarkali_suit.png', accent: '#D4574E', category: 'All', tag: 'By Occasion' },
-  { id: 'party', title: 'Party', subtitle: 'Wear', desc: 'Statement pieces with contemporary cuts and glamorous embellishments.', image: '/sharara_suit.png', accent: '#9B59B6', category: 'All', tag: 'By Occasion' },
-  { id: 'bridal', title: 'Bridal', subtitle: 'Collection', desc: 'Exquisite bridal lehengas and suits with heavy zardozi and danka work.', image: '/wedding_edit.png', accent: '#C0392B', category: 'All', tag: 'By Occasion' },
-  { id: 'casual', title: 'Casual', subtitle: '& Daily Wear', desc: 'Comfortable everyday suits in breathable cottons and soft georgettes.', image: '/cotton_suit.png', accent: '#7DCEA0', category: 'Casual', tag: 'By Occasion' },
-  // Fabric Collections
-  { id: 'velvet', title: 'Velvet', subtitle: 'Collection', desc: 'Luxurious micro-velvet suits with heavy hand-applied zardozi work.', image: '/banarasi_suit.png', accent: '#6C3483', category: 'All', tag: 'By Fabric' },
-  { id: 'silk', title: 'Pure Silk', subtitle: 'Collection', desc: 'Handloomed silk suits with natural sheen and royal drape.', image: '/luxury_edit.png', accent: '#B7950B', category: 'All', tag: 'By Fabric' },
-  { id: 'cotton', title: 'Cotton', subtitle: 'Collection', desc: 'Breathable handloom cotton suits with block prints and Chikankari.', image: '/cotton_suit.png', accent: '#45B39D', category: 'All', tag: 'By Fabric' },
-  { id: 'georgette', title: 'Georgette', subtitle: 'Collection', desc: 'Flowy georgette suits with delicate threadwork and easy drape.', image: '/chikankari_suit.png', accent: '#AED6F1', category: 'All', tag: 'By Fabric' },
-  { id: 'organza', title: 'Organza', subtitle: 'Collection', desc: 'Sheer organza silk suits with intricate floral embroidery and volume.', image: '/pastel_edit.png', accent: '#F5B7B1', category: 'All', tag: 'By Fabric' },
-];
-
-const tagIcons = {
-  'Seasonal': '☀',
-  'By Style': '✦',
-  'By Occasion': '♦',
-  'By Fabric': '◎',
-  'Curated': '❖',
-};
 
 export default function CollectionsPage({ setView, setSelectedCategory, setSelectedProduct, setSelectedCollectionSlug, addToCart }) {
   const [hoveredId, setHoveredId] = useState(null);
   const [activeTag, setActiveTag] = useState('All');
+  const [collections, setCollections] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [tagIcons, setTagIcons] = useState({});
+
+  useEffect(() => {
+    const load = () => {
+      let data = JSON.parse(localStorage.getItem('gurnaaz_collections') || '[]');
+      data = data.filter(c => c.active).sort((a, b) => a.order - b.order);
+      setCollections(data);
+
+      const loadedTags = getCollectionTags().filter(t => t.active).sort((a, b) => a.order - b.order);
+      setTags(loadedTags);
+      
+      const iconsMap = {};
+      loadedTags.forEach(t => {
+        iconsMap[t.name] = t.icon;
+      });
+      setTagIcons(iconsMap);
+    };
+    load();
+    window.addEventListener('admin-data-updated', load);
+    return () => window.removeEventListener('admin-data-updated', load);
+  }, []);
 
   const allProducts = useMemo(() => getAllProducts(), []);
 
-  const tags = ['All', 'Seasonal', 'By Style', 'By Occasion', 'By Fabric', 'Curated'];
   const filteredCollections = activeTag === 'All' ? collections : collections.filter(c => c.tag === activeTag);
 
   const getProductCount = (category) => {
@@ -54,7 +40,7 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
     return allProducts.filter(p => p.type === category || p.suitType === category).length;
   };
 
-  const spotlight = collections.find(c => c.id === 'luxury');
+  const spotlight = collections.length > 0 ? collections[0] : null;
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] mt-[110px]">
@@ -134,22 +120,39 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
       <div id="collections-grid" className="sticky top-20 z-40 bg-[#FAF9F6]/95 backdrop-blur-xl border-b border-[#BCA58A]/10">
         <div className="max-w-[1600px] mx-auto px-6 md:px-12">
           <div className="flex items-center gap-1 overflow-x-auto py-4 scrollbar-hide">
-            {tags.map((tag) => (
+            <button
+              onClick={() => setActiveTag('All')}
+              className={`flex items-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-full text-[10px] md:text-[11px] font-semibold tracking-[0.15em] uppercase transition-all duration-300 cursor-pointer ${
+                activeTag === 'All'
+                  ? 'bg-[#111111] text-white shadow-lg'
+                  : 'bg-[#E8DDD0]/50 text-[#6B6B6B] hover:bg-[#E8DDD0] hover:text-[#111111]'
+              }`}
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
+              <span className="text-[12px]">◈</span>
+              All Edits
+              {activeTag === 'All' && (
+                <span className="bg-white/20 text-[9px] px-1.5 py-0.5 rounded-full ml-1">
+                  {collections.length}
+                </span>
+              )}
+            </button>
+            {tags.map((tagObj) => (
               <button
-                key={tag}
-                onClick={() => setActiveTag(tag)}
+                key={tagObj.id}
+                onClick={() => setActiveTag(tagObj.name)}
                 className={`flex items-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-full text-[10px] md:text-[11px] font-semibold tracking-[0.15em] uppercase transition-all duration-300 cursor-pointer ${
-                  activeTag === tag
+                  activeTag === tagObj.name
                     ? 'bg-[#111111] text-white shadow-lg'
                     : 'bg-[#E8DDD0]/50 text-[#6B6B6B] hover:bg-[#E8DDD0] hover:text-[#111111]'
                 }`}
                 style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
-                <span className="text-[12px]">{tagIcons[tag]}</span>
-                {tag}
-                {activeTag === tag && (
+                <span className="text-[12px]">{tagObj.icon}</span>
+                {tagObj.name}
+                {activeTag === tagObj.name && (
                   <span className="bg-white/20 text-[9px] px-1.5 py-0.5 rounded-full ml-1">
-                    {tag === 'All' ? collections.length : collections.filter(c => c.tag === tag).length}
+                    {collections.filter(c => c.tag === tagObj.name).length}
                   </span>
                 )}
               </button>
@@ -208,7 +211,7 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
       )}
 
       {/* ── Featured Spotlight (first item when "All") ── */}
-      {activeTag === 'All' && (
+      {activeTag === 'All' && spotlight && (
         <div className="max-w-[1600px] mx-auto px-6 md:px-12 mt-10">
           <motion.div
             initial={{ opacity: 0, y: 40 }}

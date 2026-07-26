@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { getTestimonials } from '../utils/adminStore';
+
 
 const staticReviews = [
   {
@@ -43,20 +43,7 @@ export default function CustomerReviews() {
   const [testimonials, setTestimonials] = useState(staticReviews);
 
   const loadTestimonials = () => {
-    const adminReviews = getTestimonials().filter(r => r.published).map(r => ({
-      name: r.name,
-      country: r.location || 'Global',
-      store: r.store || 'Verified Boutique',
-      text: r.review,
-      rating: r.rating,
-      avatar: r.photo || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80'
-    }));
-
-    if (adminReviews.length > 0) {
-      setTestimonials(adminReviews);
-    } else {
-      setTestimonials(staticReviews);
-    }
+    setTestimonials(staticReviews);
   };
 
   useEffect(() => {
