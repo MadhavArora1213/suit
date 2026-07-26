@@ -340,12 +340,12 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                className="relative w-full max-w-[400px] aspect-square flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl bg-[#EBE4DC]"
+                className="relative w-full max-w-[360px] aspect-square flex items-center justify-center bg-transparent"
                 onClick={e => e.stopPropagation()}
               >
                 {/* The Character Image containing baked-in text */}
                 <img 
-                  src={getErrorImage(errors.form)} 
+                  src={`${getErrorImage(errors.form)}?v=1`} 
                   alt="Notice" 
                   className="absolute inset-0 w-full h-full object-cover"
                 />
