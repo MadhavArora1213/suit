@@ -93,8 +93,8 @@ export default function Navbar({
     >
       {/* Main Nav */}
       <div className={`transition-all duration-500 flex flex-col ${scrolled
-        ? 'bg-[#FAF9F6]/95 backdrop-blur-2xl border-b border-[#BCA58A]/15 shadow-sm'
-        : 'bg-[#FAF9F6] border-b border-[#BCA58A]/10 shadow-sm'
+        ? 'bg-white/95 backdrop-blur-2xl border-b border-[#BCA58A]/15 shadow-sm'
+        : 'bg-white border-b border-[#BCA58A]/10 shadow-sm'
         }`}>
         {/* Row 1: Top Bar (Logo & Icons) */}
         <div className={`max-w-[1600px] mx-auto w-full px-6 md:px-12 transition-all duration-500 ${scrolled ? 'pt-2 pb-1' : 'pt-3 pb-2'}`}>
@@ -204,7 +204,7 @@ export default function Navbar({
 
                 {/* Cinematic Floating Megamenu for Collection */}
                 {item === 'Collection' && (
-                  <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-[#FAF9F6]/95 backdrop-blur-3xl border border-[#BCA58A]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 h-[420px] p-3 transform origin-top group-hover:translate-y-0 translate-y-4 scale-95 group-hover:scale-100">
+                  <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-white/95 backdrop-blur-3xl border border-[#BCA58A]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 h-[420px] p-3 transform origin-top group-hover:translate-y-0 translate-y-4 scale-95 group-hover:scale-100">
                     <div className="w-full h-full flex gap-8 p-8 bg-white/50 rounded-xl">
 
                       {/* Col 1: Shop By Category */}
@@ -305,7 +305,7 @@ export default function Navbar({
 
                 {/* Cinematic Floating Megamenu for Boutiques */}
                 {item === 'Shop & Boutiques' && (
-                  <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-[#FAF9F6]/95 backdrop-blur-3xl border border-[#BCA58A]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 h-[420px] p-3 transform origin-top group-hover:translate-y-0 translate-y-4 scale-95 group-hover:scale-100">
+                  <div className="absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-white/95 backdrop-blur-3xl border border-[#BCA58A]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-50 h-[420px] p-3 transform origin-top group-hover:translate-y-0 translate-y-4 scale-95 group-hover:scale-100">
                     <div className="w-full h-full flex gap-8 p-8 bg-white/50 rounded-xl">
 
                       {/* Col 1: Top Shops */}
@@ -687,7 +687,7 @@ export default function Navbar({
                             <span className="text-[9px] text-[#BCA58A] font-semibold uppercase tracking-wider block mt-1">{item.boutique} · Verified</span>
                             <span className="text-sm text-[#111111] block mt-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{item.price}</span>
                           </div>
-                          <button onClick={() => { addToCart(item, 'M'); alert(`Added ${item.name} to bag!`); }}
+                          <button onClick={() => { const size = item.sizes?.length > 0 ? item.sizes[0] : 'Unstitched'; addToCart(item, size); alert(`Added ${item.name} to bag!`); }}
                             className="mt-3 bg-[#E8DDD0] border border-[#BCA58A]/20 hover:border-[#BCA58A] hover:bg-[#BCA58A] hover:text-[#FAF9F6] text-[#111111] py-2 text-[9px] font-semibold tracking-widest uppercase flex items-center justify-center gap-1.5 transition-all cursor-pointer">
                             <ShoppingBag size={10} /> Add To Bag
                           </button>

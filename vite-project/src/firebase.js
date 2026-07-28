@@ -290,6 +290,8 @@ export async function saveProductToFirestore(productId, product) {
       name: product.name || '',
       price: product.price || '',
       priceNum: Number(product.priceNum || 0),
+      originalPrice: product.originalPrice || null,
+      originalPriceNum: Number(product.originalPriceNum || 0),
       boutique: product.boutique || '',
       badge: product.badge || '',
       collection: product.collection || 'Trending',

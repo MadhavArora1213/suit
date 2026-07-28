@@ -256,7 +256,7 @@ export default function Gallery({ addToCart }) {
 
                       <button
                         onClick={() => {
-                          addToCart(matchedProduct, 'M');
+                          addToCart(matchedProduct, matchedProduct.sizes?.length > 0 ? matchedProduct.sizes[0] : 'Unstitched');
                           alert(`Added ${matchedProduct.name} to bag!`);
                           setLightboxItem(null);
                         }}

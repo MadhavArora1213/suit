@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Upload, Plus, X, Check, Star } from 'lucide-react';
-import { addProduct, updateProduct, fileToBase64, notifyWebsite } from '../../utils/adminStore';
+import { addProduct, updateProduct, fileToBase64, notifyWebsite, getBoutiques } from '../../utils/adminStore';
 
 const P = '#111111';
 
 const sizes = ['S (36)', 'M (38)', 'L (40)', 'XL (42)', 'XXL (44)'];
-const occasions = ['Festive', 'Wedding', 'Casual', 'Party', 'Daily Wear'];
+const occasions = ['Festive', 'Wedding', 'Casual', 'Party', 'Daily Wear', 'Bridal', 'Engagement', 'Sangeet', 'Mehendi', 'Reception', 'Puja', 'Eid', 'Diwali', 'Holi', 'Navratri', 'Karva Chauth', 'Office Wear', 'Travel', 'Brunch', 'Date Night'];
 const careOptions = ['Dry Clean Only', 'Hand Wash', 'Machine Wash', 'Do Not Bleach', 'Iron on Low Heat'];
 const badges = ['Silk Blend', 'Handloom', 'Premium', 'Hot Seller', 'New Edition', 'Artisanal', 'Heritage', 'Exclusive', 'Best Price', 'Verified', '100% Cotton', 'Lightweight'];
 
@@ -61,8 +61,14 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
   const [stockQty, setStockQty] = useState(editProduct?.stockQty || {});
   const [mainImage, setMainImage] = useState(editProduct?.image || null);
   const [additionalImages, setAdditionalImages] = useState(editProduct?.additionalImages || []);
+  const [boutiques, setBoutiques] = useState([]);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const list = getBoutiques();
+    setBoutiques(list.filter(b => b.active !== false));
+  }, []);
 
   const update = (key, val) => setForm(f => ({ ...f, [key]: val }));
   const toggleArr = (arr, setArr, val) => setArr(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
@@ -93,6 +99,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       price: `₹${Number(form.price).toLocaleString('en-IN')}`,
       priceNum: Number(form.price),
       originalPrice: form.originalPrice ? `₹${Number(form.originalPrice).toLocaleString('en-IN')}` : null,
+      originalPriceNum: Number(form.originalPrice) || 0,
       boutique: form.boutique,
       badge: form.badge,
       collection: form.collection,
@@ -176,7 +183,15 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 </div>
                 <div>
                   <Label required>Boutique / Seller</Label>
-                  <Input value={form.boutique} onChange={e => update('boutique', e.target.value)} placeholder="e.g. Kala Mandir" />
+                  <select value={form.boutique} onChange={e => update('boutique', e.target.value)}
+                    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none appearance-none cursor-pointer transition-all"
+                    onFocus={e => { e.target.style.borderColor = P; }}
+                    onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }}>
+                    <option value="">Select boutique...</option>
+                    {boutiques.map(b => (
+                      <option key={b.id} value={b.name}>{b.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div>
@@ -200,9 +215,9 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
           <Card title="Categorization" subtitle="Controls which tab and filters the product appears under on the website">
             <div className="grid grid-cols-3 gap-4 mb-4">
               {[
-                { label: 'Collection Tab', key: 'collection', options: ['Trending', 'New Arrivals', 'Best Sellers', 'Festive Edit'] },
-                { label: 'Style Category', key: 'styleCategory', options: ['Traditional', 'Designer', 'Party', 'Casual'] },
-                { label: 'Suit Type', key: 'suitType', options: ['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi'] },
+                { label: 'Collection Tab', key: 'collection', options: ['Trending', 'New Arrivals', 'Best Sellers', 'Festive Edit', 'Summer', 'Monsoon', 'Wedding', 'Pastel', 'Black', 'Luxury', 'Punjabi', 'Bridal', 'Velvet', 'Pure Silk', 'Cotton', 'Georgette', 'Organza', 'Casual', 'Party'] },
+                { label: 'Style Category', key: 'styleCategory', options: ['Traditional', 'Designer', 'Party', 'Casual', 'Bridal', 'Ethnic', 'Fusion', 'Contemporary', 'Royal', 'Heritage', 'Minimalist', 'Boho', 'Indo Western', 'Western Wear', 'Festive', 'Workwear'] },
+                { label: 'Suit Type', key: 'suitType', options: ['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi', 'Lehenga', 'Palazzo Suit', 'Gown', 'Kurti Set', 'Straight Cut', 'A-Line', 'Cotton Suit', 'Georgette Suit', 'Silk Suit', 'Floor Length', 'Indo Western'] },
               ].map(({ label, key, options }) => (
                 <div key={key}>
                   <Label required>{label}</Label>
@@ -383,14 +398,26 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
               <div>
                 <Label>Star Rating</Label>
                 <div className="flex items-center gap-2 mt-1">
-                  {[1, 2, 3, 4, 5].map(n => (
-                    <button key={n} type="button" onClick={() => update('rating', String(n))}
-                      className="transition-transform hover:scale-110 active:scale-95">
-                      <Star size={28} className={parseFloat(form.rating) >= n ? 'fill-amber-400 text-amber-400' : 'text-[#E8DDD0]'} />
-                    </button>
-                  ))}
-                  <span className="text-lg font-bold text-[#1A1A1A] ml-2">{form.rating}</span>
+                  {[1, 2, 3, 4, 5].map(n => {
+                    const fill = Math.min(Math.max((parseFloat(form.rating) - (n - 1)) * 100, 0), 100);
+                    return (
+                      <button key={n} type="button" onClick={() => update('rating', String(n))}
+                        className="transition-transform hover:scale-110 active:scale-95 relative" style={{ width: 28, height: 28 }}>
+                        <Star size={28} className="text-[#E8DDD0] absolute inset-0" />
+                        <div className="absolute inset-0 overflow-hidden" style={{ width: `${fill}%` }}>
+                          <Star size={28} className="fill-amber-400 text-amber-400" />
+                        </div>
+                      </button>
+                    );
+                  })}
+                  <input type="number" step="0.1" min="0" max="5" value={form.rating}
+                    onChange={e => update('rating', e.target.value)}
+                    className="w-20 px-3 py-1.5 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none transition-all text-center font-bold"
+                    onFocus={e => { e.target.style.borderColor = P; }}
+                    onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }} />
+                  <span className="text-sm text-[#6B8C90]">/ 5</span>
                 </div>
+                <p className="text-[10px] text-[#6B8C90] mt-1">Click stars or type decimal like 4.4, 3.2</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>

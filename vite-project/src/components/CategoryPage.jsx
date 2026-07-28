@@ -446,7 +446,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                           <button 
                             onClick={(e) => { 
                               e.stopPropagation(); 
-                              addToCart(p, 'M');
+                              addToCart(p, p.sizes?.length > 0 ? p.sizes[0] : 'Unstitched');
                             }}
                             className="flex-1 bg-white/95 backdrop-blur-md text-[#111111] py-3.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#111111] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
                           >

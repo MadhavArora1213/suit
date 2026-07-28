@@ -147,7 +147,7 @@ export default function FeaturedCollections({ cart = [], addToCart, favorites = 
                   <div className="absolute inset-0 bg-[#FAF9F6]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4 z-10">
                     <div className="w-full flex gap-2">
                       <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                        onClick={(e) => { e.stopPropagation(); addToCart(product, 'M'); }}
+                        onClick={(e) => { e.stopPropagation(); addToCart(product, product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched'); }}
                         className="flex-1 bg-[#BCA58A] text-[#FAF9F6] text-[9px] font-bold tracking-[0.2em] uppercase py-3 flex items-center justify-center gap-1.5 hover:bg-[#BCA58A] transition-colors cursor-pointer">
                         <ShoppingBag size={11} /> ADD TO BAG
                       </motion.button>

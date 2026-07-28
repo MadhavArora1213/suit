@@ -50,7 +50,7 @@ export default function WishlistPage({ allProducts, favorites, toggleFavorite, a
                   {/* Quick Add overlay */}
                   <div className="absolute inset-x-0 bottom-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
                     <button 
-                      onClick={() => addToCart(product, 'M')}
+                      onClick={() => addToCart(product, product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched')}
                       className="w-full py-3 bg-white/95 backdrop-blur-sm text-[#111111] text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-[#111111] hover:text-white transition-colors flex items-center justify-center gap-2"
                     >
                       <ShoppingBag size={14} /> Add to Cart

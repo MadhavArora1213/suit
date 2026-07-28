@@ -107,7 +107,7 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
             className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#FAF9F6]/95 backdrop-blur-md text-[#111111] hover:bg-[#111111] hover:text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg border border-[#BCA58A]/20">
             <Eye size={12} /> View
           </button>
-          <button onClick={(e) => { e.stopPropagation(); addToCart(product, 'M'); }}
+          <button onClick={(e) => { e.stopPropagation(); addToCart(product, product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched'); }}
             className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#BCA58A] hover:bg-[#111111] text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg">
             <ShoppingBag size={12} /> Bag
           </button>
