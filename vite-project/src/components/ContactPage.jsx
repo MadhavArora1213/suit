@@ -4,12 +4,12 @@ import { useState, useRef, useEffect } from 'react';
 import { addSupportTicket } from '../utils/adminStore';
 
 const floatingImages = [
-  { src: '/monsoon_edit.png', style: { top: '140px', left: '2%', width: '190px', rotate: '-6deg' } },
-  { src: '/luxury_edit.png', style: { top: '130px', right: '2%', width: '170px', rotate: '5deg' } },
-  { src: '/hero_campaign_palace.png', style: { top: '45%', left: '0.5%', width: '185px', rotate: '-3deg' } },
-  { src: '/wedding_edit.png', style: { top: '42%', right: '1%', width: '190px', rotate: '4deg' } },
-  { src: '/summer_edit.png', style: { bottom: '4%', left: '2%', width: '165px', rotate: '7deg' } },
-  { src: '/pastel_edit.png', style: { bottom: '3%', right: '2%', width: '175px', rotate: '-5deg' } },
+  { src: '/monsoon_edit.png', style: { top: '140px', left: '2%', rotate: '-6deg' } },
+  { src: '/luxury_edit.png', style: { top: '130px', right: '2%', rotate: '5deg' } },
+  { src: '/hero_campaign_palace.png', style: { top: '45%', left: '0.5%', rotate: '-3deg' } },
+  { src: '/wedding_edit.png', style: { top: '42%', right: '1%', rotate: '4deg' } },
+  { src: '/summer_edit.png', style: { bottom: '4%', left: '2%', rotate: '7deg' } },
+  { src: '/pastel_edit.png', style: { bottom: '3%', right: '2%', rotate: '-5deg' } },
 ];
 
 export default function ContactPage({ setView, user }) {
@@ -225,32 +225,38 @@ export default function ContactPage({ setView, user }) {
       />
 
       {/* Floating Editorial Images */}
-      {floatingImages.map((img, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, scale: 0.8, rotate: parseFloat(img.style.rotate || '0') - 10 }}
-          animate={{ opacity: 1, scale: 1, rotate: parseFloat(img.style.rotate || '0') }}
-          transition={{ duration: 1.2, delay: 0.2 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            position: 'absolute',
-            ...img.style,
-            rotate: img.style.rotate,
-            zIndex: 1,
-          }}
-          whileHover={{ scale: 1.04, zIndex: 10, rotate: '0deg' }}
-          className="overflow-hidden shadow-2xl border border-white/10 hidden lg:block"
-        >
-          <img src={img.src} alt="" className="w-full h-auto object-cover" style={{ aspectRatio: '3/4', objectPosition: 'top' }} />
-          <div className="absolute inset-0 bg-black/20" />
-        </motion.div>
-      ))}
+      {floatingImages.map((img, i) => {
+        const isLeft = img.style.left;
+        return (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, scale: 0.8, rotate: parseFloat(img.style.rotate || '0') - 10 }}
+            animate={{ opacity: 1, scale: 1, rotate: parseFloat(img.style.rotate || '0') }}
+            transition={{ duration: 1.2, delay: 0.2 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: 'absolute',
+              ...img.style,
+              rotate: img.style.rotate,
+              zIndex: 1,
+            }}
+            whileHover={{ scale: 1.04, zIndex: 10, rotate: '0deg' }}
+            className={`overflow-hidden shadow-2xl border border-white/10
+              w-[65px] sm:w-[90px] md:w-[130px] lg:w-[160px] xl:w-[190px]
+              ${isLeft ? 'origin-left' : 'origin-right'}
+            `}
+          >
+            <img src={img.src} alt="" className="w-full h-auto object-cover" style={{ aspectRatio: '3/4', objectPosition: 'top' }} />
+            <div className="absolute inset-0 bg-black/20" />
+          </motion.div>
+        );
+      })}
 
       {/* CENTRAL GLASS CARD */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 30 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full max-w-2xl mx-4 mt-24 mb-12"
+         className="relative z-10 w-full max-w-2xl mx-3 sm:mx-4 mt-16 sm:mt-20 md:mt-24 mb-8 sm:mb-12"
         style={{
           background: 'rgba(255,255,255,0.04)',
           backdropFilter: 'blur(40px)',
@@ -262,7 +268,7 @@ export default function ContactPage({ setView, user }) {
         {/* Top Gold Trim */}
         <div className="h-px w-full bg-gradient-to-r from-transparent via-[#BCA58A] to-transparent" />
 
-        <div className="p-10 md:p-16">
+         <div className="p-6 sm:p-8 md:p-12 lg:p-16">
           {!submitted ? (
             <>
               {/* Title */}
@@ -279,15 +285,15 @@ export default function ContactPage({ setView, user }) {
                   </span>
                   <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#BCA58A]" />
                 </motion.div>
-                <motion.h1
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7, duration: 1 }}
-                  className="text-5xl md:text-7xl font-light text-white tracking-wide"
-                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                >
-                  Contact
-                </motion.h1>
+                 <motion.h1
+                   initial={{ opacity: 0, y: 16 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: 0.7, duration: 1 }}
+                   className="text-4xl sm:text-5xl md:text-7xl font-light text-white tracking-wide"
+                   style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                 >
+                   Contact
+                 </motion.h1>
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -299,12 +305,12 @@ export default function ContactPage({ setView, user }) {
               </div>
 
               {/* Quick Links */}
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.0 }}
-                className="grid grid-cols-3 gap-4 mb-12"
-              >
+               <motion.div
+                 initial={{ opacity: 0, y: 16 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 1.0 }}
+                 className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-10 sm:mb-12"
+               >
                 {[
                   { label: 'Call Us', value: '+91 98772 75894' },
                   { label: 'Email', value: 'madhavarora132005@gmail.com' },
@@ -333,14 +339,14 @@ export default function ContactPage({ setView, user }) {
               )}
 
               {/* Form */}
-              <motion.form
-                onSubmit={handleSubmit}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 }}
-                className="space-y-8"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+               <motion.form
+                 onSubmit={handleSubmit}
+                 initial={{ opacity: 0, y: 16 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 1.1 }}
+                 className="space-y-6 sm:space-y-8"
+               >
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                   {['Full Name', 'Email Address'].map((placeholder) => {
                     const isEmail = placeholder.includes('Email');
                     const value = isEmail ? formData.email : formData.name;
@@ -438,7 +444,7 @@ export default function ContactPage({ setView, user }) {
                 transition={{ duration: 1, delay: 0.2 }}
                 className="relative mb-8 flex justify-center w-full"
               >
-                <div className="w-80 h-80 md:w-[500px] md:h-[500px] relative group-hover:scale-105 transition-transform duration-700 ease-out z-10">
+                <div className="w-60 h-60 sm:w-80 sm:h-80 md:w-[500px] md:h-[500px] relative group-hover:scale-105 transition-transform duration-700 ease-out z-10">
                   <img
                     src="/Images/contact.png"
                     alt="Success Character"
@@ -487,7 +493,7 @@ export default function ContactPage({ setView, user }) {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="bg-[#FAF9F6] p-8 md:p-12 max-w-[400px] w-full border border-[#BCA58A]/30 text-center relative overflow-hidden"
+               className="bg-[#FAF9F6] p-6 sm:p-8 md:p-12 max-w-[400px] w-full border border-[#BCA58A]/30 text-center relative overflow-hidden mx-3 sm:mx-4"
               style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }}
             >
               {/* Modal Background Glow */}
