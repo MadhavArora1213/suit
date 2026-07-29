@@ -34,6 +34,168 @@ const KEYS = {
 // ── Static Products Definition ────────────────────────────────
 export const staticProducts = [];
 
+// ── Seed product with all fields ─────────────────────────────
+const seedProduct = {
+  id: 'seed_product_001',
+  name: 'Royal Banarasi Silk Anarkali Suit Set',
+  price: '₹12,999',
+  priceNum: 12999,
+  originalPrice: '₹18,999',
+  originalPriceNum: 18999,
+  boutique: 'Rajputana Heritage',
+  badge: 'Premium',
+  collection: 'Festive Edit',
+  styleCategory: 'Royal',
+  suitType: 'Anarkali',
+  type: 'Anarkali',
+  shortDesc: 'Handwoven Banarasi silk anarkali with intricate zari embroidery, perfect for weddings and festive celebrations. Includes matching dupatta and palazzo.',
+  fabricDetails: 'Crafted from 100% pure Banarasi silk with real gold zari work. The fabric is handwoven by master artisans from Varanasi. Features traditional Mughal-inspired motifs with modern silhouette. The anarkali has a flowing floor-length flare with detailed thread work on the yoke and hemline.',
+  fabricName: 'Pure Banarasi Silk',
+  fabricDesc: 'Handwoven with real gold zari',
+  rating: 4.9,
+  igLikes: '2.4K',
+  igComments: '186',
+  videoUrl: 'https://www.youtube.com/watch?v=example',
+  reelUrl: 'https://www.instagram.com/reel/example',
+  sizes: ['S (36)', 'M (38)', 'L (40)', 'XL (42)', 'XXL (44)'],
+  occasions: ['Wedding', 'Festive', 'Engagement', 'Sangeet', 'Reception'],
+  care: ['Dry Clean Only', 'Iron on Low Heat'],
+  stockQty: { 'S (36)': 5, 'M (38)': 12, 'L (40)': 18, 'XL (42)': 10, 'XXL (44)': 6 },
+  image: '/banarasi_suit.png',
+  additionalImages: ['/designer_suit_1.png', '/anarkali_suit.png'],
+  addedAt: '2026-07-25T10:00:00.000Z',
+  source: 'admin',
+  totalOrders: 48,
+  totalRevenue: '₹6.24L',
+  stock: 51,
+  category: 'Festive Edit',
+  active: true,
+};
+
+const seedProduct2 = {
+  id: 'seed_product_002',
+  name: 'Chikankari Handloom Cotton Suit Set',
+  price: '₹7,499',
+  priceNum: 7499,
+  originalPrice: '₹10,999',
+  originalPriceNum: 10999,
+  boutique: 'Awadh Kraft',
+  badge: 'Artisanal',
+  collection: 'Best Sellers',
+  styleCategory: 'Traditional',
+  suitType: 'Chikankari',
+  type: 'Chikankari',
+  shortDesc: 'Authentic Lucknowi chikankari on pure cotton, hand-embroidered by women artisans. Lightweight and elegant for daily and semi-formal wear.',
+  fabricDetails: 'Made from premium combed cotton with intricate shadow chikankari embroidery. Each piece takes 15-20 days to complete by skilled artisans from Lucknow. Features tepchi, phanda, and murri stitches. Includes cotton lining for comfort.',
+  fabricName: 'Pure Combed Cotton',
+  fabricDesc: 'Hand-embroidered Lucknowi chikankari',
+  rating: 4.8,
+  igLikes: '1.8K',
+  igComments: '142',
+  videoUrl: '',
+  reelUrl: '',
+  sizes: ['S (36)', 'M (38)', 'L (40)', 'XL (42)'],
+  occasions: ['Casual', 'Daily Wear', 'Office Wear', 'Brunch'],
+  care: ['Hand Wash', 'Do Not Bleach', 'Iron on Low Heat'],
+  stockQty: { 'S (36)': 8, 'M (38)': 15, 'L (40)': 20, 'XL (42)': 12 },
+  image: '/chikankari_suit.png',
+  additionalImages: ['/cotton_suit.png'],
+  addedAt: '2026-07-24T08:30:00.000Z',
+  source: 'admin',
+  totalOrders: 39,
+  totalRevenue: '₹2.92L',
+  stock: 55,
+  category: 'Best Sellers',
+  active: true,
+};
+
+const seedProduct3 = {
+  id: 'seed_product_003',
+  name: 'Royal Sharara Suit Set with Heavy Dupatta',
+  price: '₹11,499',
+  priceNum: 11499,
+  originalPrice: '₹15,999',
+  originalPriceNum: 15999,
+  boutique: 'Rajputana',
+  badge: 'Grand Wedding',
+  collection: 'Festive Edit',
+  styleCategory: 'Royal',
+  suitType: 'Sharara',
+  type: 'Sharara',
+  shortDesc: 'Opulent sharara suit with heavily embroidered kameez and flared sharara pants. Complete with a luxurious net dupatta with cutwork border.',
+  fabricDetails: 'Premium georgette base with sequin, mirror, and thread work. The sharara pants feature gold gota patti borders. Kameez has full back and front embroidery with scalloped hemline. Dupatta has 4-side heavy border with pallu design.',
+  fabricName: 'Premium Georgette',
+  fabricDesc: 'Heavy sequin and mirror work',
+  rating: 5.0,
+  igLikes: '3.1K',
+  igComments: '234',
+  videoUrl: 'https://www.youtube.com/watch?v=example2',
+  reelUrl: 'https://www.instagram.com/reel/example2',
+  sizes: ['S (36)', 'M (38)', 'L (40)', 'XL (42)'],
+  occasions: ['Wedding', 'Bridal', 'Engagement', 'Reception', 'Sangeet'],
+  care: ['Dry Clean Only'],
+  stockQty: { 'S (36)': 3, 'M (38)': 6, 'L (40)': 8, 'XL (42)': 4 },
+  image: '/sharara_suit.png',
+  additionalImages: ['/designer_suit_1.png'],
+  addedAt: '2026-07-23T12:00:00.000Z',
+  source: 'admin',
+  totalOrders: 31,
+  totalRevenue: '₹3.56L',
+  stock: 21,
+  category: 'Festive Edit',
+  active: true,
+};
+
+const seedProduct4 = {
+  id: 'seed_product_004',
+  name: 'Pakistani Straight Suit Set with Digital Print',
+  price: '₹4,799',
+  priceNum: 4799,
+  originalPrice: '₹6,999',
+  originalPriceNum: 6999,
+  boutique: 'Nazraana',
+  badge: 'Verified',
+  collection: 'New Arrivals',
+  styleCategory: 'Contemporary',
+  suitType: 'Pakistani',
+  type: 'Pakistani',
+  shortDesc: 'Elegant Pakistani straight cut suit with digital floral print on premium lawn fabric. Includes chiffon dupatta with printed borders.',
+  fabricDetails: 'Premium Pakistani lawn cotton with reactive digital print that retains color after multiple washes. Features contrast piping on neckline and hem. Straight pants with elasticized waistband for comfort. Chiffon dupatta with matching print.',
+  fabricName: 'Premium Lawn Cotton',
+  fabricDesc: 'Digital floral print',
+  rating: 4.7,
+  igLikes: '1.2K',
+  igComments: '98',
+  videoUrl: '',
+  reelUrl: '',
+  sizes: ['S (36)', 'M (38)', 'L (40)', 'XL (42)', 'XXL (44)'],
+  occasions: ['Casual', 'Daily Wear', 'Office Wear', 'Travel'],
+  care: ['Machine Wash', 'Do Not Bleach', 'Iron on Low Heat'],
+  stockQty: { 'S (36)': 10, 'M (38)': 20, 'L (40)': 25, 'XL (42)': 15, 'XXL (44)': 8 },
+  image: '/pakistani_suit.png',
+  additionalImages: ['/cotton_suit.png'],
+  addedAt: '2026-07-22T09:15:00.000Z',
+  source: 'admin',
+  totalOrders: 27,
+  totalRevenue: '₹1.30L',
+  stock: 78,
+  category: 'New Arrivals',
+  active: true,
+};
+
+// Auto-seed if no products exist
+export const seedIfEmpty = () => {
+  const existing = get(KEYS.products, []);
+  if (existing.length === 0) {
+    set(KEYS.products, [seedProduct, seedProduct2, seedProduct3, seedProduct4]);
+    if (isFirebaseConfigured()) {
+      [seedProduct, seedProduct2, seedProduct3, seedProduct4].forEach(p => {
+        saveProductToFirestore(p.id, p).catch(() => {});
+      });
+    }
+  }
+};
+
 // ── Generic helpers ──────────────────────────────────────────
 const get  = (key, fallback = []) => {
   try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }

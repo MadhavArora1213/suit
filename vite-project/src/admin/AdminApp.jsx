@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
+import { seedIfEmpty } from '../utils/adminStore';
 import AdminLogin from './AdminLogin';
 import AdminLayout from './AdminLayout';
 import Dashboard from './pages/Dashboard';
@@ -43,6 +44,7 @@ export default function AdminApp() {
   }, []);
 
   useEffect(() => {
+    seedIfEmpty();
     if (!auth) {
       setAuthLoading(false);
       return;

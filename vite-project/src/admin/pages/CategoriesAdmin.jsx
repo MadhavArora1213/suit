@@ -42,20 +42,20 @@ export default function CategoriesAdmin({ setActivePage }) {
   const sorted = [...categories].sort((a, b) => a.order - b.order);
 
   return (
-    <div className="space-y-5">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-semibold text-[#1A1A1A]">Categories</h2>
-          <p className="text-sm text-[#9E9189]">{categories.filter(c => c.active).length} active · {categories.filter(c => !c.active).length} hidden</p>
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#1A1A1A]">Categories</h2>
+          <p className="text-xs sm:text-sm text-[#9E9189]">{categories.filter(c => c.active).length} active · {categories.filter(c => !c.active).length} hidden</p>
         </div>
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={openAdd}
-          className="flex items-center gap-2 bg-[#111111] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#111111]/25">
-          <Plus size={16} /> Add Category
+          className="flex items-center justify-center gap-2 bg-[#111111] text-white px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-md shadow-[#111111]/25 w-full sm:w-auto">
+          <Plus size={14} /> Add Category
         </motion.button>
       </div>
 
       {/* Category Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
         <AnimatePresence mode="popLayout">
           {sorted.map((cat, i) => (
             <motion.div key={cat.id} layout

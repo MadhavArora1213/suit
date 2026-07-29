@@ -32,15 +32,53 @@ export default function BoutiquesAdmin({ setActivePage }) {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto pb-32">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-semibold text-[#111111]">Shops & Boutiques Manager</h1>
-        <button onClick={handleAdd} className="bg-[#111111] text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-[#BCA58A] transition cursor-pointer">
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto pb-32">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl font-semibold text-[#111111]">Shops & Boutiques Manager</h1>
+        <button onClick={handleAdd} className="bg-[#111111] text-white px-4 py-2 rounded flex items-center justify-center gap-2 hover:bg-[#BCA58A] transition cursor-pointer text-sm">
           <Plus size={16} /> Add Profile
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
+      {/* Mobile Cards */}
+      <div className="lg:hidden space-y-3">
+        {boutiques.map((b) => (
+          <div key={b.id} className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden flex-shrink-0 border border-gray-200">
+                {b.logo ? <img src={b.logo} className="w-full h-full object-cover" /> : <Store className="m-auto text-gray-400 mt-2" size={20} />}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold text-gray-900 truncate">{b.name}</div>
+                <div className="text-xs text-gray-500">{b.owner || 'N/A'}</div>
+              </div>
+              <div className="flex gap-1">
+                <button onClick={() => handleEdit(b)} className="p-2 text-gray-500 hover:text-[#BCA58A] cursor-pointer"><Pencil size={16} /></button>
+                <button onClick={() => handleDelete(b.id)} className="p-2 text-gray-500 hover:text-red-500 cursor-pointer"><Trash2 size={16} /></button>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <span className={`px-2 py-1 rounded-full ${b.type === 'Shop' ? 'bg-blue-50 text-blue-600' : 'bg-[#BCA58A]/10 text-[#BCA58A]'}`}>
+                {b.type || 'Boutique'}
+              </span>
+              <span className="text-gray-500">{b.location || b.address || 'N/A'}</span>
+              <span className="text-gray-400">·</span>
+              <span className="text-gray-600">★ {b.rating}</span>
+              <span className="text-gray-400">·</span>
+              <span className="text-gray-600">{b.totalOrders || '0'} orders</span>
+            </div>
+          </div>
+        ))}
+        {boutiques.length === 0 && (
+          <div className="bg-white rounded-xl p-8 text-center text-gray-500">
+            <Store size={32} className="mx-auto mb-3 text-gray-300" />
+            No profiles added yet.
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Table */}
+      <div className="hidden lg:block bg-white rounded-lg shadow overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead className="bg-gray-50 text-gray-600 border-b border-gray-100">
             <tr>

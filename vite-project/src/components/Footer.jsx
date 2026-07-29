@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import gurnaazLogo from '../assets/gurnaaz.png';
 
 export default function Footer({ setView }) {
   const navigate = (view) => {
@@ -27,7 +28,7 @@ export default function Footer({ setView }) {
       <div
         className="absolute inset-0 z-[2]"
         style={{
-          background: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.4) 100%)',
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.45) 100%)',
         }}
       />
 
@@ -36,41 +37,30 @@ export default function Footer({ setView }) {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 md:gap-8">
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="md:col-span-5">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 bg-[#111111] rounded-xl flex items-center justify-center">
-                <span className="text-[#FAF9F6] text-[13px] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>G</span>
-              </div>
-              <span className="text-[#111111] text-[17px] font-bold tracking-wide" style={{ fontFamily: "'DM Sans', sans-serif" }}>Gurnaaz</span>
-            </div>
-             <div className="flex items-center gap-3 mb-4">
-               <div className="w-10 h-10 bg-[#111111] rounded-xl flex items-center justify-center">
-                 <span className="text-[#FAF9F6] text-[13px] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>G</span>
-               </div>
-               <span className="text-[#111111] text-[16px] font-bold tracking-wide" style={{ fontFamily: "'DM Sans', sans-serif" }}>Gurnaaz</span>
-             </div>
-             <h3 className="text-[#111111] text-[22px] sm:text-2xl md:text-[28px] font-bold mb-3 sm:mb-4 leading-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>Your Premium Ethnic Wear Destination</h3>
-             <p className="text-[#111111]/50 text-[13px] sm:text-[14px] leading-relaxed mb-6 sm:mb-8 max-w-xs sm:max-w-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>Gurnaaz brings you handcrafted premium ethnic wear from India's finest heritage boutiques — curated, not aggregated.</p>
+            <img src={gurnaazLogo} alt="GURNAAZ" className="h-8 md:h-10 w-auto object-contain mb-4" />
+             <h3 className="text-white md:text-[#111111] text-[22px] sm:text-2xl md:text-[28px] font-bold mb-3 sm:mb-4 leading-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>Your Premium Ethnic Wear Destination</h3>
+             <p className="text-white/70 md:text-[#111111]/70 text-[13px] sm:text-[14px] leading-relaxed mb-6 sm:mb-8 max-w-xs sm:max-w-sm font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>Gurnaaz brings you handcrafted premium ethnic wear from India's finest heritage boutiques — curated, not aggregated.</p>
              <a href="#" onClick={(e) => { e.preventDefault(); navigate('collections'); }} className="inline-flex items-center gap-2.5 bg-[#111111] text-[#FAF9F6] text-[11px] sm:text-[12px] font-semibold tracking-[0.05em] px-6 sm:px-7 py-3 sm:py-3.5 hover:bg-[#BCA58A] transition-colors duration-300 rounded-xl" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                Explore Collection
              </a>
-             <p className="text-[#111111]/50 text-[12px] mt-8 mb-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>&copy; 2026 Gurnaaz — All rights reserved</p>
-             <p className="text-[#111111]/50 text-[12px] flex items-center gap-1.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>Built with <span className="text-[#BCA58A] text-sm">✦</span> by <span className="font-semibold text-[#111111]/60">Gurnaaz Team</span></p>
+             <p className="text-white/60 md:text-[#111111]/60 text-[12px] mt-8 mb-1 font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>&copy; 2026 Gurnaaz — All rights reserved</p>
+             <p className="text-white/60 md:text-[#111111]/60 text-[12px] flex items-center gap-1.5 font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>Built with <span className="text-[#BCA58A] text-sm">✦</span> by <span className="font-semibold text-white/80 md:text-white/80 md:text-[#111111]/80">Gurnaaz Team</span></p>
           </motion.div>
 
           <div className="hidden md:block md:col-span-1" />
 
           <div className="md:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6 }} viewport={{ once: true }}>
-              <h4 className="text-[#111111] text-[15px] sm:text-[14px] font-bold mb-4 sm:mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>Shop</h4>
+              <h4 className="text-white md:text-[#111111] text-[15px] sm:text-[14px] font-bold mb-4 sm:mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>Shop</h4>
               <ul className="space-y-2.5 sm:space-y-3">
                 {[{ label: 'Anarkali', view: 'category' }, { label: 'Banarasi', view: 'category' }, { label: 'Chikankari', view: 'category' }, { label: 'Sharara', view: 'category' }, { label: 'Patiala', view: 'category' }].map((item) => (
-                  <li key={item.label}><a href="#" onClick={(e) => { e.preventDefault(); navigate(item.view); }} className="text-[#111111]/60 text-[14px] sm:text-[13px] hover:text-[#111111] transition-colors duration-300" style={{ fontFamily: "'DM Sans', sans-serif" }}>{item.label}</a></li>
+                  <li key={item.label}><a href="#" onClick={(e) => { e.preventDefault(); navigate(item.view); }} className="text-white/80 md:text-[#111111]/80 text-[14px] sm:text-[13px] font-medium hover:text-white md:hover:text-[#111111] transition-colors duration-300" style={{ fontFamily: "'DM Sans', sans-serif" }}>{item.label}</a></li>
                 ))}
               </ul>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} viewport={{ once: true }}>
-              <h4 className="text-[#111111] text-[15px] sm:text-[14px] font-bold mb-4 sm:mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>Navigation</h4>
+              <h4 className="text-white md:text-[#111111] text-[15px] sm:text-[14px] font-bold mb-4 sm:mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>Navigation</h4>
               <ul className="space-y-2.5 sm:space-y-3">
                 {[
                   { label: 'Home', view: 'customer-home' }, 
@@ -79,15 +69,15 @@ export default function Footer({ setView }) {
                   { label: 'Boutiques', view: 'boutiques' },
                   { label: 'Contact', view: 'contact' }
                 ].map((l) => (
-                  <li key={l.label}><a href="#" onClick={(e) => { e.preventDefault(); navigate(l.view); }} className="text-[#111111]/60 text-[14px] sm:text-[13px] hover:text-[#111111] transition-colors duration-300" style={{ fontFamily: "'DM Sans', sans-serif" }}>{l.label}</a></li>
+                  <li key={l.label}><a href="#" onClick={(e) => { e.preventDefault(); navigate(l.view); }} className="text-white/80 md:text-[#111111]/80 text-[14px] sm:text-[13px] font-medium hover:text-white md:hover:text-[#111111] transition-colors duration-300" style={{ fontFamily: "'DM Sans', sans-serif" }}>{l.label}</a></li>
                 ))}
               </ul>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }} viewport={{ once: true }}>
-              <h4 className="text-[#111111] text-[15px] sm:text-[14px] font-bold mb-4 sm:mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>Help</h4>
+              <h4 className="text-white md:text-[#111111] text-[15px] sm:text-[14px] font-bold mb-4 sm:mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>Help</h4>
               <ul className="space-y-2.5 sm:space-y-3">
                 {[{ label: 'Shipping', view: 'shipping' }, { label: 'FAQ', view: 'faq' }, { label: 'Privacy Policy', view: 'privacy' }].map((l) => (
-                  <li key={l.label}><a href="#" onClick={(e) => { e.preventDefault(); if (l.view) navigate(l.view); }} className="text-[#111111]/60 text-[14px] sm:text-[13px] hover:text-[#111111] transition-colors duration-300" style={{ fontFamily: "'DM Sans', sans-serif" }}>{l.label}</a></li>
+                  <li key={l.label}><a href="#" onClick={(e) => { e.preventDefault(); if (l.view) navigate(l.view); }} className="text-white/80 md:text-[#111111]/80 text-[14px] sm:text-[13px] font-medium hover:text-white md:hover:text-[#111111] transition-colors duration-300" style={{ fontFamily: "'DM Sans', sans-serif" }}>{l.label}</a></li>
                 ))}
               </ul>
             </motion.div>
@@ -96,12 +86,12 @@ export default function Footer({ setView }) {
       </div>
 
       {/* ═══════════════ Large "Gurnaaz" text at bottom ═══════════════ */}
-      <div className="relative z-10 flex items-center justify-center pointer-events-none" style={{ height: 'clamp(180px, 28vw, 350px)' }}>
+      <div className="relative z-10 flex items-end justify-center pb-4 md:items-center md:pb-0 pointer-events-none" style={{ height: 'clamp(140px, 28vw, 350px)' }}>
         <h1
           className="font-bold leading-none text-center"
           style={{
             fontFamily: "'Cormorant Garamond', serif",
-            fontSize: 'clamp(120px, 22vw, 320px)',
+            fontSize: 'clamp(70px, 22vw, 320px)',
             color: 'rgba(255, 252, 245, 0.6)',
             textShadow: '0 4px 60px rgba(255,252,245,0.3), 0 0 120px rgba(255,252,245,0.15)',
             lineHeight: '0.85',

@@ -40,24 +40,60 @@ export default function CollectionsAdmin({ setActivePage }) {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 sm:space-y-6 max-w-6xl">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Collections</h2>
-          <p className="text-gray-500 text-sm mt-1">Manage your curated collections and editorial edits.</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Collections</h2>
+          <p className="text-gray-500 text-xs sm:text-sm mt-1">Manage your curated collections and editorial edits.</p>
         </div>
         <button
           onClick={() => {
             localStorage.removeItem('editCollectionData');
             setActivePage('add-collection');
           }}
-          className="flex items-center gap-2 bg-[#111111] text-white px-4 py-2 rounded-md hover:bg-black transition-colors"
+          className="flex items-center justify-center gap-2 bg-[#111111] text-white px-4 py-2 rounded-md hover:bg-black transition-colors text-sm"
         >
-          <Plus size={18} /> Add Collection
+          <Plus size={16} /> Add Collection
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* Mobile Cards */}
+      <div className="lg:hidden space-y-3">
+        {collections.map((col) => (
+          <div key={col.id} className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden border border-gray-200 flex-shrink-0">
+                {col.image ? (
+                  <img src={col.image} alt={col.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">?</div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-gray-900 truncate">{col.title}</p>
+                <p className="text-xs text-gray-500 italic truncate">{col.subtitle}</p>
+              </div>
+              <div className="flex gap-1 flex-shrink-0">
+                <button onClick={() => handleEdit(col)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"><Edit2 size={16} /></button>
+                <button onClick={() => handleDelete(col.id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-md transition-colors"><Trash2 size={16} /></button>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap text-xs">
+              <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-full font-medium uppercase">{col.tag}</span>
+              <span className="text-gray-500">Order: {col.order}</span>
+              <button onClick={() => handleToggleActive(col.id)} className={`px-2 py-1 rounded-full font-medium ${col.active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+                {col.active ? 'Active' : 'Hidden'}
+              </button>
+            </div>
+          </div>
+        ))}
+        {collections.length === 0 && (
+          <div className="bg-white rounded-xl p-8 text-center text-gray-500">No collections found.</div>
+        )}
+      </div>
+
+      {/* Desktop Table */}
+      <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-50 border-b border-gray-100 text-sm font-medium text-gray-500">

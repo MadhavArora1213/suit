@@ -97,17 +97,17 @@ export default function Navbar({
         : 'bg-white border-b border-[#BCA58A]/10 shadow-sm'
         }`}>
         {/* Row 1: Top Bar (Logo & Icons) */}
-        <div className={`max-w-[1600px] mx-auto w-full px-6 md:px-12 transition-all duration-500 ${scrolled ? 'pt-2 pb-1' : 'pt-3 pb-2'}`}>
+        <div className={`max-w-[1600px] mx-auto w-full px-5 md:px-12 transition-all duration-500 ${scrolled ? 'pt-1.5 pb-1' : 'pt-3 pb-2 md:pt-3 md:pb-2'}`}>
           <div className="relative flex items-center justify-between">
 
             {/* Left: Mobile Hamburger & Desktop Search */}
-            <div className="flex items-center gap-4 w-1/3">
+            <div className="flex items-center gap-5 w-1/3">
               <button
-                className={`md:hidden flex flex-col justify-center gap-1.5 w-6 h-6 cursor-pointer text-[#111111]`}
+                className={`md:hidden flex flex-col justify-center gap-1.5 w-7 h-7 cursor-pointer text-[#111111]`}
                 onClick={() => setIsOpen(!isOpen)}>
-                <span className={`w-5 h-px bg-current transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
-                <span className={`w-4 h-px bg-current transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
-                <span className={`w-5 h-px bg-current transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[5px]' : ''}`} />
+                <span className={`w-5 h-[1px] bg-current transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[6px]' : ''}`} />
+                <span className={`w-4 h-[1px] bg-current transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
+                <span className={`w-5 h-[1px] bg-current transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[6px]' : ''}`} />
               </button>
 
               <button
@@ -121,12 +121,12 @@ export default function Navbar({
             {/* Center: Logo */}
             <div className="flex justify-center w-1/3">
               <motion.a href="/sell" onClick={(e) => { e.preventDefault(); window.location.href = '/sell'; }} whileHover={{ scale: 1.02 }} className="cursor-pointer group flex flex-col items-center">
-                <img src={gurnaazLogo} alt="GURNAAZ" className="h-6 md:h-8 lg:h-10 w-auto object-contain drop-shadow-sm" />
+                <img src={gurnaazLogo} alt="GURNAAZ" className="h-16 md:h-8 lg:h-10 w-auto object-contain drop-shadow-sm" />
               </motion.a>
             </div>
 
             {/* Right: Icons */}
-            <div className="flex items-center justify-end gap-4 lg:gap-6 w-1/3">
+            <div className="flex items-center justify-end gap-6 lg:gap-6 w-1/3">
 
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
@@ -480,7 +480,7 @@ export default function Navbar({
         {isOpen && (
           <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }} transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed inset-y-0 right-0 w-64 bg-[#FAF9F6] border-l border-[#BCA58A]/10 shadow-2xl z-50 p-8 flex flex-col gap-6 md:hidden">
+            className="fixed inset-y-0 right-0 w-80 bg-[#FAF9F6] border-l border-[#BCA58A]/10 shadow-2xl z-50 p-8 flex flex-col gap-6 md:hidden">
             <div className="flex justify-between items-center border-b border-[#BCA58A]/15 pb-4">
               <span className="text-lg tracking-[0.2em] text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>MENU</span>
               <button onClick={() => setIsOpen(false)} className="text-[#6B6B6B] hover:text-[#111111] cursor-pointer"><X size={20} /></button>

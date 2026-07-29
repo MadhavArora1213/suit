@@ -51,38 +51,38 @@ export default function Products({ setActivePage }) {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-semibold text-[#1A1A1A]">Products</h2>
-          <p className="text-sm text-[#9E9189]">{filtered.length} products found</p>
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#1A1A1A]">Products</h2>
+          <p className="text-xs sm:text-sm text-[#9E9189]">{filtered.length} products found</p>
         </div>
         <motion.button
           whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
           onClick={() => setActivePage('add-product')}
-          className="flex items-center gap-2 bg-[#111111] text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-[#111111]/25 hover:shadow-lg transition-shadow"
+          className="flex items-center justify-center gap-2 bg-[#111111] text-white px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-md shadow-[#111111]/25 hover:shadow-lg transition-shadow w-full sm:w-auto"
         >
-          <Plus size={16} /> Add Product
+          <Plus size={14} /> Add Product
         </motion.button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl border border-[#E8DDD0] p-4 flex flex-col sm:flex-row gap-3">
+      <div className="bg-white rounded-2xl border border-[#E8DDD0] p-3 sm:p-4 flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#111111]" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#111111]" />
           <input
             type="text"
             placeholder="Search products or boutique..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] placeholder-[#B0A99F] focus:outline-none focus:border-[#111111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.1)] transition-all"
+            className="w-full pl-9 pr-3 py-2 sm:py-2.5 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-xs sm:text-sm text-[#1A1A1A] placeholder-[#B0A99F] focus:outline-none focus:border-[#111111] focus:shadow-[0_0_0_3px_rgba(17,17,17,0.1)] transition-all"
           />
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-1.5 sm:gap-2 flex-wrap">
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setFilterCat(cat)}
-              className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-[10px] sm:text-xs font-semibold transition-all ${
                 filterCat === cat
                   ? 'bg-[#111111] text-white shadow-sm'
                   : 'bg-[#F8F4F9] text-[#6B6B6B] hover:bg-[#F0EAE2]'
@@ -95,7 +95,7 @@ export default function Products({ setActivePage }) {
       </div>
 
       {/* Products Grid */}
-      <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+      <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4">
         <AnimatePresence mode="popLayout">
           {filtered.map((product, i) => (
             <motion.div
@@ -108,12 +108,12 @@ export default function Products({ setActivePage }) {
               className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden group hover:shadow-lg hover:shadow-[#111111]/10 hover:border-[#111111]/30 transition-all duration-300"
             >
               {/* Image */}
-              <div className="relative h-44 bg-[#F8F4F9] overflow-hidden">
+              <div className="relative h-36 sm:h-44 bg-[#F8F4F9] overflow-hidden">
                 <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#111111] text-[11px] font-bold tracking-wider px-2 py-1 rounded-lg border border-[#111111]/20">
+                <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#111111] text-[9px] sm:text-[11px] font-bold tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg border border-[#111111]/20">
                   {product.badge}
                 </span>
-                <span className={`absolute top-2 right-2 text-[11px] font-bold px-2 py-1 rounded-lg ${product.stock <= 3 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${product.stock <= 3 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
                   {product.stock <= 3 ? `Low: ${product.stock}` : `${product.stock} in stock`}
                 </span>
                 {/* Action overlay */}
@@ -123,7 +123,7 @@ export default function Products({ setActivePage }) {
                     <Eye size={15} />
                   </motion.button>
                   <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-                    onClick={() => setActivePage('add-product')}
+                    onClick={() => { localStorage.setItem('admin_edit_product', JSON.stringify(product)); setActivePage('add-product'); }}
                     className="w-9 h-9 bg-[#111111] rounded-full flex items-center justify-center text-white shadow-md">
                     <Edit2 size={15} />
                   </motion.button>
@@ -136,17 +136,17 @@ export default function Products({ setActivePage }) {
               </div>
 
               {/* Info */}
-              <div className="p-4">
-                <p className="text-xs text-[#111111] font-semibold tracking-wider uppercase mb-1">{product.boutique} · {product.type}</p>
-                <h4 className="text-sm font-semibold text-[#1A1A1A] leading-snug mb-2 line-clamp-2">{product.name}</h4>
+              <div className="p-3 sm:p-4">
+                <p className="text-[10px] sm:text-xs text-[#111111] font-semibold tracking-wider uppercase mb-1">{product.boutique} · {product.type}</p>
+                <h4 className="text-xs sm:text-sm font-semibold text-[#1A1A1A] leading-snug mb-1.5 sm:mb-2 line-clamp-2">{product.name}</h4>
                 <div className="flex items-center justify-between">
-                  <p className="text-base font-bold text-[#111111]">{product.price}</p>
+                  <p className="text-sm sm:text-base font-bold text-[#111111]">{product.price}</p>
                   <div className="flex items-center gap-1">
-                    <Star size={11} className="text-amber-400 fill-amber-400" />
-                    <span className="text-xs text-[#6B6B6B]">{product.rating}</span>
+                    <Star size={10} className="text-amber-400 fill-amber-400" />
+                    <span className="text-[10px] sm:text-xs text-[#6B6B6B]">{product.rating}</span>
                   </div>
                 </div>
-                <span className="inline-block mt-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E8DDD0] text-[#111111]">{product.category}</span>
+                <span className="inline-block mt-1.5 sm:mt-2 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E8DDD0] text-[#111111]">{product.category}</span>
               </div>
             </motion.div>
           ))}

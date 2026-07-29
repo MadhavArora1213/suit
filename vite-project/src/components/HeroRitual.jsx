@@ -1,123 +1,190 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 
+const sparkles = Array.from({ length: 15 }, (_, i) => ({
+  id: i,
+  x: 5 + Math.random() * 90,
+  y: 5 + Math.random() * 90,
+  size: 3 + Math.random() * 8,
+  delay: Math.random() * 6,
+}));
+
 export default function HeroRitual() {
-  const containerRef = useRef(null);
+  const ref = useRef(null);
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: ref,
     offset: ["start start", "end start"]
   });
-
-  const yText = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const yImage = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const imgY = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
   return (
-    <section ref={containerRef} className="relative w-full h-screen min-h-[850px] bg-[#FAF9F6] pt-[15vh] overflow-hidden flex flex-col items-center">
-      
-      {/* Massive Background Typography */}
-      <motion.div 
-        style={{ y: yText }}
-        className="absolute top-[12%] left-0 right-0 w-full flex flex-col items-center justify-center text-center z-0 pointer-events-none select-none px-4"
-      >
-        <h1 className="text-[8vw] leading-[1.05] font-black text-[#111111] uppercase tracking-tighter" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-          HERITAGE THAT <br/> SPEAKS <br/> BEFORE YOU DO
-        </h1>
-      </motion.div>
+    <section ref={ref} className="relative w-full h-screen min-h-[800px] overflow-hidden bg-[#FAF9F6]">
 
-      <div className="max-w-[1600px] w-full h-full mx-auto relative z-10">
+      {/* HERO WRAPPER */}
+      <div className="w-full h-full flex flex-col lg:flex-row">
         
-        {/* Center: Cutout Model (Replicated from Seller Hero) */}
-        <motion.div 
-          style={{ 
-            y: yImage, 
-            x: '-50%',
-            width: 'clamp(480px, 120vw, 1500px)' 
-          }}
-          initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute bottom-[14vh] left-[50%] h-[92vh] z-30 pointer-events-none overflow-visible"
+        {/* LEFT PANEL - Festive Red */}
+        <div className="relative lg:w-[55%] h-[55vh] lg:h-full flex flex-col items-center justify-center overflow-hidden px-6 md:px-12"
+          style={{ background: 'linear-gradient(145deg, #8B1A1A 0%, #5C1018 40%, #3D000B 100%)' }}
         >
-          <img 
-            src="/luxury_model_truly_transparent.png" 
-            alt="Model" 
-            className="w-full h-[120%] lg:h-[130%] object-contain object-bottom block origin-bottom transition-transform duration-700 pointer-events-auto hover:scale-[1.05]"
-            style={{ 
-              transform: 'scale(1.10)',
-              filter: "drop-shadow(0px 30px 50px rgba(0,0,0,0.3))"
+          {/* Decorative golden dots */}
+          <div className="absolute inset-0 opacity-[0.07]"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #D4AF37 1px, transparent 1px)',
+              backgroundSize: '30px 30px',
             }}
           />
-        </motion.div>
-          
-        {/* Left Column: Text & Avatars (Absolute Bottom Left) */}
-        <motion.div 
-          initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.2 }}
-          className="hidden md:flex flex-col justify-end absolute left-8 lg:left-12 bottom-[28%] max-w-[280px] z-40 bg-[#FAF9F6]/60 backdrop-blur-md p-6 rounded-3xl lg:bg-transparent lg:backdrop-blur-none lg:p-0 lg:rounded-none"
-        >
-          <p className="text-[12px] text-[#111111]/80 leading-[2] font-bold uppercase tracking-widest mb-6" style={{ fontFamily: "'Montserrat', sans-serif" }}>
-            Discover the latest drops curated for everyday elegance — bold looks with timeless vibes.
-          </p>
-          <div className="flex items-center gap-3">
-            <div className="flex -space-x-3">
-              <img src="/banarasi_suit.png" className="w-12 h-12 rounded-full border-2 border-[#FAF9F6] shadow-sm object-cover object-top" alt="Suit" />
-              <img src="/anarkali_suit.png" className="w-12 h-12 rounded-full border-2 border-[#FAF9F6] shadow-sm object-cover object-top" alt="Suit" />
-              <img src="/chikankari_suit.png" className="w-12 h-12 rounded-full border-2 border-[#FAF9F6] shadow-sm object-cover object-top" alt="Suit" />
-              <div className="w-12 h-12 rounded-full border-2 border-[#FAF9F6] bg-[#111111] shadow-sm flex items-center justify-center text-white cursor-pointer hover:bg-[#BCA58A] transition-colors">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+
+          {/* Sparkles */}
+          {sparkles.map(s => (
+            <motion.div
+              key={s.id}
+              className="absolute rounded-full bg-[#D4AF37] pointer-events-none"
+              style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.size, height: s.size }}
+              animate={{ opacity: [0, 0.8, 0], scale: [0.5, 1.2, 0.5] }}
+              transition={{ duration: 2.5, repeat: Infinity, delay: s.delay, ease: "easeInOut" }}
+            />
+          ))}
+
+          {/* Large background text */}
+          <h2 className="absolute text-[20vw] lg:text-[14vw] font-black text-white/5 select-none pointer-events-none tracking-tighter"
+            style={{ fontFamily: "'Montserrat', sans-serif", top: '5%', right: '-5%' }}>
+            RAKHI
+          </h2>
+
+          {/* Content */}
+          <div className="relative z-10 text-center lg:text-left">
+            {/* Label */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="inline-block text-[10px] tracking-[0.3em] font-bold text-[#D4AF37] uppercase border border-[#D4AF37]/30 px-4 py-2 rounded-full mb-6"
+                style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                Raksha Bandhan Special
+              </span>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="text-white"
+            >
+              <span className="text-[14vw] sm:text-[12vw] md:text-[10vw] lg:text-[7vw] font-black leading-[1] tracking-tighter block"
+                style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                RAKHI
+              </span>
+              <span className="text-[10vw] sm:text-[8vw] md:text-[6vw] lg:text-[4.5vw] font-light tracking-[0.08em] text-[#D4AF37] block -mt-2"
+                style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Special Collection
+              </span>
+            </motion.h1>
+
+            {/* Offer */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="mt-6"
+            >
+              <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-md border border-[#D4AF37]/30 rounded-full px-6 py-3">
+                <span className="text-[#D4AF37] text-[13px] md:text-[15px] font-black tracking-[0.1em]"
+                  style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  FLAT 40% OFF
+                </span>
+                <span className="text-white/50 text-[10px] tracking-[0.15em] uppercase">+ Free Gift Wrap</span>
               </div>
-            </div>
-          </div>
-        </motion.div>
+            </motion.div>
 
-        {/* Right Column: Stats Grid (Absolute Bottom Right) */}
-        <motion.div 
-          initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, delay: 0.4 }}
-          className="hidden md:grid grid-cols-2 gap-x-6 gap-y-10 absolute right-8 lg:right-12 bottom-[25%] z-40 bg-[#FAF9F6]/60 backdrop-blur-md p-6 rounded-3xl lg:bg-transparent lg:backdrop-blur-none lg:p-0 lg:rounded-none"
-        >
-          <div>
-            <h3 className="text-3xl xl:text-4xl font-black text-[#111111] tracking-tighter mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>10K+</h3>
-            <p className="text-[10px] uppercase font-bold tracking-widest text-[#111111]/70 leading-relaxed">Happy<br/>Shoppers</p>
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.9 }}
+              className="mt-8"
+            >
+              <a href="#categories"
+                className="inline-flex items-center gap-3 bg-[#D4AF37] text-[#3D000B] hover:bg-white transition-colors px-10 py-4 md:px-12 md:py-4 rounded-full text-[11px] md:text-[12px] font-black tracking-[0.15em] uppercase shadow-2xl"
+                style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                Shop Now
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </motion.div>
           </div>
-          <div>
-            <h3 className="text-3xl xl:text-4xl font-black text-[#111111] tracking-tighter mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>100+</h3>
-            <p className="text-[10px] uppercase font-bold tracking-widest text-[#111111]/70 leading-relaxed">Unique<br/>Styles</p>
-          </div>
-          <div>
-            <h3 className="text-3xl xl:text-4xl font-black text-[#111111] tracking-tighter mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>50+</h3>
-            <p className="text-[10px] uppercase font-bold tracking-widest text-[#111111]/70 leading-relaxed">Countries<br/>Served</p>
-          </div>
-          <div>
-            <h3 className="text-3xl xl:text-4xl font-black text-[#111111] tracking-tighter mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>250K+</h3>
-            <p className="text-[10px] uppercase font-bold tracking-widest text-[#111111]/70 leading-relaxed">Products<br/>Sold</p>
-          </div>
-        </motion.div>
 
-        {/* Bottom Center: Button */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.6 }}
-          className="absolute bottom-[10%] left-1/2 -translate-x-1/2 z-50"
-        >
-          <a href="#categories" className="inline-flex items-center gap-3 bg-[#111111] text-white hover:bg-[#BCA58A] transition-colors px-10 py-4 xl:px-12 xl:py-5 rounded-full shadow-2xl group">
-            <span className="text-[11px] xl:text-[12px] font-bold tracking-[0.1em] uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>Start Shopping</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-1 transition-transform"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </motion.div>
+          {/* Bottom decorative strip */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-transparent" />
+        </div>
 
-      </div>
-
-      {/* Slanted Bottom Marquee */}
-      <div className="absolute bottom-0 left-0 right-0 w-full overflow-hidden z-[60] origin-bottom-left -rotate-2 scale-[1.05] translate-y-3">
-        <div className="w-full bg-[#111111] py-3 xl:py-4 flex overflow-hidden whitespace-nowrap shadow-2xl border-t border-[#111111]">
-          <motion.div 
-            animate={{ x: [0, -1000] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="flex items-center gap-12 text-white text-[13px] xl:text-[15px] font-black uppercase tracking-[0.3em]" style={{ fontFamily: "'Montserrat', sans-serif" }}
+        {/* RIGHT PANEL - Model */}
+        <div className="relative lg:w-[45%] h-[45vh] lg:h-full flex items-center justify-center overflow-hidden bg-[#FAF9F6]">
+          
+          {/* Model image */}
+          <motion.div
+            style={{ y: imgY }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="h-full w-full flex items-end justify-center"
           >
-            {Array(15).fill('GURNAAZ ✦').map((text, i) => (
-              <span key={i}>{text}</span>
-            ))}
+            <img
+              src="/luxury_model_truly_transparent.png"
+              alt="Rakhi Collection"
+              className="h-[95%] w-auto object-contain object-bottom"
+              style={{ filter: 'drop-shadow(0px 20px 50px rgba(0,0,0,0.06))' }}
+              onError={(e) => {
+                e.target.src = '/model_maroon_suit_bgless.png';
+                e.onerror = () => {
+                  e.target.src = '/hero_model_red_bgless.png';
+                };
+              }}
+            />
+          </motion.div>
+
+          {/* Floating badges */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
+            className="absolute top-[8%] right-[8%] bg-white shadow-lg rounded-xl px-4 py-3 border border-[#BCA58A]/10"
+          >
+            <p className="text-[10px] font-bold text-[#111111] tracking-[0.05em]"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              500+ Styles
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 1.4 }}
+            className="absolute bottom-[12%] left-[8%] bg-white shadow-lg rounded-xl px-4 py-3 border border-[#BCA58A]/10"
+          >
+            <p className="text-[10px] font-bold text-[#111111] tracking-[0.05em]"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              Free Gift Wrap
+            </p>
           </motion.div>
         </div>
+
       </div>
 
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.8 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 hidden md:block"
+      >
+        <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}
+          className="flex flex-col items-center gap-1">
+          <span className="text-[8px] tracking-[0.2em] uppercase text-[#111111]/30 font-bold">Scroll</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111111" strokeWidth="1.5" className="opacity-30"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

@@ -80,12 +80,12 @@ export default function Orders() {
       </div>
 
       {/* Status pills */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-1.5 sm:gap-2 flex-wrap">
         {['All', ...statusOptions].map(s => (
           <button
             key={s}
             onClick={() => setFilterStatus(s)}
-            className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-semibold transition-all flex items-center gap-1 sm:gap-1.5 ${
               filterStatus === s ? 'bg-[#111111] text-white shadow-md shadow-[#111111]/20' : 'bg-white border border-[#E8DDD0] text-[#6B6B6B] hover:bg-[#F8F4F9]'
             }`}
           >
@@ -109,8 +109,78 @@ export default function Orders() {
         </div>
       </div>
 
-      {/* Orders Table */}
-      <div className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden">
+      {/* Orders - Mobile Cards */}
+      <div className="lg:hidden space-y-3">
+        {filtered.map((order, i) => {
+          const sc = statusConfig[order.status] || statusConfig.Pending;
+          const ordId = order.orderId || order.id;
+          const productName = order.product || (order.items && order.items.length > 0 ? order.items[0].name + (order.items.length > 1 ? ` +${order.items.length - 1} more` : '') : 'Custom Suit');
+          const productSize = order.size || (order.items && order.items.length > 0 ? order.items[0].size : 'M');
+
+          return (
+            <motion.div key={ordId} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
+              className="bg-white rounded-2xl border border-[#E8DDD0] p-4 space-y-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-[#E8DDD0] flex items-center justify-center text-xs font-bold text-[#111111] flex-shrink-0">
+                    {(order.customer || 'C').charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-[#1A1A1A] truncate">{order.customer || 'Customer'}</p>
+                    <p className="text-[10px] text-[#9E9189]">{ordId} · {order.city || 'N/A'}</p>
+                  </div>
+                </div>
+                <select
+                  value={order.status}
+                  onChange={e => updateStatus(ordId, e.target.value)}
+                  className="text-[10px] font-semibold px-2 py-1 rounded-full border-0 appearance-none cursor-pointer focus:outline-none pr-5 flex-shrink-0"
+                  style={{ background: sc.bg, color: sc.text }}
+                >
+                  {statusOptions.map(s => <option key={s}>{s}</option>)}
+                </select>
+              </div>
+              <div className="text-xs text-[#1A1A1A] font-medium">{productName}</div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold text-[#1A1A1A]">{order.amount}</span>
+                  <span className="text-[10px] text-[#9E9189]">{order.date}</span>
+                </div>
+                <button
+                  onClick={() => setExpandedId(expandedId === ordId ? null : ordId)}
+                  className="text-[10px] text-[#111111] font-semibold flex items-center gap-1"
+                >
+                  {expandedId === ordId ? 'Less' : 'Details'}
+                </button>
+              </div>
+              {expandedId === ordId && (
+                <div className="pt-2 border-t border-[#E8DDD0] grid grid-cols-2 gap-2 text-[10px]">
+                  <div><span className="text-[#9E9189]">Size:</span> {productSize}</div>
+                  <div><span className="text-[#9E9189]">Payment:</span> {order.payment || 'N/A'}</div>
+                  <div><span className="text-[#9E9189]">Email:</span> {order.email || 'N/A'}</div>
+                  <div><span className="text-[#9E9189]">Date:</span> {order.date || 'N/A'}</div>
+                  {order.items && order.items.length > 0 && (
+                    <div className="col-span-2 pt-2 border-t border-[#E8DDD0] space-y-2">
+                      <p className="text-[#9E9189] font-bold uppercase">Items</p>
+                      {order.items.map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-2 bg-[#FAF9F6] rounded-lg p-2">
+                          <img src={item.image} alt={item.name} className="w-8 h-10 object-cover object-top rounded" />
+                          <div className="min-w-0">
+                            <p className="font-semibold truncate">{item.name}</p>
+                            <p className="text-[#9E9189]">Size: {item.size} · Qty: {item.quantity}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Orders Table - Desktop */}
+      <div className="hidden lg:block bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[800px]">
             <thead>

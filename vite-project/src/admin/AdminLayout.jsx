@@ -134,24 +134,24 @@ export default function AdminLayout({ children, activePage, setActivePage, onLog
       </motion.aside>
 
       {/* Main */}
-      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300"
-        style={{ marginLeft: collapsed ? 76 : 256 }}>
+      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300 lg:ml-[var(--sidebar-w)]"
+        style={{ '--sidebar-w': collapsed ? '76px' : '256px' }}>
         {/* Topbar */}
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-[#E8DDD0]/60 px-6 py-4 flex items-center gap-4 shadow-sm">
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-[#E8DDD0]/60 px-4 sm:px-6 py-3 sm:py-4 flex items-center gap-3 sm:gap-4 shadow-sm">
           <button onClick={() => setMobileOpen(true)}
             className="lg:hidden p-2 rounded-xl hover:bg-[#E8DDD0] transition-colors" style={{ color: '#111111' }}>
             <Menu size={20} />
           </button>
-          <div>
-            <h2 className="text-lg font-semibold text-[#1A1A1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-lg font-semibold text-[#1A1A1A] truncate" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               {activeItem?.label || 'Dashboard'}
             </h2>
-            <p className="text-xs tracking-wider uppercase" style={{ color: '#111111', opacity: 0.7 }}>
+            <p className="text-[10px] sm:text-xs tracking-wider uppercase hidden sm:block" style={{ color: '#111111', opacity: 0.7 }}>
               Gurnaaz Ethnic Wear · Admin
             </p>
           </div>
           {/* Breadcrumb dot */}
-          <div className="ml-4 hidden sm:flex items-center gap-2">
+          <div className="ml-4 hidden md:flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full" style={{ background: '#111111' }} />
             <span className="text-xs text-[#9E9189] font-medium">{activeItem?.label}</span>
           </div>
@@ -169,7 +169,7 @@ export default function AdminLayout({ children, activePage, setActivePage, onLog
         </header>
 
         {/* Page */}
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-4 sm:p-6 overflow-auto">
           <AnimatePresence mode="wait">
             <motion.div key={activePage}
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}

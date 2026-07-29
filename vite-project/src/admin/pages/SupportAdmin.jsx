@@ -31,31 +31,31 @@ export default function SupportAdmin() {
   });
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Support Tickets</h1>
-          <p className="text-sm text-[#6B8C90] mt-1">Manage and respond to customer inquiries from the contact page</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#1A1A1A] tracking-tight">Support Tickets</h1>
+          <p className="text-xs sm:text-sm text-[#6B8C90] mt-1">Manage and respond to customer inquiries</p>
         </div>
         
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A8BCBE]" />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full md:w-auto">
+          <div className="relative flex-1 sm:flex-initial">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A8BCBE]" />
             <input 
               type="text"
               placeholder="Search email or name..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-white border border-[#E8DDD0] rounded-xl text-sm focus:outline-none focus:border-[#111111] transition-colors w-64"
+              className="pl-9 pr-3 py-2 bg-white border border-[#E8DDD0] rounded-xl text-xs sm:text-sm focus:outline-none focus:border-[#111111] transition-colors w-full sm:w-56 md:w-64"
             />
           </div>
-          <div className="bg-white border border-[#E8DDD0] rounded-xl px-4 py-2 flex items-center gap-2">
-            <Filter size={16} className="text-[#A8BCBE]" />
+          <div className="bg-white border border-[#E8DDD0] rounded-xl px-3 sm:px-4 py-2 flex items-center gap-2">
+            <Filter size={14} className="text-[#A8BCBE]" />
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="bg-transparent text-sm text-[#1A1A1A] focus:outline-none"
+              className="bg-transparent text-xs sm:text-sm text-[#1A1A1A] focus:outline-none"
             >
               <option value="all">All Status</option>
               <option value="new">New</option>
@@ -67,21 +67,21 @@ export default function SupportAdmin() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
         {[
-          { label: 'Total Inquiries', value: tickets.length, color: '#111111' },
+          { label: 'Total', value: tickets.length, color: '#111111' },
           { label: 'New', value: tickets.filter(t => t.status === 'new').length, color: '#f59e0b' },
           { label: 'Closed', value: tickets.filter(t => t.status === 'closed').length, color: '#10b981' }
         ].map((stat, i) => (
-          <div key={i} className="bg-white rounded-2xl p-6 border border-[#E8DDD0] shadow-sm">
-            <p className="text-sm text-[#6B8C90] uppercase tracking-wider mb-2 font-medium">{stat.label}</p>
-            <p className="text-3xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
+          <div key={i} className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 md:p-6 border border-[#E8DDD0] shadow-sm">
+            <p className="text-[10px] sm:text-xs text-[#6B8C90] uppercase tracking-wider mb-1 sm:mb-2 font-medium">{stat.label}</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold" style={{ color: stat.color }}>{stat.value}</p>
           </div>
         ))}
       </div>
 
       {/* Ticket List */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         <AnimatePresence>
           {filteredTickets.map(ticket => (
             <motion.div
@@ -89,45 +89,47 @@ export default function SupportAdmin() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, height: 0 }}
-              className="bg-white rounded-2xl p-6 border border-[#E8DDD0] shadow-sm flex flex-col md:flex-row gap-6 hover:shadow-md transition-all group"
+              className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-[#E8DDD0] shadow-sm flex flex-col md:flex-row gap-4 sm:gap-6 hover:shadow-md transition-all group"
             >
               <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h3 className="font-bold text-[#1A1A1A] text-lg">{ticket.name}</h3>
-                  <a href={`mailto:${ticket.email}`} className="text-sm text-[#6B8C90] hover:text-[#111111] flex items-center gap-1 transition-colors">
-                    <Mail size={14} />
-                    {ticket.email}
-                  </a>
-                  <span className="text-xs text-[#A8BCBE] ml-auto">
-                    {new Date(ticket.createdAt).toLocaleString()}
-                  </span>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-2">
+                  <h3 className="font-bold text-[#1A1A1A] text-base sm:text-lg">{ticket.name}</h3>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <a href={`mailto:${ticket.email}`} className="text-xs sm:text-sm text-[#6B8C90] hover:text-[#111111] flex items-center gap-1 transition-colors">
+                      <Mail size={12} />
+                      {ticket.email}
+                    </a>
+                    <span className="text-[10px] sm:text-xs text-[#A8BCBE]">
+                      {new Date(ticket.createdAt).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
                 
                 <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#E8DDD0] text-sm text-[#1A1A1A] leading-relaxed mb-4">
                   {ticket.message}
                 </div>
                 
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-medium uppercase tracking-wider text-[#A8BCBE]">Status:</span>
-                  <div className="flex gap-2">
+                <div className="flex items-start sm:items-center gap-2 flex-wrap">
+                  <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-[#A8BCBE] hidden sm:inline">Status:</span>
+                  <div className="flex gap-1.5 sm:gap-2 flex-wrap">
                     <button
                       onClick={() => updateStatus(ticket.id, 'new')}
-                      className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${ticket.status === 'new' ? 'bg-amber-100 text-amber-700 border border-amber-200' : 'bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100'}`}
+                      className={`px-2.5 sm:px-3 py-1 text-[10px] sm:text-xs rounded-full font-medium transition-colors ${ticket.status === 'new' ? 'bg-amber-100 text-amber-700 border border-amber-200' : 'bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100'}`}
                     >
                       New
                     </button>
                     <button
                       onClick={() => updateStatus(ticket.id, 'in-progress')}
-                      className={`px-3 py-1 text-xs rounded-full font-medium transition-colors flex items-center gap-1 ${ticket.status === 'in-progress' ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100'}`}
+                      className={`px-2.5 sm:px-3 py-1 text-[10px] sm:text-xs rounded-full font-medium transition-colors flex items-center gap-1 ${ticket.status === 'in-progress' ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100'}`}
                     >
-                      <Clock size={12} />
+                      <Clock size={10} />
                       In Progress
                     </button>
                     <button
                       onClick={() => updateStatus(ticket.id, 'closed')}
-                      className={`px-3 py-1 text-xs rounded-full font-medium transition-colors flex items-center gap-1 ${ticket.status === 'closed' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100'}`}
+                      className={`px-2.5 sm:px-3 py-1 text-[10px] sm:text-xs rounded-full font-medium transition-colors flex items-center gap-1 ${ticket.status === 'closed' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-gray-50 text-gray-400 border border-gray-200 hover:bg-gray-100'}`}
                     >
-                      <CheckCircle size={12} />
+                      <CheckCircle size={10} />
                       Closed
                     </button>
                   </div>

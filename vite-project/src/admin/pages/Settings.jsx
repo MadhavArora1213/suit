@@ -124,33 +124,33 @@ export default function Settings() {
   return (
     <div className="space-y-1">
       {/* Page header */}
-      <div className="mb-5">
-        <h2 className="text-2xl font-semibold text-[#1A1A1A]">Settings</h2>
-        <p className="text-sm text-[#6B7A7C] mt-1">Manage your store configuration and admin preferences</p>
+      <div className="mb-4 sm:mb-5">
+        <h2 className="text-xl sm:text-2xl font-semibold text-[#1A1A1A]">Settings</h2>
+        <p className="text-xs sm:text-sm text-[#6B7A7C] mt-1">Manage your store configuration and admin preferences</p>
       </div>
 
-      {/* TWO-COLUMN GRID — eliminates empty right space */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+      {/* TWO-COLUMN GRID */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-5">
 
-        {/* ── LEFT COLUMN ─────────────────────────────── */}
-        <div className="space-y-5">
+        {/* LEFT COLUMN */}
+        <div className="space-y-4 sm:space-y-5">
 
           {/* Branding */}
           <SectionCard title="Branding" subtitle="Logo and site identity" icon={Palette}>
             {/* Logo */}
-            <div className="flex items-center gap-5 mb-5 pb-5 border-b border-[#E8DDD0]">
-              <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-[#E8DDD0] flex items-center justify-center overflow-hidden flex-shrink-0 bg-[#FAF9F6]">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 mb-5 pb-5 border-b border-[#E8DDD0]">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-dashed border-[#E8DDD0] flex items-center justify-center overflow-hidden flex-shrink-0 bg-[#FAF9F6]">
                 {logoPreview
                   ? <img src={logoPreview} alt="Logo" className="w-full h-full object-cover" />
-                  : <span className="text-3xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: P }}>G</span>
+                  : <span className="text-2xl sm:text-3xl font-bold" style={{ fontFamily: "'Cormorant Garamond', serif", color: P }}>G</span>
                 }
               </div>
-              <div>
-                <p className="text-lg font-semibold text-[#1A1A1A] mb-1">Store Logo</p>
-                <p className="text-sm text-[#6B7A7C] mb-3">PNG or SVG · transparent bg · 200×200px</p>
-                <label className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-xl cursor-pointer border transition-colors"
+              <div className="text-center sm:text-left">
+                <p className="text-base sm:text-lg font-semibold text-[#1A1A1A] mb-1">Store Logo</p>
+                <p className="text-xs sm:text-sm text-[#6B7A7C] mb-3">PNG or SVG · transparent bg · 200×200px</p>
+                <label className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold px-4 py-2 sm:py-2.5 rounded-xl cursor-pointer border transition-colors"
                   style={{ background: '#E8DDD0', color: P, borderColor: '#E8DDD0' }}>
-                  <Upload size={14} /> Upload Logo
+                  <Upload size={13} /> Upload Logo
                   <input type="file" accept="image/*" onChange={handleLogo} className="hidden" />
                 </label>
               </div>
@@ -185,8 +185,8 @@ export default function Settings() {
 
         </div>
 
-        {/* ── RIGHT COLUMN ────────────────────────────── */}
-        <div className="space-y-5">
+        {/* RIGHT COLUMN */}
+        <div className="space-y-4 sm:space-y-5">
 
           {/* Firebase Config */}
           <SectionCard title="Firebase Configuration" subtitle="Database and authentication keys" icon={Database}>
@@ -247,21 +247,21 @@ export default function Settings() {
           </SectionCard>
 
           {/* Danger Zone */}
-          <div className="bg-red-50 rounded-2xl border border-red-200 p-6">
+          <div className="bg-red-50 rounded-2xl border border-red-200 p-4 sm:p-6">
             <div className="flex items-start gap-3 mb-4">
-              <div className="w-9 h-9 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Shield size={18} className="text-red-500" />
+              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Shield size={16} className="text-red-500" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-red-700">Danger Zone</h3>
-                <p className="text-sm text-red-400 mt-0.5">Irreversible actions. Proceed with caution.</p>
+                <h3 className="text-base sm:text-lg font-semibold text-red-700">Danger Zone</h3>
+                <p className="text-xs sm:text-sm text-red-400 mt-0.5">Irreversible actions. Proceed with caution.</p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <button className="py-3 border border-red-300 text-red-600 rounded-xl text-sm font-semibold hover:bg-red-100 transition-colors">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+              <button className="py-2.5 sm:py-3 border border-red-300 text-red-600 rounded-xl text-xs sm:text-sm font-semibold hover:bg-red-100 transition-colors">
                 Clear All Orders
               </button>
-              <button className="py-3 border border-red-300 text-red-600 rounded-xl text-sm font-semibold hover:bg-red-100 transition-colors">
+              <button className="py-2.5 sm:py-3 border border-red-300 text-red-600 rounded-xl text-xs sm:text-sm font-semibold hover:bg-red-100 transition-colors">
                 Reset All Products
               </button>
             </div>

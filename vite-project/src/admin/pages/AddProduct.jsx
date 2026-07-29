@@ -35,32 +35,42 @@ const Card = ({ title, subtitle, children }) => (
 );
 
 export default function AddProduct({ setActivePage, editProduct = null }) {
-  const [form, setForm] = useState({
-    name: editProduct?.name || '',
-    price: editProduct?.price?.replace('₹', '').replace(',', '') || '',
-    originalPrice: editProduct?.originalPrice?.replace('₹', '').replace(',', '') || '',
-    boutique: editProduct?.boutique || '',
-    badge: editProduct?.badge || '',
-    collection: editProduct?.collection || 'Trending',
-    styleCategory: editProduct?.styleCategory || 'Traditional',
-    suitType: editProduct?.suitType || 'Anarkali',
-    shortDesc: editProduct?.shortDesc || '',
-    fabricDetails: editProduct?.fabricDetails || '',
-    fabricName: editProduct?.fabricName || '',
-    fabricDesc: editProduct?.fabricDesc || '',
-    rating: editProduct?.rating || '4.5',
-    igLikes: editProduct?.igLikes || '',
-    igComments: editProduct?.igComments || '',
-    videoUrl: editProduct?.videoUrl || '',
-    reelUrl: editProduct?.reelUrl || '',
+  const [editData] = useState(() => {
+    const saved = localStorage.getItem('admin_edit_product');
+    if (saved) {
+      try { return JSON.parse(saved); } catch(e) { return null; }
+    }
+    return null;
   });
 
-  const [selectedSizes, setSelectedSizes] = useState(editProduct?.sizes || []);
-  const [selectedOccasions, setSelectedOccasions] = useState(editProduct?.occasions || []);
-  const [selectedCare, setSelectedCare] = useState(editProduct?.care || []);
-  const [stockQty, setStockQty] = useState(editProduct?.stockQty || {});
-  const [mainImage, setMainImage] = useState(editProduct?.image || null);
-  const [additionalImages, setAdditionalImages] = useState(editProduct?.additionalImages || []);
+  const ep = editProduct || editData;
+
+  const [form, setForm] = useState({
+    name: ep?.name || '',
+    price: ep?.price?.replace('₹', '').replace(/,/g, '') || '',
+    originalPrice: ep?.originalPrice?.replace('₹', '').replace(/,/g, '') || '',
+    boutique: ep?.boutique || '',
+    badge: ep?.badge || '',
+    collection: ep?.collection || 'Trending',
+    styleCategory: ep?.styleCategory || 'Traditional',
+    suitType: ep?.suitType || ep?.type || 'Anarkali',
+    shortDesc: ep?.shortDesc || '',
+    fabricDetails: ep?.fabricDetails || '',
+    fabricName: ep?.fabricName || '',
+    fabricDesc: ep?.fabricDesc || '',
+    rating: ep?.rating?.toString() || '4.5',
+    igLikes: ep?.igLikes || '',
+    igComments: ep?.igComments || '',
+    videoUrl: ep?.videoUrl || '',
+    reelUrl: ep?.reelUrl || '',
+  });
+
+  const [selectedSizes, setSelectedSizes] = useState(ep?.sizes || []);
+  const [selectedOccasions, setSelectedOccasions] = useState(ep?.occasions || []);
+  const [selectedCare, setSelectedCare] = useState(ep?.care || []);
+  const [stockQty, setStockQty] = useState(ep?.stockQty || {});
+  const [mainImage, setMainImage] = useState(ep?.image || null);
+  const [additionalImages, setAdditionalImages] = useState(ep?.additionalImages || []);
   const [boutiques, setBoutiques] = useState([]);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -94,7 +104,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
     }
     setSaving(true);
     const product = {
-      id: editProduct?.id || `admin_${Date.now()}`,
+      id: ep?.id || `admin_${Date.now()}`,
       name: form.name,
       price: `₹${Number(form.price).toLocaleString('en-IN')}`,
       priceNum: Number(form.price),
@@ -121,16 +131,17 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       stockQty,
       image: mainImage || '/designer_suit_1.png',
       additionalImages,
-      addedAt: editProduct?.addedAt || new Date().toISOString(),
+      addedAt: ep?.addedAt || new Date().toISOString(),
       source: 'admin',
     };
 
-    if (editProduct) {
-      updateProduct(editProduct.id, product);
+    if (ep) {
+      updateProduct(ep.id, product);
     } else {
       addProduct(product);
     }
 
+    localStorage.removeItem('admin_edit_product');
     notifyWebsite();
     setSaving(false);
     setSaved(true);
@@ -146,7 +157,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
           <ArrowLeft size={18} className="text-[#6B8C90]" />
         </button>
         <div>
-          <h2 className="text-2xl font-semibold text-[#1A1A1A]">{editProduct ? 'Edit Product' : 'Add New Product'}</h2>
+          <h2 className="text-2xl font-semibold text-[#1A1A1A]">{ep ? 'Edit Product' : 'Add New Product'}</h2>
           <p className="text-sm text-[#6B8C90]">Fill in details — saved product will appear on the website instantly</p>
         </div>
         <motion.button type="submit" disabled={saving}
