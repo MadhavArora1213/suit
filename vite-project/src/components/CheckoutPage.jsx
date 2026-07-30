@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, CreditCard, Shield, QrCode, AlertCircle, ShoppingBag, Truck, MessageSquare } from 'lucide-react';
 import { addOrder } from '../utils/adminStore';
+import { RAZORPAY_KEY_ID, initiateRazorpayPayment } from '../utils/razorpay';
 
 export default function CheckoutPage({ cart, setView, clearCart }) {
   // Steps: 1 = Address, 2 = Payment, 3 = Completed
@@ -91,33 +92,10 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
     setCheckoutStep(2);
   };
 
-  const handlePaymentSubmit = (e) => {
-    e.preventDefault();
-    
-    // Validations based on selected method
-    if (paymentMode === 'card') {
-      if (!cardData.cardholder || cardData.cardNumber.length < 19 || cardData.expiry.length < 5 || cardData.cvv.length < 3) {
-        alert('Please fill in valid Card Details (16-digit card number, MM/YY expiry, and 3-digit CVV).');
-        return;
-      }
-    } else if (paymentMode === 'upi') {
-      if (!upiId.includes('@')) {
-        alert('Please enter a valid UPI ID (e.g. name@upi).');
-        return;
-      }
-    }
-
-    // Trigger simulation loader
-    const paymentStr = paymentMode === 'card' ? 'Debit/Credit Card' : paymentMode === 'upi' ? `UPI (${upiId})` : 'Cash on Delivery (COD)';
-    setFinalOrderCart([...cart]);
-    setFinalPaymentMode(paymentStr);
-    setProcessingPayment(true);
-    setLoadingMsg('Connecting to secure banking gateway...');
-
+  const buildOrderRecord = (paymentStr, paymentId) => {
     const subtotal = getSubtotal();
     const grandTotal = getGrandTotal();
-
-    const orderRecord = {
+    return {
       id: orderId,
       orderId: orderId,
       customer: formData.name,
@@ -130,6 +108,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
       amount: `₹${grandTotal.toLocaleString()}`,
       amountNum: grandTotal,
       payment: paymentStr,
+      paymentId: paymentId || '',
       status: 'Pending',
       date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
       createdAt: new Date().toISOString(),
@@ -145,21 +124,77 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
       discount: appliedDiscount,
       grandTotal: grandTotal
     };
+  };
 
-    setTimeout(() => {
-      setLoadingMsg('Verifying payment authentication token...');
+  const finalizeOrder = (paymentStr, paymentId) => {
+    const orderRecord = buildOrderRecord(paymentStr, paymentId);
+    addOrder(orderRecord);
+    setFinalOrderCart([...cart]);
+    setFinalPaymentMode(paymentStr);
+    setProcessingPayment(false);
+    setCheckoutStep(3);
+    clearCart();
+  };
+
+  const handlePaymentSubmit = (e) => {
+    e.preventDefault();
+    
+    const subtotal = getSubtotal();
+    const grandTotal = getGrandTotal();
+
+    // COD - no Razorpay needed
+    if (paymentMode === 'cod') {
+      const paymentStr = 'Cash on Delivery (COD)';
+      setFinalOrderCart([...cart]);
+      setFinalPaymentMode(paymentStr);
+      setProcessingPayment(true);
+      setLoadingMsg('Placing your COD order...');
+
       setTimeout(() => {
-        setLoadingMsg('Creating secure order database records...');
+        finalizeOrder(paymentStr, '');
+      }, 1500);
+      return;
+    }
+
+    // Card / UPI - use Razorpay
+    if (RAZORPAY_KEY_ID === 'rzp_test_YOUR_KEY_HERE') {
+      alert('Razorpay test key not configured. Please add your test key in src/utils/razorpay.js');
+      return;
+    }
+
+    if (paymentMode === 'card') {
+      if (!cardData.cardholder || cardData.cardNumber.length < 19 || cardData.expiry.length < 5 || cardData.cvv.length < 3) {
+        alert('Please fill in valid Card Details (16-digit card number, MM/YY expiry, and 3-digit CVV).');
+        return;
+      }
+    } else if (paymentMode === 'upi') {
+      if (!upiId.includes('@')) {
+        alert('Please enter a valid UPI ID (e.g. name@upi).');
+        return;
+      }
+    }
+
+    const paymentStr = paymentMode === 'card' ? 'Debit/Credit Card' : `UPI (${upiId})`;
+    setProcessingPayment(true);
+    setLoadingMsg('Redirecting to Razorpay...');
+
+    initiateRazorpayPayment({
+      amount: grandTotal,
+      orderId: orderId,
+      customerName: formData.name,
+      customerEmail: formData.email,
+      customerPhone: formData.phone,
+      onSuccess: (paymentResponse) => {
+        setLoadingMsg('Payment verified. Creating order...');
         setTimeout(() => {
-          // Save order to store and DB
-          addOrder(orderRecord);
-          
-          setProcessingPayment(false);
-          setCheckoutStep(3);
-          clearCart(); // Clear cart after placing order
-        }, 1000);
-      }, 1000);
-    }, 1200);
+          finalizeOrder(paymentStr, paymentResponse.razorpayPaymentId);
+        }, 800);
+      },
+      onFailure: (errorMsg) => {
+        setProcessingPayment(false);
+        alert(`Payment failed: ${errorMsg}`);
+      }
+    });
   };
 
   // Step 3: Success page
@@ -268,7 +303,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
             </a>
 
             <button 
-              onClick={() => window.location.href = '/sell'}
+              onClick={() => window.location.href = '/'}
               className="flex-1 border border-[#BCA58A]/35 hover:border-[#111111] text-[#111111] py-4 rounded text-xs font-bold tracking-widest uppercase transition-all"
             >
               Back to Storefront
@@ -346,7 +381,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
           <div className="py-20 text-center border border-[#BCA58A]/15 bg-white p-10 rounded">
             <ShoppingBag size={32} className="mx-auto text-[#BCA58A] mb-4" />
             <h3 className="text-xl font-light mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Your bag is empty</h3>
-            <button onClick={() => window.location.href = '/sell'} className="mt-4 bg-[#BCA58A] text-white px-8 py-3 text-xs font-bold tracking-widest uppercase hover:bg-[#9A8268] transition-colors">
+            <button onClick={() => window.location.href = '/'} className="mt-4 bg-[#BCA58A] text-white px-8 py-3 text-xs font-bold tracking-widest uppercase hover:bg-[#9A8268] transition-colors">
               Continue Shopping
             </button>
           </div>

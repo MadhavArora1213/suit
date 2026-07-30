@@ -114,7 +114,7 @@ export default function Hero() {
           .gh-scale-large-right { transform: scale(0.65); transform-origin: bottom right; }
           .gurnaaz-watermark { padding-top: 12vh !important; }
           .fashion-text-container { top: 25% !important; }
-          .hero-model-container { bottom: 10vh !important; height: 85vh !important; width: clamp(300px, 120vw, 480px) !important; }
+          .hero-model-container { bottom: 10vh !important; height: 85vh !important; width: clamp(260px, 85vw, 480px) !important; }
         }
 
         /* ── nav hover underline ── */
@@ -132,7 +132,7 @@ export default function Hero() {
           position: 'relative',
           width: '100%',
           height: '100vh',
-          minHeight: '700px',
+          minHeight: '600px',
           background: '#FAF9F6',
           overflow: 'visible',
           fontFamily: "'Montserrat', sans-serif",

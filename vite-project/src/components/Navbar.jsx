@@ -120,7 +120,7 @@ export default function Navbar({
 
             {/* Center: Logo */}
             <div className="flex justify-center w-1/3">
-              <motion.a href="/sell" onClick={(e) => { e.preventDefault(); window.location.href = '/sell'; }} whileHover={{ scale: 1.02 }} className="cursor-pointer group flex flex-col items-center">
+              <motion.a href="/" onClick={(e) => { e.preventDefault(); window.location.href = '/'; }} whileHover={{ scale: 1.02 }} className="cursor-pointer group flex flex-col items-center">
                 <img src={gurnaazLogo} alt="GURNAAZ" className="h-16 md:h-8 lg:h-10 w-auto object-contain drop-shadow-sm" />
               </motion.a>
             </div>
@@ -486,7 +486,7 @@ export default function Navbar({
               <button onClick={() => setIsOpen(false)} className="text-[#6B6B6B] hover:text-[#111111] cursor-pointer"><X size={20} /></button>
             </div>
             <div className="flex flex-col gap-5 text-left">
-              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = '/sell'; setIsOpen(false); }}
+              <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = '/'; setIsOpen(false); }}
                 className="text-[11px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors py-1 border-b border-[#BCA58A]/10 uppercase font-semibold">
                 HOME
               </a>
@@ -547,7 +547,7 @@ export default function Navbar({
                   if (item === 'SHOP & BOUTIQUES') { setView('boutiques'); }
                   else if (item === 'COLLECTIONS') { window.location.href = '/collections'; }
                   else if (item === 'CONTACT') { setView('contact'); }
-                  else { window.location.href = '/sell'; }
+                  else { window.location.href = '/'; }
                   setIsOpen(false);
                 }}
                   className="text-[11px] tracking-[0.2em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors py-1 border-b border-[#BCA58A]/10 uppercase font-semibold">

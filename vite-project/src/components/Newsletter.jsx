@@ -46,7 +46,7 @@ export default function Newsletter() {
           transition: transform 0.2s;
         }
       `}</style>
-      <section className="relative min-h-[100vh] flex items-center bg-[#111111] overflow-hidden" style={{ marginBottom: '-1px' }}>
+      <section className="relative min-h-[60vh] md:min-h-[100vh] flex items-center bg-[#111111] overflow-hidden" style={{ marginBottom: '-1px' }}>
 
         {/* ═══ Left — Image ═══ */}
         <div className="hidden md:block absolute left-0 top-0 w-[45%] h-full">
@@ -67,13 +67,13 @@ export default function Newsletter() {
         <div className="absolute top-1/2 right-1/4 w-[300px] h-[300px] bg-[#BCA58A]/[0.04] rounded-full blur-[120px] pointer-events-none" />
 
         {/* ═══ Content ═══ */}
-        <div className="relative z-10 w-full max-w-[1300px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+        <div className="relative z-10 w-full max-w-[1300px] mx-auto px-4 sm:px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 items-center">
 
           {/* Left spacer on desktop */}
           <div className="hidden md:block" />
 
           {/* Right — Form */}
-          <div className="py-16 md:py-0">
+          <div className="py-10 sm:py-16 md:py-0">
 
             {/* Label */}
             <motion.p
@@ -96,11 +96,11 @@ export default function Newsletter() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="mb-5"
             >
-              <span className="block text-white text-[42px] md:text-[54px] font-light leading-[1.05] tracking-tight"
+              <span className="block text-white text-[32px] sm:text-[42px] md:text-[54px] font-light leading-[1.05] tracking-tight"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Never Miss
               </span>
-              <span className="block text-[#BCA58A] text-[50px] md:text-[66px] italic font-light leading-[0.95] tracking-tight"
+              <span className="block text-[#BCA58A] text-[38px] sm:text-[50px] md:text-[66px] italic font-light leading-[0.95] tracking-tight"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 a New Suit
               </span>

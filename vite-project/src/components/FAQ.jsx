@@ -29,14 +29,14 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section className="py-32 bg-[#FAF9F6] relative overflow-hidden border-t border-[#111111]/5">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12">
+    <section className="py-16 md:py-32 bg-[#FAF9F6] relative overflow-hidden border-t border-[#111111]/5">
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 md:px-12">
         
-        <div className="text-center mb-24">
-          <span className="text-[11px] tracking-[0.5em] text-[#BCA58A] uppercase font-medium mb-6 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+        <div className="text-center mb-12 md:mb-24">
+          <span className="text-[9px] sm:text-[11px] tracking-[0.5em] text-[#BCA58A] uppercase font-medium mb-4 md:mb-6 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
             Common Inquiries
           </span>
-          <h2 className="text-5xl md:text-7xl font-light text-[#111111] leading-none tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h2 className="text-3xl sm:text-5xl md:text-7xl font-light text-[#111111] leading-none tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Frequently Asked <em className="italic text-[#BCA58A] font-light">Questions</em>
           </h2>
         </div>
@@ -49,12 +49,12 @@ export default function FAQ() {
               <div key={idx} className="border-b border-[#111111]/10">
                 <button
                   onClick={() => setOpenIndex(isOpen ? -1 : idx)}
-                  className="w-full py-8 flex items-center justify-between group cursor-pointer"
+                  className="w-full py-5 md:py-8 flex items-center justify-between group cursor-pointer"
                 >
-                  <h3 className={`text-2xl font-light text-left transition-colors duration-500 ${isOpen ? 'text-[#BCA58A]' : 'text-[#111111] group-hover:text-[#BCA58A]'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  <h3 className={`text-lg sm:text-2xl font-light text-left transition-colors duration-500 ${isOpen ? 'text-[#BCA58A]' : 'text-[#111111] group-hover:text-[#BCA58A]'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {faq.question}
                   </h3>
-                  <div className={`w-10 h-10 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-500 ${isOpen ? 'border-[#BCA58A] bg-[#BCA58A] text-white' : 'border-[#111111]/20 text-[#111111] group-hover:border-[#BCA58A] group-hover:text-[#BCA58A]'}`}>
+                  <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-500 ${isOpen ? 'border-[#BCA58A] bg-[#BCA58A] text-white' : 'border-[#111111]/20 text-[#111111] group-hover:border-[#BCA58A] group-hover:text-[#BCA58A]'}`}>
                     {isOpen ? <Minus size={16} strokeWidth={1} /> : <Plus size={16} strokeWidth={1} />}
                   </div>
                 </button>
@@ -68,7 +68,7 @@ export default function FAQ() {
                       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-10 pr-12 text-[13px] text-[#555] leading-loose font-light" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                      <p className="pb-6 md:pb-10 pr-0 md:pr-12 text-[12px] md:text-[13px] text-[#555] leading-loose font-light" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                         {faq.answer}
                       </p>
                     </motion.div>

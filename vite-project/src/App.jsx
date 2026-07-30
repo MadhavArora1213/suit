@@ -448,6 +448,7 @@ function App() {
 
       {view === 'wishlist' && (
         <WishlistPage
+          allProducts={allProducts}
           setView={setView}
           favorites={favorites}
           toggleFavorite={toggleFavorite}

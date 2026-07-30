@@ -175,7 +175,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
       {/* Breadcrumb */}
       <nav className="border-b border-[#f0ece6]/50">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-10 py-3 flex items-center gap-1.5 text-[11px] text-gray-400 overflow-x-auto whitespace-nowrap no-scrollbar">
-          <button onClick={() => window.location.href = '/sell'} className="hover:text-[#8B2252] transition-colors cursor-pointer shrink-0">Home</button>
+          <button onClick={() => window.location.href = '/'} className="hover:text-[#8B2252] transition-colors cursor-pointer shrink-0">Home</button>
           <ChevronRight size={9} className="shrink-0 opacity-40" />
           {product.type && (
             <>

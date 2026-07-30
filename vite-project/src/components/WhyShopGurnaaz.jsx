@@ -138,17 +138,17 @@ export default function WhyShopGurnaaz() {
         </svg>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-12 relative z-10">
         
         {/* Header */}
-        <div className="mb-20">
-          <h1 className="text-5xl md:text-7xl font-light text-[#111111] leading-tight tracking-tight mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+        <div className="mb-10 md:mb-20">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-light text-[#111111] leading-tight tracking-tight mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Why <em className="italic text-[#BCA58A] font-light">Shop</em> From GURNAAZ
           </h1>
         </div>
 
         {/* Scattered Cards - 2x2 Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-x-20 md:gap-y-24 max-w-[900px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-x-20 md:gap-y-24 max-w-[900px] mx-auto">
           {cards.map((card, idx) => (
             <motion.div
               key={idx}
