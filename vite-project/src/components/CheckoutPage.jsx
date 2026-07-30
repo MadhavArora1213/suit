@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, CreditCard, Shield, QrCode, AlertCircle, ShoppingBag, Truck, MessageSquare } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, CreditCard, Shield, AlertCircle, ShoppingBag, Truck, MessageSquare } from 'lucide-react';
 import { addOrder } from '../utils/adminStore';
 import { RAZORPAY_KEY_ID, initiateRazorpayPayment } from '../utils/razorpay';
 
 export default function CheckoutPage({ cart, setView, clearCart }) {
   // Steps: 1 = Address, 2 = Payment, 3 = Completed
   const [checkoutStep, setCheckoutStep] = useState(1);
-  const [paymentMode, setPaymentMode] = useState('card'); // card, upi, cod
+  const [paymentMode, setPaymentMode] = useState('online'); // online, cod
   const [processingPayment, setProcessingPayment] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
   
@@ -22,14 +22,6 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
     zip: ''
   });
 
-  const [cardData, setCardData] = useState({
-    cardholder: '',
-    cardNumber: '',
-    expiry: '',
-    cvv: ''
-  });
-
-  const [upiId, setUpiId] = useState('');
   const [couponCode, setCouponCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
 
@@ -60,27 +52,6 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleCardInputChange = (e) => {
-    const { name, value } = e.target;
-    if (name === 'cardNumber') {
-      // Formatter for card number space separation
-      const val = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-      const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
-      setCardData(prev => ({ ...prev, [name]: formatted.slice(0, 19) }));
-    } else if (name === 'expiry') {
-      const val = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-      if (val.length >= 2) {
-        setCardData(prev => ({ ...prev, [name]: val.slice(0, 2) + '/' + val.slice(2, 4) }));
-      } else {
-        setCardData(prev => ({ ...prev, [name]: val }));
-      }
-    } else if (name === 'cvv') {
-      setCardData(prev => ({ ...prev, [name]: value.replace(/[^0-9]/g, '').slice(0, 3) }));
-    } else {
-      setCardData(prev => ({ ...prev, [name]: value }));
-    }
   };
 
   const handleAddressSubmit = (e) => {
@@ -139,7 +110,6 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
     
-    const subtotal = getSubtotal();
     const grandTotal = getGrandTotal();
 
     // COD - no Razorpay needed
@@ -156,25 +126,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
       return;
     }
 
-    // Card / UPI - use Razorpay
-    if (RAZORPAY_KEY_ID === 'rzp_test_YOUR_KEY_HERE') {
-      alert('Razorpay test key not configured. Please add your test key in src/utils/razorpay.js');
-      return;
-    }
-
-    if (paymentMode === 'card') {
-      if (!cardData.cardholder || cardData.cardNumber.length < 19 || cardData.expiry.length < 5 || cardData.cvv.length < 3) {
-        alert('Please fill in valid Card Details (16-digit card number, MM/YY expiry, and 3-digit CVV).');
-        return;
-      }
-    } else if (paymentMode === 'upi') {
-      if (!upiId.includes('@')) {
-        alert('Please enter a valid UPI ID (e.g. name@upi).');
-        return;
-      }
-    }
-
-    const paymentStr = paymentMode === 'card' ? 'Debit/Credit Card' : `UPI (${upiId})`;
+    // Online Payment - Razorpay
+    const paymentStr = 'Online Payment (Razorpay)';
     setProcessingPayment(true);
     setLoadingMsg('Redirecting to Razorpay...');
 
@@ -508,20 +461,19 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                     <h3 className="text-2xl font-light border-b border-[#BCA58A]/10 pb-4 text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                       Secure Checkout Gateway
                     </h3>
-                    <p className="text-xs text-[#6B6B6B] mt-1">Select your preferred payment method. Transactions are 256-bit SSL encrypted.</p>
+                    <p className="text-xs text-[#6B6B6B] mt-1">Pay securely via Razorpay. Card, UPI, Netbanking & more.</p>
                   </div>
 
-                  {/* Payment modes selectors */}
-                  <div className="grid grid-cols-3 gap-3">
+                  {/* Payment mode selectors */}
+                  <div className="grid grid-cols-2 gap-3">
                     {[
-                      { id: 'card', label: 'Credit Card', icon: <CreditCard size={16} /> },
-                      { id: 'upi', label: 'UPI / QR', icon: <QrCode size={16} /> },
-                      { id: 'cod', label: 'COD (Cash)', icon: <Truck size={16} /> }
+                      { id: 'online', label: 'Pay Online', icon: <CreditCard size={16} />, desc: 'Card / UPI / Netbanking' },
+                      { id: 'cod', label: 'COD (Cash)', icon: <Truck size={16} />, desc: 'Pay on delivery' }
                     ].map(mode => (
                       <button 
                         key={mode.id}
                         onClick={() => setPaymentMode(mode.id)}
-                        className={`py-3.5 border flex flex-col items-center gap-1.5 text-[10px] tracking-wider uppercase font-bold transition-all rounded cursor-pointer ${
+                        className={`py-4 border flex flex-col items-center gap-1.5 text-[10px] tracking-wider uppercase font-bold transition-all rounded cursor-pointer ${
                           paymentMode === mode.id 
                             ? 'bg-[#E8DDD0]/30 border-[#BCA58A] text-[#005461]' 
                             : 'border-[#BCA58A]/25 hover:border-[#111111] text-[#6B6B6B]'
@@ -529,93 +481,28 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                       >
                         {mode.icon}
                         <span>{mode.label}</span>
+                        <span className="text-[8px] normal-case tracking-normal font-normal text-[#999]">{mode.desc}</span>
                       </button>
                     ))}
                   </div>
 
-                  {/* Form Container based on selected Mode */}
                   <form onSubmit={handlePaymentSubmit} className="space-y-6 pt-4 border-t border-[#BCA58A]/10">
                     
-                    {/* CARD OPTION */}
-                    {paymentMode === 'card' && (
-                      <div className="space-y-4 animate-fadeIn">
-                        <div className="space-y-1.5 text-left">
-                          <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">Cardholder Name *</label>
-                          <input 
-                            type="text" 
-                            name="cardholder"
-                            required={paymentMode === 'card'}
-                            value={cardData.cardholder}
-                            onChange={handleCardInputChange}
-                            placeholder="e.g. Gurpreet Singh"
-                            className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
-                          />
-                        </div>
-
-                        <div className="space-y-1.5 text-left">
-                          <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">16-Digit Card Number *</label>
-                          <input 
-                            type="text" 
-                            name="cardNumber"
-                            required={paymentMode === 'card'}
-                            value={cardData.cardNumber}
-                            onChange={handleCardInputChange}
-                            placeholder="4000 1234 5678 9010"
-                            className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none p-3.5 text-xs transition-colors rounded font-semibold font-mono"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-1.5 text-left">
-                            <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">Expiry Date *</label>
-                            <input 
-                              type="text" 
-                              name="expiry"
-                              required={paymentMode === 'card'}
-                              value={cardData.expiry}
-                              onChange={handleCardInputChange}
-                              placeholder="MM/YY"
-                              className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none p-3.5 text-xs transition-colors rounded font-semibold font-mono"
-                            />
+                    {/* ONLINE PAYMENT — Razorpay */}
+                    {paymentMode === 'online' && (
+                      <div className="space-y-4 animate-fadeIn text-center">
+                        <div className="bg-[#FAF9F6] border border-[#BCA58A]/15 p-5 rounded space-y-3">
+                          <div className="flex items-center justify-center gap-2 text-[#111111]">
+                            <Shield size={16} className="text-[#005461]" />
+                            <span className="text-xs font-bold uppercase tracking-wider">Razorpay Secure</span>
                           </div>
-
-                          <div className="space-y-1.5 text-left">
-                            <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">Security CVV *</label>
-                            <input 
-                              type="password" 
-                              name="cvv"
-                              required={paymentMode === 'card'}
-                              value={cardData.cvv}
-                              onChange={handleCardInputChange}
-                              placeholder="123"
-                              className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none p-3.5 text-xs transition-colors rounded font-semibold font-mono"
-                            />
+                          <p className="text-[11px] text-[#6B6B6B] leading-relaxed">
+                            You will be redirected to Razorpay's secure payment page.<br/>
+                            Supports: Credit/Debit Card, UPI, Netbanking, Wallets, EMI.
+                          </p>
+                          <div className="flex items-center justify-center gap-4 pt-2">
+                            <img src="https://razpay.guru/assets/razorpay-logo.svg" alt="Razorpay" className="h-5 opacity-50" />
                           </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* UPI OPTION */}
-                    {paymentMode === 'upi' && (
-                      <div className="space-y-6 animate-fadeIn text-center flex flex-col items-center">
-                        <div className="w-full bg-[#FAF9F6] border border-[#BCA58A]/15 p-4 rounded text-left space-y-1.5">
-                          <span className="text-[10px] uppercase tracking-widest text-[#BCA58A] font-bold block">Option 1: Scan QR Code</span>
-                          <p className="text-xs text-[#6B6B6B] leading-relaxed">Open BHIM, GPay, PhonePe, or Paytm and scan the QR code to proceed.</p>
-                          <div className="w-36 h-36 bg-white border border-[#BCA58A]/20 p-2 shadow-inner rounded flex items-center justify-center mx-auto my-3">
-                            <img src="/gpay_qr_code.png" alt="Google Pay QR Code" className="w-full h-full object-contain" />
-                          </div>
-                        </div>
-
-                        <div className="w-full text-left space-y-1.5">
-                          <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">Option 2: Enter UPI ID *</label>
-                          <input 
-                            type="text" 
-                            required={paymentMode === 'upi'}
-                            value={upiId}
-                            onChange={e => setUpiId(e.target.value)}
-                            placeholder="e.g. name@okhdfcbank"
-                            className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none p-3.5 text-xs transition-colors rounded font-semibold font-mono"
-                          />
                         </div>
                       </div>
                     )}
@@ -640,7 +527,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                       type="submit"
                       className="w-full bg-[#005461] hover:bg-[#003B44] text-[#FAF9F6] py-4 text-xs font-bold tracking-widest transition-colors cursor-pointer uppercase rounded"
                     >
-                      {paymentMode === 'cod' ? 'PLACE CASH ON DELIVERY ORDER' : `PAY ₹${getGrandTotal().toLocaleString()} & AUTHORIZE ORDER`}
+                      {paymentMode === 'cod' ? 'PLACE CASH ON DELIVERY ORDER' : `PAY ₹${getGrandTotal().toLocaleString()} VIA RAZORPAY`}
                     </button>
                   </form>
                 </div>

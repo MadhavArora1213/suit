@@ -1,51 +1,78 @@
-// Razorpay Test Mode Configuration
-// Replace with your actual Razorpay Test Key from https://dashboard.razorpay.com/app/keys
-export const RAZORPAY_KEY_ID = 'rzp_test_YOUR_KEY_HERE';
+export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_live_TJdJXmia1aBwgA';
 
-export const createRazorpayOrder = async (amount, orderId) => {
-  // In test mode, we create a client-side order
-  // For production, this should be done on your backend server
-  return {
-    id: `order_${orderId}`,
-    amount: amount * 100, // Razorpay expects amount in paise
-    currency: 'INR',
-  };
-};
+export const initiateRazorpayPayment = async ({ amount, orderId, customerName, customerEmail, customerPhone, onSuccess, onFailure }) => {
+  try {
+    // Step 1: Create order via backend
+    const res = await fetch('/api/razorpay-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount, orderId, customerName, customerEmail, customerPhone }),
+    });
 
-export const initiateRazorpayPayment = ({ amount, orderId, customerName, customerEmail, customerPhone, onSuccess, onFailure }) => {
-  const options = {
-    key: RAZORPAY_KEY_ID,
-    amount: amount * 100, // Amount in paise
-    currency: 'INR',
-    name: 'Gurnaaz',
-    description: `Order #${orderId}`,
-    order_id: orderId,
-    handler: function (response) {
-      // Payment successful
-      onSuccess({
-        razorpayPaymentId: response.razorpay_payment_id,
-        razorpayOrderId: response.razorpay_order_id,
-        razorpaySignature: response.razorpay_signature,
-      });
-    },
-    prefill: {
-      name: customerName,
-      email: customerEmail,
-      contact: customerPhone,
-    },
-    theme: {
-      color: '#111111',
-    },
-    modal: {
-      ondismiss: function () {
-        onFailure('Payment cancelled by user');
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Failed to create order');
+    }
+
+    const orderData = await res.json();
+
+    // Step 2: Open Razorpay checkout popup
+    const options = {
+      key: orderData.keyId,
+      amount: orderData.amount,
+      currency: orderData.currency,
+      name: 'Gurnaaz',
+      description: `Order #${orderId}`,
+      order_id: orderData.orderId,
+      handler: async function (response) {
+        try {
+          // Step 3: Verify payment via backend
+          const verifyRes = await fetch('/api/razorpay-verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            }),
+          });
+
+          const verifyData = await verifyRes.json();
+
+          if (verifyData.verified) {
+            onSuccess({
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+            });
+          } else {
+            onFailure('Payment verification failed');
+          }
+        } catch (err) {
+          onFailure(err.message);
+        }
       },
-    },
-  };
+      prefill: {
+        name: customerName,
+        email: customerEmail,
+        contact: customerPhone,
+      },
+      theme: {
+        color: '#111111',
+      },
+      modal: {
+        ondismiss: function () {
+          onFailure('Payment cancelled by user');
+        },
+      },
+    };
 
-  const rzp = new window.Razorpay(options);
-  rzp.on('payment.failed', function (response) {
-    onFailure(response.error?.description || 'Payment failed');
-  });
-  rzp.open();
+    const rzp = new window.Razorpay(options);
+    rzp.on('payment.failed', function (response) {
+      onFailure(response.error?.description || 'Payment failed');
+    });
+    rzp.open();
+  } catch (err) {
+    onFailure(err.message);
+  }
 };
