@@ -501,7 +501,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                             Supports: Credit/Debit Card, UPI, Netbanking, Wallets, EMI.
                           </p>
                           <div className="flex items-center justify-center gap-4 pt-2">
-                            <img src="https://razpay.guru/assets/razorpay-logo.svg" alt="Razorpay" className="h-5 opacity-50" />
+                            <span className="text-[10px] text-[#999] tracking-wider uppercase">Powered by Razorpay</span>
                           </div>
                         </div>
                       </div>
