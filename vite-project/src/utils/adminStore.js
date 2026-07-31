@@ -750,7 +750,44 @@ export const notifyWebsite = () => {
   window.dispatchEvent(new CustomEvent('admin-data-updated'));
 };
 
-export const staticBoutiques = {};
+export const staticBoutiques = {
+  'Awadh Kraft': {
+    id: 'b1',
+    name: 'Awadh Kraft',
+    logo: '/chikankari_suit.png',
+    coverImage: '/chikankari_suit.png',
+    rating: 4.9,
+    reviews: 124,
+    location: 'Lucknow, UP'
+  },
+  'Rajputana Heritage': {
+    id: 'b2',
+    name: 'Rajputana Heritage',
+    logo: '/banarasi_suit.png',
+    coverImage: '/banarasi_suit.png',
+    rating: 4.8,
+    reviews: 89,
+    location: 'Varanasi, UP'
+  },
+  'Nazraana': {
+    id: 'b3',
+    name: 'Nazraana',
+    logo: '/pakistani_suit.png',
+    coverImage: '/pakistani_suit.png',
+    rating: 4.7,
+    reviews: 210,
+    location: 'Delhi'
+  },
+  'Rajputana': {
+    id: 'b4',
+    name: 'Rajputana',
+    logo: '/sharara_suit.png',
+    coverImage: '/sharara_suit.png',
+    rating: 5.0,
+    reviews: 312,
+    location: 'Jaipur, RJ'
+  }
+};
 
 // ── BOUTIQUES ────────────────────────────────────────────────
 export const getBoutiques = () => get(KEYS.boutiques, []);

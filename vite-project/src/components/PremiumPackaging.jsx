@@ -84,40 +84,40 @@ export default function PremiumPackaging() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-[#8B1A1A] text-[9px] md:text-[11px] tracking-[0.4em] uppercase font-bold"
+              <div className="flex items-center gap-4 mb-8">
+                <span className="text-[#8B1A1A] text-[10px] md:text-[11px] tracking-[0.3em] uppercase font-bold"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   A Unique Discovery
                 </span>
-                <div className="w-12 h-[1px] bg-[#1A0008]/20" />
+                <div className="w-16 h-[1px] bg-[#D4AF37]/60" />
               </div>
 
-              <h2 className="text-[40px] sm:text-[50px] md:text-[64px] font-light text-[#1A0008] leading-[1.1] tracking-tighter mb-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <h2 className="text-6xl md:text-7xl lg:text-[80px] font-light text-[#1A0008] leading-[1.05] tracking-tight mb-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Peek Inside <br />
-                <span className="italic text-[#D4AF37] font-light">The Magic</span>
+                <span className="italic text-[#D4AF37] font-light">The Experience</span>
               </h2>
 
-              <p className="text-[14px] md:text-[16px] text-[#1A0008]/70 leading-relaxed font-light mb-12 max-w-md" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-[13px] md:text-[15px] text-[#1A0008]/70 leading-relaxed font-medium mb-12 max-w-md tracking-wide" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 True luxury is in the unseen details. Move your cursor over the signature box to act as a spotlight, revealing the meticulous layers of our premium packaging ritual hidden beneath the surface.
               </p>
 
               {/* Layer Features */}
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-8">
                 {[
                   { title: 'Branded Butter Paper', desc: 'Garments delicately enveloped in premium butter paper.' },
                   { title: 'Signature Stickers', desc: 'Custom brand stickers for a perfect, secure finish.' },
                   { title: 'Thank You Card', desc: 'A heartfelt, personalized note of gratitude.' },
                   { title: 'Stamped Business Card', desc: 'Our authentic brand mark stamped with care.' },
                 ].map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-5 group cursor-default">
-                    <div className="w-8 h-8 rounded-full border border-[#1A0008]/20 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-[#8B1A1A] group-hover:border-[#8B1A1A] transition-colors duration-500">
-                      <span className="text-[#1A0008]/60 group-hover:text-white text-[10px] font-bold transition-colors duration-500">{idx + 1}</span>
+                  <div key={idx} className="flex items-start gap-6 group cursor-default">
+                    <div className="text-[#D4AF37] text-2xl md:text-3xl font-light italic mt-1 transition-transform duration-500 group-hover:-translate-y-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                       0{idx + 1}
                     </div>
                     <div>
-                      <h4 className="text-[#1A0008] text-[18px] md:text-[20px] font-light mb-1 leading-tight group-hover:text-[#8B1A1A] transition-colors duration-500" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                      <h4 className="text-[#1A0008] text-[22px] md:text-[26px] font-medium mb-1.5 leading-tight group-hover:text-[#8B1A1A] transition-colors duration-500" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                         {item.title}
                       </h4>
-                      <p className="text-[#1A0008]/50 text-[13px] font-light leading-relaxed max-w-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      <p className="text-[#1A0008]/50 text-[10px] md:text-[11px] font-bold leading-relaxed max-w-sm tracking-[0.15em] uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         {item.desc}
                       </p>
                     </div>

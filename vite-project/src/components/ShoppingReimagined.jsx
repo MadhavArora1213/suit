@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 const CRAFTS = [
-  { id: 'intro', title: 'The Artisanal Edit', subtitle: 'Curated by Craft', type: 'intro' },
+  { id: 'intro', title: 'Signature Collections', subtitle: 'Shop by Fabric', type: 'intro' },
   { id: 'banarasi', title: 'The Banarasi Weave', subtitle: 'Royal, heavy silk with intricate zari work originating from Varanasi.', image: '/banarasi_suit.png' },
   { id: 'chikankari', title: 'Pure Chikankari', subtitle: 'Delicate and artful hand embroidery from the heart of Lucknow.', image: '/chikankari_suit.png' },
   { id: 'pakistani', title: 'Pakistani Silhouettes', subtitle: 'Long, flowing kameez paired with wide trousers for a dramatic look.', image: '/pakistani_suit.png' },

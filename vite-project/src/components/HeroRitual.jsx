@@ -62,9 +62,14 @@ export default function HeroRitual({ onSelectFilter }) {
         </p>
 
         {mounted && (
-          <div className="mt-6 text-sm bg-white border border-[#D4AF37] px-5 py-2.5 rounded-full shadow-[4px_4px_0px_rgba(26,0,8,1)] flex items-center gap-3 font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            <span className="text-[#8B1A1A] tracking-widest text-[10px]">OFFER ENDS IN:</span>
-            <span className="text-[#1A0008] tabular-nums tracking-widest text-[12px]">{String(timeLeft.days).padStart(2, '0')}d : {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.mins).padStart(2, '0')}m</span>
+          <div className="mt-6 flex flex-col items-center gap-3">
+            <div className="text-sm bg-white border border-[#D4AF37] px-5 py-2.5 rounded-full shadow-[4px_4px_0px_rgba(26,0,8,1)] flex items-center gap-3 font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <span className="text-[#8B1A1A] tracking-widest text-[10px]">OFFER ENDS IN:</span>
+              <span className="text-[#1A0008] tabular-nums tracking-widest text-[12px]">{String(timeLeft.days).padStart(2, '0')}d : {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.mins).padStart(2, '0')}m</span>
+            </div>
+            <p className="text-[10px] tracking-[0.2em] uppercase font-bold text-[#1A0008]/50" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Offer valid till August 28th
+            </p>
           </div>
         )}
       </div>

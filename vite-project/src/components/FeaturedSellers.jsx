@@ -3,36 +3,42 @@ import { staticBoutiques, getAllProducts } from '../utils/adminStore';
 
 export default function FeaturedSellers({ setView, setSelectedBoutique }) {
   const allProducts = getAllProducts();
-  const sellers = Object.values(staticBoutiques).slice(0, 6);
+  const sellers = Object.values(staticBoutiques).slice(0, 4); 
 
   return (
     <section className="py-24 md:py-32 bg-[#FAF9F6] relative overflow-hidden">
       
-      {/* Delicate Background Texture */}
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#D4AF37 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      {/* Delicate Grid Background */}
+      <div className="absolute inset-0 opacity-[0.2] pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(#8B1A1A 1px, transparent 1px), linear-gradient(90deg, #8B1A1A 1px, transparent 1px)',
+          backgroundSize: '30px 30px',
+        }} 
+      />
 
-      <div className="max-w-[1400px] mx-auto text-center px-6 mb-20 relative z-10">
+      {/* Title Section */}
+      <div className="max-w-[1200px] mx-auto px-6 mb-24 relative z-10 text-center">
         <motion.div 
           initial={{ opacity: 0, scaleY: 0 }}
           whileInView={{ opacity: 1, scaleY: 1 }}
           viewport={{ once: true }}
-          className="w-px h-16 bg-[#D4AF37]/50 mx-auto mb-8 origin-top" 
+          className="w-px h-16 bg-[#1A0008]/30 mx-auto mb-8 origin-top" 
         />
         <motion.p 
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-[9px] tracking-[0.4em] text-[#D4AF37] uppercase mb-4" 
+          className="text-[10px] tracking-[0.4em] text-[#8B1A1A] uppercase mb-4 font-bold" 
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
-          Verified Sellers
+          Curated Artisans
         </motion.p>
         <motion.h2 
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1A0008] mb-6" 
+          className="text-5xl md:text-7xl font-light text-[#1A0008] leading-none mb-6" 
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
           Top Heritage <span className="italic text-[#D4AF37]">Sellers</span>
@@ -42,100 +48,85 @@ export default function FeaturedSellers({ setView, setSelectedBoutique }) {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="text-sm text-[#1A0008]/50 max-w-md mx-auto"
+          className="text-sm text-[#1A0008]/60 max-w-md mx-auto tracking-wide leading-relaxed"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
-          Shop directly from India's most trusted and highly rated artisan workshops.
+          Shop directly from India's most prestigious and highly rated artisan workshops.
         </motion.p>
       </div>
 
-      <div className="w-full relative z-10">
-        
-        {/* Horizontal Scroll Track */}
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-12 md:gap-20 px-6 md:px-[10vw] pb-16 pt-4 hide-scrollbar cursor-grab active:cursor-grabbing" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+      {/* Staggered Lookbook Grid */}
+      <div className="max-w-[1100px] mx-auto px-4 md:px-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-x-12 md:gap-y-32">
           
           {sellers.map((seller, index) => {
-            const sellerProducts = allProducts.filter(p => p.boutique === seller.name).slice(0, 3);
-            const thumbnails = [...sellerProducts, ...Array(3)].slice(0, 3);
+            const sellerProducts = allProducts.filter(p => p.boutique === seller.name).slice(0, 2);
+            const isEven = index % 2 !== 0;
 
             return (
               <motion.div 
                 key={seller.name}
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 80 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.8, delay: index * 0.1, ease: "easeOut" }}
-                className="flex-shrink-0 w-[300px] md:w-[350px] snap-center flex flex-col items-center group"
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className={`relative flex flex-col group cursor-pointer ${isEven ? 'md:mt-32' : ''}`}
+                onClick={() => {
+                  if(setSelectedBoutique) setSelectedBoutique(seller.name);
+                  if(setView) setView('seller-shop');
+                }}
               >
-                
-                {/* Logo & Delicate Line */}
-                <div className="flex flex-col items-center mb-6">
-                  <div className="w-16 h-16 rounded-full overflow-hidden border border-[#D4AF37]/30 p-1 group-hover:border-[#D4AF37] transition-colors duration-500">
-                    <img src={seller.logo} alt="Logo" className="w-full h-full object-cover rounded-full" />
+                {/* The Polaroid Frame */}
+                <div className="relative w-full h-[450px] md:h-[550px] bg-white p-3 md:p-4 pb-20 md:pb-24 border border-[#1A0008]/10 shadow-[0_20px_50px_rgba(26,0,8,0.08)] rounded-sm group-hover:shadow-[0_30px_60px_rgba(26,0,8,0.12)] transition-all duration-700 z-10">
+                  <div className="w-full h-full relative overflow-hidden bg-[#E8DDD0] border border-[#1A0008]/5">
+                    <img 
+                      src={seller.coverImage} 
+                      alt="Cover"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-out"
+                    />
                   </div>
-                  <div className="w-px h-8 bg-[#D4AF37]/30 mt-4 group-hover:h-12 transition-all duration-500" />
+                  
+                  {/* Seller Info at Bottom of Polaroid */}
+                  <div className="absolute bottom-4 md:bottom-6 left-0 w-full flex flex-col items-center px-4">
+                     <h3 className="text-3xl text-[#1A0008] font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                       {seller.name}
+                     </h3>
+                     <p className="text-[#8B1A1A] text-[9px] tracking-[0.2em] uppercase font-bold mt-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                       Explore Workshop
+                     </p>
+                  </div>
                 </div>
 
-                {/* The Arch Cover Image */}
-                <div className="w-full h-[450px] md:h-[500px] rounded-t-full rounded-b-2xl overflow-hidden relative border border-black/5 group-hover:border-[#D4AF37]/40 transition-colors duration-500 bg-[#F0EBE2]">
-                  <img 
-                    src={seller.coverImage} 
-                    alt="Cover"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s] ease-out"
-                  />
-                  
-                  {/* Gradient Overlay for Text/Thumbnails */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                {/* Floating Logo Badge */}
+                <div className="absolute -top-6 -left-6 md:-left-8 w-20 h-20 md:w-24 md:h-24 rounded-full bg-white p-1 border border-[#D4AF37]/30 shadow-xl z-30 group-hover:scale-110 transition-transform duration-500">
+                  <img src={seller.logo} alt="Logo" className="w-full h-full object-cover rounded-full" />
+                </div>
 
-                  {/* Little Circular Thumbnails Like Jewels */}
-                  <div className="absolute bottom-6 left-0 w-full flex justify-center -space-x-3">
-                    {thumbnails.map((prod, i) => (
+                {/* Floating Products (Overlapping the Polaroid) */}
+                {sellerProducts.length > 0 && (
+                  <div className="absolute -bottom-10 -right-4 md:-right-8 flex gap-3 z-20">
+                    {sellerProducts.map((prod, i) => (
                       <div 
                         key={i} 
-                        className="w-12 h-12 rounded-full border-2 border-white/80 overflow-hidden shadow-lg relative z-10 group-hover:scale-110 transition-transform duration-500"
-                        style={{ zIndex: 10 - i, transitionDelay: `${i * 100}ms` }}
+                        className="w-20 h-24 md:w-28 md:h-36 bg-white p-1.5 shadow-2xl border border-[#1A0008]/10 transform transition-transform duration-500 group-hover:-translate-y-4"
+                        style={{ 
+                          transform: `rotate(${i === 0 ? '-8deg' : '5deg'}) translateY(${i === 0 ? '10px' : '-5px'})`,
+                          transitionDelay: `${i * 100}ms`
+                        }}
                       >
-                        {prod ? (
-                          <img src={prod.image} alt="Product" className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full bg-[#1A0008] flex items-center justify-center">
-                            <span className="w-2 h-2 rounded-full bg-white/20" />
-                          </div>
-                        )}
+                        <img src={prod.image} alt="Product" className="w-full h-full object-cover" />
                       </div>
                     ))}
                   </div>
-                </div>
-
-                {/* Elegant Text Below */}
-                <div className="mt-8 text-center flex flex-col items-center">
-                  <h3 className="text-3xl text-[#1A0008] font-medium group-hover:text-[#D4AF37] transition-colors duration-500" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                    {seller.name}
-                  </h3>
-                  <div className="mt-4">
-                    <button onClick={() => {
-                      if(setSelectedBoutique) setSelectedBoutique(seller.name);
-                      if(setView) setView('seller-shop');
-                    }} className="text-[9px] text-[#1A0008]/60 font-bold tracking-[0.2em] uppercase border-b border-[#1A0008]/20 pb-1 group-hover:border-[#D4AF37] group-hover:text-[#D4AF37] transition-all duration-300 cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                      Visit Shop
-                    </button>
-                  </div>
-                </div>
-
+                )}
+                
               </motion.div>
             );
           })}
-
-          {/* Spacer */}
-          <div className="flex-shrink-0 w-[5vw] md:w-[10vw]" />
+          
         </div>
       </div>
-      
-      <style dangerouslySetInnerHTML={{__html: `
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}} />
+
     </section>
   );
 }

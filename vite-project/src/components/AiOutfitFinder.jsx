@@ -123,20 +123,20 @@ export default function AiOutfitFinder() {
           </motion.h1>
 
           {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
+          <motion.h2 
+            className="text-4xl md:text-5xl lg:text-7xl font-light text-[#1A0008] leading-[1.1] mb-12 tracking-tight"
+            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="text-[#1A0008] text-2xl md:text-4xl font-light mb-12 max-w-2xl leading-relaxed"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Find your perfect <span className="italic text-[#D4AF37]">masterpiece.</span>
-          </motion.p>
+            Find your perfect <span className="italic text-[#D4AF37]">outfit.</span>
+          </motion.h2>
           
-          {/* Button */}
+          {/* Elegant CTA */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.5 }}
@@ -149,7 +149,7 @@ export default function AiOutfitFinder() {
                <div className="absolute inset-0 bg-[#1A0008] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-700 ease-in-out" />
                
               <span className="relative z-10 text-[#1A0008] group-hover:text-white text-[11px] tracking-[0.3em] font-bold uppercase transition-colors duration-500" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                Begin Consultation
+                Help Me Choose
               </span>
               <div className="relative z-10 w-10 h-[1px] bg-[#1A0008] group-hover:bg-white group-hover:w-16 transition-all duration-500" />
             </button>

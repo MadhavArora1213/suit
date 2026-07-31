@@ -19,11 +19,18 @@ export default function ShopByColor() {
     : COLORS.find(c => c.id === activeColorId);
 
   return (
-    <section className="py-24 relative overflow-hidden bg-[#FAF9F6] min-h-[900px] flex items-center justify-center border-y border-[#1A0008]/5">
+    <section className="py-24 relative overflow-hidden bg-[#FAF9F6] min-h-[900px] flex items-center justify-center border-y border-[#1A0008]/10">
         
-       {/* Massive Ambient Background Glow */}
+       {/* Grid Pattern Background to match Hero */}
+       <div className="absolute inset-0 opacity-[0.2] pointer-events-none"
+         style={{
+           backgroundImage: 'linear-gradient(#8B1A1A 1px, transparent 1px), linear-gradient(90deg, #8B1A1A 1px, transparent 1px)',
+           backgroundSize: '30px 30px',
+         }} />
+
+       {/* Ambient Glows */}
        <div 
-         className="absolute inset-0 transition-colors duration-[1.5s] ease-in-out opacity-20 blur-[150px]"
+         className="absolute inset-0 transition-colors duration-[1.5s] ease-in-out opacity-10 blur-[150px]"
          style={{ backgroundColor: activeColor.hex }}
        />
 
@@ -36,8 +43,8 @@ export default function ShopByColor() {
                animate={{ opacity: 0.04, scaleX: 1, scaleY: 2, y: 0 }}
                exit={{ opacity: 0, scaleX: 1.1, scaleY: 2.2, y: -20 }}
                transition={{ duration: 0.8 }}
-               className="text-[16vw] md:text-[14vw] lg:text-[13vw] font-bold text-black uppercase tracking-tighter leading-none whitespace-nowrap origin-center"
-               style={{ fontFamily: "'DM Sans', sans-serif" }}
+               className="text-[16vw] md:text-[14vw] lg:text-[13vw] font-bold text-[#1A0008] uppercase tracking-tighter leading-none whitespace-nowrap origin-center"
+               style={{ fontFamily: "'Cormorant Garamond', serif" }}
              >
                 {activeColor.name}
              </motion.h1>
@@ -48,16 +55,16 @@ export default function ShopByColor() {
            
            {/* Section Header */}
            <div className="text-center mb-12 md:mb-16">
-              <h2 className="text-5xl md:text-6xl font-light text-[#1A0008] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                 Shop By <span className="italic text-[#D4AF37]">Color</span>
-              </h2>
-              <p className="text-[10px] tracking-[0.4em] text-[#1A0008]/40 uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-[11px] tracking-[0.3em] text-[#8B1A1A] uppercase font-bold mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                  The Signature Collection
               </p>
+              <h2 className="text-6xl md:text-7xl font-light text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                 Shop By <span className="italic text-[#D4AF37]">Color</span>
+              </h2>
            </div>
 
-           {/* Central Portrait Image - The Main Stage */}
-           <div className="relative w-full max-w-[420px] h-[550px] md:h-[650px] rounded-t-full rounded-b-xl shadow-[0_30px_80px_rgba(0,0,0,0.15)] overflow-hidden border-[6px] border-white z-20 transition-all duration-700">
+           {/* Central Portrait Image - The Main Stage (Restored Luxury Arch) */}
+           <div className="relative w-full max-w-[420px] h-[550px] md:h-[650px] rounded-t-full rounded-b-xl shadow-[0_30px_80px_rgba(0,0,0,0.15)] overflow-hidden border-[6px] border-white z-20 transition-all duration-700 mt-4 group">
               <AnimatePresence mode="wait">
                   <motion.div
                      key={activeColor.id}
@@ -70,7 +77,7 @@ export default function ShopByColor() {
                      <img 
                        src={activeColor.image} 
                        alt={activeColor.name}
-                       className={`w-full h-full object-cover object-top ${activeColorId === 'custom' ? 'grayscale contrast-125' : ''}`}
+                       className={`w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 ${activeColorId === 'custom' ? 'grayscale contrast-125' : ''}`}
                      />
                      
                      {/* Bespoke Real-Time Tinting */}
@@ -85,11 +92,11 @@ export default function ShopByColor() {
                      <div className="absolute inset-3 border border-white/30 rounded-t-full rounded-b-md pointer-events-none" />
 
                      {/* Gradient for text */}
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-90" />
+                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-90" />
                      
-                     {/* Hover Action / Label */}
+                     {/* Elegant Button Overlaid on Image */}
                      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-full text-center px-4">
-                        <button className="px-8 py-3 bg-white/20 backdrop-blur-md border border-white/40 text-white rounded-full text-[10px] tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all font-semibold shadow-lg">
+                        <button className="px-10 py-3.5 bg-white/20 backdrop-blur-md border border-white/40 text-white rounded-full text-[10px] tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all font-semibold shadow-2xl">
                            Explore {activeColor.name}
                         </button>
                      </div>
@@ -97,8 +104,8 @@ export default function ShopByColor() {
               </AnimatePresence>
            </div>
 
-           {/* The Dynamic Glassmorphism Navigation Dock */}
-           <div className="mt-12 md:mt-16 bg-white/40 backdrop-blur-xl border border-white/60 p-2 md:p-3 rounded-full shadow-lg flex items-center justify-center gap-2 md:gap-4 z-30 max-w-full overflow-x-auto no-scrollbar">
+           {/* The Dynamic Glassmorphic Navigation Dock */}
+           <div className="mt-12 md:mt-16 bg-white/60 backdrop-blur-xl border border-white/60 p-2 md:p-3 rounded-full shadow-[0_20px_40px_-15px_rgba(26,0,8,0.1)] flex items-center justify-center gap-2 md:gap-4 z-30 max-w-full overflow-x-auto no-scrollbar relative">
               {COLORS.map((color) => {
                  const isActive = activeColorId === color.id;
                  const isCustom = color.isCustom;
@@ -127,10 +134,10 @@ export default function ShopByColor() {
                        
                        {/* Expanded Pill Text (Only visible when active) */}
                        <div className={`overflow-hidden transition-all duration-500 flex flex-col justify-center ${isActive ? 'w-full opacity-100 ml-3' : 'w-0 opacity-0 ml-0'}`}>
-                           <p className="text-[#1A0008] font-semibold text-xs md:text-sm whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                           <p className="text-[#1A0008] font-bold text-xs md:text-sm whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                               {color.name}
                            </p>
-                           <p className="text-[#1A0008]/50 text-[9px] tracking-wider uppercase whitespace-nowrap">
+                           <p className="text-[#1A0008]/50 text-[9px] tracking-[0.2em] uppercase whitespace-nowrap">
                               {color.hex}
                            </p>
                        </div>

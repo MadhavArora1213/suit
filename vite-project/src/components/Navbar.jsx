@@ -91,16 +91,20 @@ export default function Navbar({
         <motion.div
           className="flex gap-8 items-center py-2"
           animate={{ x: ["0%", "-50%"] }}
-          transition={{ ease: "linear", duration: 15, repeat: Infinity }}
+          transition={{ ease: "linear", duration: 120, repeat: Infinity }}
         >
           {[...Array(6)].map((_, i) => (
             <div key={i} className="flex gap-8 items-center">
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                COMPLIMENTARY WORLDWIDE SHIPPING ON ALL ORDERS OVER $200
+                🔥 FLAT 40% OFF : THE ULTIMATE RAKHI SALE IS LIVE
               </span>
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#FAF9F6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                THE BANARASI WEAVE COLLECTION IS NOW LIVE
+                SECURE YOUR SIGNATURE LOOK BEFORE IT'S GONE
+              </span>
+              <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
+              <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                COMPLIMENTARY WORLDWIDE SHIPPING OVER $200
               </span>
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
             </div>
