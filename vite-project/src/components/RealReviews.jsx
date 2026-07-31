@@ -51,7 +51,7 @@ const COLUMNS = [
 const ReviewCard = ({ item }) => {
   return (
     <div 
-      className={`relative w-[180px] md:w-[220px] rounded-3xl overflow-hidden shrink-0 group bg-[#1A0008] shadow-[0_15px_40px_-10px_rgba(0,0,0,0.1)] cursor-pointer transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] ring-1 ring-white/40
+      className={`relative w-[180px] md:w-[220px] rounded-3xl overflow-hidden shrink-0 group bg-[#F0EBE2] shadow-sm cursor-pointer transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(26,0,8,0.1)] ring-1 ring-[#1A0008]/10
         ${item.isTall ? 'h-[280px] md:h-[340px]' : 'h-[180px] md:h-[210px]'}`}
     >
       {/* Background Image */}
@@ -61,25 +61,25 @@ const ReviewCard = ({ item }) => {
         className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 group-hover:blur-sm"
       />
       
-      {/* Dark Hover Overlay */}
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-colors duration-500 ease-out" />
+      {/* Light Hover Overlay */}
+      <div className="absolute inset-0 bg-[#FAF9F6]/0 group-hover:bg-[#FAF9F6]/80 backdrop-blur-[2px] transition-all duration-500 ease-out" />
 
       {/* Hover Quote Text */}
-      <div className="absolute inset-0 p-5 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 ease-out">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="#D4AF37" stroke="none" className="mb-3 opacity-80 transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
+      <div className="absolute inset-0 p-5 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 ease-out z-20">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#8B1A1A" stroke="none" className="mb-3 opacity-80 transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
           <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
         </svg>
-        <p className="text-white text-[13px] md:text-[15px] font-light leading-relaxed transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700" 
+        <p className="text-[#1A0008] text-[13px] md:text-[15px] font-medium leading-relaxed transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700" 
            style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           "{item.quote}"
         </p>
       </div>
 
       {/* Premium Frosted Nameplate (Moves down slightly on hover) */}
-      <div className="absolute inset-x-2 bottom-2 md:inset-x-3 md:bottom-3 rounded-2xl overflow-hidden pointer-events-none transform translate-y-0 group-hover:translate-y-2 group-hover:opacity-80 transition-all duration-500 ease-out z-10">
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-md border border-white/10" />
+      <div className="absolute inset-x-2 bottom-2 md:inset-x-3 md:bottom-3 rounded-2xl overflow-hidden pointer-events-none transform translate-y-0 group-hover:translate-y-4 group-hover:opacity-0 transition-all duration-500 ease-out z-10">
+        <div className="absolute inset-0 bg-white/40 backdrop-blur-md border border-white/40" />
         <div className="relative px-4 py-3 flex flex-col justify-center items-center text-center">
-          <h4 className="text-white font-bold text-sm md:text-[15px] leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] tracking-wide" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <h4 className="text-[#1A0008] font-bold text-sm md:text-[15px] leading-tight tracking-wide" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             {item.name.split(' ').map((part, i) => (
               <span key={i} className="block">{part}</span>
             ))}
@@ -92,12 +92,12 @@ const ReviewCard = ({ item }) => {
 
 export default function RealReviews() {
   return (
-    <section className="relative overflow-hidden py-24 md:py-36 border-t border-[#1A0008]/5">
+    <section className="relative overflow-hidden py-24 md:py-36 border-y border-[#1A0008]/5 bg-[#FAF9F6]">
       
       {/* ═══ Ultra-Premium Ambient Background ═══ */}
-      <div className="absolute inset-0 bg-[#FAF9F6] pointer-events-none" />
+      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(#8B1A1A 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-[#D4AF37]/10 to-transparent rounded-full blur-[150px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-[#1A0008]/5 to-transparent rounded-full blur-[120px] pointer-events-none -translate-x-1/3 translate-y-1/3" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-[#8B1A1A]/5 to-transparent rounded-full blur-[120px] pointer-events-none -translate-x-1/3 translate-y-1/3" />
 
       {/* ═══ Header Section ═══ */}
       <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 mb-16 md:mb-24">
@@ -110,25 +110,25 @@ export default function RealReviews() {
         >
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <span className="text-[#D4AF37] text-[9px] md:text-[10px] tracking-[0.4em] uppercase font-bold"
+              <span className="text-[#8B1A1A] text-[9px] md:text-[10px] tracking-[0.4em] uppercase font-bold"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 The Experience
               </span>
-              <div className="w-12 h-[1px] bg-[#D4AF37]/50" />
+              <div className="w-12 h-[1px] bg-[#8B1A1A]/30" />
             </div>
             <h2 className="text-[40px] sm:text-[50px] md:text-[64px] font-light text-[#1A0008] tracking-tighter leading-[1.1]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Loved by our <br className="hidden sm:block"/>
-              <span className="italic font-light text-[#D4AF37]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>customers</span>
+              <span className="italic font-light text-[#8B1A1A]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>customers</span>
             </h2>
           </div>
 
           <div className="flex items-center gap-4 pb-2">
-            <span className="text-[10px] tracking-[0.2em] uppercase font-medium text-[#1A0008]/40" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-[#1A0008]/40" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Swipe to explore
             </span>
-            <div className="w-16 h-[1px] bg-[#1A0008]/20 relative overflow-hidden">
+            <div className="w-16 h-[1px] bg-[#1A0008]/10 relative overflow-hidden">
               <motion.div 
-                className="absolute inset-y-0 left-0 w-1/3 bg-[#1A0008]"
+                className="absolute inset-y-0 left-0 w-1/3 bg-[#8B1A1A]"
                 animate={{ x: ["-100%", "300%"] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               />

@@ -36,7 +36,7 @@ const MARQUEE_TEXT = [
 // Marquee Component for the infinite scrolling ribbon
 const Marquee = () => {
   return (
-    <div className="w-full bg-[#1A0008] text-[#D4AF37] py-2.5 md:py-4 overflow-hidden flex whitespace-nowrap border-y border-[#D4AF37]/30">
+    <div className="w-full bg-[#1A0008] text-[#FAF9F6] py-2.5 md:py-4 overflow-hidden flex whitespace-nowrap border-y border-[#1A0008]">
       <motion.div
         className="flex gap-6 md:gap-12 items-center"
         animate={{ x: ["0%", "-50%"] }}
@@ -49,7 +49,7 @@ const Marquee = () => {
                 <span className="text-[9px] md:text-[12px] tracking-[0.2em] md:tracking-[0.3em] font-medium uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   {text}
                 </span>
-                <span className="text-[#D4AF37]/40 text-[10px] md:text-[14px]">✦</span>
+                <span className="text-white/30 text-[10px] md:text-[14px]">✦</span>
               </div>
             ))}
           </div>
@@ -74,17 +74,17 @@ export default function TrustStrip() {
         >
           <div>
             <div className="flex items-center gap-3 mb-4 md:mb-6">
-              <span className="text-[#D4AF37] text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold"
+              <span className="text-[#8B1A1A] text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] uppercase font-bold"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 The Gurnaaz Promise
               </span>
-              <div className="w-8 md:w-12 h-[1px] bg-[#D4AF37]/50" />
+              <div className="w-8 md:w-12 h-[1px] bg-[#8B1A1A]/30" />
             </div>
             
             <h2 className="text-[#1A0008] text-[42px] sm:text-[48px] md:text-[72px] lg:text-[88px] font-light leading-[0.95] tracking-tighter uppercase"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               TRUST IN <br className="hidden sm:block" /> 
-              <span className="italic text-[#D4AF37] lowercase text-[46px] sm:text-[56px] md:text-[80px] lg:text-[100px] block sm:inline mt-1 sm:mt-0">every thread</span>
+              <span className="italic text-[#8B1A1A] lowercase text-[46px] sm:text-[56px] md:text-[80px] lg:text-[100px] block sm:inline mt-1 sm:mt-0">every thread</span>
             </h2>
           </div>
           
@@ -115,7 +115,7 @@ export default function TrustStrip() {
               
               {/* Left: Number & Title */}
               <div className="flex items-start md:items-center gap-4 md:gap-12 w-full lg:w-1/2">
-                <span className="text-[#D4AF37] text-[11px] md:text-[14px] font-bold tracking-[0.2em] font-sans pt-1.5 md:pt-0 shrink-0">
+                <span className="text-[#8B1A1A] text-[11px] md:text-[14px] font-bold tracking-[0.2em] font-sans pt-1.5 md:pt-0 shrink-0">
                   {item.num}
                 </span>
                 <h3 className="text-[#1A0008] text-[28px] sm:text-[32px] md:text-[42px] font-light tracking-tight group-hover:lg:pl-4 transition-all duration-500 ease-out leading-[1.1]"
@@ -134,7 +134,7 @@ export default function TrustStrip() {
 
               {/* Right: Big Stat */}
               <div className="flex items-baseline justify-start lg:justify-end gap-2 md:gap-3 w-full lg:w-1/6 pl-[34px] md:pl-0 mt-2 md:mt-0">
-                <span className="text-[#1A0008] text-[42px] sm:text-[48px] md:text-[72px] font-light leading-[0.8] tracking-tighter group-hover:text-[#D4AF37] transition-colors duration-500"
+                <span className="text-[#1A0008] text-[42px] sm:text-[48px] md:text-[72px] font-light leading-[0.8] tracking-tighter group-hover:text-[#8B1A1A] transition-colors duration-500"
                   style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   {item.stat}
                 </span>

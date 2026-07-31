@@ -71,12 +71,12 @@ export default function AiOutfitFinder() {
   return (
     <>
       {/* ─── TEXT-MASK USP BANNER (EXTRAORDINARY ELEGANCE) ─── */}
-      <section className="w-full bg-[#0a0a0a] py-20 md:py-28 relative overflow-hidden flex flex-col items-center justify-center border-y border-[#D4AF37]/10">
+      <section className="w-full bg-[#FAF9F6] py-20 md:py-28 relative overflow-hidden flex flex-col items-center justify-center border-y border-[#1A0008]/10">
         
         {/* Subtle Ambient Background */}
         <div className="absolute inset-0 z-0 pointer-events-none">
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#D4AF37]/5 rounded-full blur-[120px]" />
-           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/stardust.png')" }} />
+           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(#8B1A1A 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
         </div>
 
         <div className="max-w-[1400px] mx-auto px-6 w-full relative z-10 flex flex-col items-center text-center">
@@ -89,9 +89,9 @@ export default function AiOutfitFinder() {
             transition={{ duration: 0.8 }}
             className="mb-6 flex items-center gap-4"
           >
-            <div className="w-8 h-px bg-[#D4AF37]" />
-            <span className="text-[#D4AF37] text-[10px] uppercase tracking-[0.4em] font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>Our Innovation</span>
-            <div className="w-8 h-px bg-[#D4AF37]" />
+            <div className="w-8 h-px bg-[#1A0008]/30" />
+            <span className="text-[#8B1A1A] text-[10px] uppercase tracking-[0.4em] font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>Our Innovation</span>
+            <div className="w-8 h-px bg-[#1A0008]/30" />
           </motion.div>
 
           {/* MASSIVE TEXT MASK */}
@@ -105,8 +105,8 @@ export default function AiOutfitFinder() {
               backgroundImage: "url('/designer_suit_1.png')",
               backgroundSize: "150% auto",
               backgroundPosition: "center 20%",
-              // Adding a subtle stroke so the text outline is always crisp even if the image is dark
-              WebkitTextStroke: "1px rgba(188, 165, 138, 0.2)"
+              // Subtle stroke for light mode
+              WebkitTextStroke: "1px rgba(26, 0, 8, 0.1)"
             }}
           >
             <motion.span
@@ -128,7 +128,7 @@ export default function AiOutfitFinder() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="text-white/80 text-2xl md:text-4xl font-light mb-12 max-w-2xl leading-relaxed"
+            className="text-[#1A0008] text-2xl md:text-4xl font-light mb-12 max-w-2xl leading-relaxed"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
             Find your perfect <span className="italic text-[#D4AF37]">masterpiece.</span>
@@ -143,15 +143,15 @@ export default function AiOutfitFinder() {
           >
             <button 
               onClick={() => setIsOpen(true)}
-              className="group relative px-12 py-5 bg-transparent border border-[#D4AF37]/50 hover:border-[#D4AF37] overflow-hidden transition-all duration-500 flex items-center gap-6"
+              className="group relative px-12 py-5 bg-transparent border border-[#1A0008]/20 hover:border-[#1A0008] overflow-hidden transition-all duration-500 flex items-center gap-6"
             >
                {/* Elegant fill hover */}
-               <div className="absolute inset-0 bg-[#D4AF37] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-700 ease-in-out" />
+               <div className="absolute inset-0 bg-[#1A0008] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-700 ease-in-out" />
                
-              <span className="relative z-10 text-white group-hover:text-black text-[11px] tracking-[0.3em] font-bold uppercase transition-colors duration-500" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <span className="relative z-10 text-[#1A0008] group-hover:text-white text-[11px] tracking-[0.3em] font-bold uppercase transition-colors duration-500" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Begin Consultation
               </span>
-              <div className="relative z-10 w-10 h-[1px] bg-white group-hover:bg-black group-hover:w-16 transition-all duration-500" />
+              <div className="relative z-10 w-10 h-[1px] bg-[#1A0008] group-hover:bg-white group-hover:w-16 transition-all duration-500" />
             </button>
           </motion.div>
 
@@ -166,18 +166,18 @@ export default function AiOutfitFinder() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-[100] bg-[#0a0a0a] flex flex-col md:flex-row overflow-hidden"
+            className="fixed inset-0 z-[100] bg-[#FAF9F6] flex flex-col md:flex-row overflow-hidden"
           >
             {/* Close Button */}
             <button 
               onClick={closeAndReset}
-              className="absolute top-6 right-6 md:top-10 md:right-12 w-12 h-12 flex items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white transition-colors group z-50 backdrop-blur-md"
+              className="absolute top-6 right-6 md:top-10 md:right-12 w-12 h-12 flex items-center justify-center rounded-full bg-white/50 border border-[#1A0008]/10 hover:bg-[#1A0008] hover:border-[#1A0008] transition-colors group z-50 backdrop-blur-md"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white group-hover:text-black transition-colors"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[#1A0008] group-hover:text-white transition-colors"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
 
             {/* LEFT SIDE: Dynamic Image Gallery */}
-            <div className="hidden md:block w-1/2 h-full relative bg-[#1A0008]">
+            <div className="hidden md:block w-1/2 h-full relative bg-[#E8DDD0]">
               <AnimatePresence mode="wait">
                 {!isRevealing && (
                   <motion.div
@@ -191,9 +191,9 @@ export default function AiOutfitFinder() {
                     <img 
                       src={QUESTIONS[currentStep].image} 
                       alt="Fashion Mood"
-                      className="w-full h-full object-cover saturate-50"
+                      className="w-full h-full object-cover saturate-50 mix-blend-multiply"
                     />
-                    <div className="absolute inset-0 bg-black/20" />
+                    <div className="absolute inset-0 bg-[#D4AF37]/10" />
                   </motion.div>
                 )}
                 {isRevealing && (
@@ -202,14 +202,14 @@ export default function AiOutfitFinder() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1.5 }}
-                    className="absolute inset-0 bg-[#D4AF37]/20 backdrop-blur-3xl"
+                    className="absolute inset-0 bg-white/40 backdrop-blur-3xl"
                   />
                 )}
               </AnimatePresence>
             </div>
 
             {/* RIGHT SIDE: Interactive UI */}
-            <div className="w-full md:w-1/2 h-full relative flex flex-col">
+            <div className="w-full md:w-1/2 h-full relative flex flex-col bg-[#FAF9F6]">
               
               {!isRevealing ? (
                 <div className="flex-1 flex flex-col w-full max-w-[600px] mx-auto px-8 pt-24 pb-12 relative z-10">
@@ -217,13 +217,13 @@ export default function AiOutfitFinder() {
                   {/* Glowing Progress Indicator */}
                   <div className="flex gap-2 mb-16">
                     {QUESTIONS.map((_, idx) => (
-                      <div key={idx} className="flex-1 h-[2px] bg-white/10 relative overflow-hidden rounded-full">
+                      <div key={idx} className="flex-1 h-[2px] bg-[#1A0008]/10 relative overflow-hidden rounded-full">
                         {idx <= currentStep && (
                           <motion.div 
                             initial={{ x: '-100%' }}
                             animate={{ x: idx < currentStep ? '0%' : '0%' }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="absolute inset-0 bg-[#D4AF37]"
+                            className="absolute inset-0 bg-[#8B1A1A]"
                           />
                         )}
                       </div>
@@ -241,11 +241,11 @@ export default function AiOutfitFinder() {
                         transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
                         className="w-full"
                       >
-                        <span className="text-[#D4AF37] text-[10px] tracking-[0.3em] font-bold uppercase mb-4 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        <span className="text-[#8B1A1A] text-[10px] tracking-[0.3em] font-bold uppercase mb-4 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                           Step 0{currentStep + 1}
                         </span>
                         <h3 
-                          className="text-4xl lg:text-5xl text-white font-light mb-12 leading-tight"
+                          className="text-4xl lg:text-5xl text-[#1A0008] font-light mb-12 leading-tight"
                           style={{ fontFamily: "'Cormorant Garamond', serif" }}
                         >
                           {QUESTIONS[currentStep].title}
@@ -260,19 +260,19 @@ export default function AiOutfitFinder() {
                                 onClick={() => handleOptionSelect(QUESTIONS[currentStep].id, option)}
                                 className={`group relative p-6 text-left border-b transition-all duration-500 overflow-hidden flex items-center justify-between
                                   ${isSelected 
-                                    ? 'border-[#D4AF37] bg-white/5' 
-                                    : 'border-white/10 hover:border-white/40 hover:bg-white/5'
+                                    ? 'border-[#8B1A1A] bg-white' 
+                                    : 'border-[#1A0008]/10 hover:border-[#1A0008]/40 hover:bg-white'
                                   }`}
                               >
                                 <span 
-                                  className={`relative z-10 text-lg lg:text-xl font-light tracking-wide transition-colors duration-300 ${isSelected ? 'text-[#D4AF37]' : 'text-white'}`}
+                                  className={`relative z-10 text-lg lg:text-xl font-light tracking-wide transition-colors duration-300 ${isSelected ? 'text-[#8B1A1A]' : 'text-[#1A0008]'}`}
                                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                                 >
                                   {option}
                                 </span>
                                 
-                                <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${isSelected ? 'border-[#D4AF37] bg-[#D4AF37]/10' : 'border-white/20 group-hover:border-white/50'}`}>
-                                  {isSelected && <div className="w-2 h-2 rounded-full bg-[#D4AF37]" />}
+                                <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${isSelected ? 'border-[#8B1A1A] bg-[#8B1A1A]/10' : 'border-[#1A0008]/20 group-hover:border-[#1A0008]/50'}`}>
+                                  {isSelected && <div className="w-2 h-2 rounded-full bg-[#8B1A1A]" />}
                                 </div>
                               </button>
                             );
@@ -292,12 +292,12 @@ export default function AiOutfitFinder() {
                     className="text-center w-full max-w-[500px]"
                   >
                     <h3 
-                      className="text-5xl md:text-6xl text-white font-light mb-6 tracking-wide"
+                      className="text-5xl md:text-6xl text-[#1A0008] font-light mb-6 tracking-wide"
                       style={{ fontFamily: "'Cormorant Garamond', serif" }}
                     >
-                      The <span className="italic text-[#D4AF37]">curation</span><br/>is complete.
+                      The <span className="italic text-[#8B1A1A]">curation</span><br/>is complete.
                     </h3>
-                    <p className="text-white/50 text-sm font-light mb-12" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    <p className="text-[#1A0008]/60 text-sm font-light mb-12" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                       We have hand-selected 18 exquisite pieces that perfectly match your exact preferences, occasion, and style.
                     </p>
                     
@@ -306,7 +306,7 @@ export default function AiOutfitFinder() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 1, duration: 0.8 }}
                       onClick={closeAndReset}
-                      className="w-full bg-white text-black py-5 rounded-none text-[10px] tracking-[0.3em] font-bold uppercase hover:bg-[#D4AF37] hover:text-white transition-all duration-500"
+                      className="w-full bg-[#1A0008] text-[#FAF9F6] py-5 rounded-none text-[10px] tracking-[0.3em] font-bold uppercase hover:bg-[#8B1A1A] hover:text-white transition-all duration-500"
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
                       View Your Masterpieces

@@ -85,26 +85,45 @@ export default function Navbar({
   const col4 = megamenuImages[1];
 
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 left-0 right-0 z-[100]"
-    >
-      {/* Main Nav */}
-      <div className={`transition-all duration-500 flex flex-col relative ${scrolled
-        ? 'bg-white/95 backdrop-blur-2xl shadow-[0_10px_30px_rgba(26,0,8,0.05)] border-b border-[#D4AF37]/20'
-        : 'bg-white border-b border-[#D4AF37]/10'
-        }`}>
-        {/* Subtle top border in scrolled state to match the gold/maroon vibe */}
-        {scrolled && <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[#D4AF37] via-[#8B1A1A] to-[#D4AF37] opacity-80 z-50" />}
-        
-        {/* Row 1: Top Bar (Logo & Icons) */}
-        <div className={`max-w-[1600px] mx-auto w-full px-5 md:px-12 transition-all duration-500 ${scrolled ? 'pt-1 pb-1' : 'pt-2 pb-1 md:pt-2 md:pb-1'}`}>
-          <div className="relative flex items-center justify-between">
+    <>
+      {/* Announcement Bar */}
+      <div className={`fixed top-0 left-0 right-0 w-full bg-[#1A0008] text-[#FAF9F6] overflow-hidden flex whitespace-nowrap transition-all duration-500 z-[101] ${scrolled ? '-translate-y-full' : 'translate-y-0'}`}>
+        <motion.div
+          className="flex gap-8 items-center py-2"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ ease: "linear", duration: 15, repeat: Infinity }}
+        >
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="flex gap-8 items-center">
+              <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                COMPLIMENTARY WORLDWIDE SHIPPING ON ALL ORDERS OVER $200
+              </span>
+              <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
+              <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#FAF9F6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                THE BANARASI WEAVE COLLECTION IS NOW LIVE
+              </span>
+              <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
+            </div>
+          ))}
+        </motion.div>
+      </div>
 
-            {/* Left: Mobile Hamburger & Desktop Search */}
-            <div className="flex items-center gap-5 w-1/3">
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className={`fixed left-0 right-0 z-[100] flex justify-center transition-all duration-700 ${scrolled ? 'top-4 px-4' : 'top-[32px] px-0'}`}
+      >
+        {/* Main Nav */}
+        <div className={`transition-all duration-500 flex flex-col relative w-full ${scrolled
+          ? 'max-w-[1200px] bg-white/95 backdrop-blur-2xl shadow-[0_20px_50px_-15px_rgba(26,0,8,0.15)] rounded-3xl border border-white ring-1 ring-[#1A0008]/5'
+          : 'bg-white border-b border-[#1A0008]/10'
+          }`}>
+          
+          <div className={`mx-auto w-full px-5 md:px-10 transition-all duration-500 flex items-center justify-between ${scrolled ? 'py-3 max-w-[1200px]' : 'py-3.5 md:py-4 max-w-[1600px]'}`}>
+
+            {/* Left: Mobile Hamburger & Desktop Logo */}
+            <div className="flex items-center gap-4 lg:gap-5 w-[20%]">
               <button
                 className={`md:hidden flex flex-col justify-center gap-1.5 w-7 h-7 cursor-pointer text-[#1A0008]`}
                 onClick={() => setIsOpen(!isOpen)}>
@@ -113,78 +132,14 @@ export default function Navbar({
                 <span className={`w-5 h-[1px] bg-current transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[6px]' : ''}`} />
               </button>
 
-              <button
-                onClick={() => setSearchOpen(!searchOpen)}
-                className={`hidden md:flex items-center gap-2 cursor-pointer transition-colors text-[#1A0008] hover:text-[#8B1A1A]`}>
-                <Search strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
-                <span className="text-[10px] uppercase tracking-[0.2em] font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>Search</span>
-              </button>
-            </div>
-
-            {/* Center: Logo */}
-            <div className="flex justify-center w-1/3">
-              <motion.a href="/" onClick={(e) => { e.preventDefault(); window.location.href = '/'; }} whileHover={{ scale: 1.02 }} className="cursor-pointer group flex flex-col items-center">
-                <img src={gurnaazLogo} alt="GURNAAZ" className="h-14 md:h-7 lg:h-9 w-auto object-contain drop-shadow-sm" />
+              <motion.a href="/" onClick={(e) => { e.preventDefault(); window.location.href = '/'; }} whileHover={{ scale: 1.02 }} className="cursor-pointer group flex items-center">
+                <img src={gurnaazLogo} alt="GURNAAZ" className="h-10 md:h-8 lg:h-9 w-auto object-contain drop-shadow-sm ml-2 md:ml-0 transition-all duration-300" />
               </motion.a>
             </div>
 
-            {/* Right: Icons */}
-            <div className="flex items-center justify-end gap-6 lg:gap-6 w-1/3">
-
-              <button
-                onClick={() => setSearchOpen(!searchOpen)}
-                className={`md:hidden cursor-pointer transition-colors text-[#1A0008] hover:text-[#8B1A1A]`}>
-                <Search strokeWidth={1.5} className="w-5 h-5" />
-              </button>
-
-              <button
-                onClick={() => setView('wishlist')}
-                className={`hidden sm:block cursor-pointer transition-colors relative text-[#1A0008] hover:text-[#8B1A1A]`}>
-                <Heart strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
-                {favoriteCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#8B1A1A] rounded-full" />
-                )}
-              </button>
-
-              <button
-                onClick={() => setCartOpen(true)}
-                className={`cursor-pointer transition-colors relative text-[#1A0008] hover:text-[#8B1A1A]`}>
-                <ShoppingBag strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
-                {cartItemCount > 0 && (
-                  <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
-                    className="absolute -top-1.5 -right-2 bg-[#8B1A1A] text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-sm">
-                    {cartItemCount}
-                  </motion.span>
-                )}
-              </button>
-
-              {user ? (
-                <button
-                  onClick={() => setView('profile')}
-                  title="My Profile"
-                  className="hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#D4AF37] cursor-pointer ml-2 hover:scale-105 transition-transform"
-                >
-                  <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
-                    setView('login');
-                  }}
-                  className={`hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#1A0008]/20 hover:border-[#1A0008] cursor-pointer ml-2 transition-all`}
-                  title="Login / Register"
-                >
-                  <User strokeWidth={1.5} className={`w-full h-full p-1 text-[#1A0008]`} />
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Row 2: Top-Level Pages & Megamenu (Desktop Only) */}
-        <div className={`hidden md:flex justify-center border-t transition-colors duration-500 ${scrolled ? 'border-[#D4AF37]/10 py-1' : 'border-[#1A0008]/10 py-1.5'}`}>
-          <ul key={navKey} onClick={() => setNavKey(k => k + 1)} className="flex items-center gap-10 lg:gap-16">
+            {/* Center: Top-Level Pages & Megamenu (Desktop Only) */}
+            <div className={`hidden md:flex justify-center flex-1`}>
+              <ul key={navKey} onClick={() => setNavKey(k => k + 1)} className="flex items-center justify-center gap-1 lg:gap-3">
             {['Home', 'Shop & Boutiques', 'Collection', 'About Us', 'Contact'].map((item) => (
               <li key={item} className={`group ${['Collection', 'Shop & Boutiques'].includes(item) ? 'static' : 'relative'}`}>
                 <a
@@ -198,14 +153,13 @@ export default function Navbar({
                     else if (item === 'About Us') { setView('about'); }
                     else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
                   }}
-                  className={`relative flex items-center gap-2 text-[16px] lg:text-[17px] tracking-wide transition-all duration-300 py-1 text-[#1A0008] hover:text-[#8B1A1A] hover:italic font-medium`}
-                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                  className={`relative flex items-center justify-center gap-2 text-[11px] lg:text-[12px] uppercase tracking-[0.15em] transition-all duration-300 px-4 py-2 rounded-full text-[#1A0008]/80 hover:text-[#1A0008] hover:bg-[#1A0008]/5 font-semibold whitespace-nowrap`}
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
                   {item}
                   {item === 'Collection' && (
-                    <span className="bg-[#1A0008] text-[#F5D76E] text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-widest shadow-sm" style={{ fontFamily: "'DM Sans', sans-serif", fontStyle: 'normal' }}>Sale</span>
+                    <span className="bg-[#8B1A1A] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-widest shadow-sm">New</span>
                   )}
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[1px] transition-all duration-500 group-hover:w-full bg-[#8B1A1A] opacity-40" />
                 </a>
 
                 {/* Cinematic Floating Megamenu for Collection */}
@@ -413,6 +367,58 @@ export default function Navbar({
             ))}
           </ul>
         </div>
+
+        {/* Right: Icons */}
+        <div className="flex items-center justify-end gap-5 lg:gap-6 w-auto md:w-[20%] pr-4 md:pr-0">
+          <button
+            onClick={() => setSearchOpen(!searchOpen)}
+            className={`cursor-pointer transition-colors text-[#1A0008] hover:text-[#8B1A1A]`}>
+            <Search strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
+          </button>
+
+          <button
+            onClick={() => setView('wishlist')}
+            className={`hidden sm:block cursor-pointer transition-colors relative text-[#1A0008] hover:text-[#8B1A1A]`}>
+            <Heart strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
+            {favoriteCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#8B1A1A] rounded-full" />
+            )}
+          </button>
+
+          <button
+            onClick={() => setCartOpen(true)}
+            className={`cursor-pointer transition-colors relative text-[#1A0008] hover:text-[#8B1A1A]`}>
+            <ShoppingBag strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
+            {cartItemCount > 0 && (
+              <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
+                className="absolute -top-1.5 -right-2 bg-[#8B1A1A] text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-sm">
+                {cartItemCount}
+              </motion.span>
+            )}
+          </button>
+
+          {user ? (
+            <button
+              onClick={() => setView('profile')}
+              title="My Profile"
+              className="hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#D4AF37] cursor-pointer hover:scale-105 transition-transform"
+            >
+              <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
+                setView('login');
+              }}
+              className={`hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#1A0008]/20 hover:border-[#1A0008] cursor-pointer transition-all`}
+              title="Login / Register"
+            >
+              <User strokeWidth={1.5} className={`w-full h-full p-1 text-[#1A0008]`} />
+            </button>
+          )}
+        </div>
+
       </div>
 
       {/* Search Panel */}
@@ -780,6 +786,8 @@ export default function Navbar({
           </div>
         )}
       </AnimatePresence>
+      </div>
     </motion.nav>
+    </>
   );
 }

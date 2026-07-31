@@ -63,11 +63,14 @@ export default function PremiumPackaging() {
   };
 
   return (
-    <section className="py-24 md:py-36 bg-[#1A0008] relative border-t border-white/10 overflow-hidden" style={{ perspective: '2000px' }}>
+    <section className="py-24 md:py-36 bg-[#FAF9F6] relative border-y border-[#1A0008]/10 overflow-hidden" style={{ perspective: '2000px' }}>
       
       {/* ═══ Ambient Glows ═══ */}
-      <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-[#D4AF37]/15 to-transparent rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-[#FAF9F6]/5 to-transparent rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-[#D4AF37]/5 to-transparent rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-[#8B1A1A]/5 to-transparent rounded-full blur-[100px] pointer-events-none" />
+      
+      {/* Texture Pattern */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#1A0008 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
         
@@ -82,19 +85,19 @@ export default function PremiumPackaging() {
               transition={{ duration: 0.8 }}
             >
               <div className="flex items-center gap-3 mb-6">
-                <span className="text-[#D4AF37] text-[9px] md:text-[11px] tracking-[0.4em] uppercase font-bold"
+                <span className="text-[#8B1A1A] text-[9px] md:text-[11px] tracking-[0.4em] uppercase font-bold"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   A Unique Discovery
                 </span>
-                <div className="w-12 h-[1px] bg-[#D4AF37]/50" />
+                <div className="w-12 h-[1px] bg-[#1A0008]/20" />
               </div>
 
-              <h2 className="text-[40px] sm:text-[50px] md:text-[64px] font-light text-[#FAF9F6] leading-[1.1] tracking-tighter mb-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <h2 className="text-[40px] sm:text-[50px] md:text-[64px] font-light text-[#1A0008] leading-[1.1] tracking-tighter mb-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Peek Inside <br />
                 <span className="italic text-[#D4AF37] font-light">The Magic</span>
               </h2>
 
-              <p className="text-[14px] md:text-[16px] text-white/60 leading-relaxed font-light mb-12 max-w-md" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-[14px] md:text-[16px] text-[#1A0008]/70 leading-relaxed font-light mb-12 max-w-md" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 True luxury is in the unseen details. Move your cursor over the signature box to act as a spotlight, revealing the meticulous layers of our premium packaging ritual hidden beneath the surface.
               </p>
 
@@ -107,14 +110,14 @@ export default function PremiumPackaging() {
                   { title: 'Stamped Business Card', desc: 'Our authentic brand mark stamped with care.' },
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-start gap-5 group cursor-default">
-                    <div className="w-8 h-8 rounded-full border border-[#D4AF37]/30 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-[#D4AF37] transition-colors duration-500">
-                      <span className="text-[#D4AF37] group-hover:text-[#1A0008] text-[10px] font-bold transition-colors duration-500">{idx + 1}</span>
+                    <div className="w-8 h-8 rounded-full border border-[#1A0008]/20 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-[#8B1A1A] group-hover:border-[#8B1A1A] transition-colors duration-500">
+                      <span className="text-[#1A0008]/60 group-hover:text-white text-[10px] font-bold transition-colors duration-500">{idx + 1}</span>
                     </div>
                     <div>
-                      <h4 className="text-[#FAF9F6] text-[18px] md:text-[20px] font-light mb-1 leading-tight group-hover:text-[#D4AF37] transition-colors duration-500" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                      <h4 className="text-[#1A0008] text-[18px] md:text-[20px] font-light mb-1 leading-tight group-hover:text-[#8B1A1A] transition-colors duration-500" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                         {item.title}
                       </h4>
-                      <p className="text-white/40 text-[13px] font-light leading-relaxed max-w-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      <p className="text-[#1A0008]/50 text-[13px] font-light leading-relaxed max-w-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         {item.desc}
                       </p>
                     </div>
@@ -139,7 +142,7 @@ export default function PremiumPackaging() {
                 rotateY,
                 transformStyle: "preserve-3d" 
               }}
-              className="relative w-full max-w-[460px] aspect-[4/5] cursor-none rounded-md shadow-[0_40px_80px_rgba(0,0,0,0.8)] group"
+              className="relative w-full max-w-[460px] aspect-[4/5] cursor-none rounded-md shadow-[0_40px_80px_rgba(26,0,8,0.2)] group"
             >
               
               {/* --- LAYER 1: THE INSIDE (Hidden underneath) --- */}
