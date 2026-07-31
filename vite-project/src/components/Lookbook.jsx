@@ -66,13 +66,13 @@ export default function Lookbook({ addToCart }) {
   const activeLook = lookbookItems[activeIndex];
 
   return (
-    <section className="py-28 bg-[#111111] relative overflow-hidden">
+    <section className="py-28 bg-[#1A0008] relative overflow-hidden">
       
       {/* Luxury Editorial Margins */}
-      <div className="absolute left-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-[0.4em] text-[#BCA58A]/20 uppercase hidden 2xl:block select-none pointer-events-none">
+      <div className="absolute left-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-[0.4em] text-[#D4AF37]/20 uppercase hidden 2xl:block select-none pointer-events-none">
         GURNAAZ LOOKBOOK
       </div>
-      <div className="absolute right-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] text-[10px] font-bold tracking-[0.4em] text-[#BCA58A]/20 uppercase hidden 2xl:block select-none pointer-events-none">
+      <div className="absolute right-6 top-1/2 -translate-y-1/2 [writing-mode:vertical-lr] text-[10px] font-bold tracking-[0.4em] text-[#D4AF37]/20 uppercase hidden 2xl:block select-none pointer-events-none">
         EDITION 2026
       </div>
 
@@ -86,15 +86,15 @@ export default function Lookbook({ addToCart }) {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="text-[10px] tracking-[0.35em] text-[#BCA58A] uppercase block mb-4 font-medium"
+          <span className="text-[10px] tracking-[0.35em] text-[#D4AF37] uppercase block mb-4 font-medium"
             style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Fashion Inspiration
           </span>
           <h2 className="text-4xl md:text-5xl font-light text-[#E8DDD0] mb-5"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Lookbook &amp; <em className="italic text-[#BCA58A]">Style Guide</em>
+            Lookbook &amp; <em className="italic text-[#D4AF37]">Style Guide</em>
           </h2>
-          <div className="h-px w-16 bg-[#BCA58A]/30 mx-auto mb-5" />
+          <div className="h-px w-16 bg-[#D4AF37]/30 mx-auto mb-5" />
           <p className="text-[#6B6B6B] text-sm max-w-md mx-auto leading-relaxed"
             style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Get inspired by how our ethnic designer suits drape, fit, and capture royal heritage.
@@ -109,11 +109,11 @@ export default function Lookbook({ addToCart }) {
             <div className="relative w-full aspect-[3/4] max-w-sm md:max-w-md lg:max-w-none">
               
               {/* Layered Decorative Background Frames */}
-              <div className="absolute -inset-3 border border-[#BCA58A]/25 rounded-3xl -rotate-1.5 pointer-events-none"></div>
+              <div className="absolute -inset-3 border border-[#D4AF37]/25 rounded-3xl -rotate-1.5 pointer-events-none"></div>
               <div className="absolute inset-0 bg-[#1E1E1E]/10 rounded-3xl transform rotate-1 pointer-events-none"></div>
               
               {/* Main Photo Card */}
-              <div className="relative w-full h-full overflow-hidden rounded-3xl shadow-premium bg-[#111111]">
+              <div className="relative w-full h-full overflow-hidden rounded-3xl shadow-premium bg-[#1A0008]">
                 <AnimatePresence mode="wait">
                   <motion.img
                     key={activeIndex}
@@ -138,7 +138,7 @@ export default function Lookbook({ addToCart }) {
                 {/* Overlay Metadata */}
                 <div className="absolute bottom-5 left-6 right-6 flex items-center justify-between text-white z-20 pointer-events-none">
                   <span className="text-[10px] tracking-widest uppercase text-white/85 font-mono">{activeLook.color}</span>
-                  <span className="text-sm font-display italic text-[#BCA58A]">{activeLook.num} / LOOK</span>
+                  <span className="text-sm font-display italic text-[#D4AF37]">{activeLook.num} / LOOK</span>
                 </div>
               </div>
 
@@ -162,7 +162,7 @@ export default function Lookbook({ addToCart }) {
                   <span>{item.num} / {item.title.split(' ')[0]}</span>
                   {activeIndex === index && (
                   <motion.div layoutId="lookbookActiveUnderline"
-                      className="absolute bottom-0 left-0 right-0 h-px bg-[#BCA58A]"
+                      className="absolute bottom-0 left-0 right-0 h-px bg-[#D4AF37]"
                       transition={{ type: 'spring', stiffness: 300, damping: 30 }} />
                   )}
                 </button>
@@ -182,13 +182,13 @@ export default function Lookbook({ addToCart }) {
                 
                 {/* Title Blocks */}
                 <div className="text-left space-y-3">
-                  <span className="text-[9px] font-bold tracking-[0.25em] text-[#BCA58A] uppercase block">
+                  <span className="text-[9px] font-bold tracking-[0.25em] text-[#D4AF37] uppercase block">
                     {activeLook.tag} &middot; LOOK {activeLook.num}
                   </span>
                   <h3 className="text-3xl md:text-5xl font-display font-medium text-[#FAF9F6] leading-tight">
                     {activeLook.title}
                   </h3>
-                  <p className="text-base md:text-lg font-display italic text-[#BCA58A] leading-relaxed">
+                  <p className="text-base md:text-lg font-display italic text-[#D4AF37] leading-relaxed">
                     "{activeLook.subtitle}"
                   </p>
                   <p className="text-sm text-[#6B6B6B] leading-relaxed font-body max-w-xl">
@@ -199,7 +199,7 @@ export default function Lookbook({ addToCart }) {
                 {/* Specs Split */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-[#1E1E1E]/40 text-left">
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-[#BCA58A]">
+                    <div className="flex items-center gap-2 text-[#D4AF37]">
                       <Sparkles size={14} />
                       <h5 className="text-[10px] font-bold tracking-[0.2em] uppercase">FABRIC & CRAFT</h5>
                     </div>
@@ -208,7 +208,7 @@ export default function Lookbook({ addToCart }) {
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-[#BCA58A]">
+                    <div className="flex items-center gap-2 text-[#D4AF37]">
                       <Sparkles size={14} />
                       <h5 className="text-[10px] font-bold tracking-[0.2em] uppercase">STYLE ADVISORY</h5>
                     </div>
@@ -220,7 +220,7 @@ export default function Lookbook({ addToCart }) {
 
                 {/* Inline Shoppable Widget */}
                 <div className="pt-6 border-t border-[#1E1E1E]/40 text-left">
-                  <div className="bg-[#111111] border border-[#BCA58A]/15 p-4 md:p-6 flex flex-col sm:flex-row gap-4 items-center justify-between hover:border-[#BCA58A]/40 transition-all duration-500">
+                  <div className="bg-[#1A0008] border border-[#D4AF37]/15 p-4 md:p-6 flex flex-col sm:flex-row gap-4 items-center justify-between hover:border-[#D4AF37]/40 transition-all duration-500">
                     <div className="flex items-center gap-4 w-full sm:w-auto">
                       <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#1E1E1E]/15 flex-shrink-0">
                         <img
@@ -230,7 +230,7 @@ export default function Lookbook({ addToCart }) {
                         />
                       </div>
                       <div>
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#BCA58A]">SUIT EDITION</span>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-[#D4AF37]">SUIT EDITION</span>
                         <h4 className="text-sm font-semibold text-[#FAF9F6] font-display mt-0.5">
                           {activeLook.productName}
                         </h4>
@@ -248,7 +248,7 @@ export default function Lookbook({ addToCart }) {
                         image: activeLook.image,
                         badge: 'Lookbook Edition'
                       }, 'M')}
-                      className="w-full sm:w-auto px-6 py-3 bg-[#E8DDD0] hover:bg-[#BCA58A] text-[#111111] text-[9px] font-bold tracking-[0.2em] flex items-center justify-center gap-2.5 transition-colors duration-300 flex-shrink-0 cursor-pointer"
+                      className="w-full sm:w-auto px-6 py-3 bg-[#E8DDD0] hover:bg-[#D4AF37] text-[#1A0008] text-[9px] font-bold tracking-[0.2em] flex items-center justify-center gap-2.5 transition-colors duration-300 flex-shrink-0 cursor-pointer"
                     >
                       <ShoppingBag size={14} />
                       <span>ADD LOOK TO BAG</span>

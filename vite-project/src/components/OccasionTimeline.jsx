@@ -80,11 +80,11 @@ export default function OccasionTimeline() {
 
   return (
     <section 
-      className="py-24 md:py-32 bg-[#FAF9F6] border-y border-[#111111]/10 relative overflow-hidden"
+      className="py-24 md:py-32 bg-[#FAF9F6] border-y border-[#1A0008]/10 relative overflow-hidden"
     >
       {/* Subtle Ambient Background Flourishes */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#BCA58A]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#BCA58A]/5 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/4 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#D4AF37]/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#D4AF37]/5 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/4 pointer-events-none" />
 
       <div className="max-w-[1300px] mx-auto px-6 md:px-12 relative z-10">
         
@@ -93,17 +93,17 @@ export default function OccasionTimeline() {
           <div>
             <motion.p 
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              className="text-[10px] tracking-[0.4em] text-[#BCA58A] uppercase font-bold mb-4" 
-              style={{ fontFamily: "'Montserrat', sans-serif" }}
+              className="text-[10px] tracking-[0.4em] text-[#D4AF37] uppercase font-bold mb-4" 
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               Curated Masterpieces
             </motion.p>
             <motion.h2 
               initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} 
-              className="text-4xl md:text-5xl lg:text-6xl font-light text-[#111111]" 
+              className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1A0008]" 
               style={{ fontFamily: "'Cormorant Garamond', serif" }}
             >
-              Shop by <span className="italic text-[#BCA58A]">Occasion</span>
+              Shop by <span className="italic text-[#D4AF37]">Occasion</span>
             </motion.h2>
           </div>
           
@@ -111,8 +111,8 @@ export default function OccasionTimeline() {
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }} 
             className="hidden md:flex items-center gap-4"
           >
-             <span className="w-16 h-px bg-[#111111]/20" />
-             <span className="text-xs text-[#111111]/40 uppercase tracking-[0.2em] font-medium" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+             <span className="w-16 h-px bg-[#1A0008]/20" />
+             <span className="text-xs text-[#1A0008]/40 uppercase tracking-[0.2em] font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                Select a moment
              </span>
           </motion.div>
@@ -121,11 +121,11 @@ export default function OccasionTimeline() {
         {/* The Luxury Timeline Tracker */}
         <div className="relative w-full mb-32 px-4 md:px-8">
            {/* The Base Track */}
-           <div className="absolute top-[16px] left-0 w-full h-[1px] bg-[#111111]/10" />
+           <div className="absolute top-[16px] left-0 w-full h-[1px] bg-[#1A0008]/10" />
 
            {/* The Animated Gold Progress Line */}
            <div 
-             className="absolute top-[16px] left-0 h-[1.5px] bg-[#BCA58A] transition-all duration-700 ease-in-out z-0" 
+             className="absolute top-[16px] left-0 h-[1.5px] bg-[#D4AF37] transition-all duration-700 ease-in-out z-0" 
              style={{ width: `${(activeIndex / (OCCASIONS.length - 1)) * 100}%` }} 
            />
 
@@ -141,23 +141,23 @@ export default function OccasionTimeline() {
                  >
                    {/* The Diamond Node */}
                    <div className="relative flex items-center justify-center w-8 h-8 mb-6">
-                     <div className={`absolute inset-0 bg-[#FAF9F6] transition-all duration-500 ease-out ${isActive ? 'scale-100 rotate-45 border border-[#BCA58A] shadow-md' : 'scale-[0.6] rotate-0 border border-[#111111]/20 group-hover:border-[#BCA58A] group-hover:rotate-45'}`} />
+                     <div className={`absolute inset-0 bg-[#FAF9F6] transition-all duration-500 ease-out ${isActive ? 'scale-100 rotate-45 border border-[#D4AF37] shadow-md' : 'scale-[0.6] rotate-0 border border-[#1A0008]/20 group-hover:border-[#D4AF37] group-hover:rotate-45'}`} />
                      
                      {/* Inner dot */}
-                     <div className={`w-1.5 h-1.5 transition-all duration-500 z-10 ${isActive ? 'bg-[#BCA58A] scale-100' : 'bg-[#111111]/20 scale-0 group-hover:scale-100 group-hover:bg-[#BCA58A]/50'}`} style={{ transform: isActive ? 'rotate(-45deg)' : 'rotate(0)' }} />
+                     <div className={`w-1.5 h-1.5 transition-all duration-500 z-10 ${isActive ? 'bg-[#D4AF37] scale-100' : 'bg-[#1A0008]/20 scale-0 group-hover:scale-100 group-hover:bg-[#D4AF37]/50'}`} style={{ transform: isActive ? 'rotate(-45deg)' : 'rotate(0)' }} />
                      
                      {/* Soft Glow */}
                      {isActive && (
-                       <motion.div layoutId="nodeGlow" className="absolute inset-0 bg-[#BCA58A]/30 blur-md rounded-full pointer-events-none" />
+                       <motion.div layoutId="nodeGlow" className="absolute inset-0 bg-[#D4AF37]/30 blur-md rounded-full pointer-events-none" />
                      )}
                    </div>
 
                    {/* Typography / Labels */}
                    <div className="text-center absolute top-14 w-32 -left-12 flex flex-col items-center">
-                     <span className={`block text-[9px] tracking-[0.2em] uppercase transition-all duration-500 ${isActive ? 'text-[#111111] font-bold' : 'text-[#111111]/40 group-hover:text-[#111111]/70'}`} style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                     <span className={`block text-[9px] tracking-[0.2em] uppercase transition-all duration-500 ${isActive ? 'text-[#1A0008] font-bold' : 'text-[#1A0008]/40 group-hover:text-[#1A0008]/70'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
                        {occasion.label}
                      </span>
-                     <span className={`block mt-2 font-light italic text-xl transition-all duration-500 ${isActive ? 'opacity-100 text-[#BCA58A] translate-y-0' : 'opacity-0 -translate-y-2'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                     <span className={`block mt-2 font-light italic text-xl transition-all duration-500 ${isActive ? 'opacity-100 text-[#D4AF37] translate-y-0' : 'opacity-0 -translate-y-2'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                        0{idx + 1}
                      </span>
                    </div>
@@ -175,15 +175,15 @@ export default function OccasionTimeline() {
                   key={activeOccasion}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="text-3xl font-light text-[#111111]" 
+                  className="text-3xl font-light text-[#1A0008]" 
                   style={{ fontFamily: "'Cormorant Garamond', serif" }}
                 >
-                  {OCCASIONS.find(o => o.id === activeOccasion)?.label} <span className="italic text-[#BCA58A]">Edit</span>
+                  {OCCASIONS.find(o => o.id === activeOccasion)?.label} <span className="italic text-[#D4AF37]">Edit</span>
                 </motion.h3>
               </div>
-              <a href="#shop" className="group flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-bold text-[#111111] hover:text-[#BCA58A] transition-colors" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <a href="#shop" className="group flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase font-bold text-[#1A0008] hover:text-[#D4AF37] transition-colors" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 View Full Collection
-                <span className="w-6 h-px bg-[#111111] group-hover:bg-[#BCA58A] transition-colors" />
+                <span className="w-6 h-px bg-[#1A0008] group-hover:bg-[#D4AF37] transition-colors" />
               </a>
             </div>
 
@@ -204,7 +204,7 @@ export default function OccasionTimeline() {
                       
                       {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center backdrop-blur-[2px]">
-                         <span className="bg-white/95 text-[#111] text-[9px] uppercase tracking-[0.2em] font-bold px-8 py-3.5 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                         <span className="bg-white/95 text-[#1A0008] text-[9px] uppercase tracking-[0.2em] font-bold px-8 py-3.5 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                            Quick View
                          </span>
                       </div>
@@ -212,14 +212,14 @@ export default function OccasionTimeline() {
                     
                     <div className="flex justify-between items-start gap-4">
                       <div className="flex-1">
-                        <h4 className="text-[13px] text-[#111111] font-medium mb-1.5 line-clamp-1 transition-colors group-hover:text-[#BCA58A]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        <h4 className="text-[13px] text-[#1A0008] font-medium mb-1.5 line-clamp-1 transition-colors group-hover:text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                           {product.name}
                         </h4>
-                        <p className="text-[9px] text-[#111111]/40 tracking-[0.15em] uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                        <p className="text-[9px] text-[#1A0008]/40 tracking-[0.15em] uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                           {OCCASIONS.find(o => o.id === activeOccasion)?.label}
                         </p>
                       </div>
-                      <p className="text-[#111111] text-[15px] font-semibold whitespace-nowrap" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                      <p className="text-[#1A0008] text-[15px] font-semibold whitespace-nowrap" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                         {product.price}
                       </p>
                     </div>

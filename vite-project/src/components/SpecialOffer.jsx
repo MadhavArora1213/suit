@@ -85,13 +85,13 @@ export default function SpecialOffer() {
   };
 
   return (
-    <section className="py-40 bg-[#FAF9F6] overflow-hidden relative text-left border-t border-[#111111]/5">
+    <section className="py-40 bg-[#FAF9F6] overflow-hidden relative text-left border-t border-[#1A0008]/5">
       
       {/* Background Graphic Lines */}
       <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-multiply">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <path d="M-100 100 C 200 300, 400 0, 1000 200" fill="none" stroke="#111111" strokeWidth="0.5" />
-          <path d="M0 300 C 300 500, 600 200, 1200 400" fill="none" stroke="#111111" strokeWidth="0.3" />
+          <path d="M-100 100 C 200 300, 400 0, 1000 200" fill="none" stroke="#1A0008" strokeWidth="0.5" />
+          <path d="M0 300 C 300 500, 600 200, 1200 400" fill="none" stroke="#1A0008" strokeWidth="0.3" />
         </svg>
       </div>
 
@@ -105,18 +105,18 @@ export default function SpecialOffer() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <span className="text-[11px] tracking-[0.5em] text-[#BCA58A] uppercase block mb-6 font-medium"
-              style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <span className="text-[11px] tracking-[0.5em] text-[#D4AF37] uppercase block mb-6 font-medium"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Seasonal Promotion
             </span>
-            <h2 className="text-6xl md:text-8xl font-light text-[#111111] mb-6 leading-none tracking-tight"
+            <h2 className="text-6xl md:text-8xl font-light text-[#1A0008] mb-6 leading-none tracking-tight"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               {promo.title}<br />
-              <em className="italic text-[#BCA58A] font-light">Up to {promo.discount}% Off</em>
+              <em className="italic text-[#D4AF37] font-light">Up to {promo.discount}% Off</em>
             </h2>
             
             <p className="text-[#555] text-[13px] tracking-wide mb-12 leading-loose max-w-lg font-light"
-              style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Indulge in our collection of hand-embroidered luxury. Verified craftsmanship at irresistible prices.
             </p>
 
@@ -124,13 +124,13 @@ export default function SpecialOffer() {
             <div className="flex gap-4 mb-12">
               {timerItems.map((item, index) => (
                 <div key={index} className="flex flex-col items-center">
-                  <div className="w-20 h-20 md:w-24 md:h-24 bg-white shadow-xl flex items-center justify-center text-3xl md:text-5xl font-light text-[#111111] hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 relative border border-[#111111]/5"
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-white shadow-xl flex items-center justify-center text-3xl md:text-5xl font-light text-[#1A0008] hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 relative border border-[#1A0008]/5"
                     style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {formatNumber(item.value)}
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#111111]/[0.02] to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#1A0008]/[0.02] to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </div>
                   <span className="text-[10px] tracking-[0.3em] text-[#555] uppercase mt-4 font-medium"
-                    style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {item.label}
                   </span>
                 </div>
@@ -139,13 +139,13 @@ export default function SpecialOffer() {
 
             {/* Interactive Promo Coupon code */}
             <div className="mb-12 flex flex-wrap items-center gap-6">
-              <span className="text-[10px] tracking-[0.3em] text-[#111111]/60 font-medium uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>USE DISCOUNT CODE:</span>
+              <span className="text-[10px] tracking-[0.3em] text-[#1A0008]/60 font-medium uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>USE DISCOUNT CODE:</span>
               <button
                 onClick={handleCopyCode}
-                className="group relative bg-white hover:bg-[#111111] border border-[#111111]/10 hover:border-[#111111] px-6 py-3 shadow-lg text-[#111111] hover:text-white font-mono font-light tracking-widest text-sm flex items-center gap-4 transition-all duration-500 cursor-pointer"
+                className="group relative bg-white hover:bg-[#1A0008] border border-[#1A0008]/10 hover:border-[#1A0008] px-6 py-3 shadow-lg text-[#1A0008] hover:text-white font-mono font-light tracking-widest text-sm flex items-center gap-4 transition-all duration-500 cursor-pointer"
               >
                 <span>{promo.couponCode || 'FESTIVE40'}</span>
-                {copied ? <Check size={16} strokeWidth={1.5} className="text-[#BCA58A]" /> : <Copy size={16} strokeWidth={1.5} className="text-[#111111]/40 group-hover:text-[#BCA58A]" />}
+                {copied ? <Check size={16} strokeWidth={1.5} className="text-[#D4AF37]" /> : <Copy size={16} strokeWidth={1.5} className="text-[#1A0008]/40 group-hover:text-[#D4AF37]" />}
                 
                 {/* Floating tooltip */}
                 <AnimatePresence>
@@ -154,7 +154,7 @@ export default function SpecialOffer() {
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: -45 }}
                       exit={{ opacity: 0 }}
-                      className="absolute left-1/2 -translate-x-1/2 bg-[#111111] text-white text-[10px] font-medium py-2 px-4 shadow-xl uppercase tracking-[0.2em]"
+                      className="absolute left-1/2 -translate-x-1/2 bg-[#1A0008] text-white text-[10px] font-medium py-2 px-4 shadow-xl uppercase tracking-[0.2em]"
                     >
                       Copied!
                     </motion.div>
@@ -166,8 +166,8 @@ export default function SpecialOffer() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-4 bg-[#111111] hover:bg-[#BCA58A] text-[#FAF9F6] px-12 py-5 tracking-[0.3em] text-[10px] font-medium transition-all duration-500 group cursor-pointer uppercase"
-              style={{ fontFamily: "'Montserrat', sans-serif" }}
+              className="inline-flex items-center gap-4 bg-[#1A0008] hover:bg-[#D4AF37] text-[#FAF9F6] px-12 py-5 tracking-[0.3em] text-[10px] font-medium transition-all duration-500 group cursor-pointer uppercase"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               SHOP THE SALE
               <ArrowRight size={16} strokeWidth={1.5} className="group-hover:translate-x-2 transition-transform duration-500" />
@@ -183,7 +183,7 @@ export default function SpecialOffer() {
             className="relative justify-self-center lg:justify-self-end w-full max-w-lg"
           >
             {/* Elegant Fabric Pattern Photo */}
-            <div className="aspect-[3/4] overflow-hidden bg-white relative border border-[#111111]/5 shadow-2xl group">
+            <div className="aspect-[3/4] overflow-hidden bg-white relative border border-[#1A0008]/5 shadow-2xl group">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={activeFabric}
@@ -201,22 +201,22 @@ export default function SpecialOffer() {
               {/* Slider Controls */}
               <button
                 onClick={prevFabric}
-                className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/80 hover:bg-white text-[#111111] transition-all duration-500 cursor-pointer backdrop-blur-md shadow-lg"
+                className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/80 hover:bg-white text-[#1A0008] transition-all duration-500 cursor-pointer backdrop-blur-md shadow-lg"
               >
                 <ChevronLeft size={18} strokeWidth={1} />
               </button>
               <button
                 onClick={nextFabric}
-                className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/80 hover:bg-white text-[#111111] transition-all duration-500 cursor-pointer backdrop-blur-md shadow-lg"
+                className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-full bg-white/80 hover:bg-white text-[#1A0008] transition-all duration-500 cursor-pointer backdrop-blur-md shadow-lg"
               >
                 <ChevronRight size={18} strokeWidth={1} />
               </button>
 
               {/* Fabric label overlay */}
-              <div className="absolute bottom-6 left-8 right-8 bg-white/95 backdrop-blur-xl p-6 shadow-xl border border-[#111111]/5 text-left transition-all duration-500">
-                <span className="text-[10px] font-medium text-[#BCA58A] tracking-[0.3em] uppercase block mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>Showcase</span>
-                <h4 className="text-2xl font-light text-[#111111] tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{fabrics[activeFabric].name}</h4>
-                <p className="text-[12px] text-[#555] font-light" style={{ fontFamily: "'Montserrat', sans-serif" }}>{fabrics[activeFabric].desc}</p>
+              <div className="absolute bottom-6 left-8 right-8 bg-white/95 backdrop-blur-xl p-6 shadow-xl border border-[#1A0008]/5 text-left transition-all duration-500">
+                <span className="text-[10px] font-medium text-[#D4AF37] tracking-[0.3em] uppercase block mb-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>Showcase</span>
+                <h4 className="text-2xl font-light text-[#1A0008] tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{fabrics[activeFabric].name}</h4>
+                <p className="text-[12px] text-[#555] font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>{fabrics[activeFabric].desc}</p>
               </div>
             </div>
 
@@ -224,12 +224,12 @@ export default function SpecialOffer() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -top-10 -right-10 bg-[#111111] border border-[#111111]/10 p-6 shadow-2xl text-left max-w-[200px] hidden sm:block z-20"
+              className="absolute -top-10 -right-10 bg-[#1A0008] border border-[#1A0008]/10 p-6 shadow-2xl text-left max-w-[200px] hidden sm:block z-20"
             >
-              <span className="text-[10px] font-medium text-[#BCA58A] tracking-[0.3em] uppercase block mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <span className="text-[10px] font-medium text-[#D4AF37] tracking-[0.3em] uppercase block mb-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Special Offer
               </span>
-              <p className="text-sm font-light text-[#FAF9F6] leading-relaxed" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <p className="text-sm font-light text-[#FAF9F6] leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Free shipping on orders over ₹4,999
               </p>
             </motion.div>

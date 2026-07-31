@@ -71,11 +71,11 @@ export default function AiOutfitFinder() {
   return (
     <>
       {/* ─── TEXT-MASK USP BANNER (EXTRAORDINARY ELEGANCE) ─── */}
-      <section className="w-full bg-[#0a0a0a] py-20 md:py-28 relative overflow-hidden flex flex-col items-center justify-center border-y border-[#BCA58A]/10">
+      <section className="w-full bg-[#0a0a0a] py-20 md:py-28 relative overflow-hidden flex flex-col items-center justify-center border-y border-[#D4AF37]/10">
         
         {/* Subtle Ambient Background */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#BCA58A]/5 rounded-full blur-[120px]" />
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#D4AF37]/5 rounded-full blur-[120px]" />
            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url('https://www.transparenttextures.com/patterns/stardust.png')" }} />
         </div>
 
@@ -89,9 +89,9 @@ export default function AiOutfitFinder() {
             transition={{ duration: 0.8 }}
             className="mb-6 flex items-center gap-4"
           >
-            <div className="w-8 h-px bg-[#BCA58A]" />
-            <span className="text-[#BCA58A] text-[10px] uppercase tracking-[0.4em] font-bold" style={{ fontFamily: "'Montserrat', sans-serif" }}>Our Innovation</span>
-            <div className="w-8 h-px bg-[#BCA58A]" />
+            <div className="w-8 h-px bg-[#D4AF37]" />
+            <span className="text-[#D4AF37] text-[10px] uppercase tracking-[0.4em] font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>Our Innovation</span>
+            <div className="w-8 h-px bg-[#D4AF37]" />
           </motion.div>
 
           {/* MASSIVE TEXT MASK */}
@@ -131,7 +131,7 @@ export default function AiOutfitFinder() {
             className="text-white/80 text-2xl md:text-4xl font-light mb-12 max-w-2xl leading-relaxed"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
           >
-            Find your perfect <span className="italic text-[#BCA58A]">masterpiece.</span>
+            Find your perfect <span className="italic text-[#D4AF37]">masterpiece.</span>
           </motion.p>
           
           {/* Button */}
@@ -143,12 +143,12 @@ export default function AiOutfitFinder() {
           >
             <button 
               onClick={() => setIsOpen(true)}
-              className="group relative px-12 py-5 bg-transparent border border-[#BCA58A]/50 hover:border-[#BCA58A] overflow-hidden transition-all duration-500 flex items-center gap-6"
+              className="group relative px-12 py-5 bg-transparent border border-[#D4AF37]/50 hover:border-[#D4AF37] overflow-hidden transition-all duration-500 flex items-center gap-6"
             >
                {/* Elegant fill hover */}
-               <div className="absolute inset-0 bg-[#BCA58A] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-700 ease-in-out" />
+               <div className="absolute inset-0 bg-[#D4AF37] scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-700 ease-in-out" />
                
-              <span className="relative z-10 text-white group-hover:text-black text-[11px] tracking-[0.3em] font-bold uppercase transition-colors duration-500" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <span className="relative z-10 text-white group-hover:text-black text-[11px] tracking-[0.3em] font-bold uppercase transition-colors duration-500" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Begin Consultation
               </span>
               <div className="relative z-10 w-10 h-[1px] bg-white group-hover:bg-black group-hover:w-16 transition-all duration-500" />
@@ -177,7 +177,7 @@ export default function AiOutfitFinder() {
             </button>
 
             {/* LEFT SIDE: Dynamic Image Gallery */}
-            <div className="hidden md:block w-1/2 h-full relative bg-[#111]">
+            <div className="hidden md:block w-1/2 h-full relative bg-[#1A0008]">
               <AnimatePresence mode="wait">
                 {!isRevealing && (
                   <motion.div
@@ -202,7 +202,7 @@ export default function AiOutfitFinder() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1.5 }}
-                    className="absolute inset-0 bg-[#BCA58A]/20 backdrop-blur-3xl"
+                    className="absolute inset-0 bg-[#D4AF37]/20 backdrop-blur-3xl"
                   />
                 )}
               </AnimatePresence>
@@ -223,7 +223,7 @@ export default function AiOutfitFinder() {
                             initial={{ x: '-100%' }}
                             animate={{ x: idx < currentStep ? '0%' : '0%' }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="absolute inset-0 bg-[#BCA58A]"
+                            className="absolute inset-0 bg-[#D4AF37]"
                           />
                         )}
                       </div>
@@ -241,7 +241,7 @@ export default function AiOutfitFinder() {
                         transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
                         className="w-full"
                       >
-                        <span className="text-[#BCA58A] text-[10px] tracking-[0.3em] font-bold uppercase mb-4 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                        <span className="text-[#D4AF37] text-[10px] tracking-[0.3em] font-bold uppercase mb-4 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                           Step 0{currentStep + 1}
                         </span>
                         <h3 
@@ -260,19 +260,19 @@ export default function AiOutfitFinder() {
                                 onClick={() => handleOptionSelect(QUESTIONS[currentStep].id, option)}
                                 className={`group relative p-6 text-left border-b transition-all duration-500 overflow-hidden flex items-center justify-between
                                   ${isSelected 
-                                    ? 'border-[#BCA58A] bg-white/5' 
+                                    ? 'border-[#D4AF37] bg-white/5' 
                                     : 'border-white/10 hover:border-white/40 hover:bg-white/5'
                                   }`}
                               >
                                 <span 
-                                  className={`relative z-10 text-lg lg:text-xl font-light tracking-wide transition-colors duration-300 ${isSelected ? 'text-[#BCA58A]' : 'text-white'}`}
+                                  className={`relative z-10 text-lg lg:text-xl font-light tracking-wide transition-colors duration-300 ${isSelected ? 'text-[#D4AF37]' : 'text-white'}`}
                                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                                 >
                                   {option}
                                 </span>
                                 
-                                <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${isSelected ? 'border-[#BCA58A] bg-[#BCA58A]/10' : 'border-white/20 group-hover:border-white/50'}`}>
-                                  {isSelected && <div className="w-2 h-2 rounded-full bg-[#BCA58A]" />}
+                                <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-300 ${isSelected ? 'border-[#D4AF37] bg-[#D4AF37]/10' : 'border-white/20 group-hover:border-white/50'}`}>
+                                  {isSelected && <div className="w-2 h-2 rounded-full bg-[#D4AF37]" />}
                                 </div>
                               </button>
                             );
@@ -295,7 +295,7 @@ export default function AiOutfitFinder() {
                       className="text-5xl md:text-6xl text-white font-light mb-6 tracking-wide"
                       style={{ fontFamily: "'Cormorant Garamond', serif" }}
                     >
-                      The <span className="italic text-[#BCA58A]">curation</span><br/>is complete.
+                      The <span className="italic text-[#D4AF37]">curation</span><br/>is complete.
                     </h3>
                     <p className="text-white/50 text-sm font-light mb-12" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                       We have hand-selected 18 exquisite pieces that perfectly match your exact preferences, occasion, and style.
@@ -306,8 +306,8 @@ export default function AiOutfitFinder() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 1, duration: 0.8 }}
                       onClick={closeAndReset}
-                      className="w-full bg-white text-black py-5 rounded-none text-[10px] tracking-[0.3em] font-bold uppercase hover:bg-[#BCA58A] hover:text-white transition-all duration-500"
-                      style={{ fontFamily: "'Montserrat', sans-serif" }}
+                      className="w-full bg-white text-black py-5 rounded-none text-[10px] tracking-[0.3em] font-bold uppercase hover:bg-[#D4AF37] hover:text-white transition-all duration-500"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
                     >
                       View Your Masterpieces
                     </motion.button>

@@ -11,11 +11,11 @@ export default function WishlistPage({ allProducts, favorites, toggleFavorite, a
         {/* Header */}
         <div className="text-center mb-8 md:mb-16">
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex justify-center items-center gap-4 mb-3 md:mb-4">
-            <Heart size={22} className="text-[#BCA58A]" />
+            <Heart size={22} className="text-[#D4AF37]" />
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-light text-[#111111] tracking-tight mb-3 md:mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Your <span className="italic text-[#BCA58A]">Wishlist</span>
+            className="text-3xl sm:text-4xl md:text-5xl font-light text-[#1A0008] tracking-tight mb-3 md:mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            Your <span className="italic text-[#D4AF37]">Wishlist</span>
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="text-gray-500 font-light max-w-lg mx-auto text-sm">
             {favoriteItems.length > 0 
@@ -51,7 +51,7 @@ export default function WishlistPage({ allProducts, favorites, toggleFavorite, a
                   <div className="absolute inset-x-0 bottom-0 p-2.5 sm:p-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 translate-y-0 sm:translate-y-2 sm:group-hover:translate-y-0">
                     <button 
                       onClick={() => addToCart(product, product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched')}
-                      className="w-full py-2.5 sm:py-3 bg-white/95 backdrop-blur-sm text-[#111111] text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-[#111111] hover:text-white transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
+                      className="w-full py-2.5 sm:py-3 bg-white/95 backdrop-blur-sm text-[#1A0008] text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-[#1A0008] hover:text-white transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
                     >
                       <ShoppingBag size={12} /> <span className="hidden xs:inline">Add to</span> Cart
                     </button>
@@ -60,9 +60,9 @@ export default function WishlistPage({ allProducts, favorites, toggleFavorite, a
 
                 {/* Details */}
                 <div className="px-0.5">
-                  <div className="text-[8px] sm:text-[9px] tracking-[0.2em] text-[#BCA58A] uppercase font-bold mb-1">{product.brand || 'Gurnaaz'}</div>
-                  <h3 className="text-xs sm:text-sm font-medium text-[#111111] mb-1 truncate" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
-                  <div className="text-xs sm:text-sm text-[#111111] font-light">
+                  <div className="text-[8px] sm:text-[9px] tracking-[0.2em] text-[#D4AF37] uppercase font-bold mb-1">{product.brand || 'Gurnaaz'}</div>
+                  <h3 className="text-xs sm:text-sm font-medium text-[#1A0008] mb-1 truncate" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
+                  <div className="text-xs sm:text-sm text-[#1A0008] font-light">
                     {product.price}
                   </div>
                 </div>
@@ -70,17 +70,17 @@ export default function WishlistPage({ allProducts, favorites, toggleFavorite, a
             ))}
           </div>
         ) : (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="flex flex-col items-center justify-center py-12 md:py-20 text-center border-t border-[#111111]/5">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-[#FAF9F6] flex items-center justify-center text-[#BCA58A]/30 mb-4 md:mb-6">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="flex flex-col items-center justify-center py-12 md:py-20 text-center border-t border-[#1A0008]/5">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-[#FAF9F6] flex items-center justify-center text-[#D4AF37]/30 mb-4 md:mb-6">
               <Heart size={28} strokeWidth={1} />
             </div>
-            <h3 className="text-xl sm:text-2xl font-light text-[#111111] mb-3 md:mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Nothing here yet</h3>
+            <h3 className="text-xl sm:text-2xl font-light text-[#1A0008] mb-3 md:mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Nothing here yet</h3>
             <p className="text-xs sm:text-sm text-gray-500 font-light mb-6 md:mb-8 max-w-md px-4">
               Save your favorite items here to review them later or quickly add them to your cart when you're ready.
             </p>
             <button 
               onClick={() => setView('shop')}
-              className="px-6 sm:px-8 py-2.5 sm:py-3 bg-[#111111] text-white text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-[#BCA58A] transition-colors flex items-center gap-2 group"
+              className="px-6 sm:px-8 py-2.5 sm:py-3 bg-[#1A0008] text-white text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-[#D4AF37] transition-colors flex items-center gap-2 group"
             >
               Start Shopping <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
             </button>

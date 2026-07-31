@@ -6,10 +6,10 @@ import { getAllProducts, getCategories } from '../utils/adminStore';
 function FilterAccordion({ title, children, defaultOpen = true }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
-    <div className="border-b border-[#111111]/10 pb-5 mb-5">
+    <div className="border-b border-[#1A0008]/10 pb-5 mb-5">
       <button onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-between w-full text-left group cursor-pointer">
-        <h4 className="text-[12px] font-bold tracking-[0.15em] text-[#111111] uppercase group-hover:text-[#BCA58A] transition-colors" style={{ fontFamily: "'DM Sans', sans-serif" }}>{title}</h4>
-        {isOpen ? <ChevronUp size={14} className="text-[#BCA58A] transition-colors" /> : <ChevronDown size={14} className="text-[#111111]/50 group-hover:text-[#BCA58A] transition-colors" />}
+        <h4 className="text-[12px] font-bold tracking-[0.15em] text-[#1A0008] uppercase group-hover:text-[#D4AF37] transition-colors" style={{ fontFamily: "'DM Sans', sans-serif" }}>{title}</h4>
+        {isOpen ? <ChevronUp size={14} className="text-[#D4AF37] transition-colors" /> : <ChevronDown size={14} className="text-[#1A0008]/50 group-hover:text-[#D4AF37] transition-colors" />}
       </button>
       <AnimatePresence>
         {isOpen && (
@@ -85,7 +85,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
     { name: 'Blue', hex: '#3498DB' },
     { name: 'Green', hex: '#2ECC71' },
     { name: 'Pink', hex: '#F1948A' },
-    { name: 'Black', hex: '#111111' },
+    { name: 'Black', hex: '#1A0008' },
     { name: 'White', hex: '#FFFFFF' },
     { name: 'Yellow', hex: '#F1C40F' },
     { name: 'Wine', hex: '#722F37' }
@@ -155,7 +155,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] mt-[110px] selection:bg-[#BCA58A] selection:text-white">
+    <div className="min-h-screen bg-[#FAF9F6] mt-[110px] selection:bg-[#D4AF37] selection:text-white">
       
       {/* ── 10/10 Avant-Garde Hero Section (Compact & Uncropped) ── */}
       <div className="relative w-full max-w-[1800px] mx-auto px-6 md:px-12 pt-4 pb-6 overflow-hidden">
@@ -169,17 +169,17 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-px bg-[#BCA58A]" />
-                <span className="text-[#BCA58A] text-[10px] tracking-[0.4em] uppercase font-bold" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                <div className="w-12 h-px bg-[#D4AF37]" />
+                <span className="text-[#D4AF37] text-[10px] tracking-[0.4em] uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   {banner.subtitle}
                 </span>
               </div>
 
-              <h1 className="text-6xl md:text-[80px] font-light text-[#111111] leading-[0.85] tracking-tight mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <h1 className="text-6xl md:text-[80px] font-light text-[#1A0008] leading-[0.85] tracking-tight mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 {banner.title}
               </h1>
 
-              <p className="text-[#111111]/70 text-xs md:text-sm leading-relaxed mb-8 max-w-md font-light line-clamp-3" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-[#1A0008]/70 text-xs md:text-sm leading-relaxed mb-8 max-w-md font-light line-clamp-3" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 {banner.desc}
               </p>
 
@@ -188,14 +188,14 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                   onClick={() => document.getElementById('collection-start')?.scrollIntoView({ behavior: 'smooth' })}
                   className="group relative inline-flex items-center gap-4 w-max cursor-pointer"
                 >
-                  <div className="w-10 h-10 rounded-full border border-[#BCA58A] flex items-center justify-center group-hover:bg-[#BCA58A] transition-colors duration-500">
-                    <ArrowRight size={14} className="text-[#BCA58A] group-hover:text-white transition-colors duration-500" />
+                  <div className="w-10 h-10 rounded-full border border-[#D4AF37] flex items-center justify-center group-hover:bg-[#D4AF37] transition-colors duration-500">
+                    <ArrowRight size={14} className="text-[#D4AF37] group-hover:text-white transition-colors duration-500" />
                   </div>
-                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#111111] group-hover:text-[#BCA58A] transition-colors duration-500">
+                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#1A0008] group-hover:text-[#D4AF37] transition-colors duration-500">
                     Explore Collection
                   </span>
                 </button>
-                <div className="hidden sm:flex items-center gap-2 text-[#111111]/30 animate-bounce mt-1">
+                <div className="hidden sm:flex items-center gap-2 text-[#1A0008]/30 animate-bounce mt-1">
                   <ChevronDown size={14} />
                   <span className="text-[8px] tracking-[0.2em] uppercase font-bold">Scroll</span>
                 </div>
@@ -233,17 +233,17 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
           
           {/* ── Minimalist Left Sidebar Filters ── */}
           <div className="w-full lg:w-[260px] shrink-0">
-            <div className="sticky top-[120px] max-h-[calc(100vh-140px)] overflow-y-auto pr-4 pb-10 scrollbar-thin scrollbar-thumb-[#BCA58A]/30 scrollbar-track-transparent">
+            <div className="sticky top-[120px] max-h-[calc(100vh-140px)] overflow-y-auto pr-4 pb-10 scrollbar-thin scrollbar-thumb-[#D4AF37]/30 scrollbar-track-transparent">
               
               <div className="flex items-center justify-between mb-10">
                 <div className="flex items-center gap-3">
-                  <SlidersHorizontal size={14} className="text-[#BCA58A]" />
-                  <h3 className="text-[11px] tracking-[0.3em] uppercase font-bold text-[#111111]" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  <SlidersHorizontal size={14} className="text-[#D4AF37]" />
+                  <h3 className="text-[11px] tracking-[0.3em] uppercase font-bold text-[#1A0008]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     Refine By
                   </h3>
                 </div>
                 {activeFilterCount > 0 && (
-                  <button onClick={clearAllFilters} className="text-[9px] text-[#111111] font-bold uppercase tracking-wider hover:text-[#BCA58A] cursor-pointer">
+                  <button onClick={clearAllFilters} className="text-[9px] text-[#1A0008] font-bold uppercase tracking-wider hover:text-[#D4AF37] cursor-pointer">
                     Clear All
                   </button>
                 )}
@@ -260,10 +260,10 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                   ].map((sort) => (
                     <label key={sort.id} className="flex items-center gap-4 cursor-pointer group">
                       <div className="relative flex items-center justify-center">
-                        <div className={`w-[14px] h-[14px] rounded-full border transition-all duration-300 ${sortOption === sort.id ? 'border-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`} />
-                        <div className={`absolute w-1.5 h-1.5 rounded-full bg-[#BCA58A] transition-all duration-300 ${sortOption === sort.id ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
+                        <div className={`w-[14px] h-[14px] rounded-full border transition-all duration-300 ${sortOption === sort.id ? 'border-[#D4AF37]' : 'border-[#1A0008]/20 group-hover:border-[#D4AF37]/50'}`} />
+                        <div className={`absolute w-1.5 h-1.5 rounded-full bg-[#D4AF37] transition-all duration-300 ${sortOption === sort.id ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
                       </div>
-                      <span className={`text-[13px] transition-colors duration-300 ${sortOption === sort.id ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      <span className={`text-[13px] transition-colors duration-300 ${sortOption === sort.id ? 'text-[#1A0008] font-medium' : 'text-[#1A0008]/60 group-hover:text-[#1A0008]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         {sort.label}
                       </span>
                       <input type="radio" className="hidden" checked={sortOption === sort.id} onChange={() => setSortOption(sort.id)} />
@@ -277,10 +277,10 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                 <div className="space-y-4">
                   {pricesList.map(p => (
                     <label key={p.id} className="flex items-center gap-4 cursor-pointer group">
-                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedPrices.includes(p.id) ? 'border-[#BCA58A] bg-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`}>
+                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedPrices.includes(p.id) ? 'border-[#D4AF37] bg-[#D4AF37]' : 'border-[#1A0008]/20 group-hover:border-[#D4AF37]/50'}`}>
                         <Check size={10} className={`text-white transition-opacity ${selectedPrices.includes(p.id) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
                       </div>
-                      <span className={`text-[13px] transition-colors duration-300 ${selectedPrices.includes(p.id) ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      <span className={`text-[13px] transition-colors duration-300 ${selectedPrices.includes(p.id) ? 'text-[#1A0008] font-medium' : 'text-[#1A0008]/60 group-hover:text-[#1A0008]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         {p.label}
                       </span>
                       <input type="checkbox" className="hidden" checked={selectedPrices.includes(p.id)} onChange={() => toggleFilter(setSelectedPrices, p.id)} />
@@ -294,7 +294,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                 <div className="flex flex-wrap gap-2">
                   {sizesList.map(s => (
                     <button key={s} onClick={() => toggleFilter(setSelectedSizes, s)}
-                      className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${selectedSizes.includes(s) ? 'border-[#111111] bg-[#111111] text-white' : 'border-[#BCA58A]/30 text-[#6B6B6B] hover:border-[#111111]'}`}>
+                      className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${selectedSizes.includes(s) ? 'border-[#1A0008] bg-[#1A0008] text-white' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
                       {s}
                     </button>
                   ))}
@@ -306,10 +306,10 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                 <div className="space-y-4">
                   {fabricsList.map(f => (
                     <label key={f} className="flex items-center gap-4 cursor-pointer group">
-                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedFabrics.includes(f) ? 'border-[#BCA58A] bg-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`}>
+                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedFabrics.includes(f) ? 'border-[#D4AF37] bg-[#D4AF37]' : 'border-[#1A0008]/20 group-hover:border-[#D4AF37]/50'}`}>
                         <Check size={10} className={`text-white transition-opacity ${selectedFabrics.includes(f) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
                       </div>
-                      <span className={`text-[13px] transition-colors duration-300 ${selectedFabrics.includes(f) ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      <span className={`text-[13px] transition-colors duration-300 ${selectedFabrics.includes(f) ? 'text-[#1A0008] font-medium' : 'text-[#1A0008]/60 group-hover:text-[#1A0008]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         {f}
                       </span>
                       <input type="checkbox" className="hidden" checked={selectedFabrics.includes(f)} onChange={() => toggleFilter(setSelectedFabrics, f)} />
@@ -339,10 +339,10 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                 <div className="space-y-4">
                   {occasionsList.map(o => (
                     <label key={o} className="flex items-center gap-4 cursor-pointer group">
-                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedOccasions.includes(o) ? 'border-[#BCA58A] bg-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`}>
+                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedOccasions.includes(o) ? 'border-[#D4AF37] bg-[#D4AF37]' : 'border-[#1A0008]/20 group-hover:border-[#D4AF37]/50'}`}>
                         <Check size={10} className={`text-white transition-opacity ${selectedOccasions.includes(o) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
                       </div>
-                      <span className={`text-[13px] transition-colors duration-300 ${selectedOccasions.includes(o) ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      <span className={`text-[13px] transition-colors duration-300 ${selectedOccasions.includes(o) ? 'text-[#1A0008] font-medium' : 'text-[#1A0008]/60 group-hover:text-[#1A0008]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         {o}
                       </span>
                       <input type="checkbox" className="hidden" checked={selectedOccasions.includes(o)} onChange={() => toggleFilter(setSelectedOccasions, o)} />
@@ -357,10 +357,10 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                   <div className="space-y-4">
                     {boutiques.map((btq) => (
                       <label key={btq} className="flex items-center gap-4 cursor-pointer group">
-                        <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedBoutiques.includes(btq) ? 'border-[#BCA58A] bg-[#BCA58A]' : 'border-[#111111]/20 group-hover:border-[#BCA58A]/50'}`}>
+                        <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedBoutiques.includes(btq) ? 'border-[#D4AF37] bg-[#D4AF37]' : 'border-[#1A0008]/20 group-hover:border-[#D4AF37]/50'}`}>
                           <Check size={10} className={`text-white transition-opacity ${selectedBoutiques.includes(btq) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
                         </div>
-                        <span className={`text-[13px] transition-colors duration-300 ${selectedBoutiques.includes(btq) ? 'text-[#111111] font-medium' : 'text-[#111111]/60 group-hover:text-[#111111]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        <span className={`text-[13px] transition-colors duration-300 ${selectedBoutiques.includes(btq) ? 'text-[#1A0008] font-medium' : 'text-[#1A0008]/60 group-hover:text-[#1A0008]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
                           {btq}
                         </span>
                         <input type="checkbox" className="hidden" checked={selectedBoutiques.includes(btq)} onChange={() => toggleFilter(setSelectedBoutiques, btq)} />
@@ -377,7 +377,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
           <div className="flex-1 min-w-0">
             
             <div className="flex items-end justify-between mb-12">
-              <span className="text-[10px] font-bold text-[#111111]/40 tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <span className="text-[10px] font-bold text-[#1A0008]/40 tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 {filteredProducts.length} Results
               </span>
             </div>
@@ -388,20 +388,20 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="py-32 flex flex-col items-center justify-center text-center bg-white border border-[#BCA58A]/10 shadow-sm"
+                  className="py-32 flex flex-col items-center justify-center text-center bg-white border border-[#D4AF37]/10 shadow-sm"
                 >
                   <div className="w-16 h-16 rounded-full bg-[#FAF9F6] flex items-center justify-center mb-6">
-                    <SlidersHorizontal size={24} className="text-[#BCA58A]/60" />
+                    <SlidersHorizontal size={24} className="text-[#D4AF37]/60" />
                   </div>
-                  <h3 className="text-3xl font-light text-[#111111] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  <h3 className="text-3xl font-light text-[#1A0008] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     No Styles Found
                   </h3>
-                  <p className="text-[#111111]/50 text-sm max-w-sm mx-auto mb-8 font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  <p className="text-[#1A0008]/50 text-sm max-w-sm mx-auto mb-8 font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     Your refined criteria yielded no results. Try removing some filters to discover our beautiful collection.
                   </p>
                   <button 
                     onClick={clearAllFilters}
-                    className="border border-[#111111] text-[#111111] px-8 py-3 text-[10px] tracking-[0.25em] font-bold uppercase hover:bg-[#111111] hover:text-white transition-colors cursor-pointer"
+                    className="border border-[#1A0008] text-[#1A0008] px-8 py-3 text-[10px] tracking-[0.25em] font-bold uppercase hover:bg-[#1A0008] hover:text-white transition-colors cursor-pointer"
                   >
                     Clear All Filters
                   </button>
@@ -425,7 +425,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                       className="group flex flex-col cursor-pointer"
                     >
                       {/* Taller Aspect Ratio Image Container */}
-                      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#F5F3F0] mb-5 group-hover:shadow-[0_10px_40px_rgb(0,0,0,0.08)] transition-all duration-500 border border-[#111111]/5">
+                      <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#F5F3F0] mb-5 group-hover:shadow-[0_10px_40px_rgb(0,0,0,0.08)] transition-all duration-500 border border-[#1A0008]/5">
                         <img
                           src={p.image}
                           alt={p.name}
@@ -436,7 +436,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                         
                         {/* Elegant floating boutique badge */}
                         <div className="absolute top-4 left-4 z-10">
-                          <span className="bg-white/95 backdrop-blur-md px-3.5 py-1.5 text-[9px] font-bold tracking-[0.2em] uppercase text-[#111111] rounded-full shadow-sm">
+                          <span className="bg-white/95 backdrop-blur-md px-3.5 py-1.5 text-[9px] font-bold tracking-[0.2em] uppercase text-[#1A0008] rounded-full shadow-sm">
                             {p.badge || 'Exquisite'}
                           </span>
                         </div>
@@ -448,13 +448,13 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                               e.stopPropagation(); 
                               addToCart(p, p.sizes?.length > 0 ? p.sizes[0] : 'Unstitched');
                             }}
-                            className="flex-1 bg-white/95 backdrop-blur-md text-[#111111] py-3.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#111111] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
+                            className="flex-1 bg-white/95 backdrop-blur-md text-[#1A0008] py-3.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#1A0008] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
                           >
                              <ShoppingBag size={14} /> Add to Bag
                           </button>
                           <button 
                             onClick={(e) => { e.stopPropagation(); handleProductClick(p); }}
-                            className="w-12 h-12 bg-white/95 backdrop-blur-md text-[#111111] flex items-center justify-center rounded-full hover:bg-[#BCA58A] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
+                            className="w-12 h-12 bg-white/95 backdrop-blur-md text-[#1A0008] flex items-center justify-center rounded-full hover:bg-[#D4AF37] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
                           >
                              <Eye size={16} />
                           </button>
@@ -464,7 +464,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                       {/* Typographic Content Below */}
                       <div className="flex flex-col text-left px-2">
                         <h3
-                          className="text-[20px] font-medium text-[#111111] leading-tight mb-2 group-hover:text-[#BCA58A] transition-colors truncate"
+                          className="text-[20px] font-medium text-[#1A0008] leading-tight mb-2 group-hover:text-[#D4AF37] transition-colors truncate"
                           style={{ fontFamily: "'Cormorant Garamond', serif" }}
                         >
                           {p.name}
@@ -487,9 +487,9 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                             )}
                           </div>
                           {p.rating && (
-                            <div className="flex items-center gap-1 bg-[#FAF9F6] px-2 py-1 rounded-full border border-[#BCA58A]/20">
-                              <span className="text-[#BCA58A] text-[9px]">★</span>
-                              <span className="text-[10px] font-bold text-[#111111]/80 pt-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                            <div className="flex items-center gap-1 bg-[#FAF9F6] px-2 py-1 rounded-full border border-[#D4AF37]/20">
+                              <span className="text-[#D4AF37] text-[9px]">★</span>
+                              <span className="text-[10px] font-bold text-[#1A0008]/80 pt-0.5" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                                 {p.rating}
                               </span>
                             </div>

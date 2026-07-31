@@ -5,12 +5,12 @@
   --charcoal:     #FAF9F6;
   --charcoal-mid: #FAF9F6;
   --charcoal-soft:#E8DDD0;
-  --ivory:        #111111;
+  --ivory:        #1A0008;
   --ivory-soft:   #1E1E1E;
   --ivory-dim:    #1E1E1E;
-  --gold:         #BCA58A;
-  --gold-light:   #BCA58A;
-  --gold-dark:    #BCA58A;
+  --gold:         #D4AF37;
+  --gold-light:   #D4AF37;
+  --gold-dark:    #D4AF37;
   --crimson:      #FAF9F6;
   --text-dark:    #E8DDD0;
   --text-mid:     #6B6B6B;
@@ -60,7 +60,7 @@ body {
   font-size: 120px;
   font-weight: 400;
   fill: none;
-  stroke: #BCA58A;
+  stroke: #D4AF37;
   stroke-width: 1;
   stroke-dasharray: 2000;
   stroke-dashoffset: 2000;
@@ -71,7 +71,7 @@ body {
   font-family: 'Great Vibes', cursive;
   font-size: 120px;
   font-weight: 400;
-  fill: #BCA58A;
+  fill: #D4AF37;
   letter-spacing: 4px;
 }
 

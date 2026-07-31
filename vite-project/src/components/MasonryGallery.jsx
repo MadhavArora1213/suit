@@ -24,7 +24,7 @@ const col3 = [
 const ProductCard = ({ item, onClickCard, onQuickAdd }) => (
   <div 
     onClick={() => onClickCard(item.realId)}
-    className={`relative group w-full ${item.height} rounded-xl overflow-hidden cursor-pointer shadow-lg border border-[#111111]/5`}
+    className={`relative group w-full ${item.height} rounded-xl overflow-hidden cursor-pointer shadow-lg border border-[#1A0008]/5`}
   >
     <img 
       src={item.image} 
@@ -33,14 +33,14 @@ const ProductCard = ({ item, onClickCard, onQuickAdd }) => (
     />
     
     {/* Cinematic Glass Overlay */}
-    <div className="absolute inset-0 bg-[#111111]/40 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] transition-all duration-500" />
+    <div className="absolute inset-0 bg-[#1A0008]/40 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] transition-all duration-500" />
     
     {/* Content */}
     <div className="absolute inset-0 p-8 flex flex-col justify-end transform translate-y-8 group-hover:translate-y-0 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 group-hover:opacity-100">
       <h3 className="text-3xl md:text-4xl text-[#FAF9F6] mb-1 font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
         {item.name}
       </h3>
-      <p className="text-[#BCA58A] text-[11px] tracking-[0.3em] mb-6 uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+      <p className="text-[#D4AF37] text-[11px] tracking-[0.3em] mb-6 uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
         {item.price}
       </p>
       
@@ -49,7 +49,7 @@ const ProductCard = ({ item, onClickCard, onQuickAdd }) => (
           e.stopPropagation();
           onQuickAdd(item.realId);
         }}
-        className="w-full bg-[#FAF9F6]/10 hover:bg-[#FAF9F6] backdrop-blur-md text-[#FAF9F6] hover:text-[#111111] py-4 flex items-center justify-center gap-2 text-[10px] tracking-[0.3em] font-medium transition-all duration-500 border border-[#FAF9F6]/20 hover:border-[#FAF9F6]"
+        className="w-full bg-[#FAF9F6]/10 hover:bg-[#FAF9F6] backdrop-blur-md text-[#FAF9F6] hover:text-[#1A0008] py-4 flex items-center justify-center gap-2 text-[10px] tracking-[0.3em] font-medium transition-all duration-500 border border-[#FAF9F6]/20 hover:border-[#FAF9F6]"
       >
         <ShoppingBag size={14} strokeWidth={1.5} />
         <span>QUICK ADD</span>
@@ -121,14 +121,14 @@ export default function ParallaxMasonry({ setView, setSelectedProduct, addToCart
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="relative z-10"
           >
-            <span className="text-[11px] tracking-[0.5em] text-[#BCA58A] uppercase font-medium mb-6 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <span className="text-[11px] tracking-[0.5em] text-[#D4AF37] uppercase font-medium mb-6 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               The Masterpieces
             </span>
-            <h2 className="text-6xl md:text-8xl lg:text-9xl font-light text-[#111111] leading-[0.9] tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-6xl md:text-8xl lg:text-9xl font-light text-[#1A0008] leading-[0.9] tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Curated <br/>
-              <em className="italic text-[#BCA58A] font-light">Silhouettes</em>
+              <em className="italic text-[#D4AF37] font-light">Silhouettes</em>
             </h2>
-            <p className="mt-8 text-[#555] text-[10px] tracking-[0.3em] uppercase max-w-md mx-auto leading-loose" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <p className="mt-8 text-[#555] text-[10px] tracking-[0.3em] uppercase max-w-md mx-auto leading-loose" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Explore our vast collection of handcrafted luxury. Every piece is woven with heritage.
             </p>
           </motion.div>

@@ -59,7 +59,7 @@ export default function CustomerReviews() {
   }, [testimonials]);
 
   return (
-    <section className="py-40 bg-[#FAF9F6] relative overflow-hidden border-t border-[#111111]/5">
+    <section className="py-40 bg-[#FAF9F6] relative overflow-hidden border-t border-[#1A0008]/5">
       
       {/* Massive Background Quote Watermark */}
       <div className="absolute top-1/2 left-1/4 -translate-y-1/2 opacity-[0.02] pointer-events-none select-none">
@@ -72,19 +72,19 @@ export default function CustomerReviews() {
 
         {/* Left Intro */}
         <div className="w-full md:w-1/3 text-center md:text-left">
-          <span className="text-[11px] tracking-[0.5em] text-[#BCA58A] uppercase block mb-6 font-medium"
-            style={{ fontFamily: "'Montserrat', sans-serif" }}>Testimonials</span>
-          <h2 className="text-6xl md:text-7xl lg:text-8xl font-light text-[#111111] leading-none tracking-tight mb-8"
+          <span className="text-[11px] tracking-[0.5em] text-[#D4AF37] uppercase block mb-6 font-medium"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>Testimonials</span>
+          <h2 className="text-6xl md:text-7xl lg:text-8xl font-light text-[#1A0008] leading-none tracking-tight mb-8"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Client <br/><em className="italic text-[#BCA58A] font-light">Stories</em>
+            Client <br/><em className="italic text-[#D4AF37] font-light">Stories</em>
           </h2>
           <div className="hidden md:flex items-center gap-6 mt-16">
             <button onClick={() => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length)}
-              className="w-12 h-12 border border-[#111111]/20 hover:border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-[#FAF9F6] flex items-center justify-center transition-all duration-500 cursor-pointer rounded-full">
+              className="w-12 h-12 border border-[#1A0008]/20 hover:border-[#1A0008] text-[#1A0008] hover:bg-[#1A0008] hover:text-[#FAF9F6] flex items-center justify-center transition-all duration-500 cursor-pointer rounded-full">
               <ChevronLeft size={18} strokeWidth={1} />
             </button>
             <button onClick={() => setCurrent((p) => (p + 1) % testimonials.length)}
-              className="w-12 h-12 border border-[#111111]/20 hover:border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-[#FAF9F6] flex items-center justify-center transition-all duration-500 cursor-pointer rounded-full">
+              className="w-12 h-12 border border-[#1A0008]/20 hover:border-[#1A0008] text-[#1A0008] hover:bg-[#1A0008] hover:text-[#FAF9F6] flex items-center justify-center transition-all duration-500 cursor-pointer rounded-full">
               <ChevronRight size={18} strokeWidth={1} />
             </button>
           </div>
@@ -101,38 +101,38 @@ export default function CustomerReviews() {
               {/* Stars */}
               <div className="flex gap-2">
                 {[...Array(testimonials[current].rating)].map((_, i) => (
-                  <Star key={i} size={14} className="fill-[#BCA58A] text-[#BCA58A]" />
+                  <Star key={i} size={14} className="fill-[#D4AF37] text-[#D4AF37]" />
                 ))}
               </div>
 
               {/* Quote text */}
-              <blockquote className="text-3xl md:text-5xl font-light text-[#111111] leading-snug"
+              <blockquote className="text-3xl md:text-5xl font-light text-[#1A0008] leading-snug"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 "{testimonials[current].text}"
               </blockquote>
 
               {/* Author */}
               <div className="flex items-center gap-6 pt-8">
-                <div className="w-16 h-16 rounded-full overflow-hidden border border-[#111111]/10">
+                <div className="w-16 h-16 rounded-full overflow-hidden border border-[#1A0008]/10">
                   <img src={testimonials[current].avatar} alt={testimonials[current].name}
                     className="w-full h-full object-cover" />
                 </div>
                 <div className="text-left">
-                  <h4 className="text-xl font-light text-[#111111] tracking-wide"
+                  <h4 className="text-xl font-light text-[#1A0008] tracking-wide"
                     style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {testimonials[current].name}
                   </h4>
                   <p className="text-[10px] tracking-[0.3em] text-[#555] uppercase font-medium mt-1"
-                    style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {testimonials[current].country}
                   </p>
                 </div>
               </div>
               
               {/* Store Purchased From */}
-              <div className="pt-4 border-t border-[#111111]/5 inline-block">
-                <span className="text-[9px] tracking-[0.3em] text-[#111111]/40 uppercase font-medium block mb-1" style={{ fontFamily: "'Montserrat', sans-serif" }}>Purchased From</span>
-                <span className="text-[12px] text-[#BCA58A] font-light tracking-wide uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>{testimonials[current].store}</span>
+              <div className="pt-4 border-t border-[#1A0008]/5 inline-block">
+                <span className="text-[9px] tracking-[0.3em] text-[#1A0008]/40 uppercase font-medium block mb-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>Purchased From</span>
+                <span className="text-[12px] text-[#D4AF37] font-light tracking-wide uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>{testimonials[current].store}</span>
               </div>
             </motion.div>
           </AnimatePresence>
@@ -140,11 +140,11 @@ export default function CustomerReviews() {
           {/* Mobile Controls */}
           <div className="flex md:hidden items-center gap-6 mt-16 justify-center">
             <button onClick={() => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length)}
-              className="w-12 h-12 border border-[#111111]/20 hover:border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-[#FAF9F6] flex items-center justify-center transition-all duration-500 cursor-pointer rounded-full">
+              className="w-12 h-12 border border-[#1A0008]/20 hover:border-[#1A0008] text-[#1A0008] hover:bg-[#1A0008] hover:text-[#FAF9F6] flex items-center justify-center transition-all duration-500 cursor-pointer rounded-full">
               <ChevronLeft size={18} strokeWidth={1} />
             </button>
             <button onClick={() => setCurrent((p) => (p + 1) % testimonials.length)}
-              className="w-12 h-12 border border-[#111111]/20 hover:border-[#111111] text-[#111111] hover:bg-[#111111] hover:text-[#FAF9F6] flex items-center justify-center transition-all duration-500 cursor-pointer rounded-full">
+              className="w-12 h-12 border border-[#1A0008]/20 hover:border-[#1A0008] text-[#1A0008] hover:bg-[#1A0008] hover:text-[#FAF9F6] flex items-center justify-center transition-all duration-500 cursor-pointer rounded-full">
               <ChevronRight size={18} strokeWidth={1} />
             </button>
           </div>

@@ -142,8 +142,8 @@ export default function WhyShopGurnaaz() {
         
         {/* Header */}
         <div className="mb-10 md:mb-20">
-          <h1 className="text-3xl sm:text-5xl md:text-7xl font-light text-[#111111] leading-tight tracking-tight mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Why <em className="italic text-[#BCA58A] font-light">Shop</em> From GURNAAZ
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-light text-[#1A0008] leading-tight tracking-tight mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            Why <em className="italic text-[#D4AF37] font-light">Shop</em> From GURNAAZ
           </h1>
         </div>
 
@@ -176,11 +176,11 @@ export default function WhyShopGurnaaz() {
                   {/* Inner Content Area */}
                   <div className={`${card.bgColor} rounded-[24px] p-8 h-full border border-black/5 flex flex-col items-start gap-4 transition-colors duration-500`}>
                     
-                    <h3 className="text-xl font-bold text-[#111111] mt-2 tracking-wide" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    <h3 className="text-xl font-bold text-[#1A0008] mt-2 tracking-wide" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                       {card.title}
                     </h3>
 
-                    <p className="text-[13px] text-[#555] leading-relaxed font-medium opacity-80" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    <p className="text-[13px] text-[#555] leading-relaxed font-medium opacity-80" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                       {card.desc}
                     </p>
 

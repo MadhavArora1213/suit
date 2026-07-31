@@ -57,7 +57,7 @@ Hoshiarpur, Punjab`,
 
 export default function PrivacyPolicy({ setView }) {
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#111111]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#1A0008]">
 
       {/* Hero */}
       <section className="relative pt-32 pb-16 px-6 md:px-12 max-w-[900px] mx-auto">
@@ -66,8 +66,8 @@ export default function PrivacyPolicy({ setView }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
           onClick={() => setView('customer-home')}
-          className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-[#111111]/50 hover:text-[#BCA58A] transition-colors mb-10 cursor-pointer"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
+          className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-[#1A0008]/50 hover:text-[#D4AF37] transition-colors mb-10 cursor-pointer"
+          style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
           <ArrowLeft size={14} /> Back to Home
         </motion.button>
@@ -76,7 +76,7 @@ export default function PrivacyPolicy({ setView }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-[9px] tracking-[0.4em] text-[#BCA58A] font-bold uppercase block mb-6"
+          className="text-[9px] tracking-[0.4em] text-[#D4AF37] font-bold uppercase block mb-6"
         >
           Legal
         </motion.span>
@@ -95,7 +95,7 @@ export default function PrivacyPolicy({ setView }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="text-sm text-[#111111]/50 font-light"
+          className="text-sm text-[#1A0008]/50 font-light"
         >
           Last Updated: July 2026
         </motion.p>
@@ -103,7 +103,7 @@ export default function PrivacyPolicy({ setView }) {
 
       {/* Divider */}
       <div className="max-w-[900px] mx-auto px-6 md:px-12">
-        <div className="h-px bg-[#111111]/10" />
+        <div className="h-px bg-[#1A0008]/10" />
       </div>
 
       {/* Intro */}
@@ -112,7 +112,7 @@ export default function PrivacyPolicy({ setView }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-[15px] leading-[1.9] text-[#111111]/70 font-light"
+          className="text-[15px] leading-[1.9] text-[#1A0008]/70 font-light"
         >
           At Gurnaaz, operated by Madhav Arora ("we," "us," or "our"), we are committed to protecting and respecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website gurnaaz.com and purchase our products. Please read this policy carefully. By accessing or using our Site, you agree to the collection and use of information in accordance with this policy.
         </motion.p>
@@ -130,12 +130,12 @@ export default function PrivacyPolicy({ setView }) {
               transition={{ delay: 0.05 * i, duration: 0.6 }}
             >
               <h2
-                className="text-[20px] md:text-[24px] font-light mb-4 text-[#111111]"
+                className="text-[20px] md:text-[24px] font-light mb-4 text-[#1A0008]"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
                 {section.title}
               </h2>
-              <p className="text-[14px] leading-[2] text-[#111111]/60 font-light whitespace-pre-line">
+              <p className="text-[14px] leading-[2] text-[#1A0008]/60 font-light whitespace-pre-line">
                 {section.content}
               </p>
             </motion.div>
@@ -145,18 +145,18 @@ export default function PrivacyPolicy({ setView }) {
 
       {/* Bottom CTA */}
       <section className="max-w-[900px] mx-auto px-6 md:px-12 pb-20">
-        <div className="border-t border-[#111111]/10 pt-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div className="border-t border-[#1A0008]/10 pt-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div>
-            <p className="text-[13px] text-[#111111]/50 font-light">
+            <p className="text-[13px] text-[#1A0008]/50 font-light">
               Questions about this policy? Reach out anytime.
             </p>
-            <p className="text-[13px] text-[#BCA58A] font-medium mt-1">
+            <p className="text-[13px] text-[#D4AF37] font-medium mt-1">
               madhavarora132005@gmail.com
             </p>
           </div>
           <button
             onClick={() => setView('contact')}
-            className="bg-[#111111] text-white px-8 py-3.5 text-[10px] tracking-[0.2em] font-bold uppercase hover:bg-[#BCA58A] transition-colors cursor-pointer"
+            className="bg-[#1A0008] text-white px-8 py-3.5 text-[10px] tracking-[0.2em] font-bold uppercase hover:bg-[#D4AF37] transition-colors cursor-pointer"
           >
             Contact Us
           </button>

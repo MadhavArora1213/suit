@@ -14,7 +14,7 @@ export default function HowItWorks() {
           transition={{ duration: 0.8 }}
           className="text-center mb-4 md:mb-6"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-[#111111] leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-[#1A0008] leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             Shopping for ethnic wear<br className="hidden sm:block" />
             is a <span className="text-[#4a90d9] italic">headache</span> to manage
           </h2>
@@ -95,15 +95,15 @@ export default function HowItWorks() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.25 }} className="absolute top-[200px] left-[5%] z-30" style={{ transform: 'rotate(-3deg)' }}>
-            <div className="bg-[#111111] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">Is this authentic? 🤨</div>
+            <div className="bg-[#1A0008] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">Is this authentic? 🤨</div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.35 }} className="absolute top-[300px] left-[10%] z-30" style={{ transform: 'rotate(2deg)' }}>
-            <div className="bg-[#BCA58A] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">Where's my order? 😤</div>
+            <div className="bg-[#D4AF37] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">Where's my order? 😤</div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="absolute top-[380px] left-[5%] z-30" style={{ transform: 'rotate(-4deg)' }}>
-            <div className="bg-[#111111] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">Return kaise karun? 😫</div>
+            <div className="bg-[#1A0008] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">Return kaise karun? 😫</div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, scale: 0 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.3, type: 'spring' }} className="absolute top-[260px] left-[2%] z-20">
@@ -114,7 +114,7 @@ export default function HowItWorks() {
 
           {/* Right Side Elements */}
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="absolute top-[100px] right-[5%] z-30" style={{ transform: 'rotate(4deg)' }}>
-            <div className="bg-[#111111] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">COD available? 🤔</div>
+            <div className="bg-[#1A0008] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">COD available? 🤔</div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.35 }} className="absolute top-[140px] right-[2%] z-20">
@@ -124,7 +124,7 @@ export default function HowItWorks() {
           </motion.div>
 
           <motion.div initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: 0.45 }} className="absolute top-[320px] right-[8%] z-30" style={{ transform: 'rotate(2deg)' }}>
-            <div className="bg-[#111111] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">Kitna time lagega? ⏰</div>
+            <div className="bg-[#1A0008] text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl">Kitna time lagega? ⏰</div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.32 }} className="absolute bottom-[80px] right-[5%] z-20" style={{ transform: 'rotate(2deg)' }}>
@@ -168,11 +168,11 @@ export default function HowItWorks() {
           </div>
           <div className="space-y-3 px-4">
             {[
-              { text: 'Is this authentic? 🤨', bg: 'bg-[#111111]', rotate: '-rotate-2' },
-              { text: "Where's my order? 😤", bg: 'bg-[#BCA58A]', rotate: 'rotate-1' },
-              { text: 'COD available? 🤔', bg: 'bg-[#111111]', rotate: 'rotate-2' },
-              { text: 'Return kaise karun? 😫', bg: 'bg-[#111111]', rotate: '-rotate-1' },
-              { text: 'Kitna time lagega? ⏰', bg: 'bg-[#BCA58A]', rotate: 'rotate-2' },
+              { text: 'Is this authentic? 🤨', bg: 'bg-[#1A0008]', rotate: '-rotate-2' },
+              { text: "Where's my order? 😤", bg: 'bg-[#D4AF37]', rotate: 'rotate-1' },
+              { text: 'COD available? 🤔', bg: 'bg-[#1A0008]', rotate: 'rotate-2' },
+              { text: 'Return kaise karun? 😫', bg: 'bg-[#1A0008]', rotate: '-rotate-1' },
+              { text: 'Kitna time lagega? ⏰', bg: 'bg-[#D4AF37]', rotate: 'rotate-2' },
             ].map((item, i) => (
               <motion.div key={i} initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 + i * 0.08 }} className={`${i % 2 === 0 ? 'mr-8' : 'ml-8'}`}>
                 <div className={`${item.bg} text-white px-4 py-2.5 rounded-2xl text-[12px] font-medium shadow-xl inline-block ${item.rotate}`}>
@@ -191,7 +191,7 @@ export default function HowItWorks() {
           transition={{ duration: 0.8 }}
           className="text-center mb-6 md:mb-8"
         >
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-light text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-light text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             and when you try to fix it,<br className="hidden sm:block" />
             you end up <span className="text-[#4a90d9] italic">stuck</span> between:
           </h3>
@@ -221,9 +221,9 @@ export default function HowItWorks() {
               <text x="180" y="193" className="text-[12px] fill-[#555]" style={{ fontFamily: "'DM Sans', sans-serif" }}>Tailors</text>
               <text x="170" y="208" className="text-[8px] fill-[#999]" style={{ fontFamily: "'DM Sans', sans-serif" }}>"Too slow & costly"</text>
 
-              <circle cx="200" cy="145" r="30" fill="#BCA58A" />
-              <text x="185" y="143" className="text-[9px] fill-white font-semibold" style={{ fontFamily: "'Montserrat', sans-serif" }}>GUR</text>
-              <text x="187" y="155" className="text-[9px] fill-white font-semibold" style={{ fontFamily: "'Montserrat', sans-serif" }}>NAAZ</text>
+              <circle cx="200" cy="145" r="30" fill="#D4AF37" />
+              <text x="185" y="143" className="text-[9px] fill-white font-semibold" style={{ fontFamily: "'DM Sans', sans-serif" }}>GUR</text>
+              <text x="187" y="155" className="text-[9px] fill-white font-semibold" style={{ fontFamily: "'DM Sans', sans-serif" }}>NAAZ</text>
             </svg>
           </div>
         </motion.div>
@@ -236,8 +236,8 @@ export default function HowItWorks() {
           transition={{ duration: 0.6 }}
           className="text-center mb-6 md:mb-8"
         >
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-light text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            But <span className="text-[#BCA58A] italic">Gurnaaz</span> makes it simple ✨
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-light text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            But <span className="text-[#D4AF37] italic">Gurnaaz</span> makes it simple ✨
           </h3>
         </motion.div>
 
@@ -258,7 +258,7 @@ export default function HowItWorks() {
             />
           </div>
           <div className="text-center sm:text-left">
-            <h4 className="text-xl sm:text-2xl font-light text-[#111111] mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h4 className="text-xl sm:text-2xl font-light text-[#1A0008] mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Premium Delivery
             </h4>
             <p className="text-xs sm:text-sm text-[#666] max-w-[250px] leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -284,9 +284,9 @@ export default function HowItWorks() {
               className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center shadow-lg border border-gray-100"
             >
               <div className="flex justify-center mb-2 sm:mb-3">
-                <item.icon className="w-6 h-6 sm:w-8 sm:h-8 text-[#BCA58A]" strokeWidth={1.5} />
+                <item.icon className="w-6 h-6 sm:w-8 sm:h-8 text-[#D4AF37]" strokeWidth={1.5} />
               </div>
-              <h4 className="text-xs sm:text-sm font-semibold text-[#111111] mb-1 sm:mb-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <h4 className="text-xs sm:text-sm font-semibold text-[#1A0008] mb-1 sm:mb-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 {item.title}
               </h4>
               <p className="text-[10px] sm:text-xs text-[#666]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

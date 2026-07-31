@@ -38,9 +38,9 @@ const MarqueeBanner = React.memo(function MarqueeBanner() {
       <div className="pm flex whitespace-nowrap">
         {[...Array(8)].map((_, i) => (
           <span key={i} className="text-[9px] uppercase tracking-[0.35em] text-white/80 font-medium mx-4 flex items-center gap-3">
-            <Gem size={9} className="text-[#BCA58A]" /> Handcrafted Luxury
-            <Award size={9} className="text-[#BCA58A]" /> Artisan Excellence
-            <Feather size={9} className="text-[#BCA58A]" /> Timeless Elegance
+            <Gem size={9} className="text-[#D4AF37]" /> Handcrafted Luxury
+            <Award size={9} className="text-[#D4AF37]" /> Artisan Excellence
+            <Feather size={9} className="text-[#D4AF37]" /> Timeless Elegance
           </span>
         ))}
       </div>
@@ -384,7 +384,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                 {[
                   { icon: <ShieldCheck size={20} />, label: '100% Authentic', sub: 'Verified seller', color: '#2e7d32' },
                   { icon: <Truck size={20} />, label: 'Free Delivery', sub: 'Orders above ₹999', color: '#8B2252' },
-                  { icon: <RotateCcw size={20} />, label: 'Easy Returns', sub: '14-day policy', color: '#BCA58A' },
+                  { icon: <RotateCcw size={20} />, label: 'Easy Returns', sub: '14-day policy', color: '#D4AF37' },
                 ].map((b, i) => (
                   <div key={i} className="flex flex-col items-center gap-2 py-4 px-2 bg-white rounded-2xl border border-[#f0ece6]/60 hover:border-[#e0d8ce] transition-colors">
                     <span style={{ color: b.color }}>{b.icon}</span>
@@ -463,7 +463,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                       <div className="flex flex-wrap gap-2 mt-3">
                         {(product.care || ['Dry Clean Only', 'Do Not Bleach', 'Iron on Low Heat', 'Store in Dry Place']).map((c, i) => (
                           <span key={i} className="inline-flex items-center gap-1.5 bg-[#faf8f5] border border-[#ebe5de] rounded-full px-3 py-1.5 text-[11px] font-medium text-gray-600">
-                            <span className="w-1 h-1 rounded-full bg-[#BCA58A]" /> {c}
+                            <span className="w-1 h-1 rounded-full bg-[#D4AF37]" /> {c}
                           </span>
                         ))}
                       </div>
@@ -510,7 +510,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
               backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23BCA58A\' fill-opacity=\'1\'%3E%3Cpath d=\'M20 20.5V18H0v-2h20v-2l2 3-2 3z\'/%3E%3C/g%3E%3C/svg%3E")',
             }} />
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-[#8B2252]/10 rounded-full blur-[120px]" />
-            <span className="text-[10px] uppercase tracking-[0.4em] text-[#BCA58A] font-semibold mb-5 block relative">The Art of Craft</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#D4AF37] font-semibold mb-5 block relative">The Art of Craft</span>
             <h2 className="text-[28px] lg:text-[40px] text-white font-semibold leading-[1.15] mb-5 max-w-[550px] mx-auto relative" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Heritage Woven Into Every Thread
             </h2>
@@ -519,9 +519,9 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
             </p>
             <div className="flex flex-wrap justify-center gap-10 text-center relative">
               {[
-                { num: '500+', label: 'Artisans', icon: <Gem size={16} className="text-[#BCA58A] mb-2" /> },
-                { num: '50+', label: 'Years Heritage', icon: <Award size={16} className="text-[#BCA58A] mb-2" /> },
-                { num: '100%', label: 'Handcrafted', icon: <Feather size={16} className="text-[#BCA58A] mb-2" /> },
+                { num: '500+', label: 'Artisans', icon: <Gem size={16} className="text-[#D4AF37] mb-2" /> },
+                { num: '50+', label: 'Years Heritage', icon: <Award size={16} className="text-[#D4AF37] mb-2" /> },
+                { num: '100%', label: 'Handcrafted', icon: <Feather size={16} className="text-[#D4AF37] mb-2" /> },
               ].map((s, i) => (
                 <div key={i} className="flex flex-col items-center">
                   {s.icon}
@@ -587,7 +587,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                   {reviewsList.map((r, i) => (
                     <div key={i} className="py-5 border-b border-[#f0ece6]/50 last:border-0">
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#8B2252] to-[#BCA58A] flex items-center justify-center text-white text-[11px] font-bold">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#8B2252] to-[#D4AF37] flex items-center justify-center text-white text-[11px] font-bold">
                           {r.name?.charAt(0)?.toUpperCase()}
                         </div>
                         <div className="flex-1">

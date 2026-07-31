@@ -88,23 +88,23 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-[110px] pb-32 font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-white pt-[80px] md:pt-[110px] pb-20 md:pb-32 font-sans overflow-x-hidden">
       
       {/* ─── 10/10 PREMIUM HERO ─── */}
-      <div className="relative w-full max-w-[1400px] mx-auto px-6 md:px-12 py-16 md:py-24 flex flex-col items-center text-center">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#BCA58A]/5 rounded-full blur-[80px] -z-10" />
+      <div className="relative w-full max-w-[1400px] mx-auto px-5 sm:px-6 md:px-12 py-10 md:py-16 lg:py-24 flex flex-col items-center text-center">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#D4AF37]/5 rounded-full blur-[80px] -z-10" />
         
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }} className="flex items-center gap-4 mb-8">
-          <span className="w-16 h-[1px] bg-gradient-to-r from-transparent to-[#BCA58A]" />
-          <span className="text-[10px] tracking-[0.5em] text-[#BCA58A] uppercase font-bold flex items-center gap-2">
+          <span className="w-16 h-[1px] bg-gradient-to-r from-transparent to-[#D4AF37]" />
+          <span className="text-[10px] tracking-[0.5em] text-[#D4AF37] uppercase font-bold flex items-center gap-2">
             <ShieldCheck size={14} /> The Directory
           </span>
-          <span className="w-16 h-[1px] bg-gradient-to-l from-transparent to-[#BCA58A]" />
+          <span className="w-16 h-[1px] bg-gradient-to-l from-transparent to-[#D4AF37]" />
         </motion.div>
         
         <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.2 }}
-          className="text-5xl md:text-6xl lg:text-7xl font-light text-[#111111] tracking-tight leading-tight mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          Explore Shops <span className="italic text-[#BCA58A]">& Boutiques</span>
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-[#1A0008] tracking-tight leading-tight mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          Explore Shops <span className="italic text-[#D4AF37]">& Boutiques</span>
         </motion.h1>
 
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.4 }} className="max-w-2xl text-gray-500 text-sm md:text-base font-light">
@@ -113,7 +113,7 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
       </div>
 
       {/* ─── FASHION EDITORIAL MARQUEE ─── */}
-      <div className="w-full bg-[#111111] py-4 mb-20 overflow-hidden relative rotate-[-1deg] scale-105 shadow-xl">
+      <div className="w-full bg-[#1A0008] py-4 mb-12 md:mb-20 overflow-hidden relative -rotate-[1deg] scale-105 shadow-xl">
         <motion.div 
           animate={{ x: ["0%", "-50%"] }} 
           transition={{ repeat: Infinity, ease: "linear", duration: 25 }}
@@ -124,13 +124,13 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
               <span className="text-white/90 text-[11px] tracking-[0.3em] font-bold uppercase mx-8">
                 ✦ 100% Authentic
               </span>
-              <span className="text-[#BCA58A] text-[11px] tracking-[0.3em] font-bold uppercase mx-8">
+              <span className="text-[#D4AF37] text-[11px] tracking-[0.3em] font-bold uppercase mx-8">
                 ✦ Verified Sellers
               </span>
               <span className="text-white/90 text-[11px] tracking-[0.3em] font-bold uppercase mx-8">
                 ✦ Premium Quality
               </span>
-              <span className="text-[#BCA58A] text-[11px] tracking-[0.3em] font-bold uppercase mx-8">
+              <span className="text-[#D4AF37] text-[11px] tracking-[0.3em] font-bold uppercase mx-8">
                 ✦ Direct from Weavers
               </span>
             </div>
@@ -139,8 +139,8 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
       </div>
 
       {/* ─── EDITORIAL GRID (MIXED SIZES) ─── */}
-      <div className="w-full max-w-[1400px] mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+      <div className="w-full max-w-[1400px] mx-auto px-5 sm:px-6 md:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
           {boutiquesList.map((boutique, index) => {
             // Make the 1st and 4th items "Featured" to break the grid and add a huge wow factor
             const isFeatured = index === 0 || index === 3;
@@ -160,7 +160,7 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.7, delay: (index % 2) * 0.1, ease: [0.21, 1.11, 0.81, 0.99] }}
                 onClick={() => handleBoutiqueClick(boutique.name)}
-                className={`group cursor-pointer bg-[#F8F5F0] rounded-[32px] p-4 flex flex-col items-stretch shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_60px_rgba(188,165,138,0.2)] transition-all duration-500 hover:-translate-y-1.5 border border-[#BCA58A]/30 relative overflow-hidden
+                className={`group cursor-pointer bg-[#F8F5F0] rounded-[32px] p-4 flex flex-col items-stretch shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_60px_rgba(188,165,138,0.2)] transition-all duration-500 hover:-translate-y-1.5 border border-[#D4AF37]/30 relative overflow-hidden
                   ${isFeatured ? 'lg:col-span-2 sm:flex-row' : 'sm:flex-col xl:flex-row'}`}
               >
                 {/* Subtle hover sweep effect */}
@@ -187,59 +187,59 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
                   {/* Tags & Rating Row */}
                   <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                     <div className="flex items-center gap-2">
-                      <span className="bg-white/95 px-3 py-1.5 rounded-full text-[9px] font-extrabold tracking-widest uppercase text-[#BCA58A] shadow-sm border border-[#BCA58A]/20">
+                      <span className="bg-white/95 px-3 py-1.5 rounded-full text-[9px] font-extrabold tracking-widest uppercase text-[#D4AF37] shadow-sm border border-[#D4AF37]/20">
                         {tag}
                       </span>
                       {isFeatured && (
-                        <span className="flex items-center gap-1 bg-[#111111] text-white px-3 py-1.5 rounded-full text-[9px] font-extrabold tracking-widest uppercase shadow-sm">
-                          <Sparkles size={10} className="text-[#BCA58A]" /> Spotlight
+                        <span className="flex items-center gap-1 bg-[#1A0008] text-white px-3 py-1.5 rounded-full text-[9px] font-extrabold tracking-widest uppercase shadow-sm">
+                          <Sparkles size={10} className="text-[#D4AF37]" /> Spotlight
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-1.5 text-[#BCA58A]">
+                    <div className="flex items-center gap-1.5 text-[#D4AF37]">
                       <Star size={13} className="fill-current" />
-                      <span className="text-[12px] font-bold text-[#111111] tracking-wide">{boutique.rating}</span>
+                      <span className="text-[12px] font-bold text-[#1A0008] tracking-wide">{boutique.rating}</span>
                     </div>
                   </div>
 
                   {/* Name */}
-                  <h2 className={`font-medium text-[#111111] leading-tight mb-4 group-hover:text-[#BCA58A] transition-colors duration-300 break-words
-                    ${isFeatured ? 'text-4xl md:text-5xl lg:text-6xl' : 'text-2xl lg:text-3xl'}`} 
+                  <h2 className={`font-medium text-[#1A0008] leading-tight mb-4 group-hover:text-[#D4AF37] transition-colors duration-300 break-words
+                    ${isFeatured ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl' : 'text-xl sm:text-2xl lg:text-3xl'}`} 
                     style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {boutique.name}
                   </h2>
                   
                   {/* Description */}
-                  <p className={`font-light leading-relaxed mb-8 pr-2 text-[#6B6B6B]
-                    ${isFeatured ? 'text-base lg:text-lg line-clamp-4' : 'text-sm line-clamp-3'}`}>
+                  <p className={`font-light leading-relaxed mb-6 md:mb-8 pr-2 text-[#6B6B6B]
+                    ${isFeatured ? 'text-sm sm:text-base lg:text-lg line-clamp-3 sm:line-clamp-4' : 'text-xs sm:text-sm line-clamp-2 sm:line-clamp-3'}`}>
                     {boutique.description}
                   </p>
 
                   {/* Meta details & Button at the bottom */}
                   <div className="mt-auto flex flex-col gap-5">
-                    <div className="flex flex-wrap items-center gap-4 text-xs font-medium text-[#888888]">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-[10px] sm:text-xs font-medium text-[#888888]">
                       <span className="flex items-center gap-1.5">
-                        <MapPin size={14} className="text-[#BCA58A]" /> {location}
+                        <MapPin size={14} className="text-[#D4AF37]" /> {location}
                       </span>
                       <span className="w-1 h-1 rounded-full bg-[#D1C8C0]" />
                       <span className="flex items-center gap-1.5">
-                        <Store size={14} className="text-[#BCA58A]" /> Est. {boutique.established}
+                        <Store size={14} className="text-[#D4AF37]" /> Est. {boutique.established}
                       </span>
                     </div>
 
-                    <div className="pt-5 border-t border-[#BCA58A]/20 flex items-center justify-between w-full gap-2">
+                    <div className="pt-4 sm:pt-5 border-t border-[#D4AF37]/20 flex items-center justify-between w-full gap-2">
                       {/* Compact Orders Badge (Stacked) */}
                       <div className="flex items-center gap-2 sm:gap-2.5">
-                        <Award size={16} className="text-[#BCA58A] flex-shrink-0" /> 
+                        <Award size={16} className="text-[#D4AF37] flex-shrink-0" /> 
                         <div className="flex flex-col items-start justify-center">
-                          <span className="text-xs sm:text-sm font-extrabold text-[#111111] leading-none">{orders}</span>
+                          <span className="text-xs sm:text-sm font-extrabold text-[#1A0008] leading-none">{orders}</span>
                           <span className="text-[8px] sm:text-[9px] font-bold tracking-[0.15em] text-[#888888] uppercase mt-1">Orders</span>
                         </div>
                       </div>
                       
                       {/* Wide Pill Button */}
                       <button className={`py-2.5 sm:py-3 rounded-full flex items-center justify-center gap-1.5 sm:gap-2 text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-500 shadow-sm hover:shadow-md flex-shrink-0 whitespace-nowrap
-                        ${isFeatured ? 'px-6 sm:px-8 bg-[#111111] text-white hover:bg-[#BCA58A]' : 'px-3 sm:px-4 bg-white text-[#111111] hover:bg-[#111111] hover:text-white border border-[#BCA58A]/30'}`}>
+                        ${isFeatured ? 'px-6 sm:px-8 bg-[#1A0008] text-white hover:bg-[#D4AF37]' : 'px-3 sm:px-4 bg-white text-[#1A0008] hover:bg-[#1A0008] hover:text-white border border-[#D4AF37]/30'}`}>
                         Visit Boutique
                         <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform flex-shrink-0" />
                       </button>

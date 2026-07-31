@@ -129,7 +129,7 @@ export default function FAQPage({ setView }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#111111]">
+    <div className="min-h-screen bg-[#FAF9F6] text-[#1A0008]">
 
       {/* Hero */}
       <section className="relative pt-32 pb-16 px-6 md:px-12 max-w-[900px] mx-auto">
@@ -138,8 +138,8 @@ export default function FAQPage({ setView }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
           onClick={() => setView('customer-home')}
-          className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-[#111111]/50 hover:text-[#BCA58A] transition-colors mb-10 cursor-pointer"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
+          className="flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-[#1A0008]/50 hover:text-[#D4AF37] transition-colors mb-10 cursor-pointer"
+          style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
           <ArrowLeft size={14} /> Back to Home
         </motion.button>
@@ -148,7 +148,7 @@ export default function FAQPage({ setView }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-[9px] tracking-[0.4em] text-[#BCA58A] font-bold uppercase block mb-6"
+          className="text-[9px] tracking-[0.4em] text-[#D4AF37] font-bold uppercase block mb-6"
         >
           Help Center
         </motion.span>
@@ -160,14 +160,14 @@ export default function FAQPage({ setView }) {
           className="text-[48px] md:text-[72px] font-light leading-none mb-6"
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
-          Frequently Asked <em className="italic text-[#BCA58A]">Questions</em>
+          Frequently Asked <em className="italic text-[#D4AF37]">Questions</em>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="text-sm text-[#111111]/50 font-light max-w-lg"
+          className="text-sm text-[#1A0008]/50 font-light max-w-lg"
         >
           Everything you need to know about shopping with Gurnaaz. Can't find your answer? Contact our support team.
         </motion.p>
@@ -175,7 +175,7 @@ export default function FAQPage({ setView }) {
 
       {/* Divider */}
       <div className="max-w-[900px] mx-auto px-6 md:px-12">
-        <div className="h-px bg-[#111111]/10" />
+        <div className="h-px bg-[#1A0008]/10" />
       </div>
 
       {/* Category Tabs */}
@@ -187,8 +187,8 @@ export default function FAQPage({ setView }) {
               onClick={() => { setActiveCategory(i); setOpenIndex(`${i}-0`); }}
               className={`px-5 py-2.5 text-[10px] tracking-[0.15em] uppercase font-bold whitespace-nowrap transition-all duration-300 cursor-pointer ${
                 activeCategory === i
-                  ? 'bg-[#111111] text-white'
-                  : 'bg-transparent border border-[#111111]/15 text-[#111111]/50 hover:border-[#BCA58A] hover:text-[#BCA58A]'
+                  ? 'bg-[#1A0008] text-white'
+                  : 'bg-transparent border border-[#1A0008]/15 text-[#1A0008]/50 hover:border-[#D4AF37] hover:text-[#D4AF37]'
               }`}
             >
               {cat.category}
@@ -199,24 +199,24 @@ export default function FAQPage({ setView }) {
 
       {/* FAQ List */}
       <section className="max-w-[900px] mx-auto px-6 md:px-12 py-10 pb-20">
-        <div className="border-t border-[#111111]/10">
+        <div className="border-t border-[#1A0008]/10">
           {faqCategories[activeCategory].items.map((item, idx) => {
             const key = `${activeCategory}-${idx}`;
             const isOpen = openIndex === key;
 
             return (
-              <div key={idx} className="border-b border-[#111111]/10">
+              <div key={idx} className="border-b border-[#1A0008]/10">
                 <button
                   onClick={() => toggle(activeCategory, idx)}
                   className="w-full py-7 flex items-center justify-between group cursor-pointer text-left"
                 >
                   <h3
-                    className={`text-[18px] md:text-[20px] font-light transition-colors duration-300 pr-6 ${isOpen ? 'text-[#BCA58A]' : 'text-[#111111] group-hover:text-[#BCA58A]'}`}
+                    className={`text-[18px] md:text-[20px] font-light transition-colors duration-300 pr-6 ${isOpen ? 'text-[#D4AF37]' : 'text-[#1A0008] group-hover:text-[#D4AF37]'}`}
                     style={{ fontFamily: "'Cormorant Garamond', serif" }}
                   >
                     {item.q}
                   </h3>
-                  <div className={`w-9 h-9 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'border-[#BCA58A] bg-[#BCA58A] text-white' : 'border-[#111111]/20 text-[#111111] group-hover:border-[#BCA58A]'}`}>
+                  <div className={`w-9 h-9 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? 'border-[#D4AF37] bg-[#D4AF37] text-white' : 'border-[#1A0008]/20 text-[#1A0008] group-hover:border-[#D4AF37]'}`}>
                     {isOpen ? <Minus size={14} strokeWidth={1.5} /> : <Plus size={14} strokeWidth={1.5} />}
                   </div>
                 </button>
@@ -230,7 +230,7 @@ export default function FAQPage({ setView }) {
                       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                       className="overflow-hidden"
                     >
-                      <p className="pb-8 pr-12 text-[13px] text-[#111111]/55 leading-[2] font-light">
+                      <p className="pb-8 pr-12 text-[13px] text-[#1A0008]/55 leading-[2] font-light">
                         {item.a}
                       </p>
                     </motion.div>
@@ -244,7 +244,7 @@ export default function FAQPage({ setView }) {
 
       {/* Bottom CTA */}
       <section className="max-w-[900px] mx-auto px-6 md:px-12 pb-20">
-        <div className="bg-[#111111] rounded-2xl p-10 md:p-14 text-center">
+        <div className="bg-[#1A0008] rounded-2xl p-10 md:p-14 text-center">
           <h3
             className="text-[28px] md:text-[36px] font-light text-white mb-4"
             style={{ fontFamily: "'Cormorant Garamond', serif" }}
@@ -257,13 +257,13 @@ export default function FAQPage({ setView }) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => setView('contact')}
-              className="bg-[#BCA58A] text-white px-8 py-3.5 text-[10px] tracking-[0.2em] font-bold uppercase hover:bg-[#a8916e] transition-colors cursor-pointer"
+              className="bg-[#D4AF37] text-white px-8 py-3.5 text-[10px] tracking-[0.2em] font-bold uppercase hover:bg-[#a8916e] transition-colors cursor-pointer"
             >
               Contact Us
             </button>
             <a
               href="mailto:madhavarora132005@gmail.com"
-              className="border border-white/20 text-white px-8 py-3.5 text-[10px] tracking-[0.2em] font-bold uppercase hover:border-[#BCA58A] hover:text-[#BCA58A] transition-colors"
+              className="border border-white/20 text-white px-8 py-3.5 text-[10px] tracking-[0.2em] font-bold uppercase hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors"
             >
               madhavarora132005@gmail.com
             </a>

@@ -131,22 +131,22 @@ export default function LoginPage({ setView, onLoginSuccess }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-[480px] mx-auto px-6 pt-36 pb-24 min-h-[80vh] flex flex-col justify-center text-[#111111]"
+      className="max-w-[480px] mx-auto px-6 pt-36 pb-24 min-h-[80vh] flex flex-col justify-center text-[#1A0008]"
       style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
-      <div className="bg-white border border-[#BCA58A]/20 p-8 md:p-10 shadow-2xl relative rounded">
+      <div className="bg-white border border-[#D4AF37]/20 p-8 md:p-10 shadow-2xl relative rounded">
         {/* Back Button */}
         <button 
           onClick={() => window.location.href = '/'} 
-          className="absolute top-6 left-6 text-[#6B6B6B] hover:text-[#111111] transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider"
+          className="absolute top-6 left-6 text-[#6B6B6B] hover:text-[#1A0008] transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider"
         >
           <ArrowLeft size={16} />
           <span>Home</span>
         </button>
 
         <div className="text-center mb-6 mt-4">
-          <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold">Join Gurnaaz</span>
-          <h2 className="text-4xl font-light text-[#111111] mt-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold">Join Gurnaaz</span>
+          <h2 className="text-4xl font-light text-[#1A0008] mt-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             {otpSent ? 'Verify OTP' : isRegister ? 'Create Account' : 'Welcome Back'}
           </h2>
           <p className="text-xs text-[#6B6B6B] mt-2">
@@ -167,16 +167,16 @@ export default function LoginPage({ setView, onLoginSuccess }) {
             >
               {/* Method Switcher Tabs (Only for Login) */}
               {!isRegister && (
-                <div className="flex border-b border-[#BCA58A]/20 pb-3 mb-2 gap-4 text-xs font-bold uppercase tracking-wider justify-center">
+                <div className="flex border-b border-[#D4AF37]/20 pb-3 mb-2 gap-4 text-xs font-bold uppercase tracking-wider justify-center">
                   <button 
                     onClick={() => setLoginMethod('phone')} 
-                    className={`pb-1 transition-colors cursor-pointer ${loginMethod === 'phone' ? 'text-[#BCA58A] border-b-2 border-[#BCA58A]' : 'text-[#6B6B6B] hover:text-[#111111]'}`}
+                    className={`pb-1 transition-colors cursor-pointer ${loginMethod === 'phone' ? 'text-[#D4AF37] border-b-2 border-[#D4AF37]' : 'text-[#6B6B6B] hover:text-[#1A0008]'}`}
                   >
                     Login with Phone
                   </button>
                   <button 
                     onClick={() => setLoginMethod('email')} 
-                    className={`pb-1 transition-colors cursor-pointer ${loginMethod === 'email' ? 'text-[#BCA58A] border-b-2 border-[#BCA58A]' : 'text-[#6B6B6B] hover:text-[#111111]'}`}
+                    className={`pb-1 transition-colors cursor-pointer ${loginMethod === 'email' ? 'text-[#D4AF37] border-b-2 border-[#D4AF37]' : 'text-[#6B6B6B] hover:text-[#1A0008]'}`}
                   >
                     Login with Email
                   </button>
@@ -189,14 +189,14 @@ export default function LoginPage({ setView, onLoginSuccess }) {
                   <div className="space-y-1.5 text-left">
                     <label className="text-[10px] uppercase tracking-widest text-[#6B6B6B] font-bold">Full Name</label>
                     <div className="relative">
-                      <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[#BCA58A]" size={16} />
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={16} />
                       <input 
                         type="text" 
                         required
                         value={name} 
                         onChange={(e) => setName(e.target.value)}
                         placeholder="e.g. Gurpreet Singh"
-                        className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none pl-11 pr-4 py-3.5 text-sm transition-colors rounded"
+                        className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none pl-11 pr-4 py-3.5 text-sm transition-colors rounded"
                       />
                     </div>
                   </div>
@@ -204,14 +204,14 @@ export default function LoginPage({ setView, onLoginSuccess }) {
                   <div className="space-y-1.5 text-left">
                     <label className="text-[10px] uppercase tracking-widest text-[#6B6B6B] font-bold">Email Address</label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#BCA58A]" size={16} />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={16} />
                       <input 
                         type="email" 
                         required
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="e.g. madhavarora132005@gmail.com"
-                        className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none pl-11 pr-4 py-3.5 text-sm transition-colors rounded"
+                        className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none pl-11 pr-4 py-3.5 text-sm transition-colors rounded"
                       />
                     </div>
                   </div>
@@ -238,14 +238,14 @@ export default function LoginPage({ setView, onLoginSuccess }) {
                     <div className="space-y-1.5 text-left">
                       <label className="text-[10px] uppercase tracking-widest text-[#6B6B6B] font-bold">Email Address</label>
                       <div className="relative">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#BCA58A]" size={16} />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={16} />
                         <input 
                           type="email" 
                           required
                           value={loginEmail} 
                           onChange={(e) => setLoginEmail(e.target.value)}
                           placeholder="e.g. madhavarora132005@gmail.com"
-                          className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none pl-11 pr-4 py-3.5 text-sm transition-colors rounded"
+                          className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none pl-11 pr-4 py-3.5 text-sm transition-colors rounded"
                         />
                       </div>
                     </div>
@@ -253,7 +253,7 @@ export default function LoginPage({ setView, onLoginSuccess }) {
                     <button 
                       type="submit" 
                       disabled={loading}
-                      className="w-full bg-[#BCA58A] hover:bg-[#9A8268] disabled:bg-[#BCA58A]/50 text-[#FAF9F6] py-4 text-xs font-bold tracking-[0.25em] shadow-lg transition-colors cursor-pointer uppercase rounded"
+                      className="w-full bg-[#D4AF37] hover:bg-[#9A8268] disabled:bg-[#D4AF37]/50 text-[#FAF9F6] py-4 text-xs font-bold tracking-[0.25em] shadow-lg transition-colors cursor-pointer uppercase rounded"
                     >
                       {loading ? 'SENDING OTP...' : 'SEND OTP'}
                     </button>
@@ -261,12 +261,12 @@ export default function LoginPage({ setView, onLoginSuccess }) {
                 )
               )}
 
-              <p className="text-xs text-center text-[#6B6B6B] mt-4 pt-2 border-t border-[#BCA58A]/10">
+              <p className="text-xs text-center text-[#6B6B6B] mt-4 pt-2 border-t border-[#D4AF37]/10">
                 {isRegister ? 'Already have an account? ' : "Don't have an account? "}
                 <button 
                   type="button" 
                   onClick={() => setIsRegister(!isRegister)}
-                  className="text-[#BCA58A] hover:underline font-bold cursor-pointer"
+                  className="text-[#D4AF37] hover:underline font-bold cursor-pointer"
                 >
                   {isRegister ? 'Log In' : 'Register'}
                 </button>
@@ -286,7 +286,7 @@ export default function LoginPage({ setView, onLoginSuccess }) {
                   Verification Code
                 </label>
                 <div className="relative max-w-[200px] mx-auto">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#BCA58A]" size={16} />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#D4AF37]" size={16} />
                   <input 
                     type="text" 
                     required
@@ -294,7 +294,7 @@ export default function LoginPage({ setView, onLoginSuccess }) {
                     value={otpCode} 
                     onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
                     placeholder="1234"
-                    className="w-full bg-[#FAF9F6] border border-[#BCA58A]/20 focus:border-[#BCA58A] outline-none pl-11 pr-4 py-3.5 text-center text-lg tracking-[0.5em] font-bold transition-colors rounded"
+                    className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none pl-11 pr-4 py-3.5 text-center text-lg tracking-[0.5em] font-bold transition-colors rounded"
                   />
                 </div>
               </div>
@@ -302,19 +302,19 @@ export default function LoginPage({ setView, onLoginSuccess }) {
               <button 
                 type="submit" 
                 disabled={loading}
-                className="w-full bg-[#111111] hover:bg-[#BCA58A] disabled:bg-[#111111]/50 text-[#FAF9F6] py-4 text-xs font-bold tracking-[0.25em] shadow-lg transition-colors cursor-pointer uppercase rounded"
+                className="w-full bg-[#1A0008] hover:bg-[#D4AF37] disabled:bg-[#1A0008]/50 text-[#FAF9F6] py-4 text-xs font-bold tracking-[0.25em] shadow-lg transition-colors cursor-pointer uppercase rounded"
               >
                 {loading ? 'VERIFYING...' : 'VERIFY & REGISTER'}
               </button>
 
               <div className="text-center text-xs text-[#6B6B6B]">
                 {timer > 0 ? (
-                  <span>Resend OTP in <strong className="text-[#111111]">{timer}s</strong></span>
+                  <span>Resend OTP in <strong className="text-[#1A0008]">{timer}s</strong></span>
                 ) : (
                   <button 
                     type="button" 
                     onClick={handleSendEmailOtp}
-                    className="text-[#BCA58A] hover:underline font-bold cursor-pointer"
+                    className="text-[#D4AF37] hover:underline font-bold cursor-pointer"
                   >
                     Resend OTP Code
                   </button>
@@ -324,7 +324,7 @@ export default function LoginPage({ setView, onLoginSuccess }) {
               <button 
                 type="button" 
                 onClick={() => setOtpSent(false)}
-                className="w-full text-xs text-[#6B6B6B] hover:text-[#111111] underline cursor-pointer mt-2"
+                className="w-full text-xs text-[#6B6B6B] hover:text-[#1A0008] underline cursor-pointer mt-2"
               >
                 Change Email
               </button>

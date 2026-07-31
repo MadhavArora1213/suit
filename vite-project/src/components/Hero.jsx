@@ -118,7 +118,7 @@ export default function Hero() {
         }
 
         /* ── nav hover underline ── */
-        .gh-nav-btn:hover { background:#111 !important; }
+        .gh-nav-btn:hover { background:#1A0008 !important; }
         .gh-nav-btn:hover svg path { stroke:#fff !important; }
         
         @keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -135,7 +135,7 @@ export default function Hero() {
           minHeight: '600px',
           background: '#FAF9F6',
           overflow: 'visible',
-          fontFamily: "'Montserrat', sans-serif",
+          fontFamily: "'DM Sans', sans-serif",
         }}
       >
 
@@ -176,7 +176,7 @@ export default function Hero() {
             fontFamily: "'Cormorant Garamond', serif",
             fontSize: 'clamp(110px, 25vw, 800px)', // default massive max for 4K
             fontWeight: 300,
-            color: '#111',
+            color: '#1A0008',
             letterSpacing: '-0.02em',
             display: 'flex',
             alignItems: 'center',
@@ -189,7 +189,7 @@ export default function Hero() {
               <span style={{
                 position: 'absolute',
                 fontSize: '0.22em',
-                color: '#111',
+                color: '#1A0008',
                 top: '59%', // Optically centered in the Cormorant Garamond 'o'
                 left: '50%',
                 transform: 'translate(-50%, -50%)',
@@ -299,7 +299,7 @@ export default function Hero() {
               boxShadow: '0 4px 18px rgba(0,0,0,0.14)',
               zIndex: 10,
             }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A0008" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </div>
@@ -308,7 +308,7 @@ export default function Hero() {
           {/* Label */}
           <span className="gh-protected-text" style={{
             fontSize: '13px', fontWeight: 700,
-            letterSpacing: '0.25em', textTransform: 'uppercase', color: '#111',
+            letterSpacing: '0.25em', textTransform: 'uppercase', color: '#1A0008',
           }}>
             EXPLORE
           </span>
@@ -336,7 +336,7 @@ export default function Hero() {
               </defs>
               <text style={{
                 fontSize: '13px', letterSpacing: '4px',
-                fill: '#555', fontFamily: "'Montserrat', sans-serif", fontWeight: 500,
+                fill: '#555', fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
               }}>
                 <textPath href="#ghCircle">
                   Choose your style · Choose your style ·
@@ -346,12 +346,12 @@ export default function Hero() {
             {/* Centre star */}
             <div style={{
               width: '48px', height: '48px', borderRadius: '50%',
-              border: '1.5px solid #111', background: '#FAF9F6',
+              border: '1.5px solid #1A0008', background: '#FAF9F6',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               position: 'relative', zIndex: 2,
             }}>
               <svg width="20" height="20" viewBox="0 0 11 11" fill="none">
-                <path d="M5.5 0L6.5 4.5L11 5.5L6.5 6.5L5.5 11L4.5 6.5L0 5.5L4.5 4.5L5.5 0Z" fill="#111" />
+                <path d="M5.5 0L6.5 4.5L11 5.5L6.5 6.5L5.5 11L4.5 6.5L0 5.5L4.5 4.5L5.5 0Z" fill="#1A0008" />
               </svg>
             </div>
         </div>
@@ -384,7 +384,7 @@ export default function Hero() {
                 <span style={{
                   fontFamily: "'Cinzel', serif",
                   fontSize: 'clamp(28px, 3.5vw, 48px)', // Increased stat value size
-                  fontWeight: 600, color: '#111', lineHeight: 1,
+                  fontWeight: 600, color: '#1A0008', lineHeight: 1,
                   textShadow: '0 0 15px rgba(250, 249, 246, 1), 0 0 30px rgba(250, 249, 246, 1)', // Protective glow
                 }}>{s.val}</span>
                 <span style={{
@@ -424,7 +424,7 @@ export default function Hero() {
               border: '1.5px solid rgba(0,0,0,0.22)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', transition: 'background 0.25s',
-              color: '#111',
+              color: '#1A0008',
             }}
           >
             <svg width="18" height="18" viewBox="0 0 14 14" fill="none">
@@ -435,7 +435,7 @@ export default function Hero() {
 
           <span className="gh-protected-text" style={{
             fontFamily: "'Cinzel', serif",
-            fontSize: '18px', fontWeight: 700, color: '#111', // Increased counter size
+            fontSize: '18px', fontWeight: 700, color: '#1A0008', // Increased counter size
             minWidth: '32px', textAlign: 'center', letterSpacing: '0.05em',
             display: 'inline-block'
           }}>
@@ -450,7 +450,7 @@ export default function Hero() {
               border: '1.5px solid rgba(0,0,0,0.22)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', transition: 'background 0.25s',
-              color: '#111',
+              color: '#1A0008',
             }}
           >
             <svg width="18" height="18" viewBox="0 0 14 14" fill="none">

@@ -13,16 +13,16 @@ const milestones = [
 
 function Marquee() {
   return (
-    <div className="overflow-hidden whitespace-nowrap border-y border-[#BCA58A]/20 py-4 bg-[#FAF9F6]">
+    <div className="overflow-hidden whitespace-nowrap border-y border-[#D4AF37]/20 py-4 bg-[#FAF9F6]">
       <motion.div
         animate={{ x: ['0%', '-50%'] }}
         transition={{ duration: 24, ease: 'linear', repeat: Infinity }}
         className="inline-flex gap-0"
       >
         {[...marqueeItems, ...marqueeItems].map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-4 mx-10 text-[10px] tracking-[0.3em] uppercase font-bold text-[#111111]/50" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <span key={i} className="inline-flex items-center gap-4 mx-10 text-[10px] tracking-[0.3em] uppercase font-bold text-[#1A0008]/50" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             {item}
-            <span className="w-1.5 h-1.5 rounded-full bg-[#BCA58A] flex-shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] flex-shrink-0" />
           </span>
         ))}
       </motion.div>
@@ -40,7 +40,7 @@ export default function AboutPage({ setView }) {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
 
   return (
-    <div ref={containerRef} className="bg-[#FAF9F6] text-[#111111] min-h-screen overflow-x-hidden">
+    <div ref={containerRef} className="bg-[#FAF9F6] text-[#1A0008] min-h-screen overflow-x-hidden">
 
       {/* ═══════════════════════════════════════════════════════════
           SECTION 1: FULL-WIDTH HERO — Giant Letters
@@ -50,7 +50,7 @@ export default function AboutPage({ setView }) {
         {/* Centered text */}
         <div className="relative z-10 flex flex-col items-center text-center px-6 sm:px-10 md:px-20 pt-16 sm:pt-20 md:pt-24">
           <motion.div style={{ y: heroTxtY, opacity: heroOpacity }}>
-            <span className="text-[8px] sm:text-[9px] tracking-[0.4em] text-[#BCA58A] font-bold uppercase block mb-5 sm:mb-8">Est. 2026 · Madhav Arora</span>
+            <span className="text-[8px] sm:text-[9px] tracking-[0.4em] text-[#D4AF37] font-bold uppercase block mb-5 sm:mb-8">Est. 2026 · Madhav Arora</span>
             <div className="overflow-hidden mb-2">
               <motion.h1 initial={{ y: 80 }} animate={{ y: 0 }} transition={{ duration: 1.1, ease: [0.16,1,0.3,1], delay: 0.1 }}
                 className="text-[52px] sm:text-[70px] md:text-[110px] lg:text-[160px] font-light leading-none"
@@ -60,13 +60,13 @@ export default function AboutPage({ setView }) {
             </div>
             <div className="overflow-hidden">
               <motion.h1 initial={{ y: 80 }} animate={{ y: 0 }} transition={{ duration: 1.1, ease: [0.16,1,0.3,1], delay: 0.25 }}
-                className="text-[52px] sm:text-[70px] md:text-[110px] lg:text-[160px] font-light leading-none italic text-[#BCA58A]"
+                className="text-[52px] sm:text-[70px] md:text-[110px] lg:text-[160px] font-light leading-none italic text-[#D4AF37]"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Us.
               </motion.h1>
             </div>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 1 }}
-              className="text-xs sm:text-sm text-[#111111]/60 mt-6 sm:mt-10 max-w-xs sm:max-w-md mx-auto leading-relaxed font-light px-2">
+              className="text-xs sm:text-sm text-[#1A0008]/60 mt-6 sm:mt-10 max-w-xs sm:max-w-md mx-auto leading-relaxed font-light px-2">
               India's most trusted platform for premium handcrafted ethnic wear — connecting extraordinary artisans with discerning shoppers.
             </motion.p>
           </motion.div>
@@ -74,7 +74,7 @@ export default function AboutPage({ setView }) {
 
         {/* Rotated GURNAAZ text behind */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
-          <p className="text-[15vw] scale-y-150 transform font-bold text-[#111111]/[0.03] uppercase tracking-widest select-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <p className="text-[15vw] scale-y-150 transform font-bold text-[#1A0008]/[0.03] uppercase tracking-widest select-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             GURNAAZ
           </p>
         </div>
@@ -93,7 +93,7 @@ export default function AboutPage({ setView }) {
       <section className="relative py-20 sm:py-32 px-4 sm:px-6 md:px-0 overflow-hidden">
 
         {/* Big ghost number */}
-        <div className="hidden sm:block absolute top-20 right-10 text-[200px] font-bold text-[#111111]/[0.03] leading-none select-none pointer-events-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>01</div>
+        <div className="hidden sm:block absolute top-20 right-10 text-[200px] font-bold text-[#1A0008]/[0.03] leading-none select-none pointer-events-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>01</div>
 
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start px-4 sm:px-6 md:px-12">
 
@@ -106,14 +106,14 @@ export default function AboutPage({ setView }) {
             <div className="relative h-[400px] sm:h-[500px] md:h-[750px] overflow-hidden">
               <img src="/wedding_edit.png" alt="Story" className="w-full h-full object-cover object-top" />
               {/* gold corner frame */}
-              <div className="absolute top-3 left-3 sm:top-4 sm:left-4 w-10 h-10 sm:w-14 sm:h-14 border-t-2 border-l-2 border-[#BCA58A]" />
-              <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-10 h-10 sm:w-14 sm:h-14 border-b-2 border-r-2 border-[#BCA58A]" />
+              <div className="absolute top-3 left-3 sm:top-4 sm:left-4 w-10 h-10 sm:w-14 sm:h-14 border-t-2 border-l-2 border-[#D4AF37]" />
+              <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-10 h-10 sm:w-14 sm:h-14 border-b-2 border-r-2 border-[#D4AF37]" />
             </div>
             {/* floating dark pill */}
             <motion.div
               initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }} transition={{ delay: 0.4, duration: 0.8 }}
-              className="absolute -bottom-4 sm:-bottom-6 right-2 sm:right-0 bg-[#111111] text-white px-5 sm:px-8 py-4 sm:py-6 max-w-[180px] sm:max-w-[220px]"
+              className="absolute -bottom-4 sm:-bottom-6 right-2 sm:right-0 bg-[#1A0008] text-white px-5 sm:px-8 py-4 sm:py-6 max-w-[180px] sm:max-w-[220px]"
             >
               <p className="text-2xl sm:text-3xl font-light mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>500+</p>
               <p className="text-[7px] sm:text-[9px] tracking-[0.2em] uppercase text-white/50 font-bold">Verified Boutiques Across India</p>
@@ -126,24 +126,24 @@ export default function AboutPage({ setView }) {
             viewport={{ once: true }} transition={{ duration: 1, delay: 0.2, ease: [0.16,1,0.3,1] }}
             className="md:col-span-7 flex flex-col justify-center md:pl-8 lg:pl-16 pt-6 sm:pt-8 md:pt-24"
           >
-            <span className="text-[8px] sm:text-[9px] tracking-[0.3em] text-[#BCA58A] font-bold uppercase block mb-4 sm:mb-6">Chapter 01</span>
+            <span className="text-[8px] sm:text-[9px] tracking-[0.3em] text-[#D4AF37] font-bold uppercase block mb-4 sm:mb-6">Chapter 01</span>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-light leading-tight mb-6 sm:mb-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Born from<br />a frustration<br /><em>with imitation.</em>
             </h2>
-            <div className="w-10 sm:w-12 h-px bg-[#BCA58A] mb-6 sm:mb-10" />
-            <p className="text-sm sm:text-base text-[#111111]/65 leading-relaxed font-light mb-4 sm:mb-6">
+            <div className="w-10 sm:w-12 h-px bg-[#D4AF37] mb-6 sm:mb-10" />
+            <p className="text-sm sm:text-base text-[#1A0008]/65 leading-relaxed font-light mb-4 sm:mb-6">
               In 2026, Gurnaaz founder Madhav Arora identified a frustration shared by thousands — finding authentic, premium Indian ethnic wear online was impossible. The market was flooded with cheap imitations sold as "handcrafted" at premium prices.
             </p>
-            <p className="text-sm sm:text-base text-[#111111]/65 leading-relaxed font-light mb-8 sm:mb-12">
+            <p className="text-sm sm:text-base text-[#1A0008]/65 leading-relaxed font-light mb-8 sm:mb-12">
               Madhav spent months connecting with real artisans and weavers across India — people whose craft was extraordinary but whose reach was limited to a single lane. Gurnaaz was built to change that.
             </p>
 
             {/* Stats row */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-6 border-t border-[#111111]/10 pt-6 sm:pt-10">
+            <div className="grid grid-cols-3 gap-3 sm:gap-6 border-t border-[#1A0008]/10 pt-6 sm:pt-10">
               {[['12K+', 'Suits'], ['48', 'Cities'], ['98%', 'Satisfaction']].map(([num, label]) => (
                 <div key={label}>
-                  <p className="text-2xl sm:text-3xl font-light text-[#111111] mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{num}</p>
-                  <p className="text-[7px] sm:text-[8px] tracking-[0.2em] uppercase text-[#BCA58A] font-bold">{label}</p>
+                  <p className="text-2xl sm:text-3xl font-light text-[#1A0008] mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{num}</p>
+                  <p className="text-[7px] sm:text-[8px] tracking-[0.2em] uppercase text-[#D4AF37] font-bold">{label}</p>
                 </div>
               ))}
             </div>
@@ -154,7 +154,7 @@ export default function AboutPage({ setView }) {
       {/* ═══════════════════════════════════════════════════════════
           SECTION 3: DARK FULL-BLEED QUOTE
       ═══════════════════════════════════════════════════════════ */}
-      <section className="bg-[#111111] py-20 sm:py-32 relative overflow-hidden">
+      <section className="bg-[#1A0008] py-20 sm:py-32 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center">
           <p className="text-[25vw] font-bold text-white/[0.025] uppercase tracking-widest" style={{ fontFamily: "'Cormorant Garamond', serif" }}>CRAFT</p>
         </div>
@@ -164,9 +164,9 @@ export default function AboutPage({ setView }) {
           className="relative z-10 max-w-5xl mx-auto px-6 md:px-12 text-center"
         >
           <div className="flex items-center justify-center gap-6 mb-10">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#BCA58A]" />
-            <span className="text-[9px] tracking-[0.3em] text-[#BCA58A] font-bold uppercase">Our Belief</span>
-            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#BCA58A]" />
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+            <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] font-bold uppercase">Our Belief</span>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#D4AF37]" />
           </div>
           <blockquote className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light text-white leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             "Heritage speaks before you do. <em>We make sure it's heard."</em>
@@ -179,31 +179,31 @@ export default function AboutPage({ setView }) {
           SECTION 4: INTERACTIVE TIMELINE
       ═══════════════════════════════════════════════════════════ */}
       <section className="py-20 sm:py-32 px-4 sm:px-6 md:px-20 relative">
-        <div className="hidden sm:block absolute top-20 left-10 text-[200px] font-bold text-[#111111]/[0.03] leading-none select-none pointer-events-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>02</div>
+        <div className="hidden sm:block absolute top-20 left-10 text-[200px] font-bold text-[#1A0008]/[0.03] leading-none select-none pointer-events-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>02</div>
         <div className="max-w-[1400px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }} transition={{ duration: 0.8 }}
             className="mb-10 sm:mb-16"
           >
-            <span className="text-[8px] sm:text-[9px] tracking-[0.3em] text-[#BCA58A] font-bold uppercase block mb-3 sm:mb-4">Chapter 02</span>
+            <span className="text-[8px] sm:text-[9px] tracking-[0.3em] text-[#D4AF37] font-bold uppercase block mb-3 sm:mb-4">Chapter 02</span>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Our Journey</h2>
           </motion.div>
 
           {/* Timeline: year tabs + content */}
-          <div className="flex flex-col md:flex-row gap-0 border border-[#111111]/10">
+          <div className="flex flex-col md:flex-row gap-0 border border-[#1A0008]/10">
             {/* Year Tabs */}
-            <div className="flex md:flex-col border-b md:border-b-0 md:border-r border-[#111111]/10 overflow-x-auto md:overflow-visible">
+            <div className="flex md:flex-col border-b md:border-b-0 md:border-r border-[#1A0008]/10 overflow-x-auto md:overflow-visible">
               {milestones.map((m) => (
                 <button
                   key={m.year}
                   onClick={() => setActiveYear(m.year)}
-                  className={`px-8 py-6 text-left transition-all duration-300 whitespace-nowrap cursor-pointer flex-shrink-0 border-r md:border-r-0 md:border-b border-[#111111]/10 group ${activeYear === m.year ? 'bg-[#111111] text-white' : 'bg-transparent hover:bg-[#111111]/5'}`}
+                  className={`px-8 py-6 text-left transition-all duration-300 whitespace-nowrap cursor-pointer flex-shrink-0 border-r md:border-r-0 md:border-b border-[#1A0008]/10 group ${activeYear === m.year ? 'bg-[#1A0008] text-white' : 'bg-transparent hover:bg-[#1A0008]/5'}`}
                 >
-                  <p className={`text-2xl font-light mb-1 transition-colors ${activeYear === m.year ? 'text-[#BCA58A]' : 'text-[#111111]/40 group-hover:text-[#111111]'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  <p className={`text-2xl font-light mb-1 transition-colors ${activeYear === m.year ? 'text-[#D4AF37]' : 'text-[#1A0008]/40 group-hover:text-[#1A0008]'}`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {m.year}
                   </p>
-                  <p className={`text-[9px] tracking-[0.2em] uppercase font-bold transition-colors ${activeYear === m.year ? 'text-white/60' : 'text-[#111111]/30'}`}>
+                  <p className={`text-[9px] tracking-[0.2em] uppercase font-bold transition-colors ${activeYear === m.year ? 'text-white/60' : 'text-[#1A0008]/30'}`}>
                     {m.title}
                   </p>
                 </button>
@@ -219,8 +219,8 @@ export default function AboutPage({ setView }) {
                     transition={{ duration: 0.5 }}
                     className="flex-1"
                   >
-                    <p className="text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold mb-4">{m.year} · {m.title}</p>
-                    <p className="text-xl md:text-2xl font-light text-[#111111]/80 leading-relaxed" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    <p className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-4">{m.year} · {m.title}</p>
+                    <p className="text-xl md:text-2xl font-light text-[#1A0008]/80 leading-relaxed" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                       {m.desc}
                     </p>
                   </motion.div>
@@ -266,7 +266,7 @@ export default function AboutPage({ setView }) {
             viewport={{ once: true }} transition={{ duration: 0.9 }}
             className="text-center lg:text-left"
           >
-            <span className="text-[8px] sm:text-[9px] tracking-[0.3em] text-[#BCA58A] uppercase font-bold block mb-4 sm:mb-6">Join the Movement</span>
+            <span className="text-[8px] sm:text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold block mb-4 sm:mb-6">Join the Movement</span>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-light leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Wear something<br />that <em>means</em> something.
             </h2>
@@ -277,11 +277,11 @@ export default function AboutPage({ setView }) {
             className="flex flex-col sm:flex-row gap-3 sm:gap-5 w-full sm:w-auto"
           >
             <button onClick={() => setView('category')}
-              className="group bg-[#111111] text-white px-8 sm:px-10 py-4 sm:py-5 text-[9px] sm:text-[10px] tracking-[0.25em] font-bold uppercase flex items-center justify-center gap-3 hover:bg-[#BCA58A] transition-colors cursor-pointer">
+              className="group bg-[#1A0008] text-white px-8 sm:px-10 py-4 sm:py-5 text-[9px] sm:text-[10px] tracking-[0.25em] font-bold uppercase flex items-center justify-center gap-3 hover:bg-[#D4AF37] transition-colors cursor-pointer">
               Shop the Collection <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
             </button>
             <button onClick={() => setView('contact')}
-              className="border border-[#111111]/30 text-[#111111] px-8 sm:px-10 py-4 sm:py-5 text-[9px] sm:text-[10px] tracking-[0.25em] font-bold uppercase hover:border-[#BCA58A] hover:text-[#BCA58A] transition-colors cursor-pointer flex items-center justify-center gap-3 group">
+              className="border border-[#1A0008]/30 text-[#1A0008] px-8 sm:px-10 py-4 sm:py-5 text-[9px] sm:text-[10px] tracking-[0.25em] font-bold uppercase hover:border-[#D4AF37] hover:text-[#D4AF37] transition-colors cursor-pointer flex items-center justify-center gap-3 group">
               Contact Us <ArrowUpRight size={13} className="group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </motion.div>

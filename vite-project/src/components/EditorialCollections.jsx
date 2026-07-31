@@ -41,7 +41,7 @@ const collections = [
 
 export default function EditorialCollections({ setView, setSelectedCollectionSlug }) {
   return (
-    <section className="relative w-full bg-[#111]">
+    <section className="relative w-full bg-[#1A0008]">
       
       {/* Intro Header (Sticky at bottom, covered by the first slide) */}
       <div className="h-[70vh] flex flex-col items-center justify-center bg-[#FAF9F6] sticky top-0 z-0">
@@ -49,8 +49,8 @@ export default function EditorialCollections({ setView, setSelectedCollectionSlu
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-[#BCA58A] tracking-[0.4em] text-[10px] uppercase font-bold mb-6"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
+          className="text-[#D4AF37] tracking-[0.4em] text-[10px] uppercase font-bold mb-6"
+          style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
           Curated Collections
         </motion.p>
@@ -59,10 +59,10 @@ export default function EditorialCollections({ setView, setSelectedCollectionSlu
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="text-[50px] md:text-[80px] lg:text-[100px] text-[#111] font-light leading-none tracking-tighter text-center" 
+          className="text-[50px] md:text-[80px] lg:text-[100px] text-[#1A0008] font-light leading-none tracking-tighter text-center" 
           style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
-          Editorial <span className="italic text-[#BCA58A]">Spreads</span>
+          Editorial <span className="italic text-[#D4AF37]">Spreads</span>
         </motion.h2>
         <div className="w-px h-24 bg-black/20 mx-auto mt-12" />
         <p className="mt-8 text-xs text-gray-400 tracking-[0.2em] uppercase">Scroll to explore</p>
@@ -109,8 +109,8 @@ export default function EditorialCollections({ setView, setSelectedCollectionSlu
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-[#BCA58A] tracking-[0.4em] text-xs font-bold uppercase mb-8 block drop-shadow-md"
-                style={{ fontFamily: "'Montserrat', sans-serif" }}
+                className="text-[#D4AF37] tracking-[0.4em] text-xs font-bold uppercase mb-8 block drop-shadow-md"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
               >
                 Edit No. {collection.id}
               </motion.span>
@@ -123,14 +123,14 @@ export default function EditorialCollections({ setView, setSelectedCollectionSlu
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
                 {collection.title.split(' ')[0]} <br/>
-                <span className="italic text-[#BCA58A]">{collection.title.split(' ')[1]}</span>
+                <span className="italic text-[#D4AF37]">{collection.title.split(' ')[1]}</span>
               </motion.h3>
 
               <motion.div 
                 initial={{ opacity: 0, scaleX: 0 }}
                 whileInView={{ opacity: 1, scaleX: 1 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
-                className="w-16 h-px bg-[#BCA58A] mb-8 origin-center"
+                className="w-16 h-px bg-[#D4AF37] mb-8 origin-center"
               />
               
               <motion.p 
@@ -154,7 +154,7 @@ export default function EditorialCollections({ setView, setSelectedCollectionSlu
                     if (setView) setView('collection-detail');
                   }}
                   className="group inline-flex items-center gap-4 bg-black/30 backdrop-blur-sm border border-white/30 text-white px-10 py-4 hover:bg-white hover:text-black transition-all duration-300 text-xs font-bold tracking-[0.2em] uppercase cursor-pointer"
-                  style={{ fontFamily: "'Montserrat', sans-serif" }}
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
                   Explore Collection
                 </button>

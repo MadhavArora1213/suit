@@ -44,14 +44,14 @@ export default function StackedCategories() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div className="text-left">
-            <span className="text-[10px] tracking-[0.35em] text-[#BCA58A] uppercase block mb-4 font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <span className="text-[10px] tracking-[0.35em] text-[#D4AF37] uppercase block mb-4 font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Shop By Silhouette
             </span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Signature <em className="italic text-[#BCA58A]">Styles</em>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Signature <em className="italic text-[#D4AF37]">Styles</em>
             </h2>
           </div>
-          <button className="flex items-center gap-2 text-[#111111] hover:text-[#BCA58A] transition-colors group pb-1 border-b border-[#111111] hover:border-[#BCA58A]">
+          <button className="flex items-center gap-2 text-[#1A0008] hover:text-[#D4AF37] transition-colors group pb-1 border-b border-[#1A0008] hover:border-[#D4AF37]">
             <span className="text-xs font-bold tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>View All Categories</span>
             <ArrowUpRight size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
           </button>
@@ -75,7 +75,7 @@ export default function StackedCategories() {
               />
               
               {/* Gradient Overlay for Text Readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#111111]/90 via-[#111111]/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008]/90 via-[#1A0008]/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
               
               {/* Info Overlay */}
               <div className="absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end h-full">
@@ -83,12 +83,12 @@ export default function StackedCategories() {
                   <h3 className="text-3xl text-[#FAF9F6] mb-2 font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {cat.name}
                   </h3>
-                  <p className="text-[#BCA58A] text-sm tracking-wide mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  <p className="text-[#D4AF37] text-sm tracking-wide mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {cat.price}
                   </p>
                   
                   {/* Shop Button */}
-                  <button className="w-fit bg-[#FAF9F6] text-[#111111] hover:bg-[#BCA58A] hover:text-[#FAF9F6] px-8 py-3 flex items-center gap-3 text-[10px] tracking-[0.2em] font-bold transition-colors opacity-0 group-hover:opacity-100 cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  <button className="w-fit bg-[#FAF9F6] text-[#1A0008] hover:bg-[#D4AF37] hover:text-[#FAF9F6] px-8 py-3 flex items-center gap-3 text-[10px] tracking-[0.2em] font-bold transition-colors opacity-0 group-hover:opacity-100 cursor-pointer" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     <ShoppingBag size={14} />
                     <span>EXPLORE SILHOUETTE</span>
                   </button>

@@ -34,15 +34,15 @@ export default function InteractivePillarsCraft() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
           <div>
-            <span className="text-[#BCA58A] text-[11px] tracking-[0.5em] uppercase font-medium mb-6 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <span className="text-[#D4AF37] text-[11px] tracking-[0.5em] uppercase font-medium mb-6 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               The Anatomy of a Masterpiece
             </span>
-            <h2 className="text-6xl md:text-8xl lg:text-9xl font-light text-[#111111] tracking-tight leading-[0.9]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-6xl md:text-8xl lg:text-9xl font-light text-[#1A0008] tracking-tight leading-[0.9]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Uncompromising <br/>
-              <em className="italic text-[#BCA58A] font-light">Craftsmanship</em>
+              <em className="italic text-[#D4AF37] font-light">Craftsmanship</em>
             </h2>
           </div>
-          <p className="text-[#555] text-[10px] tracking-[0.3em] max-w-sm uppercase leading-loose pb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+          <p className="text-[#555] text-[10px] tracking-[0.3em] max-w-sm uppercase leading-loose pb-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Perfection is not an option; it is the fundamental standard woven into every garment we create.
           </p>
         </div>
@@ -56,7 +56,7 @@ export default function InteractivePillarsCraft() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 1.2, delay: step.id * 0.15, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative flex-1 overflow-hidden cursor-pointer bg-white min-h-[450px] lg:min-h-0 border border-[#111111]/5 shadow-xl hover:shadow-2xl transition-shadow duration-1000"
+              className="group relative flex-1 overflow-hidden cursor-pointer bg-white min-h-[450px] lg:min-h-0 border border-[#1A0008]/5 shadow-xl hover:shadow-2xl transition-shadow duration-1000"
             >
               {/* Background Image */}
               <img 
@@ -73,7 +73,7 @@ export default function InteractivePillarsCraft() {
                 
                 {/* Number Indicator */}
                 <div className="mb-auto opacity-0 group-hover:opacity-100 transform -translate-y-4 group-hover:translate-y-0 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
-                  <span className="text-[#111111] text-[10px] tracking-[0.4em] font-medium border border-[#111111]/20 rounded-full px-5 py-2.5 backdrop-blur-md bg-white/50 shadow-sm">
+                  <span className="text-[#1A0008] text-[10px] tracking-[0.4em] font-medium border border-[#1A0008]/20 rounded-full px-5 py-2.5 backdrop-blur-md bg-white/50 shadow-sm">
                     0{step.id}
                   </span>
                 </div>
@@ -82,10 +82,10 @@ export default function InteractivePillarsCraft() {
                 <div className="flex flex-col z-10">
                   {/* Always Visible Title */}
                   <div className="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-2">
-                    <span className="text-[#BCA58A] text-[10px] tracking-[0.4em] font-medium uppercase mb-4 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    <span className="text-[#D4AF37] text-[10px] tracking-[0.4em] font-medium uppercase mb-4 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                       {step.subtitle}
                     </span>
-                    <h3 className="text-4xl md:text-5xl lg:text-6xl text-[#111111] font-light leading-tight tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    <h3 className="text-4xl md:text-5xl lg:text-6xl text-[#1A0008] font-light leading-tight tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                       {step.title}
                     </h3>
                   </div>
@@ -93,7 +93,7 @@ export default function InteractivePillarsCraft() {
                   {/* Text Reveal on Hover (Expands height naturally) */}
                   <div className="grid transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] grid-rows-[0fr] group-hover:grid-rows-[1fr] opacity-0 group-hover:opacity-100 mt-0 group-hover:mt-6">
                     <div className="overflow-hidden">
-                      <p className="text-[#555] text-[13px] tracking-wide leading-relaxed font-light" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                      <p className="text-[#555] text-[13px] tracking-wide leading-relaxed font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                         {step.text}
                       </p>
                     </div>

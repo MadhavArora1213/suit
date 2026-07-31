@@ -12,14 +12,14 @@ const COLORS = [
 
 export default function ShopByColor() {
   const [activeColorId, setActiveColorId] = useState(COLORS[0].id);
-  const [customColor, setCustomColor] = useState('#BCA58A');
+  const [customColor, setCustomColor] = useState('#D4AF37');
 
   const activeColor = activeColorId === 'custom' 
     ? { id: 'custom', name: 'Bespoke', hex: customColor, image: '/designer_suit_1.png' }
     : COLORS.find(c => c.id === activeColorId);
 
   return (
-    <section className="py-24 relative overflow-hidden bg-[#FAF9F6] min-h-[900px] flex items-center justify-center border-y border-[#111111]/5">
+    <section className="py-24 relative overflow-hidden bg-[#FAF9F6] min-h-[900px] flex items-center justify-center border-y border-[#1A0008]/5">
         
        {/* Massive Ambient Background Glow */}
        <div 
@@ -37,7 +37,7 @@ export default function ShopByColor() {
                exit={{ opacity: 0, scaleX: 1.1, scaleY: 2.2, y: -20 }}
                transition={{ duration: 0.8 }}
                className="text-[16vw] md:text-[14vw] lg:text-[13vw] font-bold text-black uppercase tracking-tighter leading-none whitespace-nowrap origin-center"
-               style={{ fontFamily: "'Montserrat', sans-serif" }}
+               style={{ fontFamily: "'DM Sans', sans-serif" }}
              >
                 {activeColor.name}
              </motion.h1>
@@ -48,10 +48,10 @@ export default function ShopByColor() {
            
            {/* Section Header */}
            <div className="text-center mb-12 md:mb-16">
-              <h2 className="text-5xl md:text-6xl font-light text-[#111111] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                 Shop By <span className="italic text-[#BCA58A]">Color</span>
+              <h2 className="text-5xl md:text-6xl font-light text-[#1A0008] mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                 Shop By <span className="italic text-[#D4AF37]">Color</span>
               </h2>
-              <p className="text-[10px] tracking-[0.4em] text-[#111111]/40 uppercase font-bold" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+              <p className="text-[10px] tracking-[0.4em] text-[#1A0008]/40 uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                  The Signature Collection
               </p>
            </div>
@@ -111,9 +111,9 @@ export default function ShopByColor() {
                       style={{ height: isActive ? (typeof window !== 'undefined' && window.innerWidth < 768 ? '56px' : '64px') : '' }}
                     >
                        {/* Dynamic Thumbnail */}
-                       <div className={`flex-shrink-0 rounded-full overflow-hidden transition-all duration-500 ${isActive ? 'w-10 h-10 md:w-12 md:h-12 border border-[#111111]/10 shadow-sm' : 'w-full h-full border-2 border-white/50 group-hover:border-white shadow-sm'}`}>
+                       <div className={`flex-shrink-0 rounded-full overflow-hidden transition-all duration-500 ${isActive ? 'w-10 h-10 md:w-12 md:h-12 border border-[#1A0008]/10 shadow-sm' : 'w-full h-full border-2 border-white/50 group-hover:border-white shadow-sm'}`}>
                           {isCustom ? (
-                             <div className="relative w-full h-full bg-[#111111] flex items-center justify-center">
+                             <div className="relative w-full h-full bg-[#1A0008] flex items-center justify-center">
                                  <div className="absolute inset-0 mix-blend-color opacity-80" style={{ backgroundColor: customColor }} />
                                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" className="relative z-10">
                                    <circle cx="12" cy="12" r="4"/>
@@ -127,10 +127,10 @@ export default function ShopByColor() {
                        
                        {/* Expanded Pill Text (Only visible when active) */}
                        <div className={`overflow-hidden transition-all duration-500 flex flex-col justify-center ${isActive ? 'w-full opacity-100 ml-3' : 'w-0 opacity-0 ml-0'}`}>
-                           <p className="text-[#111111] font-semibold text-xs md:text-sm whitespace-nowrap" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                           <p className="text-[#1A0008] font-semibold text-xs md:text-sm whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                               {color.name}
                            </p>
-                           <p className="text-[#111111]/50 text-[9px] tracking-wider uppercase whitespace-nowrap">
+                           <p className="text-[#1A0008]/50 text-[9px] tracking-wider uppercase whitespace-nowrap">
                               {color.hex}
                            </p>
                        </div>
@@ -156,7 +156,7 @@ export default function ShopByColor() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="mt-6 text-[#111111]/50 text-[10px] tracking-widest uppercase font-medium"
+                  className="mt-6 text-[#1A0008]/50 text-[10px] tracking-widest uppercase font-medium"
                 >
                    Tap the bespoke pill to open color picker
                 </motion.p>

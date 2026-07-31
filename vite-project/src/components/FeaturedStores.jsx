@@ -54,25 +54,25 @@ export default function FeaturedStores({ setView, setSelectedBoutique }) {
   };
 
   return (
-    <section className="py-32 bg-[#FAF9F6] relative overflow-hidden border-t border-[#111111]/5">
+    <section className="py-32 bg-[#FAF9F6] relative overflow-hidden border-t border-[#1A0008]/5">
       <div className="max-w-[1600px] mx-auto px-6 md:px-12">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
           <div>
-            <span className="text-[11px] tracking-[0.5em] text-[#BCA58A] uppercase font-medium mb-6 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <span className="text-[11px] tracking-[0.5em] text-[#D4AF37] uppercase font-medium mb-6 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Boutique Spotlight
             </span>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-light text-[#111111] leading-none tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Featured <em className="italic text-[#BCA58A] font-light">Stores</em>
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-light text-[#1A0008] leading-none tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Featured <em className="italic text-[#D4AF37] font-light">Stores</em>
             </h2>
           </div>
           
           <div className="flex gap-4">
-            <button onClick={prevStore} className="w-14 h-14 rounded-full border border-[#111111]/10 flex items-center justify-center hover:bg-[#111111] hover:text-white hover:border-[#111111] transition-all duration-500 cursor-pointer text-[#111111]">
+            <button onClick={prevStore} className="w-14 h-14 rounded-full border border-[#1A0008]/10 flex items-center justify-center hover:bg-[#1A0008] hover:text-white hover:border-[#1A0008] transition-all duration-500 cursor-pointer text-[#1A0008]">
               <ChevronLeft size={20} strokeWidth={1} />
             </button>
-            <button onClick={nextStore} className="w-14 h-14 rounded-full border border-[#111111]/10 flex items-center justify-center hover:bg-[#111111] hover:text-white hover:border-[#111111] transition-all duration-500 cursor-pointer text-[#111111]">
+            <button onClick={nextStore} className="w-14 h-14 rounded-full border border-[#1A0008]/10 flex items-center justify-center hover:bg-[#1A0008] hover:text-white hover:border-[#1A0008] transition-all duration-500 cursor-pointer text-[#1A0008]">
               <ChevronRight size={20} strokeWidth={1} />
             </button>
           </div>
@@ -88,12 +88,12 @@ export default function FeaturedStores({ setView, setSelectedBoutique }) {
           >
             {featuredStores.map((store) => (
               <div key={store.id} className="min-w-full md:min-w-[calc(50%-1rem)] lg:min-w-[calc(33.333%-1.33rem)] group cursor-pointer">
-                <div className="bg-white border border-[#111111]/5 overflow-hidden group-hover:shadow-2xl transition-all duration-700 h-full flex flex-col">
+                <div className="bg-white border border-[#1A0008]/5 overflow-hidden group-hover:shadow-2xl transition-all duration-700 h-full flex flex-col">
                   
                   {/* Store Cover Image */}
                   <div className="relative h-64 overflow-hidden">
                     <img src={store.cover} alt={store.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" />
-                    <div className="absolute inset-0 bg-[#111111]/20 group-hover:bg-[#111111]/10 transition-colors duration-700" />
+                    <div className="absolute inset-0 bg-[#1A0008]/20 group-hover:bg-[#1A0008]/10 transition-colors duration-700" />
                     
                     {/* Floating Logo */}
                     <div className="absolute -bottom-8 left-8 w-20 h-20 rounded-full border-4 border-white overflow-hidden shadow-lg z-10 bg-white">
@@ -104,23 +104,23 @@ export default function FeaturedStores({ setView, setSelectedBoutique }) {
                   {/* Store Details */}
                   <div className="pt-14 px-8 pb-8 flex-1 flex flex-col">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-3xl font-light text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                      <h3 className="text-3xl font-light text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                         {store.name}
                       </h3>
-                      <div className="flex items-center gap-1 bg-[#FAF9F6] px-3 py-1 border border-[#111111]/5">
-                        <Star size={12} className="fill-[#BCA58A] text-[#BCA58A]" />
-                        <span className="text-[11px] font-medium text-[#111111]" style={{ fontFamily: "'Montserrat', sans-serif" }}>{store.rating}</span>
+                      <div className="flex items-center gap-1 bg-[#FAF9F6] px-3 py-1 border border-[#1A0008]/5">
+                        <Star size={12} className="fill-[#D4AF37] text-[#D4AF37]" />
+                        <span className="text-[11px] font-medium text-[#1A0008]" style={{ fontFamily: "'DM Sans', sans-serif" }}>{store.rating}</span>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-2 text-[#555] mb-8">
-                      <MapPin size={12} strokeWidth={1.5} className="text-[#BCA58A]" />
-                      <span className="text-[11px] tracking-wide font-light uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>{store.city}</span>
-                      <span className="mx-2 text-[#111111]/20">•</span>
-                      <span className="text-[11px] tracking-wide font-light" style={{ fontFamily: "'Montserrat', sans-serif" }}>{store.followers} Followers</span>
+                      <MapPin size={12} strokeWidth={1.5} className="text-[#D4AF37]" />
+                      <span className="text-[11px] tracking-wide font-light uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>{store.city}</span>
+                      <span className="mx-2 text-[#1A0008]/20">•</span>
+                      <span className="text-[11px] tracking-wide font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>{store.followers} Followers</span>
                     </div>
 
-                    <div className="mt-auto pt-6 border-t border-[#111111]/5">
+                    <div className="mt-auto pt-6 border-t border-[#1A0008]/5">
                       <button 
                         onClick={() => {
                           if (setSelectedBoutique && setView) {
@@ -128,9 +128,9 @@ export default function FeaturedStores({ setView, setSelectedBoutique }) {
                             setView('seller-shop');
                           }
                         }}
-                        className="w-full flex items-center justify-between group-hover:text-[#BCA58A] transition-colors text-[#111111]"
+                        className="w-full flex items-center justify-between group-hover:text-[#D4AF37] transition-colors text-[#1A0008]"
                       >
-                        <span className="text-[10px] tracking-[0.3em] font-medium uppercase" style={{ fontFamily: "'Montserrat', sans-serif" }}>Visit Boutique</span>
+                        <span className="text-[10px] tracking-[0.3em] font-medium uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>Visit Boutique</span>
                         <ArrowRight size={16} strokeWidth={1} className="group-hover:translate-x-2 transition-transform duration-500" />
                       </button>
                     </div>

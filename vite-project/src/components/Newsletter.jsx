@@ -46,7 +46,7 @@ export default function Newsletter() {
           transition: transform 0.2s;
         }
       `}</style>
-      <section className="relative min-h-[60vh] md:min-h-[100vh] flex items-center bg-[#111111] overflow-hidden" style={{ marginBottom: '-1px' }}>
+      <section className="relative min-h-[60vh] md:min-h-[100vh] flex items-center bg-[#1A0008] overflow-hidden" style={{ marginBottom: '-1px' }}>
 
         {/* ═══ Left — Image ═══ */}
         <div className="hidden md:block absolute left-0 top-0 w-[45%] h-full">
@@ -55,8 +55,8 @@ export default function Newsletter() {
             alt="Ethnic Wear"
             className="w-full h-full object-cover object-top"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#111111]" />
-          <div className="absolute inset-0 bg-[#111111]/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#1A0008]" />
+          <div className="absolute inset-0 bg-[#1A0008]/20" />
         </div>
 
         {/* ═══ Bottom Gradient → Footer ═══ */}
@@ -64,7 +64,7 @@ export default function Newsletter() {
           style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(250,249,246,0.15) 30%, rgba(240,235,226,0.5) 60%, #F0EBE2 85%, #FAF9F6 100%)' }} />
 
         {/* ═══ Ambient Glow ═══ */}
-        <div className="absolute top-1/2 right-1/4 w-[300px] h-[300px] bg-[#BCA58A]/[0.04] rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 right-1/4 w-[300px] h-[300px] bg-[#D4AF37]/[0.04] rounded-full blur-[120px] pointer-events-none" />
 
         {/* ═══ Content ═══ */}
         <div className="relative z-10 w-full max-w-[1300px] mx-auto px-4 sm:px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 items-center">
@@ -81,10 +81,10 @@ export default function Newsletter() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-[#BCA58A] text-[9px] tracking-[0.4em] uppercase mb-5 flex items-center gap-3"
-              style={{ fontFamily: "'Montserrat', sans-serif" }}
+              className="text-[#D4AF37] text-[9px] tracking-[0.4em] uppercase mb-5 flex items-center gap-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
-              <span className="w-6 h-px bg-[#BCA58A]/50" />
+              <span className="w-6 h-px bg-[#D4AF37]/50" />
               The Inner Circle
             </motion.p>
 
@@ -100,7 +100,7 @@ export default function Newsletter() {
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Never Miss
               </span>
-              <span className="block text-[#BCA58A] text-[38px] sm:text-[50px] md:text-[66px] italic font-light leading-[0.95] tracking-tight"
+              <span className="block text-[#D4AF37] text-[38px] sm:text-[50px] md:text-[66px] italic font-light leading-[0.95] tracking-tight"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 a New Suit
               </span>
@@ -128,7 +128,7 @@ export default function Newsletter() {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="mb-6"
             >
-              <div className="flex bg-white/[0.05] border border-white/[0.08] hover:border-[#BCA58A]/25 transition-all duration-500 overflow-hidden max-w-[440px]">
+              <div className="flex bg-white/[0.05] border border-white/[0.08] hover:border-[#D4AF37]/25 transition-all duration-500 overflow-hidden max-w-[440px]">
                 <div className="flex-1 relative">
                   {/* Hidden real input */}
                   <input
@@ -169,8 +169,8 @@ export default function Newsletter() {
                 </div>
                 <button
                   type="submit"
-                  className="bg-[#BCA58A] hover:bg-[#c9b39a] text-[#111111] px-6 md:px-8 py-4 text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer whitespace-nowrap"
-                  style={{ fontFamily: "'Montserrat', sans-serif" }}
+                  className="bg-[#D4AF37] hover:bg-[#c9b39a] text-[#1A0008] px-6 md:px-8 py-4 text-[10px] font-bold tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer whitespace-nowrap"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
                 >
                   Subscribe
                 </button>
@@ -187,10 +187,10 @@ export default function Newsletter() {
                 {subscribed && (
                   <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                     className="mt-3 ml-1 flex items-center gap-2">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#BCA58A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
-                    <span className="text-[#BCA58A] text-[12px]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    <span className="text-[#D4AF37] text-[12px]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                       Welcome to the Gurnaaz family
                     </span>
                   </motion.div>
@@ -209,7 +209,7 @@ export default function Newsletter() {
               {['No spam', 'Unsubscribe anytime', '2,400+ subscribers'].map((t, i) => (
                 <span key={i} className="flex items-center gap-2 text-white/15 text-[11px]"
                   style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                  <span className="w-1 h-1 rounded-full bg-[#BCA58A]/30" />
+                  <span className="w-1 h-1 rounded-full bg-[#D4AF37]/30" />
                   {t}
                 </span>
               ))}

@@ -8,23 +8,25 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 function loadServerEnv() {
   try {
     const envPath = path.resolve(__dirname, '..', '.env');
+    console.log('[Razorpay] Loading .env from:', envPath);
     const envContent = fs.readFileSync(envPath, 'utf-8');
     const env = {};
     envContent.split('\n').forEach(line => {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith('#')) return;
-      const [key, ...valueParts] = trimmed.split('=');
-      if (key && valueParts.length) {
-        env[key.trim()] = valueParts.join('=').trim();
-      }
+      const eqIndex = trimmed.indexOf('=');
+      if (eqIndex === -1) return;
+      const key = trimmed.substring(0, eqIndex).trim();
+      const value = trimmed.substring(eqIndex + 1).trim();
+      if (key) env[key] = value;
     });
+    console.log('[Razorpay] Loaded keys:', Object.keys(env).filter(k => k.includes('RAZORPAY')));
     return env;
-  } catch {
+  } catch (e) {
+    console.error('[Razorpay] Failed to load .env:', e.message);
     return {};
   }
 }
-
-const serverEnv = loadServerEnv();
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
@@ -35,9 +37,11 @@ function readBody(req) {
   });
 }
 
-function getCredentials() {
-  const keyId = serverEnv.VITE_RAZORPAY_KEY_ID || process.env.VITE_RAZORPAY_KEY_ID;
+function getCredentials(serverEnv) {
+  const keyId = serverEnv.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID;
   const keySecret = serverEnv.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_KEY_SECRET;
+  console.log('[Razorpay] Key ID:', keyId ? keyId.substring(0, 12) + '...' : 'MISSING');
+  console.log('[Razorpay] Key Secret:', keySecret ? 'SET' : 'MISSING');
   return { keyId, keySecret };
 }
 
@@ -46,6 +50,7 @@ function razorpayAuth(keyId, keySecret) {
 }
 
 export default function razorpayApiPlugin() {
+  // Load env fresh each time (not cached at import)
   return {
     name: 'razorpay-api-plugin',
     configureServer(server) {
@@ -57,8 +62,10 @@ export default function razorpayApiPlugin() {
           return;
         }
 
-        const { keyId, keySecret } = getCredentials();
+        const serverEnv = loadServerEnv();
+        const { keyId, keySecret } = getCredentials(serverEnv);
         if (!keyId || !keySecret) {
+          console.error('[Razorpay] Keys not found!');
           res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ error: 'Razorpay keys not configured in .env' }));
           return;
@@ -74,10 +81,13 @@ export default function razorpayApiPlugin() {
             return;
           }
 
+          const authHeader = razorpayAuth(keyId, keySecret);
+          console.log('[Razorpay] Creating order for amount:', amount, 'INR');
+
           const response = await fetch('https://api.razorpay.com/v1/orders', {
             method: 'POST',
             headers: {
-              'Authorization': razorpayAuth(keyId, keySecret),
+              'Authorization': authHeader,
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -92,22 +102,24 @@ export default function razorpayApiPlugin() {
             }),
           });
 
+          const data = await response.json();
+
           if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.error?.description || 'Razorpay order creation failed');
+            console.error('[Razorpay] Order creation failed:', data);
+            throw new Error(data.error?.description || 'Razorpay order creation failed');
           }
 
-          const order = await response.json();
+          console.log('[Razorpay] Order created:', data.id);
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({
-            orderId: order.id,
-            amount: order.amount,
-            currency: order.currency,
+            orderId: data.id,
+            amount: data.amount,
+            currency: data.currency,
             keyId: keyId,
           }));
         } catch (error) {
-          console.error('Razorpay order error:', error.message);
+          console.error('[Razorpay] Order error:', error.message);
           res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ error: error.message }));
         }
@@ -121,10 +133,11 @@ export default function razorpayApiPlugin() {
           return;
         }
 
-        const { keyId, keySecret } = getCredentials();
+        const serverEnv = loadServerEnv();
+        const { keyId, keySecret } = getCredentials(serverEnv);
         if (!keyId || !keySecret) {
           res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: 'Razorpay keys not configured in .env' }));
+          res.end(JSON.stringify({ error: 'Razorpay keys not configured' }));
           return;
         }
 
@@ -138,7 +151,6 @@ export default function razorpayApiPlugin() {
             return;
           }
 
-          // Verify HMAC signature
           const expectedSignature = crypto
             .createHmac('sha256', keySecret)
             .update(razorpayOrderId + '|' + razorpayPaymentId)
@@ -150,7 +162,6 @@ export default function razorpayApiPlugin() {
             return;
           }
 
-          // Fetch payment details
           const paymentRes = await fetch(`https://api.razorpay.com/v1/payments/${razorpayPaymentId}`, {
             headers: { 'Authorization': razorpayAuth(keyId, keySecret) },
           });
@@ -173,7 +184,7 @@ export default function razorpayApiPlugin() {
             },
           }));
         } catch (error) {
-          console.error('Razorpay verify error:', error.message);
+          console.error('[Razorpay] Verify error:', error.message);
           res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ error: error.message }));
         }

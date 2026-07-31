@@ -89,14 +89,14 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
         {/* Absolute Badges */}
         <div className="absolute top-4 left-4 flex flex-col gap-2 z-10" style={{ transform: "translateZ(20px)" }}>
           {product.badge && (
-            <span className="bg-[#FAF9F6]/95 backdrop-blur-sm text-[#111111] text-[9px] font-semibold tracking-[0.15em] uppercase px-3 py-1.5 rounded-md border border-[#BCA58A]/20 shadow-sm">{product.badge}</span>
+            <span className="bg-[#FAF9F6]/95 backdrop-blur-sm text-[#1A0008] text-[9px] font-semibold tracking-[0.15em] uppercase px-3 py-1.5 rounded-md border border-[#D4AF37]/20 shadow-sm">{product.badge}</span>
           )}
         </div>
         
         <button onClick={(e) => { e.stopPropagation(); toggleFavorite(product.id); }}
           style={{ transform: "translateZ(30px)" }}
           className={`absolute top-4 right-4 p-2.5 rounded-full transition-all duration-300 z-20 shadow-md ${
-            favorites[product.id] ? 'bg-[#BCA58A] text-white border-transparent' : 'bg-[#FAF9F6]/90 text-[#111111]/60 hover:text-[#BCA58A] backdrop-blur-sm hover:scale-110'
+            favorites[product.id] ? 'bg-[#D4AF37] text-white border-transparent' : 'bg-[#FAF9F6]/90 text-[#1A0008]/60 hover:text-[#D4AF37] backdrop-blur-sm hover:scale-110'
           }`}>
           <Heart size={14} className={favorites[product.id] ? 'fill-current' : ''} />
         </button>
@@ -104,11 +104,11 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
         {/* Hover Action Sheet */}
         <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[0.25,1,0.5,1] flex gap-2" style={{ transform: "translateZ(40px)" }}>
           <button onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setView('product-details'); }}
-            className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#FAF9F6]/95 backdrop-blur-md text-[#111111] hover:bg-[#111111] hover:text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg border border-[#BCA58A]/20">
+            className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#FAF9F6]/95 backdrop-blur-md text-[#1A0008] hover:bg-[#1A0008] hover:text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg border border-[#D4AF37]/20">
             <Eye size={12} /> View
           </button>
           <button onClick={(e) => { e.stopPropagation(); addToCart(product, product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched'); }}
-            className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#BCA58A] hover:bg-[#111111] text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg">
+            className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#D4AF37] hover:bg-[#1A0008] text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg">
             <ShoppingBag size={12} /> Bag
           </button>
         </div>
@@ -116,8 +116,8 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
       
       {/* Product Details */}
       <div className="pt-4 px-1 flex flex-col gap-1.5 transition-transform duration-300 group-hover:translate-y-1">
-        <h3 className="text-[15px] font-light text-[#111111]/90 group-hover:text-[#111111] transition-colors line-clamp-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
-        <p className="text-[14px] font-medium text-[#BCA58A] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.price}</p>
+        <h3 className="text-[15px] font-light text-[#1A0008]/90 group-hover:text-[#1A0008] transition-colors line-clamp-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
+        <p className="text-[14px] font-medium text-[#D4AF37] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.price}</p>
       </div>
     </motion.div>
   );
@@ -127,10 +127,10 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
 function FilterSection({ title, options, selected, onSelect }) {
   const [open, setOpen] = useState(true);
   return (
-    <div className="border-b border-[#BCA58A]/15 pb-4 mb-4">
+    <div className="border-b border-[#D4AF37]/15 pb-4 mb-4">
       <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between py-2 group cursor-pointer">
-        <span className="text-[10px] tracking-[0.2em] uppercase text-[#111111]/70 font-semibold">{title}</span>
-        <ChevronDown size={14} className={`text-[#BCA58A]/70 transition-transform ${open ? 'rotate-180' : ''}`} />
+        <span className="text-[10px] tracking-[0.2em] uppercase text-[#1A0008]/70 font-semibold">{title}</span>
+        <ChevronDown size={14} className={`text-[#D4AF37]/70 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       <AnimatePresence>
         {open && (
@@ -138,9 +138,9 @@ function FilterSection({ title, options, selected, onSelect }) {
             <div className="flex flex-col gap-1.5 pt-3">
               {options.map((opt) => (
                 <button key={opt.value} onClick={() => onSelect(opt.value)}
-                  className={`text-left text-[11px] py-2 px-3 rounded-xl flex items-center justify-between transition-colors ${selected === opt.value ? 'bg-[#BCA58A]/10 text-[#BCA58A] font-semibold' : 'text-[#111111]/60 hover:bg-[#BCA58A]/5 hover:text-[#111111]'}`}>
+                  className={`text-left text-[11px] py-2 px-3 rounded-xl flex items-center justify-between transition-colors ${selected === opt.value ? 'bg-[#D4AF37]/10 text-[#D4AF37] font-semibold' : 'text-[#1A0008]/60 hover:bg-[#D4AF37]/5 hover:text-[#1A0008]'}`}>
                   <span>{opt.label}</span>
-                  {selected === opt.value && <Check size={12} className="text-[#BCA58A]" />}
+                  {selected === opt.value && <Check size={12} className="text-[#D4AF37]" />}
                 </button>
               ))}
             </div>
@@ -159,6 +159,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   const [favorites, setFavorites] = useState({});
   const [sortBy, setSortBy] = useState('default');
   const [filters, setFilters] = useState({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' });
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -238,70 +239,82 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   if (!profile) return null;
 
   return (
-    <div className="bg-[#FAF9F6] min-h-screen text-[#111111] overflow-hidden">
+    <div className="bg-[#FAF9F6] min-h-screen text-[#1A0008] overflow-hidden">
       
       {/* ═══════ COLLAGE HERO ═══════ */}
-      <div ref={heroRef} className="relative h-[85vh] md:h-[90vh] min-h-[600px] w-full overflow-hidden flex flex-col items-center justify-center bg-[#FAF9F6] border-b border-[#BCA58A]/15 pt-12 md:pt-16">
+      <div ref={heroRef} className="relative w-full overflow-hidden bg-[#FAF9F6] border-b border-[#D4AF37]/15 pt-14 md:pt-16">
         
-        <button onClick={() => window.location.href = '/boutiques'} className="absolute top-6 left-6 md:left-12 z-50 flex items-center gap-2 bg-[#FAF9F6]/90 hover:bg-[#FAF9F6] text-[#111111] text-[9px] uppercase tracking-[0.2em] px-5 py-2.5 backdrop-blur-md shadow-lg transition-all rounded-full border border-[#BCA58A]/20 cursor-pointer hover:scale-105">
+        <button onClick={() => window.location.href = '/boutiques'} className="absolute top-4 left-4 md:top-6 md:left-12 z-50 flex items-center gap-2 bg-[#FAF9F6]/90 hover:bg-[#FAF9F6] text-[#1A0008] text-[9px] uppercase tracking-[0.2em] px-4 md:px-5 py-2 md:py-2.5 backdrop-blur-md shadow-lg transition-all rounded-full border border-[#D4AF37]/20 cursor-pointer hover:scale-105">
           <ArrowLeft size={12} /> Directory
         </button>
 
         {/* Ambient Glow */}
-        <div className="absolute top-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#BCA58A]/10 blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-[-20%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[#BCA58A]/15 blur-[100px] pointer-events-none" />
+        <div className="absolute top-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#D4AF37]/10 blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-[-20%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[#D4AF37]/15 blur-[100px] pointer-events-none" />
 
-        {/* Collage Container */}
-        <div className="relative z-10 w-full max-w-[1200px] mx-auto px-4 flex items-center justify-center">
-          
-          {/* Left Floating Image */}
-          <motion.div style={{ y: collageY1 }} className="hidden md:block w-1/4 max-w-[220px] aspect-[4/5] rounded-[24px] overflow-hidden shadow-2xl rotate-[-8deg] border-[6px] border-[#FAF9F6] translate-x-16 z-0">
-            <img src={profile.leftImage || "/custom_suit_1.png"} className="w-full h-full object-cover saturate-[0.8]" alt="Left image" />
+        {/* ── Mobile: Single Center Image ── */}
+        <div className="md:hidden relative z-10 w-full px-5 py-6">
+          <div className="relative w-full aspect-[4/3] rounded-[16px] overflow-hidden shadow-[0_20px_50px_rgba(188,165,138,0.25)] border-[4px] border-[#FAF9F6]">
+            <img src={profile.coverImage || 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1400&q=85'} className="w-full h-full object-cover" alt="Boutique Cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-5 text-center flex flex-col items-center">
+              <span className="text-[7px] font-bold tracking-[0.2em] uppercase text-[#D4AF37] mb-1.5">The Artisan Collection</span>
+              <h1 className="text-xl font-light text-white tracking-tight mb-2 break-words px-1" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}>
+                {profile.name}
+              </h1>
+              <div className="flex items-center justify-center gap-2 text-[7px] font-bold tracking-[0.15em] uppercase text-white/80">
+                {profile.address && <span className="flex items-center gap-1"><MapPin size={10} className="text-[#D4AF37]"/> {profile.address.split(',').slice(-1)[0]}</span>}
+                <span className="w-1 h-1 bg-[#D4AF37] rounded-full" />
+                <span className="flex items-center gap-1"><Star size={10} className="text-[#D4AF37] fill-current" /> {profile.rating || 4.8}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Desktop: Three Image Collage ── */}
+        <div className="hidden md:flex relative z-10 w-full max-w-[1200px] mx-auto px-6 py-10 items-center justify-center gap-6">
+          {/* Left Image */}
+          <motion.div style={{ y: collageY1 }} className="w-[22%] max-w-[220px] aspect-[3/4] rounded-[20px] overflow-hidden shadow-2xl rotate-[-6deg] border-[5px] border-[#FAF9F6] z-0 flex-shrink-0">
+            <img src={profile.leftImage || "/custom_suit_1.png"} className="w-full h-full object-cover saturate-[0.8]" alt="" />
           </motion.div>
           
-          {/* Center Main Image */}
-          <motion.div style={{ scale: collageScale }} className="w-[95%] md:w-[65%] max-w-[700px] aspect-[16/10] rounded-[32px] overflow-hidden shadow-[0_30px_60px_rgba(188,165,138,0.25)] border-[8px] border-[#FAF9F6] z-10 relative">
+          {/* Center Image */}
+          <motion.div style={{ scale: collageScale }} className="w-[55%] max-w-[700px] aspect-[16/10] rounded-[32px] overflow-hidden shadow-[0_30px_60px_rgba(188,165,138,0.25)] border-[8px] border-[#FAF9F6] z-10 relative flex-shrink-0">
             <img src={profile.coverImage || 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1400&q=85'} className="w-full h-full object-cover filter brightness-[0.8]" alt="Boutique Cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#111111]/80 via-[#111111]/30 to-transparent" />
-            
-            {/* Embedded Text inside Main Image */}
-            <div className="absolute inset-x-0 bottom-0 p-8 md:p-12 text-center flex flex-col items-center">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-8 lg:p-12 text-center flex flex-col items-center">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: [0.25, 1, 0.5, 1] }} className="space-y-3">
-                <span className="text-[9px] md:text-[10px] font-bold tracking-[0.4em] uppercase text-[#BCA58A] drop-shadow-md">
-                  The Artisan Collection
-                </span>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#FAF9F6] tracking-tight drop-shadow-2xl" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 4px 20px rgba(0,0,0,0.6)" }}>
+                <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-[#D4AF37] drop-shadow-md">The Artisan Collection</span>
+                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white tracking-tight drop-shadow-2xl" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 4px 20px rgba(0,0,0,0.6)" }}>
                   {profile.name}
                 </h1>
-                <div className="flex flex-wrap items-center justify-center gap-3 text-[9px] md:text-[10px] font-bold tracking-[0.2em] uppercase text-[#FAF9F6]/90 pt-3">
-                  {profile.address && <span className="flex items-center gap-1.5"><MapPin size={12} className="text-[#BCA58A]"/> {profile.address.split(',').slice(-1)[0]}</span>}
-                  <span className="hidden md:block w-1.5 h-1.5 bg-[#BCA58A] rounded-full shadow-lg" />
-                  <span className="flex items-center gap-1.5"><Star size={12} className="text-[#BCA58A] fill-current" /> {profile.rating || 4.8}</span>
-                  <span className="hidden md:block w-1.5 h-1.5 bg-[#BCA58A] rounded-full shadow-lg" />
-                  
+                <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-bold tracking-[0.2em] uppercase text-white/90 pt-3">
+                  {profile.address && <span className="flex items-center gap-1.5"><MapPin size={12} className="text-[#D4AF37]"/> {profile.address.split(',').slice(-1)[0]}</span>}
+                  <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full" />
+                  <span className="flex items-center gap-1.5"><Star size={12} className="text-[#D4AF37] fill-current" /> {profile.rating || 4.8}</span>
+                  <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full" />
                   {profile.gstVerified ? (
                     <span className="flex items-center gap-1.5"><BadgeCheck size={12} className="text-[#10B981]"/> Verified Partner</span>
                   ) : (
-                    <span className="flex items-center gap-1.5 opacity-80"><BadgeCheck size={12} className="text-[#FAF9F6]/60"/> Unverified</span>
+                    <span className="flex items-center gap-1.5 opacity-80"><BadgeCheck size={12} className="text-white/60"/> Unverified</span>
                   )}
                 </div>
               </motion.div>
             </div>
           </motion.div>
 
-          {/* Right Floating Image */}
-          <motion.div style={{ y: collageY2 }} className="hidden lg:block w-1/4 max-w-[220px] aspect-[4/5] rounded-[24px] overflow-hidden shadow-2xl rotate-[8deg] border-[6px] border-[#FAF9F6] -translate-x-16 z-0">
-            <img src={profile.rightImage || "/custom_suit_2.png"} className="w-full h-full object-cover saturate-[0.8]" alt="Right image" />
+          {/* Right Image */}
+          <motion.div style={{ y: collageY2 }} className="w-[22%] max-w-[220px] aspect-[3/4] rounded-[20px] overflow-hidden shadow-2xl rotate-[6deg] border-[5px] border-[#FAF9F6] z-0 flex-shrink-0">
+            <img src={profile.rightImage || "/custom_suit_2.png"} className="w-full h-full object-cover saturate-[0.8]" alt="" />
           </motion.div>
-
         </div>
       </div>
 
       {/* ═══════ MAGNETIC ACTION BAR ═══════ */}
-      <div className="sticky top-0 z-40 bg-[#FAF9F6]/80 backdrop-blur-2xl border-b border-[#BCA58A]/15 shadow-sm">
-        <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between py-3 gap-4">
+      <div className="sticky top-0 z-40 bg-[#FAF9F6]/80 backdrop-blur-2xl border-b border-[#D4AF37]/15 shadow-sm">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 flex flex-col md:flex-row items-center justify-between py-3 gap-3 md:gap-4">
           <div className="text-[11px] tracking-widest uppercase text-[#6B6B6B] font-semibold w-full md:w-auto text-center md:text-left">
-            Showing <span className="text-[#BCA58A]">{filteredProducts.length}</span> curated pieces
+            Showing <span className="text-[#D4AF37]">{filteredProducts.length}</span> curated pieces
           </div>
           <div className="flex items-center w-full md:w-auto h-full gap-3 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
             {profile.whatsapp && profile.whatsapp.split(',').map((num, idx, arr) => (
@@ -313,7 +326,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
 
             {profile.contact && profile.contact.split(',').map((num, idx, arr) => (
               <MagneticButton key={`call-${idx}`} as="a" href={`tel:${num.trim().replace(/[^0-9+]/g, '')}`}
-                 className="flex-shrink-0 flex items-center justify-center w-auto min-w-[140px] md:min-w-0 md:w-full gap-2 bg-[#111111] hover:bg-[#BCA58A] text-[#FAF9F6] px-6 py-2.5 text-[10px] font-bold tracking-widest uppercase rounded-xl transition-colors shadow-md">
+                 className="flex-shrink-0 flex items-center justify-center w-auto min-w-[140px] md:min-w-0 md:w-full gap-2 bg-[#1A0008] hover:bg-[#D4AF37] text-[#FAF9F6] px-6 py-2.5 text-[10px] font-bold tracking-widest uppercase rounded-xl transition-colors shadow-md">
                  <Phone size={14} /> Call Shop {arr.length > 1 ? idx + 1 : ''}
               </MagneticButton>
             ))}
@@ -322,14 +335,14 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
       </div>
 
       {/* ═══════ MAIN CONTENT ═══════ */}
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 py-12 flex flex-col xl:flex-row gap-12">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-12 flex flex-col xl:flex-row gap-8 md:gap-12">
         
         {/* SIDEBAR */}
         <div className="hidden xl:block w-64 flex-shrink-0">
-          <div className="sticky top-28 bg-white/50 p-6 rounded-3xl border border-[#BCA58A]/15 shadow-[0_8px_30px_rgba(188,165,138,0.05)] max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#BCA58A]/20">
-            <div className="flex items-center justify-between mb-6 border-b border-[#BCA58A]/15 pb-4">
-              <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#111111]">Refine</h3>
-              <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' })} className="text-[9px] uppercase font-bold tracking-wider text-[#BCA58A] hover:text-[#111111] transition-colors">Clear</button>
+          <div className="sticky top-28 bg-white/50 p-6 rounded-3xl border border-[#D4AF37]/15 shadow-[0_8px_30px_rgba(188,165,138,0.05)] max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#D4AF37]/20">
+            <div className="flex items-center justify-between mb-6 border-b border-[#D4AF37]/15 pb-4">
+              <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#1A0008]">Refine</h3>
+              <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' })} className="text-[9px] uppercase font-bold tracking-wider text-[#D4AF37] hover:text-[#1A0008] transition-colors">Clear</button>
             </div>
             <FilterSection title="Fabric" options={fabricOptions} selected={filters.fabric} onSelect={(v) => setFilters(f => ({ ...f, fabric: v }))} />
             <FilterSection title="Color" options={colorOptions} selected={filters.color} onSelect={(v) => setFilters(f => ({ ...f, color: v }))} />
@@ -342,12 +355,15 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
 
         {/* PRODUCTS GRID */}
         <div className="flex-1">
-          <div className="flex justify-between items-end mb-8 border-b border-[#BCA58A]/15 pb-4">
-            <h2 className="text-3xl md:text-4xl font-light text-[#111111] tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Our Collection</h2>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 border border-[#BCA58A]/30 px-4 py-2 rounded-xl bg-white/50 cursor-pointer hover:border-[#BCA58A] transition-all">
-                <ArrowUpDown size={12} className="text-[#BCA58A]" />
-                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="text-[10px] font-bold uppercase tracking-widest bg-transparent focus:outline-none cursor-pointer text-[#111111]/80">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-6 md:mb-8 border-b border-[#D4AF37]/15 pb-4 gap-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-[#1A0008] tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Our Collection</h2>
+            <div className="flex items-center gap-3 sm:gap-4">
+              <button onClick={() => setShowMobileFilter(true)} className="xl:hidden flex items-center gap-2 px-4 py-2 rounded-xl border border-[#D4AF37]/30 bg-white/50 text-[10px] font-bold uppercase tracking-widest text-[#1A0008]/80 hover:border-[#D4AF37] transition-all cursor-pointer">
+                <Filter size={12} className="text-[#D4AF37]" /> Filters
+              </button>
+              <div className="flex items-center gap-2 border border-[#D4AF37]/30 px-3 sm:px-4 py-2 rounded-xl bg-white/50 cursor-pointer hover:border-[#D4AF37] transition-all">
+                <ArrowUpDown size={12} className="text-[#D4AF37]" />
+                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="text-[10px] font-bold uppercase tracking-widest bg-transparent focus:outline-none cursor-pointer text-[#1A0008]/80">
                   <option value="default">Default</option>
                   <option value="newest">Newest First</option>
                   <option value="price-low">Price: Low to High</option>
@@ -358,12 +374,12 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
           </div>
           
           {filteredProducts.length === 0 ? (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-24 bg-white/50 rounded-3xl border border-dashed border-[#BCA58A]/30">
-              <p className="text-xl font-light text-[#6B6B6B]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>No pieces match your current filters.</p>
-              <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All' })} className="mt-4 text-[10px] font-bold tracking-[0.2em] uppercase text-[#BCA58A] hover:text-[#111111] border-b border-[#BCA58A]/40 pb-1 transition-colors">Reset All Filters</button>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 md:py-24 bg-white/50 rounded-2xl md:rounded-3xl border border-dashed border-[#D4AF37]/30">
+              <p className="text-lg md:text-xl font-light text-[#6B6B6B]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>No pieces match your current filters.</p>
+              <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All' })} className="mt-4 text-[10px] font-bold tracking-[0.2em] uppercase text-[#D4AF37] hover:text-[#1A0008] border-b border-[#D4AF37]/40 pb-1 transition-colors">Reset All Filters</button>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10 [perspective:1000px]">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-6 sm:gap-y-10 [perspective:1000px]">
               {filteredProducts.map((product, i) => (
                 <ProductCard key={product.id} product={product} index={i} favorites={favorites} toggleFavorite={toggleFavorite} addToCart={addToCart} setSelectedProduct={setSelectedProduct} setView={setView} />
               ))}
@@ -371,28 +387,68 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
           )}
         </div>
       </div>
-      
+
+      {/* ═══════ MOBILE FILTER PANEL ═══════ */}
+      <AnimatePresence>
+        {showMobileFilter && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowMobileFilter(false)}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 xl:hidden"
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 left-0 w-[300px] max-w-[85vw] bg-white z-50 xl:hidden overflow-y-auto shadow-2xl"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6 border-b border-[#D4AF37]/15 pb-4">
+                  <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#1A0008]">Refine</h3>
+                  <div className="flex items-center gap-4">
+                    <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' })} className="text-[9px] uppercase font-bold tracking-wider text-[#D4AF37] hover:text-[#1A0008] transition-colors">Clear</button>
+                    <button onClick={() => setShowMobileFilter(false)} className="text-[#1A0008] hover:text-[#D4AF37] transition-colors cursor-pointer">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <FilterSection title="Fabric" options={fabricOptions} selected={filters.fabric} onSelect={(v) => setFilters(f => ({ ...f, fabric: v }))} />
+                <FilterSection title="Color" options={colorOptions} selected={filters.color} onSelect={(v) => setFilters(f => ({ ...f, color: v }))} />
+                <FilterSection title="Work / Pattern" options={workOptions} selected={filters.work} onSelect={(v) => setFilters(f => ({ ...f, work: v }))} />
+                <FilterSection title="Occasion" options={occasionOptions} selected={filters.occasion} onSelect={(v) => setFilters(f => ({ ...f, occasion: v }))} />
+                <FilterSection title="Size" options={sizeOptions} selected={filters.size} onSelect={(v) => setFilters(f => ({ ...f, size: v }))} />
+                <FilterSection title="Price" options={priceOptions} selected={filters.price} onSelect={(v) => setFilters(f => ({ ...f, price: v }))} />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* ═══════ BRAND STORY FOOTER ═══════ */}
-      <div className="border-t border-[#BCA58A]/15 bg-gradient-to-b from-white/30 to-[#F5F0E8] mt-12 py-20 px-6">
+      <div className="border-t border-[#D4AF37]/15 bg-gradient-to-b from-white/30 to-[#F5F0E8] mt-8 md:mt-12 py-12 md:py-20 px-5 sm:px-6">
         <motion.div 
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 1, ease: [0.25, 1, 0.5, 1] }}
-          className="max-w-[1000px] mx-auto text-center space-y-6 bg-white/60 backdrop-blur-xl p-10 md:p-16 rounded-[40px] border border-[#BCA58A]/20 shadow-[0_20px_60px_rgba(188,165,138,0.15)]"
+          className="max-w-[1000px] mx-auto text-center space-y-4 sm:space-y-6 bg-white/60 backdrop-blur-xl p-6 sm:p-10 md:p-16 rounded-[24px] sm:rounded-[40px] border border-[#D4AF37]/20 shadow-[0_20px_60px_rgba(188,165,138,0.15)]"
         >
-          <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#BCA58A]">Our Heritage</span>
-          <h2 className="text-4xl md:text-5xl font-light text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>About {profile.name}</h2>
-          <p className="text-sm text-[#6B6B6B] leading-[1.8] max-w-2xl mx-auto">{profile.story || profile.description}</p>
+          <span className="text-[10px] font-semibold tracking-[0.3em] uppercase text-[#D4AF37]">Our Heritage</span>
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-light text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>About {profile.name}</h2>
+          <p className="text-xs sm:text-sm text-[#6B6B6B] leading-[1.8] max-w-2xl mx-auto">{profile.story || profile.description}</p>
           
-          <div className="flex flex-wrap justify-center gap-12 pt-8 border-t border-[#BCA58A]/15 mt-8">
+          <div className="flex flex-wrap justify-center gap-8 sm:gap-12 pt-6 sm:pt-8 border-t border-[#D4AF37]/15 mt-6 sm:mt-8">
             <div className="text-center">
-              <span className="block text-3xl font-light text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{profile.experience || '10+'}</span>
-              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#BCA58A]">Years Experience</span>
+              <span className="block text-2xl sm:text-3xl font-light text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{profile.experience || '10+'}</span>
+              <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-[#D4AF37]">Years Experience</span>
             </div>
             <div className="text-center">
-              <span className="block text-3xl font-light text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{profile.totalOrders || '10K+'}</span>
-              <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-[#BCA58A]">Orders Delivered</span>
+              <span className="block text-2xl sm:text-3xl font-light text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{profile.totalOrders || '10K+'}</span>
+              <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-[#D4AF37]">Orders Delivered</span>
             </div>
           </div>
         </motion.div>

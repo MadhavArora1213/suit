@@ -183,13 +183,50 @@ const seedProduct4 = {
   active: true,
 };
 
+const seedProduct5 = {
+  id: 'seed_product_005',
+  name: 'Razorpay Test Suit',
+  price: '₹1',
+  priceNum: 1,
+  originalPrice: '₹1',
+  originalPriceNum: 1,
+  boutique: 'Gurnaaz',
+  badge: 'Test',
+  collection: 'Test',
+  styleCategory: 'Casual',
+  suitType: 'Anarkali',
+  type: 'Anarkali',
+  shortDesc: 'Test product for Razorpay integration. ₹1 price.',
+  fabricDetails: 'Test fabric for payment testing.',
+  fabricName: 'Cotton',
+  fabricDesc: 'Test cotton',
+  rating: 4.0,
+  igLikes: '0',
+  igComments: '0',
+  videoUrl: '',
+  reelUrl: '',
+  sizes: ['M (38)'],
+  occasions: ['Casual'],
+  care: ['Machine Wash'],
+  stockQty: { 'M (38)': 999 },
+  image: '/Images/Confused.png',
+  additionalImages: [],
+  addedAt: new Date().toISOString(),
+  source: 'admin',
+  totalOrders: 0,
+  totalRevenue: '₹0',
+  stock: 999,
+  category: 'Test',
+  active: true,
+};
+
 // Auto-seed if no products exist
 export const seedIfEmpty = () => {
   const existing = get(KEYS.products, []);
   if (existing.length === 0) {
-    set(KEYS.products, [seedProduct, seedProduct2, seedProduct3, seedProduct4]);
+    set(KEYS.products, [seedProduct, seedProduct2, seedProduct3, seedProduct4, seedProduct5]);
     if (isFirebaseConfigured()) {
-      [seedProduct, seedProduct2, seedProduct3, seedProduct4].forEach(p => {
+      [seedProduct, seedProduct2, seedProduct3, seedProduct4, seedProduct5].forEach(p => {
         saveProductToFirestore(p.id, p).catch(() => {});
       });
     }

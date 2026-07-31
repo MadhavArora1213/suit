@@ -14,7 +14,7 @@ const sellerBenefits = [
 
 export default function WhySellersChoose() {
   return (
-    <section className="py-32 bg-[#111111] text-white relative overflow-hidden">
+    <section className="py-32 bg-[#1A0008] text-white relative overflow-hidden">
       
       {/* Background Graphic Lines (Subtle) */}
       <div className="absolute inset-0 opacity-5 pointer-events-none mix-blend-overlay">
@@ -41,10 +41,10 @@ export default function WhySellersChoose() {
                 alt="Boutique Owner" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#111111]/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008]/80 via-transparent to-transparent" />
               
               <div className="absolute bottom-10 left-10 right-10">
-                <span className="text-[10px] tracking-[0.4em] text-[#BCA58A] uppercase font-medium mb-3 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                <span className="text-[10px] tracking-[0.4em] text-[#D4AF37] uppercase font-medium mb-3 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   Empowering Artisans
                 </span>
                 <p className="text-xl font-light leading-relaxed text-[#FAF9F6] max-w-sm" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
@@ -62,21 +62,21 @@ export default function WhySellersChoose() {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="w-full lg:w-1/2"
           >
-            <span className="text-[11px] tracking-[0.5em] text-[#BCA58A] uppercase font-medium mb-6 block" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            <span className="text-[11px] tracking-[0.5em] text-[#D4AF37] uppercase font-medium mb-6 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Partner With Us
             </span>
             <h2 className="text-5xl md:text-7xl font-light text-[#FAF9F6] leading-[1.1] tracking-tight mb-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Why Sellers Choose <br/>
-              <em className="italic text-[#BCA58A] font-light">Gurnaaz</em>
+              <em className="italic text-[#D4AF37] font-light">Gurnaaz</em>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-16">
               {sellerBenefits.map((benefit, idx) => (
                 <div key={idx} className="flex items-start gap-4">
-                  <div className="w-6 h-6 rounded-full border border-[#BCA58A]/30 flex items-center justify-center flex-shrink-0 mt-0.5 bg-white/5">
-                    <Check size={12} strokeWidth={2} className="text-[#BCA58A]" />
+                  <div className="w-6 h-6 rounded-full border border-[#D4AF37]/30 flex items-center justify-center flex-shrink-0 mt-0.5 bg-white/5">
+                    <Check size={12} strokeWidth={2} className="text-[#D4AF37]" />
                   </div>
-                  <span className="text-[13px] text-white/70 font-light leading-relaxed" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  <span className="text-[13px] text-white/70 font-light leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {benefit}
                   </span>
                 </div>
@@ -86,8 +86,8 @@ export default function WhySellersChoose() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-4 bg-[#FAF9F6] hover:bg-[#BCA58A] text-[#111111] hover:text-white px-12 py-5 tracking-[0.3em] text-[10px] font-medium transition-all duration-500 group cursor-pointer uppercase shadow-2xl"
-              style={{ fontFamily: "'Montserrat', sans-serif" }}
+              className="inline-flex items-center gap-4 bg-[#FAF9F6] hover:bg-[#D4AF37] text-[#1A0008] hover:text-white px-12 py-5 tracking-[0.3em] text-[10px] font-medium transition-all duration-500 group cursor-pointer uppercase shadow-2xl"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               Become a Seller
               <ArrowRight size={16} strokeWidth={1.5} className="group-hover:translate-x-2 transition-transform duration-500" />

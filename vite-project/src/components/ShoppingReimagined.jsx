@@ -23,7 +23,7 @@ export default function ShoppingReimagined({ setView, setSelectedCategory }) {
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-80%"]);
 
   return (
-    <section ref={targetRef} className="relative h-[300vh] bg-[#111111]">
+    <section ref={targetRef} className="relative h-[300vh] bg-[#1A0008]">
       
       {/* Sticky Container - Pins to the screen while scrolling */}
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
@@ -36,14 +36,14 @@ export default function ShoppingReimagined({ setView, setSelectedCategory }) {
             if (craft.type === 'intro') {
               return (
                 <div key={craft.id} className="w-[85vw] md:w-[40vw] h-[60vh] md:h-[70vh] flex flex-col justify-center shrink-0">
-                  <p className="text-[10px] tracking-[0.4em] text-[#BCA58A] uppercase font-bold mb-6" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  <p className="text-[10px] tracking-[0.4em] text-[#D4AF37] uppercase font-bold mb-6" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {craft.title}
                   </p>
                   <h2 className="text-5xl md:text-7xl lg:text-[100px] font-light text-white leading-none tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {craft.subtitle.split(' ')[0]} <br/>
-                    <span className="italic text-[#BCA58A]">{craft.subtitle.split(' ').slice(1).join(' ')}</span>
+                    <span className="italic text-[#D4AF37]">{craft.subtitle.split(' ').slice(1).join(' ')}</span>
                   </h2>
-                  <div className="w-16 h-px bg-[#BCA58A]/50 mt-12 mb-6" />
+                  <div className="w-16 h-px bg-[#D4AF37]/50 mt-12 mb-6" />
                   <p className="text-white/40 text-sm max-w-sm tracking-widest uppercase">
                     Scroll to Explore
                   </p>
@@ -70,10 +70,10 @@ export default function ShoppingReimagined({ setView, setSelectedCategory }) {
                 {/* Card Content */}
                 <div className="absolute bottom-8 left-8 right-8 z-10">
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="text-[#BCA58A] text-xs font-bold tracking-widest" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                    <span className="text-[#D4AF37] text-xs font-bold tracking-widest" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                       0{idx}
                     </span>
-                    <div className="h-px w-12 bg-[#BCA58A]/50" />
+                    <div className="h-px w-12 bg-[#D4AF37]/50" />
                   </div>
                   <h3 className="text-4xl md:text-5xl text-white font-medium tracking-wide mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {craft.title}

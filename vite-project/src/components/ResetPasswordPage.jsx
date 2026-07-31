@@ -88,7 +88,7 @@ export default function ResetPasswordPage({ setView }) {
             setView('login');
             window.history.pushState(null, '', '/login');
           }}
-          className="flex items-center gap-2 text-[#111111]/30 hover:text-[#BCA58A] transition-colors cursor-pointer group"
+          className="flex items-center gap-2 text-[#1A0008]/30 hover:text-[#D4AF37] transition-colors cursor-pointer group"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           <span className="text-[9px] tracking-[0.25em] uppercase hidden sm:inline">Back to Login</span>
@@ -98,7 +98,7 @@ export default function ResetPasswordPage({ setView }) {
       {/* Brand wordmark */}
       <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 hidden md:block">
         <button onClick={() => setView('customer-home')} className="cursor-pointer">
-          <span className="text-[14px] font-bold tracking-[0.15em] text-[#111111]/60 hover:text-[#BCA58A] transition-colors" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <span className="text-[14px] font-bold tracking-[0.15em] text-[#1A0008]/60 hover:text-[#D4AF37] transition-colors" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             GURNAAZ
           </span>
         </button>
@@ -113,7 +113,7 @@ export default function ResetPasswordPage({ setView }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#111111]/30 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#1A0008]/30 backdrop-blur-sm"
               onClick={() => setError('')}
             >
               <motion.div
@@ -132,14 +132,14 @@ export default function ResetPasswordPage({ setView }) {
                 
                 {/* Fallback CSS overlay since we didn't generate an image for every custom reset error */}
                 <div className="absolute top-[53%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[38%] text-center flex flex-col items-center justify-center">
-                  <p className="text-[10px] sm:text-[11px] text-[#4A3B2C] font-semibold leading-[1.1]" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  <p className="text-[10px] sm:text-[11px] text-[#4A3B2C] font-semibold leading-[1.1]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     {error}
                   </p>
                 </div>
 
                 <button 
                   onClick={() => setError('')}
-                  className="absolute top-4 right-4 bg-white/40 hover:bg-white/60 text-[#111111] rounded-full p-2 backdrop-blur-md shadow-sm transition-all"
+                  className="absolute top-4 right-4 bg-white/40 hover:bg-white/60 text-[#1A0008] rounded-full p-2 backdrop-blur-md shadow-sm transition-all"
                 >
                   <X size={18} />
                 </button>
@@ -159,13 +159,13 @@ export default function ResetPasswordPage({ setView }) {
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                 className="text-center"
               >
-                <div className="w-16 h-16 bg-[#BCA58A]/10 rounded-full flex items-center justify-center mx-auto mb-8 text-[#BCA58A]">
+                <div className="w-16 h-16 bg-[#D4AF37]/10 rounded-full flex items-center justify-center mx-auto mb-8 text-[#D4AF37]">
                   <Check size={28} />
                 </div>
-                <h1 className="text-[40px] md:text-[48px] font-light leading-none mb-4 text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                <h1 className="text-[40px] md:text-[48px] font-light leading-none mb-4 text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   Password Reset
                 </h1>
-                <p className="text-[13px] text-[#111111]/50 font-light mb-10 leading-relaxed">
+                <p className="text-[13px] text-[#1A0008]/50 font-light mb-10 leading-relaxed">
                   Your password has been successfully updated. You can now use your new password to sign in.
                 </p>
                 <button
@@ -173,7 +173,7 @@ export default function ResetPasswordPage({ setView }) {
                     setView('login');
                     window.history.pushState(null, '', '/login');
                   }}
-                  className="w-full bg-[#111111] text-white py-4 rounded-full text-[10px] tracking-[0.3em] font-bold uppercase hover:bg-[#BCA58A] transition-colors cursor-pointer"
+                  className="w-full bg-[#1A0008] text-white py-4 rounded-full text-[10px] tracking-[0.3em] font-bold uppercase hover:bg-[#D4AF37] transition-colors cursor-pointer"
                 >
                   Sign In Now
                 </button>
@@ -192,12 +192,12 @@ export default function ResetPasswordPage({ setView }) {
                   </h1>
                   {verifying ? (
                     <div className="flex flex-col items-center justify-center py-4">
-                      <div className="w-5 h-5 border-2 border-[#BCA58A]/30 border-t-[#BCA58A] rounded-full animate-spin mb-3" />
-                      <p className="text-[13px] text-[#111111]/40 font-light">Verifying your secure link...</p>
+                      <div className="w-5 h-5 border-2 border-[#D4AF37]/30 border-t-[#D4AF37] rounded-full animate-spin mb-3" />
+                      <p className="text-[13px] text-[#1A0008]/40 font-light">Verifying your secure link...</p>
                     </div>
                   ) : (
-                    <p className="text-[13px] text-[#111111]/40 font-light">
-                      Create a new password for <br/><span className="text-[#111111]">{email}</span>
+                    <p className="text-[13px] text-[#1A0008]/40 font-light">
+                      Create a new password for <br/><span className="text-[#1A0008]">{email}</span>
                     </p>
                   )}
                 </div>
@@ -213,10 +213,10 @@ export default function ResetPasswordPage({ setView }) {
                           setError('');
                         }}
                         placeholder="New Password"
-                        className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 pr-10 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
+                        className="w-full bg-transparent border-b border-[#1A0008]/8 focus:border-[#D4AF37] outline-none py-3.5 pr-10 text-[14px] text-[#1A0008] placeholder:text-[#1A0008]/20 font-light transition-colors"
                       />
                       <button type="button" onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-0 top-1/2 -translate-y-1/2 text-[#111111]/15 hover:text-[#BCA58A] transition-colors cursor-pointer p-1">
+                        className="absolute right-0 top-1/2 -translate-y-1/2 text-[#1A0008]/15 hover:text-[#D4AF37] transition-colors cursor-pointer p-1">
                         {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                       </button>
                     </div>
@@ -230,7 +230,7 @@ export default function ResetPasswordPage({ setView }) {
                           setError('');
                         }}
                         placeholder="Confirm New Password"
-                        className="w-full bg-transparent border-b border-[#111111]/8 focus:border-[#BCA58A] outline-none py-3.5 pr-10 text-[14px] text-[#111111] placeholder:text-[#111111]/20 font-light transition-colors"
+                        className="w-full bg-transparent border-b border-[#1A0008]/8 focus:border-[#D4AF37] outline-none py-3.5 pr-10 text-[14px] text-[#1A0008] placeholder:text-[#1A0008]/20 font-light transition-colors"
                       />
                     </div>
 
@@ -239,7 +239,7 @@ export default function ResetPasswordPage({ setView }) {
                       disabled={loading}
                       whileHover={{ scale: 1.01 }}
                       whileTap={{ scale: 0.99 }}
-                      className="w-full bg-[#111111] text-white py-4 rounded-full text-[10px] tracking-[0.3em] font-bold uppercase hover:bg-[#BCA58A] disabled:opacity-40 transition-all duration-500 cursor-pointer flex items-center justify-center gap-2"
+                      className="w-full bg-[#1A0008] text-white py-4 rounded-full text-[10px] tracking-[0.3em] font-bold uppercase hover:bg-[#D4AF37] disabled:opacity-40 transition-all duration-500 cursor-pointer flex items-center justify-center gap-2"
                     >
                       {loading ? (
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

@@ -18,7 +18,7 @@ import Navbar from './Navbar';
 
 const CATEGORIES = ['Anarkali', 'Sharara', 'Banarasi', 'Chikankari', 'Patiala', 'Pakistani'];
 
-export default function CustomerHomePage({ setView, cart, favorites, addToCart, removeFromCart, updateCartQty, toggleFavorite, setSelectedCategory, setSelectedProduct, setSelectedBoutique, user, handleLogout }) {
+export default function CustomerHomePage({ setView, cart, favorites, addToCart, removeFromCart, updateCartQty, toggleFavorite, setSelectedCategory, setSelectedProduct, setSelectedBoutique, setSelectedCollectionSlug, user, handleLogout }) {
   const [products, setProducts] = useState([]);
   const [selectedCategoryState, setSelectedCategoryState] = useState('All');
   const [isCrossfading, setIsCrossfading] = useState(false);
@@ -71,6 +71,7 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
         setSelectedCategory={setSelectedCategory}
         setSelectedProduct={setSelectedProduct}
         setSelectedBoutique={setSelectedBoutique}
+        setSelectedCollectionSlug={setSelectedCollectionSlug}
         user={user}
         handleLogout={handleLogout}
       />
@@ -82,7 +83,7 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="fixed inset-0 bg-[#111111] z-[9999] pointer-events-none"
+            className="fixed inset-0 bg-[#1A0008] z-[9999] pointer-events-none"
           />
         )}
       </AnimatePresence>
@@ -91,7 +92,7 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
       <HeroRitual onSelectFilter={handleRitualFilter} />
 
       {/* Shopping, Reimagined Occasion Cards */}
-      <ShoppingReimagined setView={setView} setSelectedCategory={setSelectedCategory} setSelectedCollectionSlug={setSelectedCategory} />
+      <ShoppingReimagined setView={setView} setSelectedCategory={setSelectedCategory} setSelectedCollectionSlug={setSelectedCollectionSlug} />
 
       <ShopByColor setView={setView} setSelectedCategory={setSelectedCategory} />
       <OccasionTimeline setView={setView} setSelectedCategory={setSelectedCategory} />
@@ -101,7 +102,7 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
       {/* Featured Sellers (Instagram Style) */}
       <FeaturedSellers setView={setView} setSelectedBoutique={setSelectedBoutique} />
       
-      <EditorialCollections setView={setView} setSelectedCollectionSlug={setSelectedCategory} />
+      <EditorialCollections setView={setView} setSelectedCollectionSlug={setSelectedCollectionSlug} />
       <WhyGurnaaz />
       <PremiumPackaging />
 

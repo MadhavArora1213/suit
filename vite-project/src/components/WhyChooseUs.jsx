@@ -33,21 +33,21 @@ export default function WhyChooseUs() {
   const [expandedIndex, setExpandedIndex] = useState(0);
 
   return (
-    <section className="py-28 bg-[#FAF9F6] relative overflow-hidden border-t border-[#BCA58A]/10">
-      <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_1px_1px,#BCA58A_1px,transparent_0)] bg-[size:32px_32px] pointer-events-none" />
+    <section className="py-28 bg-[#FAF9F6] relative overflow-hidden border-t border-[#D4AF37]/10">
+      <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_1px_1px,#D4AF37_1px,transparent_0)] bg-[size:32px_32px] pointer-events-none" />
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-14 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
           
           {/* Left Sticky Content */}
           <div className="lg:sticky lg:top-32 text-left">
-            <span className="text-[10px] tracking-[0.35em] text-[#BCA58A] uppercase block mb-4 font-medium"
+            <span className="text-[10px] tracking-[0.35em] text-[#D4AF37] uppercase block mb-4 font-medium"
               style={{ fontFamily: "'DM Sans', sans-serif" }}>Our Promise</span>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#111111] leading-tight mb-8"
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1A0008] leading-tight mb-8"
               style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Crafting <em className="italic text-[#BCA58A]">Luxury</em><br/>Experiences
+              Crafting <em className="italic text-[#D4AF37]">Luxury</em><br/>Experiences
             </h2>
-            <div className="w-14 h-px bg-[#BCA58A]/40 mb-8" />
+            <div className="w-14 h-px bg-[#D4AF37]/40 mb-8" />
             <p className="text-[#6B6B6B] text-sm md:text-base max-w-md leading-relaxed"
               style={{ fontFamily: "'DM Sans', sans-serif" }}>
               We bridge the gap between traditional Indian craftsmanship and modern retail luxury. Our commitment is to deliver not just clothing, but heirlooms of art directly to your wardrobe.
@@ -65,21 +65,21 @@ export default function WhyChooseUs() {
               const isExpanded = expandedIndex === index;
               return (
                 <div key={index}
-                  className={`border-b transition-all duration-300 ${isExpanded ? 'border-[#BCA58A]' : 'border-[#BCA58A]/20'}`}>
+                  className={`border-b transition-all duration-300 ${isExpanded ? 'border-[#D4AF37]' : 'border-[#D4AF37]/20'}`}>
                   
                   <button onClick={() => setExpandedIndex(isExpanded ? null : index)}
                     className="w-full py-6 flex items-start gap-6 text-left cursor-pointer group">
-                    <div className={`mt-1 transition-colors duration-400 ${isExpanded ? 'text-[#BCA58A]' : 'text-[#6B6B6B] group-hover:text-[#BCA58A]'}`}>
+                    <div className={`mt-1 transition-colors duration-400 ${isExpanded ? 'text-[#D4AF37]' : 'text-[#6B6B6B] group-hover:text-[#D4AF37]'}`}>
                       <feature.icon size={24} strokeWidth={1.5} />
                     </div>
                     <div className="flex-1">
-                      <h3 className={`text-2xl font-medium mb-2 transition-colors duration-300 ${isExpanded ? 'text-[#111111]' : 'text-[#111111]/60 group-hover:text-[#111111]'}`}
+                      <h3 className={`text-2xl font-medium mb-2 transition-colors duration-300 ${isExpanded ? 'text-[#1A0008]' : 'text-[#1A0008]/60 group-hover:text-[#1A0008]'}`}
                         style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                         {feature.title}
                       </h3>
                       <p className="text-xs text-[#6B6B6B]" style={{ fontFamily: "'DM Sans', sans-serif" }}>{feature.desc}</p>
                     </div>
-                    <div className={`mt-2 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-[#BCA58A]' : 'text-[#BCA58A]/40 group-hover:text-[#BCA58A]'}`}>
+                    <div className={`mt-2 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-[#D4AF37]' : 'text-[#D4AF37]/40 group-hover:text-[#D4AF37]'}`}>
                       <ChevronDown size={20} />
                     </div>
                   </button>
@@ -90,7 +90,7 @@ export default function WhyChooseUs() {
                         exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }}
                         className="overflow-hidden">
                         <div className="pb-8 pl-12 pr-6">
-                          <p className="text-sm text-[#BCA58A]/80 leading-relaxed border-l-2 border-[#BCA58A]/30 pl-4"
+                          <p className="text-sm text-[#D4AF37]/80 leading-relaxed border-l-2 border-[#D4AF37]/30 pl-4"
                             style={{ fontFamily: "'DM Sans', sans-serif" }}>
                             {feature.detail}
                           </p>

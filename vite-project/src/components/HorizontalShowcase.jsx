@@ -53,11 +53,11 @@ export default function HorizontalShowcase() {
         
         {/* Section Header (Fixed while scrolling) */}
         <div className="absolute top-20 md:top-32 left-6 md:left-12 z-20">
-          <span className="text-[10px] tracking-[0.35em] text-[#BCA58A] uppercase font-bold block mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <span className="text-[10px] tracking-[0.35em] text-[#D4AF37] uppercase font-bold block mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Curated For You
           </span>
-          <h2 className="text-5xl md:text-7xl font-light text-[#111111]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            The <em className="italic text-[#BCA58A]">Gallery</em>
+          <h2 className="text-5xl md:text-7xl font-light text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            The <em className="italic text-[#D4AF37]">Gallery</em>
           </h2>
         </div>
 
@@ -75,11 +75,11 @@ export default function HorizontalShowcase() {
               />
               
               {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#111111]/80 via-transparent to-[#111111]/10 opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008]/80 via-transparent to-[#1A0008]/10 opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
               
               {/* Content Bottom */}
               <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500">
-                <span className="text-[10px] font-bold tracking-[0.3em] text-[#BCA58A] uppercase mb-2 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                <span className="text-[10px] font-bold tracking-[0.3em] text-[#D4AF37] uppercase mb-2 block" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   {item.subtitle}
                 </span>
                 <h3 className="text-3xl md:text-4xl text-[#FAF9F6] mb-2 font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
@@ -90,7 +90,7 @@ export default function HorizontalShowcase() {
                 </p>
                 
                 {/* Shop Button */}
-                <button className="bg-[#BCA58A] hover:bg-[#a38f76] text-[#111111] px-8 py-4 flex items-center justify-center gap-3 text-[10px] tracking-[0.25em] font-bold transition-all cursor-pointer opacity-0 group-hover:opacity-100 w-full" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                <button className="bg-[#D4AF37] hover:bg-[#a38f76] text-[#1A0008] px-8 py-4 flex items-center justify-center gap-3 text-[10px] tracking-[0.25em] font-bold transition-all cursor-pointer opacity-0 group-hover:opacity-100 w-full" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   <ShoppingBag size={14} />
                   <span>SHOP COLLECTION</span>
                 </button>
@@ -103,7 +103,7 @@ export default function HorizontalShowcase() {
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#E8DDD0]">
           <motion.div 
             style={{ scaleX: scrollYProgress, transformOrigin: 'left' }} 
-            className="h-full bg-[#BCA58A]"
+            className="h-full bg-[#D4AF37]"
           />
         </div>
 

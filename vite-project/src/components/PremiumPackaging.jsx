@@ -63,10 +63,10 @@ export default function PremiumPackaging() {
   };
 
   return (
-    <section className="py-24 md:py-36 bg-[#111] relative border-t border-white/10 overflow-hidden" style={{ perspective: '2000px' }}>
+    <section className="py-24 md:py-36 bg-[#1A0008] relative border-t border-white/10 overflow-hidden" style={{ perspective: '2000px' }}>
       
       {/* ═══ Ambient Glows ═══ */}
-      <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-[#BCA58A]/15 to-transparent rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-[#D4AF37]/15 to-transparent rounded-full blur-[150px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-[#FAF9F6]/5 to-transparent rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
@@ -82,16 +82,16 @@ export default function PremiumPackaging() {
               transition={{ duration: 0.8 }}
             >
               <div className="flex items-center gap-3 mb-6">
-                <span className="text-[#BCA58A] text-[9px] md:text-[11px] tracking-[0.4em] uppercase font-bold"
-                  style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                <span className="text-[#D4AF37] text-[9px] md:text-[11px] tracking-[0.4em] uppercase font-bold"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   A Unique Discovery
                 </span>
-                <div className="w-12 h-[1px] bg-[#BCA58A]/50" />
+                <div className="w-12 h-[1px] bg-[#D4AF37]/50" />
               </div>
 
               <h2 className="text-[40px] sm:text-[50px] md:text-[64px] font-light text-[#FAF9F6] leading-[1.1] tracking-tighter mb-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Peek Inside <br />
-                <span className="italic text-[#BCA58A] font-light">The Magic</span>
+                <span className="italic text-[#D4AF37] font-light">The Magic</span>
               </h2>
 
               <p className="text-[14px] md:text-[16px] text-white/60 leading-relaxed font-light mb-12 max-w-md" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -107,11 +107,11 @@ export default function PremiumPackaging() {
                   { title: 'Stamped Business Card', desc: 'Our authentic brand mark stamped with care.' },
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-start gap-5 group cursor-default">
-                    <div className="w-8 h-8 rounded-full border border-[#BCA58A]/30 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-[#BCA58A] transition-colors duration-500">
-                      <span className="text-[#BCA58A] group-hover:text-[#111] text-[10px] font-bold transition-colors duration-500">{idx + 1}</span>
+                    <div className="w-8 h-8 rounded-full border border-[#D4AF37]/30 flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-[#D4AF37] transition-colors duration-500">
+                      <span className="text-[#D4AF37] group-hover:text-[#1A0008] text-[10px] font-bold transition-colors duration-500">{idx + 1}</span>
                     </div>
                     <div>
-                      <h4 className="text-[#FAF9F6] text-[18px] md:text-[20px] font-light mb-1 leading-tight group-hover:text-[#BCA58A] transition-colors duration-500" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                      <h4 className="text-[#FAF9F6] text-[18px] md:text-[20px] font-light mb-1 leading-tight group-hover:text-[#D4AF37] transition-colors duration-500" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                         {item.title}
                       </h4>
                       <p className="text-white/40 text-[13px] font-light leading-relaxed max-w-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -169,12 +169,12 @@ export default function PremiumPackaging() {
                 {/* Thank You Card Layer - Hyper-Realistic Textured Paper */}
                 <div className="absolute bottom-12 right-6 w-[200px] md:w-[240px] aspect-[3/2] bg-[#FAF9F6] shadow-[0_20px_40px_rgba(0,0,0,0.6)] flex flex-col items-center justify-center p-5 transform rotate-6 transition-transform duration-[1.5s] ease-out group-hover:rotate-3 z-20 overflow-hidden rounded-[2px]">
                   <div className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]" />
-                  <div className="absolute inset-2 border border-[#BCA58A]/30" />
+                  <div className="absolute inset-2 border border-[#D4AF37]/30" />
                   <span className="text-[#8b7355] font-light text-2xl md:text-3xl italic mb-2 relative z-10 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     Thank You
                   </span>
-                  <div className="w-10 h-px bg-[#BCA58A]/40 mb-3 relative z-10" />
-                  <p className="text-[#555] text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-center relative z-10 font-medium" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  <div className="w-10 h-px bg-[#D4AF37]/40 mb-3 relative z-10" />
+                  <p className="text-[#555] text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-center relative z-10 font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     For choosing <br/>handcrafted luxury.
                   </p>
                 </div>
@@ -205,8 +205,8 @@ export default function PremiumPackaging() {
                 }}
               >
                 {/* Ultra-premium lid styling: Double Gold Border */}
-                <div className="absolute inset-[12px] border border-[#BCA58A]/30" />
-                <div className="absolute inset-[20px] border border-[#BCA58A]/10" />
+                <div className="absolute inset-[12px] border border-[#D4AF37]/30" />
+                <div className="absolute inset-[20px] border border-[#D4AF37]/10" />
 
                 {/* Lid Texture */}
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-40 mix-blend-overlay" />
@@ -218,7 +218,7 @@ export default function PremiumPackaging() {
 
                 {/* Instruction Pill on the Lid */}
                 <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/5 backdrop-blur-md px-8 py-3 rounded-full border border-white/10 animate-pulse shadow-xl">
-                  <span className="text-white/80 text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  <span className="text-white/80 text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     Move Cursor to Peek Inside
                   </span>
                 </div>
@@ -235,7 +235,7 @@ export default function PremiumPackaging() {
                   opacity: maskSize.get() > 0 ? 1 : 0
                 }}
               >
-                <div className="w-1.5 h-1.5 bg-[#BCA58A] rounded-full shadow-[0_0_10px_#BCA58A]" />
+                <div className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full shadow-[0_0_10px_#D4AF37]" />
               </motion.div>
 
             </motion.div>

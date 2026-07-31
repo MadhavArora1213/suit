@@ -293,6 +293,7 @@ function App() {
           setSelectedCategory={setSelectedCategory}
           setSelectedProduct={setSelectedProduct}
           setSelectedBoutique={setSelectedBoutique}
+          setSelectedCollectionSlug={setSelectedCollectionSlug}
           user={user}
           handleLogout={handleLogout}
         />

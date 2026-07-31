@@ -143,7 +143,7 @@ export default function ContactPage({ setView, user }) {
                     <td style="padding: 40px; text-align: center; border-bottom: 1px solid #f0ebe4; background-color: #ffffff;">
                       <!-- NOTE: This logo will only appear once the website is hosted on a live URL. Email providers block localhost images. -->
                       <img src="https://your-domain.com/assets/gurnaaz.png" alt="GURNAAZ" style="height: 40px; width: auto; margin-bottom: 15px; display: block; margin-left: auto; margin-right: auto;" />
-                      <div style="font-size: 9px; letter-spacing: 5px; color: #BCA58A; text-transform: uppercase; font-weight: bold;">Client Services</div>
+                      <div style="font-size: 9px; letter-spacing: 5px; color: #D4AF37; text-transform: uppercase; font-weight: bold;">Client Services</div>
                     </td>
                   </tr>
                   
@@ -155,7 +155,7 @@ export default function ContactPage({ setView, user }) {
                       <p style="margin-bottom: 40px;">Our dedicated client support team reviews every message personally to ensure you receive the highest level of service. A representative will be in touch with you shortly.</p>
                       
                       <!-- Quote Box -->
-                      <div style="margin: 40px 0; padding: 30px; background-color: #faf9f6; border-left: 2px solid #BCA58A; border-radius: 2px;">
+                      <div style="margin: 40px 0; padding: 30px; background-color: #faf9f6; border-left: 2px solid #D4AF37; border-radius: 2px;">
                         <div style="font-size: 10px; letter-spacing: 2px; color: #8a7c6e; text-transform: uppercase; margin-bottom: 15px; font-weight: bold;">Your Inquiry</div>
                         <div style="color: #332d28; font-style: italic; font-family: Georgia, serif; font-size: 15px; line-height: 1.6;">"${cleanMessage}"</div>
                       </div>
@@ -167,7 +167,7 @@ export default function ContactPage({ setView, user }) {
                   <!-- Footer (Light) -->
                   <tr>
                     <td style="padding: 40px; text-align: center; background-color: #faf9f6; border-top: 1px solid #f0ebe4;">
-                      <p style="margin: 0; color: #BCA58A; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">The Gurnaaz Team</p>
+                      <p style="margin: 0; color: #D4AF37; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;">The Gurnaaz Team</p>
                       <p style="margin: 15px 0 0 0; color: #8a7c6e; font-size: 10px; letter-spacing: 1px;">Excellence in every thread.</p>
                       
                       <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #f0ebe4;">
@@ -266,7 +266,7 @@ export default function ContactPage({ setView, user }) {
         }}
       >
         {/* Top Gold Trim */}
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-[#BCA58A] to-transparent" />
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent" />
 
          <div className="p-6 sm:p-8 md:p-12 lg:p-16">
           {!submitted ? (
@@ -279,11 +279,11 @@ export default function ContactPage({ setView, user }) {
                   transition={{ delay: 0.6 }}
                   className="flex items-center justify-center gap-4 mb-6"
                 >
-                  <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#BCA58A]" />
-                  <span className="text-[9px] tracking-[0.4em] text-[#BCA58A] uppercase font-bold" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+                  <div className="h-px w-16 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+                  <span className="text-[9px] tracking-[0.4em] text-[#D4AF37] uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     Gurnaaz Support
                   </span>
-                  <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#BCA58A]" />
+                  <div className="h-px w-16 bg-gradient-to-l from-transparent to-[#D4AF37]" />
                 </motion.div>
                  <motion.h1
                    initial={{ opacity: 0, y: 16 }}
@@ -318,10 +318,10 @@ export default function ContactPage({ setView, user }) {
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="text-center p-4 rounded-none border border-white/5 hover:border-[#BCA58A]/30 transition-colors"
+                    className="text-center p-4 rounded-none border border-white/5 hover:border-[#D4AF37]/30 transition-colors"
                     style={{ background: 'rgba(255,255,255,0.02)' }}
                   >
-                    <p className="text-[8px] tracking-[0.2em] uppercase text-[#BCA58A] font-bold mb-2">{item.label}</p>
+                    <p className="text-[8px] tracking-[0.2em] uppercase text-[#D4AF37] font-bold mb-2">{item.label}</p>
                     <p className="text-[10px] text-white/60 leading-relaxed">{item.value}</p>
                   </div>
                 ))}
@@ -362,7 +362,7 @@ export default function ContactPage({ setView, user }) {
                           onFocus={() => setFocused(placeholder)}
                           onBlur={() => setFocused(null)}
                           className="w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors peer"
-                          style={{ borderColor: focused === placeholder ? '#BCA58A' : 'rgba(255,255,255,0.12)' }}
+                          style={{ borderColor: focused === placeholder ? '#D4AF37' : 'rgba(255,255,255,0.12)' }}
                         />
                         <label
                           className="absolute left-0 text-xs transition-all duration-300 pointer-events-none"
@@ -370,7 +370,7 @@ export default function ContactPage({ setView, user }) {
                             top: isActive ? '-16px' : '12px',
                             fontSize: isActive ? '9px' : '13px',
                             letterSpacing: isActive ? '0.2em' : '0',
-                            color: focused === placeholder ? '#BCA58A' : 'rgba(255,255,255,0.35)',
+                            color: focused === placeholder ? '#D4AF37' : 'rgba(255,255,255,0.35)',
                             textTransform: isActive ? 'uppercase' : 'none',
                             fontWeight: isActive ? '700' : '400',
                           }}
@@ -391,7 +391,7 @@ export default function ContactPage({ setView, user }) {
                     onFocus={() => setFocused('message')}
                     onBlur={() => setFocused(null)}
                     className="w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors resize-none peer"
-                    style={{ borderColor: focused === 'message' ? '#BCA58A' : 'rgba(255,255,255,0.12)' }}
+                    style={{ borderColor: focused === 'message' ? '#D4AF37' : 'rgba(255,255,255,0.12)' }}
                   />
                   <label
                     className="absolute left-0 pointer-events-none transition-all duration-300"
@@ -399,7 +399,7 @@ export default function ContactPage({ setView, user }) {
                       top: (focused === 'message' || formData.message.trim() !== '') ? '-16px' : '12px',
                       fontSize: (focused === 'message' || formData.message.trim() !== '') ? '9px' : '13px',
                       letterSpacing: (focused === 'message' || formData.message.trim() !== '') ? '0.2em' : '0',
-                      color: focused === 'message' ? '#BCA58A' : 'rgba(255,255,255,0.35)',
+                      color: focused === 'message' ? '#D4AF37' : 'rgba(255,255,255,0.35)',
                       textTransform: (focused === 'message' || formData.message.trim() !== '') ? 'uppercase' : 'none',
                       fontWeight: (focused === 'message' || formData.message.trim() !== '') ? '700' : '400',
                     }}
@@ -419,7 +419,7 @@ export default function ContactPage({ setView, user }) {
                   />
                   <span className="relative flex items-center justify-center gap-4 text-[10px] tracking-[0.3em] text-white/80 group-hover:text-white font-bold uppercase transition-colors">
                     Send Message
-                    <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform text-[#BCA58A]" />
+                    <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform text-[#D4AF37]" />
                   </span>
                 </button>
               </motion.form>
@@ -462,14 +462,14 @@ export default function ContactPage({ setView, user }) {
               >
 
                 <button
-                  onClick={() => setView('home')}
-                  className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-transparent border border-[#BCA58A]/30 hover:border-[#BCA58A] transition-colors duration-500 overflow-hidden cursor-pointer"
+                  onClick={() => setView('customer-home')}
+                  className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-transparent border border-[#D4AF37]/30 hover:border-[#D4AF37] transition-colors duration-500 overflow-hidden cursor-pointer"
                 >
-                  <div className="absolute inset-0 bg-[#BCA58A]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                  <div className="absolute inset-0 bg-[#D4AF37]/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
                   <span className="relative text-[10px] tracking-[0.3em] uppercase text-white font-semibold">
                     Return to Store
                   </span>
-                  <ArrowRight size={14} className="relative text-[#BCA58A] group-hover:translate-x-1 transition-transform duration-500" />
+                  <ArrowRight size={14} className="relative text-[#D4AF37] group-hover:translate-x-1 transition-transform duration-500" />
                 </button>
               </motion.div>
             </motion.div>
@@ -477,7 +477,7 @@ export default function ContactPage({ setView, user }) {
         </div>
 
         {/* Bottom Gold Trim */}
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-[#BCA58A] to-transparent" />
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent" />
       </motion.div>
 
       {/* Auth Required Modal */}
@@ -493,23 +493,23 @@ export default function ContactPage({ setView, user }) {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-               className="bg-[#FAF9F6] p-6 sm:p-8 md:p-12 max-w-[400px] w-full border border-[#BCA58A]/30 text-center relative overflow-hidden mx-3 sm:mx-4"
+               className="bg-[#FAF9F6] p-6 sm:p-8 md:p-12 max-w-[400px] w-full border border-[#D4AF37]/30 text-center relative overflow-hidden mx-3 sm:mx-4"
               style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }}
             >
               {/* Modal Background Glow */}
               <div
                 className="absolute inset-0 opacity-20 pointer-events-none"
-                style={{ background: 'radial-gradient(circle at top center, #BCA58A 0%, transparent 70%)' }}
+                style={{ background: 'radial-gradient(circle at top center, #D4AF37 0%, transparent 70%)' }}
               />
 
-              <div className="w-16 h-16 rounded-full bg-[#111111]/5 flex items-center justify-center text-[#BCA58A] mx-auto mb-6 relative z-10 border border-[#BCA58A]/20">
+              <div className="w-16 h-16 rounded-full bg-[#1A0008]/5 flex items-center justify-center text-[#D4AF37] mx-auto mb-6 relative z-10 border border-[#D4AF37]/20">
                 <User size={28} strokeWidth={1.5} />
               </div>
 
-              <h3 className="text-3xl font-light text-[#111111] mb-3 relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <h3 className="text-3xl font-light text-[#1A0008] mb-3 relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Login Required
               </h3>
-              <p className="text-[13px] text-[#111111]/60 mb-8 relative z-10 leading-relaxed font-light">
+              <p className="text-[13px] text-[#1A0008]/60 mb-8 relative z-10 leading-relaxed font-light">
                 Please sign in to your Gurnaaz account to send us a message. It helps us serve you better!
               </p>
 
@@ -519,13 +519,13 @@ export default function ContactPage({ setView, user }) {
                     sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
                     setView('login');
                   }}
-                  className="w-full bg-[#111111] text-white py-3.5 text-[11px] uppercase tracking-[0.2em] font-semibold hover:bg-[#BCA58A] transition-colors duration-300"
+                  className="w-full bg-[#1A0008] text-white py-3.5 text-[11px] uppercase tracking-[0.2em] font-semibold hover:bg-[#D4AF37] transition-colors duration-300"
                 >
                   Log In Now
                 </button>
                 <button
                   onClick={() => setShowAuthModal(false)}
-                  className="w-full py-3.5 text-[11px] uppercase tracking-[0.2em] text-[#111111]/40 font-semibold hover:text-[#111111] transition-colors duration-300"
+                  className="w-full py-3.5 text-[11px] uppercase tracking-[0.2em] text-[#1A0008]/40 font-semibold hover:text-[#1A0008] transition-colors duration-300"
                 >
                   Cancel
                 </button>

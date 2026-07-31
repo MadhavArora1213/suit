@@ -67,14 +67,14 @@ export default function Gallery({ addToCart }) {
         
         {/* Header */}
         <div className="text-center mb-16">
-          <span className="text-xs font-bold tracking-[0.3em] text-[#BCA58A] uppercase block mb-3">
+          <span className="text-xs font-bold tracking-[0.3em] text-[#D4AF37] uppercase block mb-3">
             Social Showcase
           </span>
           <h2 className="text-3xl md:text-5xl font-display font-medium text-[#FAF9F6] mb-6">
             Instagram Moments
           </h2>
           <p className="text-[#6B6B6B] text-sm md:text-base max-w-xl mx-auto font-body">
-            Follow our style journey on social media. Share your look with <span className="font-semibold text-[#BCA58A]">#GurnaazEthnicWear</span>.
+            Follow our style journey on social media. Share your look with <span className="font-semibold text-[#D4AF37]">#GurnaazEthnicWear</span>.
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export default function Gallery({ addToCart }) {
               onClick={() => setFilter(cat)}
               className={`px-6 py-2 rounded-full font-semibold tracking-wider text-xs transition-all duration-300 cursor-pointer ${
                 filter === cat
-                  ? 'bg-[#FAF9F6] text-[#111111] shadow-sm'
+                  ? 'bg-[#FAF9F6] text-[#1A0008] shadow-sm'
                   : 'border border-[#1E1E1E] text-[#6B6B6B] hover:border-[#FAF9F6] hover:text-[#FAF9F6]'
               }`}
             >
@@ -110,7 +110,7 @@ export default function Gallery({ addToCart }) {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.4 }}
                 onClick={() => setLightboxItem(item)}
-                className="aspect-square rounded-2xl overflow-hidden cursor-pointer bg-[#111111] relative group shadow-sm hover:shadow-premium"
+                className="aspect-square rounded-2xl overflow-hidden cursor-pointer bg-[#1A0008] relative group shadow-sm hover:shadow-premium"
               >
                 {/* Image */}
                 <img
@@ -149,7 +149,7 @@ export default function Gallery({ addToCart }) {
             href="#"
             whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(188,165,138,0.2)' }}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2.5 bg-gradient-to-r from-[#BCA58A] to-[#BCA58A] text-white px-8 py-3.5 rounded-xl text-xs font-semibold tracking-widest hover:shadow-premium transition-all duration-300"
+            className="inline-flex items-center gap-2.5 bg-gradient-to-r from-[#D4AF37] to-[#D4AF37] text-white px-8 py-3.5 rounded-xl text-xs font-semibold tracking-widest hover:shadow-premium transition-all duration-300"
           >
             <Instagram size={16} />
             FOLLOW @SUITEETHNICWEAR
@@ -179,13 +179,13 @@ export default function Gallery({ addToCart }) {
               {/* Close Button */}
               <button
                 onClick={() => setLightboxItem(null)}
-                className="absolute top-4 right-4 p-2 rounded-full bg-neutral-100 hover:bg-[#BCA58A]/10 text-neutral-800 transition-colors z-10 cursor-pointer"
+                className="absolute top-4 right-4 p-2 rounded-full bg-neutral-100 hover:bg-[#D4AF37]/10 text-neutral-800 transition-colors z-10 cursor-pointer"
               >
                 <X size={18} />
               </button>
 
               {/* Left Side: Campaign Photo */}
-              <div className="w-full md:w-1/2 aspect-square md:aspect-auto md:h-[500px] relative bg-[#111111]">
+              <div className="w-full md:w-1/2 aspect-square md:aspect-auto md:h-[500px] relative bg-[#1A0008]">
                 <img
                   src={lightboxItem.image}
                   alt="Campaign Instagram Look"
@@ -200,7 +200,7 @@ export default function Gallery({ addToCart }) {
                   {/* Insta Account Header */}
                   <div className="flex items-center justify-between pb-4 border-b border-[#1E1E1E]/30">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#BCA58A]/15 border border-[#BCA58A]/45 flex items-center justify-center font-display font-bold text-sm text-[#BCA58A]">
+                      <div className="w-10 h-10 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/45 flex items-center justify-center font-display font-bold text-sm text-[#D4AF37]">
                         S
                       </div>
                       <div>
@@ -219,7 +219,7 @@ export default function Gallery({ addToCart }) {
                       <span className="font-bold mr-1.5">suiteethnicwear</span>
                       {lightboxItem.caption}
                     </p>
-                    <span className="text-[10px] font-semibold text-[#BCA58A] block">
+                    <span className="text-[10px] font-semibold text-[#D4AF37] block">
                       #ethnicwear #salwarsuits #anarkali #weddingseason #artisanal
                     </span>
                   </div>
@@ -241,16 +241,16 @@ export default function Gallery({ addToCart }) {
                 {/* Shoppable Widget Column */}
                 {matchedProduct && (
                   <div className="pt-4 border-t border-[#1E1E1E]/40 mt-6 md:mt-0">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#BCA58A] block mb-2.5">SHOP THIS LOOK</span>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#D4AF37] block mb-2.5">SHOP THIS LOOK</span>
                     
-                    <div className="bg-[#111111] border border-[#1E1E1E]/50 rounded-xl p-3 flex items-center justify-between gap-4">
+                    <div className="bg-[#1A0008] border border-[#1E1E1E]/50 rounded-xl p-3 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-14 rounded-lg overflow-hidden bg-neutral-100 flex-shrink-0">
                           <img src={matchedProduct.image} alt={matchedProduct.name} className="w-full h-full object-cover object-top" />
                         </div>
                         <div>
                           <h4 className="text-xs font-semibold text-neutral-900 line-clamp-1">{matchedProduct.name}</h4>
-                          <span className="text-xs font-bold text-[#BCA58A] mt-0.5 block">{matchedProduct.price}</span>
+                          <span className="text-xs font-bold text-[#D4AF37] mt-0.5 block">{matchedProduct.price}</span>
                         </div>
                       </div>
 
@@ -260,7 +260,7 @@ export default function Gallery({ addToCart }) {
                           alert(`Added ${matchedProduct.name} to bag!`);
                           setLightboxItem(null);
                         }}
-                        className="bg-neutral-900 hover:bg-[#BCA58A] text-white p-2.5 px-4 rounded-lg text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 transition-colors cursor-pointer"
+                        className="bg-neutral-900 hover:bg-[#D4AF37] text-white p-2.5 px-4 rounded-lg text-[10px] font-bold tracking-widest uppercase flex items-center gap-1.5 transition-colors cursor-pointer"
                       >
                         <ShoppingBag size={12} />
                         ADD
