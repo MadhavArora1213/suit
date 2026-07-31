@@ -50,7 +50,7 @@ export default function WishlistPage({ allProducts, favorites, toggleFavorite, a
                   {/* Quick Add overlay - always visible on mobile, hover on desktop */}
                   <div className="absolute inset-x-0 bottom-0 p-2.5 sm:p-4 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 translate-y-0 sm:translate-y-2 sm:group-hover:translate-y-0">
                     <button 
-                      onClick={() => addToCart(product, product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched')}
+                      onClick={() => addToCart(product, product.fitOptions?.includes('Unstitched') ? 'Unstitched' : (product.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (product.sizes?.length > 0 ? `Stitched - ${product.sizes[0]}` : 'Stitched')))}
                       className="w-full py-2.5 sm:py-3 bg-white/95 backdrop-blur-sm text-[#1A0008] text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-[#1A0008] hover:text-white transition-colors flex items-center justify-center gap-1.5 sm:gap-2"
                     >
                       <ShoppingBag size={12} /> <span className="hidden xs:inline">Add to</span> Cart

@@ -706,7 +706,12 @@ export default function Navbar({
                             <span className="text-[9px] text-[#D4AF37] font-semibold uppercase tracking-wider block mt-1">{item.boutique} · Verified</span>
                             <span className="text-sm text-[#1A0008] block mt-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{item.price}</span>
                           </div>
-                          <button onClick={() => { const size = item.sizes?.length > 0 ? item.sizes[0] : 'Unstitched'; addToCart(item, size); alert(`Added ${item.name} to bag!`); }}
+                          <button onClick={() => { 
+                              const fit = item.fitOptions?.includes('Unstitched') ? 'Unstitched' : (item.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (item.fitOptions?.[0] || 'Stitched'));
+      const size = fit === 'Stitched' ? (item.sizes?.length > 0 ? `Stitched - ${item.sizes[0]}` : 'Stitched') : fit;
+                              addToCart(item, size); 
+                              alert(`Added ${item.name} to bag!`); 
+                            }}
                             className="mt-3 bg-[#E8DDD0] border border-[#D4AF37]/20 hover:border-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#FAF9F6] text-[#1A0008] py-2 text-[9px] font-semibold tracking-widest uppercase flex items-center justify-center gap-1.5 transition-all cursor-pointer">
                             <ShoppingBag size={10} /> Add To Bag
                           </button>

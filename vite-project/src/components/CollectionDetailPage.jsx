@@ -101,7 +101,7 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
   const categoriesList = ['Anarkali', 'Straight Suit', 'Sharara', 'Patiala', 'Lehenga'];
   const fabricsList = ['Cotton', 'Silk', 'Georgette', 'Velvet', 'Organza', 'Chanderi'];
   const occasionsList = ['Casual', 'Festive', 'Wedding', 'Party'];
-  const sizesList = ['Unstitched']; // Temporarily only showing Unstitched
+  const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
   const patternsList = ['Solid', 'Printed', 'Embroidered', 'Floral', 'Geometric', 'Zari Work'];
   const stylesList = ['Straight', 'A-Line', 'Flared', 'Asymmetric'];
   const sleevesList = ['Sleeveless', 'Short Sleeves', '3/4 Sleeves', 'Full Sleeves'];
@@ -494,7 +494,7 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
                       {/* Floating Glassmorphism Quick Add */}
                       <div className="absolute inset-x-4 bottom-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20">
                         <button
-                          onClick={(e) => { e.stopPropagation(); addToCart(product, product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched'); }}
+                          onClick={(e) => { e.stopPropagation(); addToCart(product, product.fitOptions?.includes('Unstitched') ? 'Unstitched' : (product.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (product.sizes?.length > 0 ? `Stitched - ${product.sizes[0]}` : 'Stitched'))); }}
                           className="w-full bg-white/85 backdrop-blur-md text-[#1A0008] py-3.5 rounded-full text-[11px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#1A0008] hover:text-white transition-colors shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
                           <ShoppingBag size={14} /> Add to Bag
                         </button>

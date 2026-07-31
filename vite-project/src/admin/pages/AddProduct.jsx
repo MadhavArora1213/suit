@@ -5,7 +5,7 @@ import { addProduct, updateProduct, fileToBase64, notifyWebsite, getBoutiques } 
 
 const P = '#111111';
 
-const sizes = ['S (36)', 'M (38)', 'L (40)', 'XL (42)', 'XXL (44)'];
+const sizes = ['XS (34)', 'S (36)', 'M (38)', 'L (40)', 'XL (42)', 'XXL (44)', 'XXXL (46)', 'XXXXL (48)'];
 const occasions = ['Festive', 'Wedding', 'Casual', 'Party', 'Daily Wear', 'Bridal', 'Engagement', 'Sangeet', 'Mehendi', 'Reception', 'Puja', 'Eid', 'Diwali', 'Holi', 'Navratri', 'Karva Chauth', 'Office Wear', 'Travel', 'Brunch', 'Date Night'];
 const careOptions = ['Dry Clean Only', 'Hand Wash', 'Machine Wash', 'Do Not Bleach', 'Iron on Low Heat'];
 const badges = ['Silk Blend', 'Handloom', 'Premium', 'Hot Seller', 'New Edition', 'Artisanal', 'Heritage', 'Exclusive', 'Best Price', 'Verified', '100% Cotton', 'Lightweight'];
@@ -65,6 +65,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
     reelUrl: ep?.reelUrl || '',
   });
 
+  const [selectedFits, setSelectedFits] = useState(ep?.fitOptions || ['Unstitched', 'Stitched']);
   const [selectedSizes, setSelectedSizes] = useState(ep?.sizes || []);
   const [selectedOccasions, setSelectedOccasions] = useState(ep?.occasions || []);
   const [selectedCare, setSelectedCare] = useState(ep?.care || []);
@@ -125,6 +126,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       igComments: form.igComments,
       videoUrl: form.videoUrl,
       reelUrl: form.reelUrl,
+      fitOptions: selectedFits,
       sizes: selectedSizes,
       occasions: selectedOccasions,
       care: selectedCare,
@@ -304,30 +306,53 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
           </Card>
 
           {/* Sizes & Stock */}
-          <Card title="Sizes & Stock" subtitle="Select available sizes and enter per-size stock quantity">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {sizes.map(size => (
-                <div key={size}
-                  className="flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer"
-                  style={{ borderColor: selectedSizes.includes(size) ? P : '#E8DDD0', background: selectedSizes.includes(size) ? '#E8DDD0' : '#FAF9F6' }}
-                  onClick={() => toggleArr(selectedSizes, setSelectedSizes, size)}>
-                  <div className="w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all"
-                    style={{ borderColor: selectedSizes.includes(size) ? P : '#A8BCBE', background: selectedSizes.includes(size) ? P : 'transparent' }}>
-                    {selectedSizes.includes(size) && <Check size={13} className="text-white" />}
-                  </div>
-                  <span className="text-sm font-semibold text-[#1A1A1A]">{size}</span>
-                  {selectedSizes.includes(size) && (
-                    <input type="number" min="0" value={stockQty[size] || ''}
-                      onChange={e => { e.stopPropagation(); setStockQty(prev => ({ ...prev, [size]: e.target.value })); }}
-                      onClick={e => e.stopPropagation()}
-                      placeholder="Qty"
-                      className="ml-auto w-16 px-2 py-1 border border-[#E8DDD0] rounded-lg text-sm text-center focus:outline-none bg-white"
-                      onFocus={e => { e.stopPropagation(); e.target.style.borderColor = P; }}
-                      onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }} />
-                  )}
-                </div>
-              ))}
+          <Card title="Available Fits & Sizes" subtitle="Select available fits and sizes. Stock qty is per size.">
+            
+            <div className="mb-6 border-b border-[#E8DDD0] pb-6">
+              <Label required>Available Fits</Label>
+              <div className="flex flex-wrap gap-4 mt-2">
+                {['Unstitched', 'Semi-Stitched', 'Stitched'].map(fit => (
+                  <label key={fit} className="flex items-center gap-2 cursor-pointer group">
+                    <div className="w-5 h-5 rounded border border-[#E8DDD0] flex items-center justify-center transition-all group-hover:border-black"
+                         style={{ background: selectedFits.includes(fit) ? '#111111' : '#fff', borderColor: selectedFits.includes(fit) ? '#111111' : '' }}>
+                      {selectedFits.includes(fit) && <Check size={12} className="text-white" />}
+                    </div>
+                    <span className="text-sm font-medium text-[#1A1A1A]">{fit === 'Stitched' ? 'Readymade (Stitched)' : (fit === 'Semi-Stitched' ? 'Semi-Stitched' : 'Unstitched Fabric')}</span>
+                    <input type="checkbox" className="hidden" checked={selectedFits.includes(fit)} onChange={() => toggleArr(selectedFits, setSelectedFits, fit)} />
+                  </label>
+                ))}
+              </div>
+              {selectedFits.length === 0 && <p className="text-red-500 text-xs mt-2">Please select at least one fit option.</p>}
             </div>
+
+            {selectedFits.includes('Stitched') && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {sizes.map(size => (
+                  <div key={size}
+                    className="flex items-center gap-3 p-4 rounded-xl border transition-all cursor-pointer"
+                    style={{ borderColor: selectedSizes.includes(size) ? P : '#E8DDD0', background: selectedSizes.includes(size) ? '#E8DDD0' : '#FAF9F6' }}
+                    onClick={() => toggleArr(selectedSizes, setSelectedSizes, size)}>
+                    <div className="w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all"
+                      style={{ borderColor: selectedSizes.includes(size) ? P : '#A8BCBE', background: selectedSizes.includes(size) ? P : 'transparent' }}>
+                      {selectedSizes.includes(size) && <Check size={13} className="text-white" />}
+                    </div>
+                    <span className="text-sm font-semibold text-[#1A1A1A]">{size}</span>
+                    {selectedSizes.includes(size) && (
+                      <input type="number" min="0" value={stockQty[size] || ''}
+                        onChange={e => { e.stopPropagation(); setStockQty(prev => ({ ...prev, [size]: e.target.value })); }}
+                        onClick={e => e.stopPropagation()}
+                        placeholder="Qty"
+                        className="ml-auto w-16 px-2 py-1 border border-[#E8DDD0] rounded-lg text-sm text-center focus:outline-none bg-white"
+                        onFocus={e => { e.stopPropagation(); e.target.style.borderColor = P; }}
+                        onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }} />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            {!selectedFits.includes('Stitched') && (
+              <p className="text-sm text-[#6B8C90] italic">Sizes are not applicable for purely Unstitched products.</p>
+            )}
           </Card>
         </div>
 
@@ -452,6 +477,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 { label: 'Price',      val: form.price ? `₹${Number(form.price).toLocaleString('en-IN')}` : '—', bold: true },
                 { label: 'Collection', val: form.collection },
                 { label: 'Type',       val: form.suitType },
+                { label: 'Fits',       val: selectedFits.join(', ') || 'None' },
                 { label: 'Sizes',      val: selectedSizes.length ? `${selectedSizes.length} selected` : 'None' },
                 { label: 'Image',      val: mainImage ? '✓ Ready' : 'Not uploaded', color: mainImage ? '#10B981' : '#F43F5E' },
               ].map(({ label, val, bold, color }) => (

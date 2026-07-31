@@ -74,7 +74,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   
   const fabricsList = ['Cotton', 'Silk', 'Georgette', 'Velvet', 'Organza', 'Chanderi'];
   const occasionsList = ['Casual', 'Festive', 'Wedding', 'Party'];
-  const sizesList = ['Unstitched']; // Temporarily only showing Unstitched
+  const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
   const pricesList = [
     { id: 'under5k', label: 'Under ₹5,000' },
     { id: '5k-10k', label: '₹5,000 - ₹10,000' },
@@ -446,7 +446,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                           <button 
                             onClick={(e) => { 
                               e.stopPropagation(); 
-                              addToCart(p, p.sizes?.length > 0 ? p.sizes[0] : 'Unstitched');
+                              addToCart(p, p.fitOptions?.includes('Unstitched') ? 'Unstitched' : (p.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (p.sizes?.length > 0 ? `Stitched - ${p.sizes[0]}` : 'Stitched')));
                             }}
                             className="flex-1 bg-white/95 backdrop-blur-md text-[#1A0008] py-3.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#1A0008] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
                           >

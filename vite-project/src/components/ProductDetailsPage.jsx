@@ -60,6 +60,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
   const [reviewComment, setReviewComment] = useState('');
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [addedToBag, setAddedToBag] = useState(false);
+  const [selectedFit, setSelectedFit] = useState('Unstitched');
   const [selectedSize, setSelectedSize] = useState(null);
   const [zoomedImg, setZoomedImg] = useState(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -85,6 +86,9 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
     }
     window.scrollTo({ top: 0, behavior: 'auto' });
     setAddedToBag(false);
+    const defaultFit = product?.fitOptions?.includes('Unstitched') ? 'Unstitched' : (product?.fitOptions?.[0] || 'Stitched');
+    setSelectedFit(defaultFit);
+    setSelectedSize(null);
     setCurrentImg(product?.additionalImages?.length ? 1 : 0);
     return () => { clearTimeout(addedTimerRef.current); clearTimeout(copiedTimerRef.current); };
   }, [product]);
@@ -129,12 +133,13 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
 
   // Memoized handlers
   const handleAddToBag = useCallback(() => {
-    const size = selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched');
-    addToCart(product, size);
+    const size = selectedFit === 'Stitched' ? (selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Stitched')) : selectedFit;
+    const finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
+    addToCart(product, finalSelection);
     setAddedToBag(true);
     clearTimeout(addedTimerRef.current);
     addedTimerRef.current = setTimeout(() => setAddedToBag(false), 2500);
-  }, [addToCart, product, selectedSize]);
+  }, [addToCart, product, selectedSize, selectedFit]);
 
   const handleReviewSubmit = useCallback((e) => {
     e.preventDefault();
@@ -332,8 +337,26 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
 
               {/* Action Buttons */}
               <div ref={buyBtnRef} className="mb-4">
-                {product.sizes && product.sizes.length > 0 && (
-                  <div className="mb-3">
+                {product.fitOptions && product.fitOptions.length > 0 && (
+                  <div className="mb-4">
+                    <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2 block">Select Fit</span>
+                    <div className="flex flex-wrap gap-3">
+                      {['Unstitched', 'Semi-Stitched', 'Stitched'].filter(f => product.fitOptions.includes(f)).map(fit => (
+                        <button key={fit} type="button" onClick={() => setSelectedFit(fit)}
+                          className={`flex-1 py-3 rounded-xl text-[12px] font-bold border-2 transition-all cursor-pointer ${
+                            selectedFit === fit
+                              ? 'border-[#8B2252] bg-[#8B2252] text-white shadow-md'
+                              : 'border-gray-200 text-gray-600 hover:border-[#8B2252] hover:text-[#8B2252]'
+                          }`}>
+                          {fit === 'Stitched' ? 'Readymade (Stitched)' : (fit === 'Semi-Stitched' ? 'Semi-Stitched' : 'Unstitched Fabric')}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {selectedFit === 'Stitched' && product.sizes && product.sizes.length > 0 && (
+                  <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Select Size</span>
                       <button onClick={() => setShowSizeGuide(true)} className="text-[10px] text-[#8B2252] font-semibold underline cursor-pointer">Size Guide</button>
@@ -368,7 +391,12 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                     <Heart size={18} className={favorites[product.id] ? 'fill-current' : ''} />
                   </button>
                 </div>
-                <button onClick={() => { const size = selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched'); addToCart(product, size); setView('checkout'); }}
+                <button onClick={() => { 
+                    const size = selectedFit === 'Stitched' ? (selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Stitched')) : selectedFit;
+                    const finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
+                    addToCart(product, finalSelection); 
+                    setView('checkout'); 
+                  }}
                   className="w-full h-[46px] flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em] rounded-2xl border-2 border-[#222] text-[#222] hover:bg-[#222] hover:text-white transition-all duration-500 cursor-pointer hover:shadow-lg">
                   <Sparkles size={14} /> Buy Now
                 </button>

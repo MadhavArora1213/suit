@@ -107,7 +107,7 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
             className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#FAF9F6]/95 backdrop-blur-md text-[#1A0008] hover:bg-[#1A0008] hover:text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg border border-[#D4AF37]/20">
             <Eye size={12} /> View
           </button>
-          <button onClick={(e) => { e.stopPropagation(); addToCart(product, product.sizes?.length > 0 ? product.sizes[0] : 'Unstitched'); }}
+          <button onClick={(e) => { e.stopPropagation(); addToCart(product, product.fitOptions?.includes('Unstitched') ? 'Unstitched' : (product.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (product.sizes?.length > 0 ? `Stitched - ${product.sizes[0]}` : 'Stitched'))); }}
             className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#D4AF37] hover:bg-[#1A0008] text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg">
             <ShoppingBag size={12} /> Bag
           </button>
@@ -233,7 +233,19 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   const occasionOptions = [{ value: 'All', label: 'All Occasions' }, { value: 'Festive', label: 'Festive Wear' }, { value: 'Wedding', label: 'Wedding Guest' }, { value: 'Casual', label: 'Casual Wear' }];
   const colorOptions = [{ value: 'All', label: 'All Colors' }, { value: 'Red', label: 'Red' }, { value: 'Blue', label: 'Blue' }, { value: 'Green', label: 'Green' }, { value: 'Pink', label: 'Pink' }, { value: 'Black', label: 'Black' }];
   const priceOptions = [{ value: 'All', label: 'Any Price' }, { value: 'Under 5K', label: 'Under ₹5,000' }, { value: '5K - 10K', label: '₹5,000 - ₹10,000' }, { value: 'Over 10K', label: 'Over ₹10,000' }];
-  const sizeOptions = [{ value: 'All', label: 'All Sizes' }, { value: 'XS', label: 'XS' }, { value: 'S', label: 'S' }, { value: 'M', label: 'M' }, { value: 'L', label: 'L' }, { value: 'XL', label: 'XL' }];
+  const sizeOptions = [
+    { value: 'All', label: 'All Sizes' },
+    { value: 'Unstitched', label: 'Unstitched' },
+    { value: 'Semi-Stitched', label: 'Semi-Stitched' },
+    { value: 'XS', label: 'XS' }, 
+    { value: 'S', label: 'S' }, 
+    { value: 'M', label: 'M' }, 
+    { value: 'L', label: 'L' }, 
+    { value: 'XL', label: 'XL' },
+    { value: 'XXL', label: 'XXL' },
+    { value: 'XXXL', label: 'XXXL' },
+    { value: 'XXXXL', label: 'XXXXL' }
+  ];
   const workOptions = [{ value: 'All', label: 'All Work' }, { value: 'Embroidery', label: 'Hand Embroidery' }, { value: 'Zari', label: 'Zari Work' }, { value: 'Gota Patti', label: 'Gota Patti' }, { value: 'Printed', label: 'Printed' }];
 
   if (!profile) return null;
