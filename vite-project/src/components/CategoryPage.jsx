@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ShoppingBag, Eye, SlidersHorizontal, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowRight, ShoppingBag, Eye, SlidersHorizontal, Check, ChevronDown, ChevronUp, Heart } from 'lucide-react';
 import { getAllProducts, getCategories } from '../utils/adminStore';
 
 function FilterAccordion({ title, children, defaultOpen = true }) {
@@ -22,7 +22,7 @@ function FilterAccordion({ title, children, defaultOpen = true }) {
   );
 }
 
-export default function CategoryPage({ categoryName, setView, setSelectedProduct, addToCart }) {
+export default function CategoryPage({ categoryName, setView, setSelectedProduct, addToCart, favorites = {}, toggleFavorite }) {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   
@@ -74,7 +74,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   
   const fabricsList = ['Cotton', 'Silk', 'Georgette', 'Velvet', 'Organza', 'Chanderi'];
   const occasionsList = ['Casual', 'Festive', 'Wedding', 'Party'];
-  const sizesList = ['Unstitched']; // Temporarily only showing Unstitched
+  const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
   const pricesList = [
     { id: 'under5k', label: 'Under ₹5,000' },
     { id: '5k-10k', label: '₹5,000 - ₹10,000' },
@@ -440,13 +440,20 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                             {p.badge || 'Exquisite'}
                           </span>
                         </div>
+                        
+                        <div className="absolute top-4 right-4 z-10">
+                          <button onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
+                            className="w-9 h-9 bg-white/90 backdrop-blur-md rounded-full shadow-sm flex items-center justify-center hover:scale-110 transition-transform text-gray-900 cursor-pointer">
+                            <Heart size={16} className={favorites[p.id] ? 'fill-red-500 text-red-500' : ''} />
+                          </button>
+                        </div>
 
                         {/* Quick View & Add to Bag Drawer overlay */}
                         <div className="absolute inset-x-3 bottom-3 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20 flex gap-2">
                           <button 
                             onClick={(e) => { 
                               e.stopPropagation(); 
-                              addToCart(p, p.sizes?.length > 0 ? p.sizes[0] : 'Unstitched');
+                              addToCart(p, p.fitOptions?.includes('Unstitched') ? 'Unstitched' : (p.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (p.sizes?.length > 0 ? `Stitched - ${p.sizes[0]}` : 'Stitched')));
                             }}
                             className="flex-1 bg-white/95 backdrop-blur-md text-[#1A0008] py-3.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#1A0008] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
                           >

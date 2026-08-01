@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { auth, db } from './firebase'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { syncProducts, getAllProducts } from './utils/adminStore'
 import { motion, AnimatePresence } from 'framer-motion'
+import { User } from 'lucide-react'
 import './App.css'
 import LoadingScreen from './LoadingScreen'
 import Navbar from './components/Navbar'
@@ -45,6 +46,7 @@ function App() {
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState({})
   const [toastMessage, setToastMessage] = useState('')
+  const [showLoginModal, setShowLoginModal] = useState(false)
   const allProducts = getAllProducts();
 
   const showToast = (msg) => {
@@ -138,7 +140,13 @@ function App() {
         try {
           const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
           if (userDoc.exists()) {
-            setUser(userDoc.data());
+            const data = userDoc.data();
+            setUser(data);
+            if (data.favorites) {
+              setFavorites(data.favorites);
+            } else {
+              setFavorites({});
+            }
           } else {
             setUser({
               uid: currentUser.uid,
@@ -153,6 +161,7 @@ function App() {
         }
       } else {
         setUser(null);
+        setFavorites({});
       }
     });
     return () => unsubscribe();
@@ -254,8 +263,18 @@ function App() {
     )
   }
 
-  const toggleFavorite = (productId) => {
-    setFavorites((prev) => ({ ...prev, [productId]: !prev[productId] }))
+  const toggleFavorite = async (productId) => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
+    const newFavs = { ...favorites, [productId]: !favorites[productId] };
+    setFavorites(newFavs);
+    try {
+      await setDoc(doc(db, 'users', user.uid), { favorites: newFavs }, { merge: true });
+    } catch (err) {
+      console.error("Error syncing favorites:", err);
+    }
   }
 
   const clearCart = () => setCart([])
@@ -304,6 +323,63 @@ function App() {
   return (
     <div className="min-h-screen bg-[#FAF9F6]" style={{ opacity: contentVisible ? 1 : 0, transition: 'opacity 0.8s ease' }}>
       <Toast />
+      
+      {/* Auth Required Modal */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pt-24 sm:pt-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+               className="bg-[#FAF9F6] p-6 sm:p-8 md:p-12 max-w-[400px] w-full border border-[#D4AF37]/30 text-center relative overflow-hidden mx-3 sm:mx-4"
+              style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }}
+            >
+              {/* Modal Background Glow */}
+              <div
+                className="absolute inset-0 opacity-20 pointer-events-none"
+                style={{ background: 'radial-gradient(circle at top center, #D4AF37 0%, transparent 70%)' }}
+              />
+
+              <div className="w-16 h-16 rounded-full bg-[#1A0008]/5 flex items-center justify-center text-[#D4AF37] mx-auto mb-6 relative z-10 border border-[#D4AF37]/20">
+                <User size={28} strokeWidth={1.5} />
+              </div>
+
+              <h3 className="text-3xl font-light text-[#1A0008] mb-3 relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Login Required
+              </h3>
+              <p className="text-[13px] text-[#1A0008]/60 mb-8 relative z-10 leading-relaxed font-light">
+                Please sign in to your Gurnaaz account to save items to your wishlist.
+              </p>
+
+              <div className="flex flex-col gap-3 relative z-10">
+                <button
+                  onClick={() => {
+                    sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
+                    setShowLoginModal(false);
+                    setView('login');
+                  }}
+                  className="w-full bg-[#1A0008] text-white py-3.5 text-[11px] uppercase tracking-[0.2em] font-semibold hover:bg-[#D4AF37] transition-colors duration-300"
+                >
+                  Log In Now
+                </button>
+                <button
+                  onClick={() => setShowLoginModal(false)}
+                  className="w-full py-3.5 text-[11px] uppercase tracking-[0.2em] text-[#1A0008]/40 font-semibold hover:text-[#1A0008] transition-colors duration-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <Navbar 
         cart={cart} 
         removeFromCart={removeFromCart} 
@@ -342,6 +418,8 @@ function App() {
           setView={setView}
           setSelectedProduct={setSelectedProduct}
           addToCart={addToCart}
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
         />
       )}
 
@@ -351,6 +429,8 @@ function App() {
           setView={setView}
           setSelectedProduct={setSelectedProduct}
           addToCart={addToCart}
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
         />
       )}
 
@@ -372,6 +452,8 @@ function App() {
           setSelectedProduct={setSelectedProduct}
           setSelectedCollectionSlug={setSelectedCollectionSlug}
           addToCart={addToCart}
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
         />
       )}
 
@@ -400,6 +482,8 @@ function App() {
           setView={setView}
           setSelectedProduct={setSelectedProduct}
           addToCart={addToCart}
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
         />
       )}
 

@@ -874,6 +874,7 @@ const seedProduct = {
   stock: 51,
   category: 'Festive Edit',
   active: true,
+  fitOptions: ['Unstitched', 'Stitched'],
 };
 
 const seedProduct2 = {
@@ -911,6 +912,7 @@ const seedProduct2 = {
   stock: 55,
   category: 'Best Sellers',
   active: true,
+  fitOptions: ['Unstitched', 'Stitched'],
 };
 
 const seedProduct3 = {
@@ -948,6 +950,7 @@ const seedProduct3 = {
   stock: 21,
   category: 'Festive Edit',
   active: true,
+  fitOptions: ['Unstitched', 'Stitched'],
 };
 
 const seedProduct4 = {
@@ -985,6 +988,7 @@ const seedProduct4 = {
   stock: 78,
   category: 'New Arrivals',
   active: true,
+  fitOptions: ['Unstitched', 'Stitched'],
 };
 
 const seedProduct5 = {
@@ -1022,6 +1026,7 @@ const seedProduct5 = {
   stock: 999,
   category: 'Test',
   active: true,
+  fitOptions: ['Unstitched', 'Stitched'],
 };
 
 // Auto-seed if no products exist
@@ -1153,7 +1158,8 @@ const injectDefaultMedia = (product, index) => {
     videoUrl: product.videoUrl || '',
     reelUrl: product.reelUrl || '',
     additionalImages: product.additionalImages || [],
-    sizes: product.sizes || []
+    sizes: product.sizes || [],
+    fitOptions: product.fitOptions || ['Unstitched', 'Stitched']
   };
 };
 

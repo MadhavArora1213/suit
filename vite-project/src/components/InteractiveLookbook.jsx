@@ -176,7 +176,8 @@ export default function InteractiveLookbook({ addToCart, setView, setSelectedPro
                 onClick={() => {
                   const found = allProducts.find(p => p.id === activeHotspot.realId);
                   if (found) {
-                    const size = found.sizes?.length > 0 ? found.sizes[0] : 'Unstitched';
+                    const fit = found.fitOptions?.includes('Unstitched') ? 'Unstitched' : (found.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (found.fitOptions?.[0] || 'Stitched'));
+      const size = fit === 'Stitched' ? (found.sizes?.length > 0 ? `Stitched - ${found.sizes[0]}` : 'Stitched') : fit;
                     addToCart(found, size);
                     alert(`Added ${found.name} (${size}) to your bag!`);
                     setActiveHotspot(null);
