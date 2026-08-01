@@ -62,64 +62,79 @@ export default function HeroRitual({ onSelectFilter }) {
         </p>
 
         {mounted && (
-          <div className="mt-6 flex flex-col items-center gap-3">
-            <div className="text-sm bg-white border border-[#D4AF37] px-5 py-2.5 rounded-full shadow-[4px_4px_0px_rgba(26,0,8,1)] flex items-center gap-3 font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              <span className="text-[#8B1A1A] tracking-widest text-[10px]">OFFER ENDS IN:</span>
-              <span className="text-[#1A0008] tabular-nums tracking-widest text-[12px]">{String(timeLeft.days).padStart(2, '0')}d : {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.mins).padStart(2, '0')}m</span>
+          <div className="mt-6 flex flex-col items-center gap-4">
+            <div className="text-sm bg-white/80 backdrop-blur-md border-2 border-[#D4AF37] px-6 py-2.5 rounded-full shadow-[0_10px_30px_rgba(212,175,55,0.25)] flex items-center gap-3 font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <span className="text-[#8B1A1A] tracking-widest text-[11px] flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#8B1A1A] animate-ping" />
+                FESTIVE SALE ENDS IN:
+              </span>
+              <span className="text-[#1A0008] tabular-nums tracking-widest text-[13px] font-black">{String(timeLeft.days).padStart(2, '0')}d : {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.mins).padStart(2, '0')}m : {String(timeLeft.secs).padStart(2, '0')}s</span>
             </div>
-            <p className="text-[10px] tracking-[0.2em] uppercase font-bold text-[#1A0008]/50" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Offer valid till August 28th
-            </p>
+
+            <button 
+              onClick={() => {
+                const el = document.getElementById('rakhi-offers-sale');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="mt-2 inline-flex items-center gap-2 bg-[#1A0008] hover:bg-[#8B1A1A] text-[#F5D76E] px-7 py-3 rounded-full text-xs uppercase tracking-[0.2em] font-bold transition-all transform hover:scale-105 shadow-xl border border-[#D4AF37]/40"
+            >
+              Explore Exclusive Offers ↓
+            </button>
           </div>
         )}
       </div>
 
       {/* Overlapping Cards Container (Daisy Style in Light Theme) */}
-      <div className="relative z-10 w-full flex-grow mt-16 pb-32 flex justify-center items-center overflow-x-visible">
+      <div className="relative z-10 w-full flex-grow mt-12 pb-28 flex justify-center items-center overflow-x-visible">
         <div className="relative w-full max-w-[1100px] h-[400px] md:h-[500px] mx-auto">
           
-          {/* Card 1: The Suit Photo (Polaroid style) */}
+          {/* Card 1: The Suit Photo (Polaroid style with Gold Border) */}
           <motion.div 
             initial={{ opacity: 0, y: 100, rotate: -20 }}
             animate={{ opacity: 1, y: 0, rotate: -12 }}
             transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
-            className="absolute left-[2%] md:left-[6%] top-[10%] w-[180px] md:w-[260px] h-[250px] md:h-[360px] bg-white p-2 pb-10 border-2 border-[#1A0008] rounded-sm shadow-xl z-10 group"
+            whileHover={{ scale: 1.05, rotate: -8, zIndex: 40 }}
+            className="absolute left-[2%] md:left-[6%] top-[10%] w-[180px] md:w-[270px] h-[260px] md:h-[370px] bg-white p-2.5 pb-10 border-2 border-[#D4AF37] rounded-xl shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group transition-all"
           >
-            <div className="w-full h-full overflow-hidden bg-[#E8DDD0] border border-gray-200">
-              <img src="/model_maroon_suit_bgless.png" alt="Suit" className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+            <div className="w-full h-full overflow-hidden bg-[#E8DDD0] rounded-lg border border-gray-200 relative">
+              <img src="/rakhi_suit_hero_shoot.jpg" alt="Rakhi Suit Model Shoot" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3 text-white text-xs font-bold">
+                Silk Patiala & Silver Rakhi Set
+              </div>
             </div>
             
             {/* Sticker Top Left */}
-            <div className="absolute -top-4 -left-6 bg-[#D4AF37] border-2 border-[#1A0008] px-3 py-1.5 rounded-md text-[#1A0008] text-xs font-black tracking-widest rotate-[-10deg] shadow-[3px_3px_0px_rgba(26,0,8,1)]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <div className="absolute -top-4 -left-6 bg-[#D4AF37] border-2 border-[#1A0008] px-3.5 py-1.5 rounded-lg text-[#1A0008] text-xs font-black tracking-widest rotate-[-10deg] shadow-[3px_3px_0px_rgba(26,0,8,1)]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               THE FESTIVE EDIT
             </div>
           </motion.div>
 
-          {/* Card 2: The Audio QR Box (Dark Contrast Theme) */}
+          {/* Card 2: The Audio QR Box (Dark Contrast Theme with Gold Glow) */}
           <motion.div 
             initial={{ opacity: 0, y: 100, rotate: 10 }}
             animate={{ opacity: 1, y: 0, rotate: -2 }}
             transition={{ duration: 0.8, delay: 0.3, type: "spring" }}
-            className="absolute left-[22%] md:left-[24%] top-[5%] w-[200px] md:w-[300px] h-[280px] md:h-[400px] bg-[#1A0008] border-2 border-[#1A0008] rounded-2xl p-6 shadow-2xl z-20 flex flex-col justify-center items-center text-center text-white relative overflow-hidden"
+            whileHover={{ scale: 1.05, rotate: 0, zIndex: 40 }}
+            className="absolute left-[22%] md:left-[24%] top-[5%] w-[200px] md:w-[310px] h-[290px] md:h-[410px] bg-[#1A0008] border-2 border-[#D4AF37] rounded-2xl p-6 shadow-[0_25px_60px_rgba(212,175,55,0.3)] z-20 flex flex-col justify-center items-center text-center text-white relative overflow-hidden"
           >
-            {/* Subtle background glow */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#D4AF37]/20 via-transparent to-transparent opacity-50" />
+            {/* Background glow */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#D4AF37]/30 via-transparent to-transparent opacity-60 pointer-events-none" />
             
-            <div className="w-16 h-16 md:w-20 md:h-20 bg-white border-2 border-[#D4AF37] p-1.5 rounded-lg mb-4 flex items-center justify-center relative z-10 shadow-[3px_3px_0px_rgba(212,175,55,1)]">
-              {/* Real-looking Dummy QR Code */}
+            <div className="w-16 h-16 md:w-20 md:h-20 bg-white border-2 border-[#D4AF37] p-1.5 rounded-xl mb-4 flex items-center justify-center relative z-10 shadow-[4px_4px_0px_rgba(212,175,55,1)]">
+              {/* Dummy QR Code */}
               <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Gurnaaz+Rakhi+Special" alt="QR Code" className="w-full h-full object-contain opacity-90" />
             </div>
             
-            <h3 className="text-[28px] md:text-[34px] mb-2 leading-tight text-[#F5D76E]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Behen<br/>Ki Awaaz
+            <h3 className="text-[28px] md:text-[36px] mb-2 leading-tight text-[#F5D76E] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Behen<br/>Ki Awaaz 🎙️
             </h3>
             
-            <p className="text-[10px] md:text-[12px] text-[#FAF9F6]/80 border border-[#D4AF37]/30 p-2.5 rounded-lg w-full bg-white/5 relative z-10" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Scan the QR in your box to hear her voice note. 🎙️
+            <p className="text-[10px] md:text-[12px] text-[#FAF9F6]/90 border border-[#D4AF37]/40 p-2.5 rounded-xl w-full bg-white/10 relative z-10 backdrop-blur-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Scan the QR code inside your gift box to play her voice note.
             </p>
             
             <div className="absolute bottom-5 text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Scan to Play
+              Scan to Play Audio
             </div>
           </motion.div>
 
@@ -128,18 +143,19 @@ export default function HeroRitual({ onSelectFilter }) {
             initial={{ opacity: 0, y: 100, rotate: -5 }}
             animate={{ opacity: 1, y: 0, rotate: 6 }}
             transition={{ duration: 0.8, delay: 0.4, type: "spring" }}
-            className="absolute right-[22%] md:right-[24%] top-[12%] md:top-[15%] w-[180px] md:w-[250px] h-[260px] md:h-[350px] bg-[#F5D76E] border-2 border-[#1A0008] rounded-2xl p-4 shadow-xl z-30 flex flex-col justify-between"
+            whileHover={{ scale: 1.05, rotate: 3, zIndex: 40 }}
+            className="absolute right-[22%] md:right-[24%] top-[12%] md:top-[15%] w-[180px] md:w-[260px] h-[270px] md:h-[360px] bg-[#F5D76E] border-2 border-[#1A0008] rounded-2xl p-4 shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-30 flex flex-col justify-between"
           >
-            <div className="text-center text-xl md:text-2xl mt-4 text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Premium <br/> Bhabhi Rakhis
+            <div className="text-center text-xl md:text-2xl mt-4 text-[#1A0008] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Signature <br/> Silver Rakhis
             </div>
             <div className="flex-grow flex items-center justify-center">
               <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-[3px] border-[#1A0008] shadow-[4px_4px_0px_rgba(26,0,8,1)] bg-white p-1">
-                <img src="/rakhi_campaign_hero.png" alt="Signature Rakhi" className="w-full h-full object-cover rounded-full" />
+                <img src="/rakhi_campaign_hero.png" alt="Signature Rakhi" className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform" />
               </div>
             </div>
-            <div className="text-[9px] md:text-[10px] border-t-2 border-[#1A0008]/20 pt-3 text-[#1A0008]/80 text-center tracking-widest uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Included in Signature Box
+            <div className="text-[9px] md:text-[10px] border-t-2 border-[#1A0008]/20 pt-3 text-[#1A0008] text-center tracking-widest uppercase font-black" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Included in Gift Hampers
             </div>
           </motion.div>
 
@@ -148,14 +164,15 @@ export default function HeroRitual({ onSelectFilter }) {
             initial={{ opacity: 0, y: 100, rotate: 15 }}
             animate={{ opacity: 1, y: 0, rotate: 12 }}
             transition={{ duration: 0.8, delay: 0.5, type: "spring" }}
-            className="absolute right-[2%] md:right-[6%] top-[8%] w-[160px] md:w-[240px] h-[230px] md:h-[320px] bg-white p-2 pb-10 border-2 border-[#1A0008] rounded-sm overflow-hidden shadow-xl z-10 group"
+            whileHover={{ scale: 1.05, rotate: 8, zIndex: 40 }}
+            className="absolute right-[2%] md:right-[6%] top-[8%] w-[160px] md:w-[250px] h-[240px] md:h-[330px] bg-white p-2.5 pb-10 border-2 border-[#D4AF37] rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group"
           >
-            <div className="w-full h-full rounded-sm overflow-hidden bg-[#FAF9F6] border border-[#1A0008]/10">
-              <img src="/designer_suit_1.png" alt="Suit" className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+            <div className="w-full h-full rounded-lg overflow-hidden bg-[#FAF9F6] border border-[#1A0008]/10">
+              <img src="/designer_suit_1.png" alt="Designer Suit" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
             </div>
             
             {/* Sticker Bottom Right */}
-            <div className="absolute bottom-2 -right-4 bg-[#8B1A1A] border-2 border-[#1A0008] px-3 py-2 rounded-md text-[#FAF9F6] text-[10px] font-bold tracking-wider rotate-[-5deg] shadow-[3px_3px_0px_rgba(26,0,8,1)] z-30" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <div className="absolute bottom-2 -right-4 bg-[#8B1A1A] border-2 border-[#1A0008] px-3 py-2 rounded-lg text-[#FAF9F6] text-[10px] font-bold tracking-wider rotate-[-5deg] shadow-[3px_3px_0px_rgba(26,0,8,1)] z-30" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               GIFT HER THE BEST
             </div>
           </motion.div>
