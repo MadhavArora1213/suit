@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ShoppingBag, Eye, SlidersHorizontal, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowRight, ShoppingBag, Eye, SlidersHorizontal, Check, ChevronDown, ChevronUp, Heart } from 'lucide-react';
 import { getAllProducts, getCategories } from '../utils/adminStore';
 
 function FilterAccordion({ title, children, defaultOpen = true }) {
@@ -22,7 +22,7 @@ function FilterAccordion({ title, children, defaultOpen = true }) {
   );
 }
 
-export default function CategoryPage({ categoryName, setView, setSelectedProduct, addToCart }) {
+export default function CategoryPage({ categoryName, setView, setSelectedProduct, addToCart, favorites = {}, toggleFavorite }) {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   
@@ -439,6 +439,13 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                           <span className="bg-white/95 backdrop-blur-md px-3.5 py-1.5 text-[9px] font-bold tracking-[0.2em] uppercase text-[#1A0008] rounded-full shadow-sm">
                             {p.badge || 'Exquisite'}
                           </span>
+                        </div>
+                        
+                        <div className="absolute top-4 right-4 z-10">
+                          <button onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
+                            className="w-9 h-9 bg-white/90 backdrop-blur-md rounded-full shadow-sm flex items-center justify-center hover:scale-110 transition-transform text-gray-900 cursor-pointer">
+                            <Heart size={16} className={favorites[p.id] ? 'fill-red-500 text-red-500' : ''} />
+                          </button>
                         </div>
 
                         {/* Quick View & Add to Bag Drawer overlay */}

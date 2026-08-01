@@ -151,12 +151,10 @@ function FilterSection({ title, options, selected, onSelect }) {
   );
 }
 
-/* ─── MAIN ─── */
-export default function SellerShopPage({ boutiqueName, setView, setSelectedProduct, addToCart }) {
+export default function SellerShopPage({ boutiqueName, setView, setSelectedProduct, addToCart, favorites = {}, toggleFavorite }) {
   const [profile, setProfile] = useState(null);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [favorites, setFavorites] = useState({});
   const [sortBy, setSortBy] = useState('default');
   const [filters, setFilters] = useState({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' });
   const [showMobileFilter, setShowMobileFilter] = useState(false);
@@ -197,15 +195,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     
     setProducts(boutiqueProds);
     setFilteredProducts(boutiqueProds);
-    const savedFavs = localStorage.getItem('gurnaaz_favorites');
-    if (savedFavs) setFavorites(JSON.parse(savedFavs));
   }, [boutiqueName]);
-
-  const toggleFavorite = (id) => {
-    const newFavs = { ...favorites, [id]: !favorites[id] };
-    setFavorites(newFavs);
-    localStorage.setItem('gurnaaz_favorites', JSON.stringify(newFavs));
-  };
 
   useEffect(() => {
     let result = [...products];

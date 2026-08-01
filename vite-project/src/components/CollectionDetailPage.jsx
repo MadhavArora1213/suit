@@ -22,8 +22,7 @@ function FilterAccordion({ title, children, defaultOpen = true }) {
   );
 }
 
-export default function CollectionDetailPage({ slug, setView, setSelectedCategory, setSelectedProduct, setSelectedCollectionSlug, addToCart }) {
-  const [favorites, setFavorites] = useState({});
+export default function CollectionDetailPage({ slug, setView, setSelectedCategory, setSelectedProduct, setSelectedCollectionSlug, addToCart, favorites = {}, toggleFavorite }) {
   const [sortBy, setSortBy] = useState('featured');
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   
@@ -192,7 +191,7 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
     return result;
   }, [products, sortBy, selectedBoutiques, selectedPrices, selectedCategories, selectedFabrics, selectedColors, selectedOccasions]);
 
-  const toggleFavorite = (id) => setFavorites(prev => ({ ...prev, [id]: !prev[id] }));
+
 
   const activeFilterCount = selectedBoutiques.length + selectedPrices.length + selectedCategories.length + selectedFabrics.length + selectedColors.length + selectedOccasions.length + selectedSizes.length + selectedPatterns.length + selectedStyles.length + selectedSleeves.length + selectedNecks.length;
 
