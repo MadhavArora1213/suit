@@ -111,7 +111,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
         }} 
       />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10 pt-10">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 relative z-10 pt-10">
         
         {/* Editorial Section Header */}
         <div className="flex flex-col items-center text-center mb-14">
@@ -134,144 +134,146 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
           </p>
         </div>
 
-        {/* 10/10 Split Magazine Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-14 items-stretch">
+        {/* High-End Fashion Staggered Editorial Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 mb-24 items-center">
           
-          {/* LEFT SIDE (5/12): Main Hero Campaign Offer Box */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-[#1A0008] via-[#2A0510] to-[#1A0008] border-2 border-[#D4AF37] rounded-3xl p-7 md:p-8 flex flex-col justify-between text-white relative overflow-hidden shadow-[0_25px_60px_rgba(26,0,8,0.25)] group">
+          {/* LEFT SIDE (5/12): Hero Magazine Cover */}
+          <div className="lg:col-span-5 relative flex justify-center">
+            {/* Arched Magazine Window */}
+            <div className="relative w-full max-w-[420px] aspect-[4/5] rounded-t-full rounded-b-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(26,0,8,0.2)] border-[8px] border-white group z-10">
+              
+              <img 
+                src="/rakhi_suit_hero_shoot.jpg" 
+                alt="Festive Collection" 
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" 
+              />
+              
+              {/* Rich gradient overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008] via-[#1A0008]/40 to-transparent opacity-90" />
+              
+              {/* Content overlay */}
+              <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end text-white z-20">
+                <div className="mb-4">
+                  <span className="bg-[#D4AF37] text-[#1A0008] text-[9px] font-black uppercase px-4 py-1.5 rounded-full tracking-[0.25em] shadow-lg">
+                    Grand Campaign
+                  </span>
+                </div>
+                
+                <h3 className="text-5xl lg:text-6xl font-light leading-[1.05] mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  Flat <span className="text-[#D4AF37] italic font-normal">50%</span> Off
+                </h3>
+                
+                <p className="text-[13px] text-gray-200 font-light mb-8 leading-relaxed max-w-[90%]">
+                  Exclusive Rakhi bundles featuring premium Silk Suits & audio QR gift hampers.
+                </p>
+
+                {/* Minimalist Floating Timer */}
+                <div className="flex items-center justify-between gap-3 mb-8 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 shadow-inner">
+                    <div className="flex flex-col items-center flex-1">
+                      <span className="text-xl font-light text-white tabular-nums">{String(timeLeft.days).padStart(2, '0')}</span>
+                      <span className="text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-1">Days</span>
+                    </div>
+                    <span className="text-white/30 text-xl font-light">:</span>
+                    <div className="flex flex-col items-center flex-1">
+                      <span className="text-xl font-light text-white tabular-nums">{String(timeLeft.hours).padStart(2, '0')}</span>
+                      <span className="text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-1">Hrs</span>
+                    </div>
+                    <span className="text-white/30 text-xl font-light">:</span>
+                    <div className="flex flex-col items-center flex-1">
+                      <span className="text-xl font-light text-white tabular-nums">{String(timeLeft.mins).padStart(2, '0')}</span>
+                      <span className="text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-1">Mins</span>
+                    </div>
+                    <span className="text-white/30 text-xl font-light">:</span>
+                    <div className="flex flex-col items-center flex-1">
+                      <span className="text-xl font-light text-white tabular-nums">{String(timeLeft.secs).padStart(2, '0')}</span>
+                      <span className="text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-1">Secs</span>
+                    </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <div className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between">
+                    <span className="text-[8px] text-gray-400 uppercase tracking-widest">Code</span>
+                    <span className="font-mono text-sm font-bold text-[#D4AF37]">RAKHI50</span>
+                  </div>
+                  <button onClick={handleCopyCode} className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-[#1A0008] hover:bg-[#D4AF37] transition-colors shrink-0">
+                    {copied ? <span className="text-sm font-bold">✓</span> : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>}
+                  </button>
+                </div>
+              </div>
+            </div>
             
-            {/* Ambient Lighting Accent */}
-            <div className="absolute -top-16 -right-16 w-48 h-48 bg-[#D4AF37]/30 rounded-full blur-3xl pointer-events-none" />
-
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-4">
-                <span className="bg-[#F5D76E] text-[#1A0008] text-[10px] font-black uppercase px-3.5 py-1.5 rounded-full tracking-[0.2em] shadow">
-                  SPECIAL FESTIVE OFFER
-                </span>
-                <span className="text-[#F5D76E] text-xs font-bold font-mono">CODE: RAKHI50</span>
-              </div>
-
-              <h3 className="text-3xl md:text-4xl font-extrabold text-[#F5D76E] font-serif leading-tight mb-2">
-                FLAT 50% OFF <br/>ON ALL COMBOS
-              </h3>
-              <p className="text-xs text-gray-200 font-light leading-relaxed mb-6">
-                Applicable on Silk Suits, Silver Rakhi Combos & Audio QR Gift Box Hampers above ₹2,999.
-              </p>
-
-              {/* Photo Preview inside Left Box */}
-              <div className="w-full aspect-[16/10] rounded-2xl overflow-hidden border border-[#D4AF37]/40 relative mb-6 shadow-md">
-                <img 
-                  src="/rakhi_suit_hero_shoot.jpg" 
-                  alt="Rakhi Suit Campaign" 
-                  className="w-full h-full object-cover object-top group-hover:scale-108 transition-transform duration-700" 
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008] via-transparent to-transparent opacity-70" />
-                <div className="absolute bottom-3 left-4 text-left">
-                  <div className="text-[10px] text-[#F5D76E] font-bold uppercase tracking-widest">Featured Bundle</div>
-                  <div className="text-sm font-bold text-white">Silk Suit + Pure Silver Rakhi</div>
-                </div>
-              </div>
-
-              {/* Ticking Countdown Timer */}
-              <div className="mb-6">
-                <div className="text-[10px] uppercase font-bold text-[#F5D76E] tracking-widest mb-2 text-center">
-                  ⚡ FLASH DEAL ENDS IN
-                </div>
-                <div className="grid grid-cols-4 gap-2 text-center">
-                  <div className="bg-white/10 border border-[#D4AF37]/40 rounded-xl p-2.5 backdrop-blur-sm">
-                    <div className="text-xl font-extrabold text-[#F5D76E] tabular-nums">{String(timeLeft.days).padStart(2, '0')}</div>
-                    <div className="text-[8px] text-gray-300 uppercase font-bold mt-0.5">Days</div>
-                  </div>
-                  <div className="bg-white/10 border border-[#D4AF37]/40 rounded-xl p-2.5 backdrop-blur-sm">
-                    <div className="text-xl font-extrabold text-[#F5D76E] tabular-nums">{String(timeLeft.hours).padStart(2, '0')}</div>
-                    <div className="text-[8px] text-gray-300 uppercase font-bold mt-0.5">Hours</div>
-                  </div>
-                  <div className="bg-white/10 border border-[#D4AF37]/40 rounded-xl p-2.5 backdrop-blur-sm">
-                    <div className="text-xl font-extrabold text-[#F5D76E] tabular-nums">{String(timeLeft.mins).padStart(2, '0')}</div>
-                    <div className="text-[8px] text-gray-300 uppercase font-bold mt-0.5">Mins</div>
-                  </div>
-                  <div className="bg-white/10 border border-[#D4AF37]/40 rounded-xl p-2.5 backdrop-blur-sm">
-                    <div className="text-xl font-extrabold text-[#F5D76E] tabular-nums">{String(timeLeft.secs).padStart(2, '0')}</div>
-                    <div className="text-[8px] text-gray-300 uppercase font-bold mt-0.5">Secs</div>
-                  </div>
-                </div>
-              </div>
+            {/* Rotating Graphic Badge */}
+            <div className="absolute top-12 -right-6 lg:-right-10 w-28 h-28 bg-[#D4AF37] rounded-full flex items-center justify-center animate-[spin_12s_linear_infinite] shadow-[0_10px_30px_rgba(212,175,55,0.4)] z-20 border-4 border-[#FAF9F6] hidden md:flex">
+               <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+                 <path id="textPath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" />
+                 <text className="text-[11.5px] font-black uppercase tracking-[0.25em]" fill="#1A0008">
+                   <textPath href="#textPath" startOffset="0%">★ LIMITED EDITION ★ FESTIVE SALE</textPath>
+                 </text>
+               </svg>
+               <div className="absolute inset-0 flex items-center justify-center">
+                 <span className="text-xl">✨</span>
+               </div>
             </div>
-
-            {/* Bottom Coupon Copy & Action */}
-            <div>
-              <div className="bg-white/10 border border-dashed border-[#D4AF37] p-3 rounded-2xl flex items-center justify-between gap-2 mb-4">
-                <div className="text-left pl-2">
-                  <div className="text-[9px] text-[#F5D76E] uppercase font-bold">Use Coupon</div>
-                  <div className="font-mono text-xl font-black text-white">RAKHI50</div>
-                </div>
-                <button
-                  onClick={handleCopyCode}
-                  className="px-4 py-2 bg-[#D4AF37] hover:bg-white text-[#1A0008] text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-md active:scale-95"
-                >
-                  {copied ? '✓ COPIED' : 'COPY'}
-                </button>
-              </div>
-
-              <button
-                onClick={() => handleCategoryClick('Rakhi Special')}
-                className="w-full py-4 bg-gradient-to-r from-[#D4AF37] via-[#F5D76E] to-[#D4AF37] text-[#1A0008] font-black text-xs uppercase tracking-[0.2em] rounded-2xl transition-all shadow-xl hover:scale-[1.02] active:scale-98"
-              >
-                Claim Festive Deal Now →
-              </button>
-            </div>
-
           </div>
 
-          {/* RIGHT SIDE (7/12): 4 Curated Category Deal Cards Grid */}
-          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {FEATURED_OFFERS.map((item) => (
+          {/* RIGHT SIDE (7/12): Staggered Bare Capsule Products */}
+          <div className="lg:col-span-7 grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-12 lg:gap-y-0 px-2 lg:px-0">
+            {FEATURED_OFFERS.map((item, index) => (
               <motion.div
                 key={item.id}
-                whileHover={{ y: -6 }}
-                className="bg-white border-2 border-gray-200/80 hover:border-[#D4AF37] rounded-3xl p-5 shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group cursor-pointer"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: index * 0.15, ease: "easeOut" }}
+                className={`flex flex-col group cursor-pointer ${index % 2 === 1 ? 'lg:mt-16' : 'lg:-mt-10'}`}
                 onClick={() => handleCategoryClick(item.category)}
               >
-                <div>
-                  {/* Photo */}
-                  <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 mb-4 border border-gray-200 relative">
+                {/* Image Container with out-of-bounds badge */}
+                <div className="w-full aspect-[2/3.2] mb-6 relative">
+                  
+                  {/* Bare Image in Capsule Shape (No white card) */}
+                  <div className="w-full h-full rounded-full overflow-hidden relative shadow-[0_15px_40px_rgba(26,0,8,0.08)] border-[5px] border-white group-hover:border-[#D4AF37]/30 transition-all duration-500">
                     <img 
                       src={item.image} 
                       alt={item.title} 
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700" 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" 
                     />
-                    <span className="absolute top-2.5 left-2.5 bg-[#1A0008] text-[#F5D76E] text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">
-                      {item.badge}
-                    </span>
+                    
+                    {/* Subtle Dark Gradient at bottom for contrast if needed */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    {/* Floating Action Button inside image */}
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full text-[9px] font-black uppercase text-[#1A0008] tracking-widest shadow-xl opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 whitespace-nowrap">
+                      View Details
+                    </div>
                   </div>
+                  
+                  {/* Chic floating badge intersecting the bottom border (Moved from top to avoid covering faces) */}
+                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#1A0008] text-[#F5D76E] text-[8px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest whitespace-nowrap shadow-md z-10 border border-[#D4AF37]/20">
+                    {item.badge}
+                  </div>
+                </div>
 
-                  <span className="text-[10px] text-[#8B1A1A] font-black uppercase tracking-widest block mb-1">
+                {/* Free-floating Typography below image */}
+                <div className="text-center px-2 flex flex-col items-center">
+                  <span className="text-[9px] text-[#D4AF37] font-black uppercase tracking-[0.25em] mb-2 flex items-center gap-2">
+                    <span className="w-2 h-[1px] bg-[#D4AF37]/50"></span>
                     {item.category}
+                    <span className="w-2 h-[1px] bg-[#D4AF37]/50"></span>
                   </span>
-
-                  <h4 className="text-lg font-bold text-[#1A0008] group-hover:text-[#8B1A1A] transition-colors line-clamp-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  
+                  <h4 className="text-[1.1rem] lg:text-lg font-bold text-[#1A0008] leading-tight mb-2 group-hover:text-[#8B1A1A] transition-colors" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {item.title}
                   </h4>
 
-                  <p className="text-xs text-gray-500 font-light mt-1 line-clamp-2 leading-relaxed">
-                    {item.desc}
-                  </p>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-                  <div>
-                    <span className="text-base font-black text-[#1A0008]">{item.price}</span>
-                    <span className="text-xs text-gray-400 line-through font-light ml-2">{item.originalPrice}</span>
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-[11px] text-gray-400 line-through font-light">{item.originalPrice}</span>
+                    <span className="text-[15px] font-bold text-[#1A0008]">{item.price}</span>
                   </div>
-
-                  <span className="px-3.5 py-1.5 bg-[#1A0008] group-hover:bg-[#8B1A1A] text-[#F5D76E] text-xs font-bold rounded-xl transition-colors shadow">
-                    Shop →
-                  </span>
                 </div>
               </motion.div>
             ))}
           </div>
-
         </div>
 
         {/* Customer Trust Strip */}
