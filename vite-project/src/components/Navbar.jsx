@@ -116,7 +116,7 @@ export default function Navbar({
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed left-0 right-0 z-[100] flex justify-center transition-all duration-700 ${scrolled ? 'top-4 px-4' : 'top-[32px] px-0'}`}
+        className={`fixed left-0 right-0 z-[999] flex justify-center transition-all duration-700 ${scrolled ? 'top-4 px-4' : 'top-[32px] px-0'}`}
       >
         {/* Main Nav */}
         <div className={`transition-all duration-500 flex flex-col relative w-full ${scrolled
@@ -127,9 +127,9 @@ export default function Navbar({
           <div className={`mx-auto w-full px-5 md:px-10 transition-all duration-500 flex items-center justify-between ${scrolled ? 'py-3 max-w-[1200px]' : 'py-3.5 md:py-4 max-w-[1600px]'}`}>
 
             {/* Left: Mobile Hamburger & Desktop Logo */}
-            <div className="flex items-center gap-4 lg:gap-5 w-[20%]">
+            <div className="flex items-center gap-4 lg:gap-5 flex-1">
               <button
-                className={`md:hidden flex flex-col justify-center gap-1.5 w-7 h-7 cursor-pointer text-[#1A0008]`}
+                className={`lg:hidden flex flex-col justify-center gap-1.5 w-7 h-7 cursor-pointer text-[#1A0008] shrink-0`}
                 onClick={() => setIsOpen(!isOpen)}>
                 <span className={`w-5 h-[1px] bg-current transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[6px]' : ''}`} />
                 <span className={`w-4 h-[1px] bg-current transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
@@ -137,12 +137,12 @@ export default function Navbar({
               </button>
 
               <motion.a href="/" onClick={(e) => { e.preventDefault(); window.location.href = '/'; }} whileHover={{ scale: 1.02 }} className="cursor-pointer group flex items-center">
-                <img src={gurnaazLogo} alt="GURNAAZ" className="h-10 md:h-8 lg:h-9 w-auto object-contain drop-shadow-sm ml-2 md:ml-0 transition-all duration-300" />
+                <img src={gurnaazLogo} alt="GURNAAZ" className="h-7 md:h-8 lg:h-9 w-auto object-contain drop-shadow-sm ml-2 md:ml-0 transition-all duration-300" />
               </motion.a>
             </div>
 
             {/* Center: Top-Level Pages & Megamenu (Desktop Only) */}
-            <div className={`hidden md:flex justify-center flex-1`}>
+            <div className={`hidden lg:flex justify-center shrink-0`}>
               <ul key={navKey} onClick={() => setNavKey(k => k + 1)} className="flex items-center justify-center gap-1 lg:gap-3">
             {['Home', 'Shop & Boutiques', 'Collection', 'About Us', 'Contact'].map((item) => (
               <li key={item} className={`group ${['Collection', 'Shop & Boutiques'].includes(item) ? 'static' : 'relative'}`}>
@@ -373,7 +373,7 @@ export default function Navbar({
         </div>
 
         {/* Right: Icons */}
-        <div className="flex items-center justify-end gap-5 lg:gap-6 w-auto md:w-[20%] pr-4 md:pr-0">
+        <div className="flex items-center justify-end gap-3 sm:gap-5 lg:gap-6 flex-1 pr-4 md:pr-0">
           <button
             onClick={() => setSearchOpen(!searchOpen)}
             className={`cursor-pointer transition-colors text-[#1A0008] hover:text-[#8B1A1A]`}>
@@ -382,7 +382,7 @@ export default function Navbar({
 
           <button
             onClick={() => setView('wishlist')}
-            className={`hidden sm:block cursor-pointer transition-colors relative text-[#1A0008] hover:text-[#8B1A1A]`}>
+            className={`cursor-pointer transition-colors relative text-[#1A0008] hover:text-[#8B1A1A]`}>
             <Heart strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
             {favoriteCount > 0 && (
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#8B1A1A] rounded-full" />
@@ -405,7 +405,7 @@ export default function Navbar({
             <button
               onClick={() => setView('profile')}
               title="My Profile"
-              className="hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#D4AF37] cursor-pointer hover:scale-105 transition-transform"
+              className="hidden lg:block w-7 h-7 rounded-full overflow-hidden border border-[#D4AF37] cursor-pointer hover:scale-105 transition-transform"
             >
               <img src="/cute_luxury_model.png" alt="User Profile" className="w-full h-full object-cover" />
             </button>
@@ -415,7 +415,7 @@ export default function Navbar({
                 sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
                 setView('login');
               }}
-              className={`hidden md:block w-7 h-7 rounded-full overflow-hidden border border-[#1A0008]/20 hover:border-[#1A0008] cursor-pointer transition-all`}
+              className={`hidden lg:block w-7 h-7 rounded-full overflow-hidden border border-[#1A0008]/20 hover:border-[#1A0008] cursor-pointer transition-all`}
               title="Login / Register"
             >
               <User strokeWidth={1.5} className={`w-full h-full p-1 text-[#1A0008]`} />
@@ -496,14 +496,40 @@ export default function Navbar({
       {/* Mobile Drawer */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }} transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed inset-y-0 right-0 w-80 bg-white border-l border-[#D4AF37]/10 shadow-2xl z-50 p-8 flex flex-col gap-6 md:hidden">
-            <div className="flex justify-between items-center border-b border-[#D4AF37]/15 pb-4">
-              <span className="text-lg tracking-[0.2em] text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>MENU</span>
-              <button onClick={() => setIsOpen(false)} className="text-[#6B6B6B] hover:text-[#1A0008] cursor-pointer"><X size={20} /></button>
-            </div>
-            <div className="flex flex-col gap-5 text-left">
+          <>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[190] lg:hidden" />
+            <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }} transition={{ type: 'tween', duration: 0.3 }}
+              className="fixed top-0 bottom-0 right-0 w-[85vw] max-w-[320px] bg-white border-l border-[#D4AF37]/10 shadow-2xl z-[200] p-6 flex flex-col gap-5 lg:hidden overflow-y-auto h-[100dvh]">
+              <div className="flex justify-between items-center border-b border-[#D4AF37]/15 pb-4 shrink-0">
+                <span className="text-lg tracking-[0.2em] text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>MENU</span>
+                <button onClick={() => setIsOpen(false)} className="text-[#6B6B6B] hover:text-[#1A0008] cursor-pointer"><X size={20} /></button>
+              </div>
+
+              {/* Login / Profile Mobile Section */}
+              <div className="border-b border-[#D4AF37]/15 pb-5 -mt-2">
+                {user ? (
+                  <div className="flex items-center gap-4 cursor-pointer" onClick={() => { setView('profile'); setIsOpen(false); }}>
+                    <div className="w-10 h-10 rounded-full overflow-hidden border border-[#D4AF37]">
+                      <img src="/cute_luxury_model.png" alt="Profile" className="w-full h-full object-cover" />
+                    </div>
+                    <div>
+                      <span className="text-xs text-[#6B6B6B] block">Welcome back,</span>
+                      <span className="text-[15px] font-medium text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{user.name || 'User'}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <button onClick={() => {
+                    sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
+                    setView('login');
+                    setIsOpen(false);
+                  }} className="w-full py-3 bg-[#1A0008] text-white text-[10px] tracking-widest uppercase font-semibold hover:bg-[#D4AF37] transition-colors flex items-center justify-center gap-2">
+                    <User size={14} /> LOG IN / REGISTER
+                  </button>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-5 text-left">
               <a href="#" onClick={(e) => { e.preventDefault(); window.location.href = '/'; setIsOpen(false); }}
                 className="text-[16px] text-[#1A0008] hover:text-[#8B1A1A] transition-colors py-1 border-b border-[#1A0008]/10 font-medium tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Home
@@ -575,6 +601,7 @@ export default function Navbar({
               ))}
             </div>
           </motion.div>
+          </>
         )}
       </AnimatePresence>
 

@@ -35,7 +35,7 @@ export default function ContactPage({ setView, user }) {
     if (user) {
       setFormData(prev => ({
         ...prev,
-        name: user.displayName || prev.name,
+        name: user.name || user.displayName || prev.name,
         email: user.email || prev.email
       }));
     }
@@ -359,10 +359,11 @@ export default function ContactPage({ setView, user }) {
                           placeholder=" "
                           value={value}
                           onChange={(e) => setFormData({ ...formData, [isEmail ? 'email' : 'name']: e.target.value })}
-                          onFocus={() => setFocused(placeholder)}
-                          onBlur={() => setFocused(null)}
-                          className="w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors peer"
-                          style={{ borderColor: focused === placeholder ? '#D4AF37' : 'rgba(255,255,255,0.12)' }}
+                          onFocus={() => !user && setFocused(placeholder)}
+                          onBlur={() => !user && setFocused(null)}
+                          className={`w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors peer ${user ? 'opacity-70 cursor-not-allowed' : ''}`}
+                          style={{ borderColor: (focused === placeholder && !user) ? '#D4AF37' : 'rgba(255,255,255,0.12)' }}
+                          readOnly={!!user}
                         />
                         <label
                           className="absolute left-0 text-xs transition-all duration-300 pointer-events-none"
@@ -370,7 +371,7 @@ export default function ContactPage({ setView, user }) {
                             top: isActive ? '-16px' : '12px',
                             fontSize: isActive ? '9px' : '13px',
                             letterSpacing: isActive ? '0.2em' : '0',
-                            color: focused === placeholder ? '#D4AF37' : 'rgba(255,255,255,0.35)',
+                            color: (focused === placeholder && !user) ? '#D4AF37' : 'rgba(255,255,255,0.35)',
                             textTransform: isActive ? 'uppercase' : 'none',
                             fontWeight: isActive ? '700' : '400',
                           }}
@@ -487,7 +488,7 @@ export default function ContactPage({ setView, user }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
