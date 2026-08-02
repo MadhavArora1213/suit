@@ -20,6 +20,8 @@ import UsersAdmin from './pages/UsersAdmin';
 import Settings from './pages/Settings';
 import BoutiquesAdmin from './pages/BoutiquesAdmin';
 import AddBoutique from './pages/AddBoutique';
+import FestiveItemsAdmin from './pages/FestiveItemsAdmin';
+import AddFestiveItem from './pages/AddFestiveItem';
 
 export default function AdminApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -80,6 +82,9 @@ export default function AdminApp() {
       case 'dashboard':    return <Dashboard setActivePage={setActivePage} />;
       case 'products':     return <Products setActivePage={setActivePage} />;
       case 'add-product':  return <AddProduct setActivePage={setActivePage} />;
+      case 'festive-items':return <FestiveItemsAdmin setActivePage={setActivePage} />;
+      case 'add-festive-item':
+      case 'edit-festive-item':return <AddFestiveItem setActivePage={setActivePage} />;
       case 'orders':       return <Orders />;
       case 'support':      return <SupportAdmin />;
       case 'users':        return <UsersAdmin />;

@@ -28,7 +28,8 @@ const KEYS = {
   support:      'gurnaaz_support',
   boutiques:    'gurnaaz_boutiques',
   collections:  'gurnaaz_collections',
-  collectionTags: 'gurnaaz_collection_tags'
+  collectionTags: 'gurnaaz_collection_tags',
+  festiveOffers: 'gurnaaz_festive_offers'
 };
 
 // ── Static Products Definition ────────────────────────────────
@@ -1146,6 +1147,101 @@ export const deleteProduct = (id) => {
       console.error("Failed to delete product from Firestore:", err)
     );
   }
+};
+
+// ── FESTIVE & SPECIAL ITEMS (Rakhi, Churi, Kadas, Hampers, Bracelets) ──────
+export const defaultFestiveOffers = [
+  {
+    id: 'suit_combo',
+    title: 'Gulabi Silk Patiala & Silver Rakhi Set',
+    category: 'Patiala Suits',
+    price: '₹8,999',
+    originalPrice: '₹14,999',
+    savings: 'Save ₹6,000',
+    rating: '4.9',
+    reviews: '142',
+    badge: '40% OFF',
+    desc: 'Pure Raw Silk Kameez with Golden Gota Patti & Silver Rakhi.',
+    image: '/rakhi_suit_hero_shoot.jpg',
+    active: true,
+    stock: 20
+  },
+  {
+    id: 'gift_hamper',
+    title: 'Royal Kesari Audio QR Gift Box',
+    category: 'Gift Hampers',
+    price: '₹1,999',
+    originalPrice: '₹3,499',
+    savings: 'Save ₹1,500',
+    rating: '4.9',
+    reviews: '98',
+    badge: '45% OFF',
+    desc: 'Padded Velvet Hamper + Silver Rakhi + Audio QR Voice Card.',
+    image: '/rakhi_gift_box_hamper.jpg',
+    active: true,
+    stock: 35
+  },
+  {
+    id: 'kashmiri_churi',
+    title: 'Royal Kashmiri Velvet & Zari Churi',
+    category: 'Kashmiri Churi',
+    price: '₹1,499',
+    originalPrice: '₹2,499',
+    savings: 'Save ₹1,000',
+    rating: '4.8',
+    reviews: '86',
+    badge: '30% OFF',
+    desc: 'Handcrafted Kashmiri Velvet Zari Bangles with Gold Tilla.',
+    image: '/kashmiri_churi_bangles.jpg',
+    active: true,
+    stock: 50
+  },
+  {
+    id: 'gold_kadas',
+    title: 'Polki & Meenakari Gold Kadas',
+    category: 'Designer Kadas',
+    price: '₹2,299',
+    originalPrice: '₹3,999',
+    savings: 'Save ₹1,700',
+    rating: '5.0',
+    reviews: '114',
+    badge: 'BUY 1 GET 1 FREE',
+    desc: 'Handcrafted Jaipur Polki Diamond & Gold Plated Kadas.',
+    image: '/designer_kadda_bangles.jpg',
+    active: true,
+    stock: 40
+  }
+];
+
+export const getFestiveOffers = () => {
+  const saved = get(KEYS.festiveOffers, null);
+  if (!saved || saved.length === 0) return defaultFestiveOffers;
+  return saved;
+};
+
+export const saveFestiveOffers = (arr) => {
+  set(KEYS.festiveOffers, arr);
+  notifyWebsite();
+};
+
+export const addFestiveOffer = (offer) => {
+  const list = getFestiveOffers();
+  list.unshift(offer);
+  saveFestiveOffers(list);
+};
+
+export const updateFestiveOffer = (id, data) => {
+  const list = getFestiveOffers();
+  const index = list.findIndex(o => o.id === id);
+  if (index !== -1) {
+    list[index] = { ...list[index], ...data };
+    saveFestiveOffers(list);
+  }
+};
+
+export const deleteFestiveOffer = (id) => {
+  const list = getFestiveOffers().filter(o => o.id !== id);
+  saveFestiveOffers(list);
 };
 
 const defaultVideos = [];

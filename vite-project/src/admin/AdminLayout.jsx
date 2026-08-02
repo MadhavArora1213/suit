@@ -9,6 +9,7 @@ import {
 const navItems = [
   { id: 'dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
   { id: 'products',     label: 'Products',     icon: Package },
+  { id: 'festive-items',label: 'Festive Items (Churi/Rakhi)', icon: Sparkles },
   { id: 'orders',       label: 'Orders',       icon: ShoppingBag },
   { id: 'users',        label: 'Users',        icon: Users },
   { id: 'boutiques',    label: 'Shops & Boutiques',    icon: Store },

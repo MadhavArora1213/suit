@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { getFestiveOffers } from '../utils/adminStore';
 
 function getTimeLeft() {
   const now = new Date();
@@ -15,52 +16,18 @@ function getTimeLeft() {
   return { days, hours, mins, secs };
 }
 
-const FEATURED_OFFERS = [
-  {
-    id: 'suit_combo',
-    title: 'Gulabi Silk Patiala & Silver Rakhi Set',
-    category: 'Patiala',
-    price: '₹8,999',
-    originalPrice: '₹14,999',
-    badge: '40% OFF',
-    desc: 'Pure Raw Silk Kameez with Golden Gota Patti & Silver Rakhi.',
-    image: '/rakhi_suit_hero_shoot.jpg',
-  },
-  {
-    id: 'gift_hamper',
-    title: 'Royal Kesari Audio QR Gift Box',
-    category: 'Gift Boxes',
-    price: '₹1,999',
-    originalPrice: '₹3,499',
-    badge: '45% OFF',
-    desc: 'Padded Velvet Hamper + Silver Rakhi + Audio QR Voice Card.',
-    image: '/rakhi_gift_box_hamper.jpg',
-  },
-  {
-    id: 'kashmiri_churi',
-    title: 'Royal Kashmiri Velvet & Zari Churi',
-    category: 'Kashmiri Churi',
-    price: '₹1,499',
-    originalPrice: '₹2,499',
-    badge: '30% OFF',
-    desc: 'Handcrafted Kashmiri Velvet Zari Bangles with Gold Tilla.',
-    image: '/kashmiri_churi_bangles.jpg',
-  },
-  {
-    id: 'gold_kadas',
-    title: 'Polki & Meenakari Gold Kadas',
-    category: 'Designer Kadas',
-    price: '₹2,299',
-    originalPrice: '₹3,999',
-    badge: 'BUY 1 GET 1',
-    desc: 'Handcrafted Jaipur Polki Diamond & Gold Plated Kadas.',
-    image: '/designer_kadda_bangles.jpg',
-  },
-];
-
 export default function RakhiSaleOfferSection({ setView, setSelectedCategory, addToCart }) {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [copied, setCopied] = useState(false);
+  const [offers, setOffers] = useState(() => getFestiveOffers().filter(o => o.active !== false));
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setOffers(getFestiveOffers().filter(o => o.active !== false));
+    };
+    window.addEventListener('admin-data-updated', handleUpdate);
+    return () => window.removeEventListener('admin-data-updated', handleUpdate);
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setTimeLeft(getTimeLeft()), 1000);
@@ -218,7 +185,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
 
           {/* RIGHT SIDE (7/12): Staggered Bare Capsule Products */}
           <div className="lg:col-span-7 grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-12 lg:gap-y-0 px-2 lg:px-0">
-            {FEATURED_OFFERS.map((item, index) => (
+            {offers.map((item, index) => (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0, y: 30 }}
