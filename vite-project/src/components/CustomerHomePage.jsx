@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getAllProducts, staticBoutiques } from '../utils/adminStore';
+import { getAllProducts, getBoutiques } from '../utils/adminStore';
 import TrustStrip from './TrustStrip';
 import PremiumPackaging from './PremiumPackaging';
 import EditorialCollections from './EditorialCollections';
@@ -59,7 +59,7 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
     : products.filter(p => p.type === selectedCategoryState);
 
   const featured = products.slice(0, 8);
-  const boutiqueList = Object.values(staticBoutiques).slice(0, 4);
+  const boutiqueList = getBoutiques().slice(0, 4);
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]">

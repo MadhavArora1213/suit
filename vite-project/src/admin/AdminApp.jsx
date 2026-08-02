@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../firebase';
-import { seedIfEmpty } from '../utils/adminStore';
+import { initializeStore } from '../utils/adminStore';
 import AdminLogin from './AdminLogin';
 import AdminLayout from './AdminLayout';
 import Dashboard from './pages/Dashboard';
@@ -35,6 +35,8 @@ export default function AdminApp() {
 
   const [activePage, setActivePage] = useState(getInitialAdminPage());
 
+  const [storeReady, setStoreReady] = useState(false);
+
   useEffect(() => {
     const handlePopState = () => {
       setActivePage(getInitialAdminPage());
@@ -44,20 +46,20 @@ export default function AdminApp() {
   }, []);
 
   useEffect(() => {
-    seedIfEmpty();
-    if (!auth) {
-      setAuthLoading(false);
-      return;
-    }
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
+    const initAdmin = async () => {
+      await initializeStore();
+      setStoreReady(true);
+      
+      if (!auth) {
+        setAuthLoading(false);
+        return;
       }
-      setAuthLoading(false);
-    });
-    return () => unsubscribe();
+      onAuthStateChanged(auth, (user) => {
+        setIsLoggedIn(!!user);
+        setAuthLoading(false);
+      });
+    };
+    initAdmin();
   }, []);
 
   const handleLogout = async () => {
@@ -67,7 +69,7 @@ export default function AdminApp() {
     setIsLoggedIn(false);
   };
 
-  if (authLoading) {
+  if (authLoading || !storeReady) {
     return <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center">Loading Admin...</div>;
   }
 

@@ -43,11 +43,28 @@ function App() {
 
   const [loadingComplete, setLoadingComplete] = useState(isHomeRoute ? false : true)
   const [contentVisible, setContentVisible] = useState(isHomeRoute ? false : true)
+  const [storeReady, setStoreReady] = useState(false)
   const [cart, setCart] = useState([])
   const [favorites, setFavorites] = useState({})
   const [toastMessage, setToastMessage] = useState('')
   const [showLoginModal, setShowLoginModal] = useState(false)
   const allProducts = getAllProducts();
+
+  useEffect(() => {
+    const initStoreData = async () => {
+      try {
+        const { initializeStore } = await import('./utils/adminStore');
+        await initializeStore();
+      } catch (err) {
+        console.error('Store initialization failed:', err);
+      } finally {
+        setStoreReady(true);
+      }
+    };
+    initStoreData();
+  }, []);
+
+
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -296,6 +313,14 @@ function App() {
       )}
     </AnimatePresence>
   );
+
+  if (!storeReady) {
+    return (
+      <div className="h-screen w-screen bg-[#FAF9F6] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#8B1A1A] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   if (!loadingComplete && isHomeRoute) return <LoadingScreen onComplete={handleLoadComplete} />
 

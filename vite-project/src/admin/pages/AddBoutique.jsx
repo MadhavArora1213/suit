@@ -185,7 +185,7 @@ export default function AddBoutique({ setActivePage }) {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="md:col-span-2">
                   <Label required>Name</Label>
-                  <Input name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Badshah Designer Fabrics" required />
+                  <Input name="name" value={formData.name} onChange={handleChange} placeholder="e.g. Mahalaksmi Silk Store" required />
                 </div>
                 <div>
                   <Label>Type</Label>

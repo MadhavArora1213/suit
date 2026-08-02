@@ -1,68 +1,67 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Store, Star, ArrowRight, MapPin, Award, ShieldCheck, Sparkles } from 'lucide-react';
+import { Store, Star, ArrowRight, MapPin, Award, ShieldCheck, Sparkles, BadgeCheck } from 'lucide-react';
 import { getBoutiques } from '../utils/adminStore';
 
 const fallbackBoutiques = [
   {
-    name: 'Badshah Designer Fabrics',
-    established: 2008,
+    name: 'Riwakarri',
+    type: 'Shop',
+    verified: true,
+    established: 2018,
     rating: 4.8,
-    orders: '25,000+',
-    location: 'Ludhiana, Punjab',
-    image: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=80',
-    description: 'Specializing in handcrafted Punjabi fashion and premium ethnic wear. Experience the legacy of authentic fabrics and unparalleled craftsmanship for your special occasions.',
-    tags: ['Premium Boutique']
-  },
-  {
-    name: '@ethnic_vibes_by_sana',
-    established: 2021,
-    rating: 4.9,
-    orders: '5,000+',
-    location: 'Instagram Store',
-    image: '/designer_suit_1.png',
-    description: 'Trending Instagram creator curating viral ethnic wear, georgette suits, and modern bridal blends.',
-    tags: ['Instagram Creator']
-  },
-  {
-    name: 'Sharma Ji Textiles',
-    established: 1990,
-    rating: 4.7,
-    orders: '15,000+',
-    location: 'Chandni Chowk, Delhi',
-    image: '/cotton_suit.png',
-    description: 'Trusted local seller famous for wholesale unstitched suits and authentic pure cotton handlooms.',
-    tags: ['Local Seller']
-  },
-  {
-    name: 'Gulabo Jaipur',
-    established: 2015,
-    rating: 4.8,
-    orders: '12,000+',
-    location: 'Jaipur',
-    image: '/sharara_suit.png',
-    description: 'Contemporary Angrakha cuts and flowing Sharara sets adorned with exquisite Gota Patti work. Perfect for the modern bride seeking traditional elegance.',
-    tags: ['Designer Boutique']
-  },
-  {
-    name: '@style_by_roshni',
-    established: 2022,
-    rating: 4.6,
-    orders: '3,000+',
-    location: 'Instagram Store',
+    orders: '40+',
+    location: 'Shop no 21, Floor 1, Sector 117, Plaza 117, Sahibzada Ajit Singh Nagar, Punjab 140307',
     image: '/pakistani_suit.png',
-    description: 'Aesthetic Instagram page bringing you the most elegant straight-cut Pakistani suits and soft pastels.',
-    tags: ['Instagram Page']
+    description: 'Authentic Kanchipuram and Patola silk sarees with traditional South Indian weaving artistry. Every piece tells a story of culture and elegance.',
+    tags: ['Verified', 'Traditional Weaves']
   },
   {
-    name: 'Arora Cloth House',
-    established: 2005,
+    name: 'The Luxuryy Store',
+    type: 'Shop',
+    verified: true,
+    established: 2020,
     rating: 4.9,
-    orders: '30,000+',
-    location: 'Amritsar, Punjab',
-    image: '/chikankari_suit.png',
-    description: 'Your favorite local shop for authentic Phulkari dupattas and daily wear cotton suits at best prices.',
-    tags: ['Local Shop']
+    orders: '30+',
+    location: 'House Number 1004, Sector 12-A, Panchkula, Haryana 134113',
+    image: '/sharara_suit.png',
+    description: 'Curated luxury ethnic wear featuring designer lehengas, Indo-western fusion, and premium bridal collections for the modern woman.',
+    tags: ['Verified', 'Luxury Boutique']
+  },
+  {
+    name: 'Mahalaksmi Silk Store',
+    type: 'Shop',
+    verified: true,
+    established: 2010,
+    rating: 4.8,
+    orders: '10+',
+    location: 'Tanda, Hoshiarpur, Punjab',
+    image: '/designer_suit_1.png',
+    description: 'Premium silk sarees, dupattas, and ethnic suits with authentic handloom craftsmanship. A trusted name for wedding and festive collections.',
+    tags: ['Verified', 'Silk Specialist']
+  },
+  {
+    name: 'Jagdambay Binny Store',
+    type: 'Shop',
+    verified: true,
+    established: 1995,
+    rating: 4.7,
+    orders: '20+',
+    location: 'Tanda, Hoshiarpur, Punjab',
+    image: '/cotton_suit.png',
+    description: 'Heritage Banarasi silk and traditional Indian ethnic wear. Known for timeless weave patterns and rich fabric quality.',
+    tags: ['Verified', 'Heritage Store']
+  },
+  {
+    name: 'Gurnaaz',
+    verified: true,
+    established: 2023,
+    rating: 4.9,
+    orders: '50+',
+    location: 'Punjab',
+    image: '/designer_suit_1.png',
+    description: 'Premium designer ethnic wear featuring handpicked suits, lehengas, and fusion outfits. Your go-to destination for stunning traditional and modern looks.',
+    tags: ['Verified', 'Premium Boutique']
   }
 ];
 
@@ -70,12 +69,18 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
   const [boutiquesList, setBoutiquesList] = useState([]);
 
   useEffect(() => {
-    const dynamic = getBoutiques();
-    if (dynamic && dynamic.length > 0) {
-      setBoutiquesList(dynamic);
-    } else {
-      setBoutiquesList(fallbackBoutiques);
-    }
+    const loadBoutiques = () => {
+      const dynamic = getBoutiques();
+      if (dynamic && dynamic.length > 0) {
+        setBoutiquesList(dynamic.sort((a, b) => (a.order || 99) - (b.order || 99)));
+      } else {
+        setBoutiquesList(fallbackBoutiques);
+      }
+    };
+    
+    loadBoutiques();
+    window.addEventListener('admin-data-updated', loadBoutiques);
+    return () => window.removeEventListener('admin-data-updated', loadBoutiques);
   }, []);
 
   const handleBoutiqueClick = (name) => {
@@ -203,10 +208,13 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
                   </div>
 
                   {/* Name */}
-                  <h2 className={`font-medium text-[#1A0008] leading-tight mb-4 group-hover:text-[#D4AF37] transition-colors duration-300 break-words
-                    ${isFeatured ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl' : 'text-xl sm:text-2xl lg:text-3xl'}`} 
-                    style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                    {boutique.name}
+                  <h2 className={`font-medium text-[#1A0008] leading-tight mb-4 group-hover:text-[#D4AF37] transition-colors duration-300 break-words flex items-center gap-3
+                      ${isFeatured ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl' : 'text-xl sm:text-2xl lg:text-3xl'}`} 
+                      style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                      {boutique.name}
+                      {boutique.verified && (
+                        <BadgeCheck size={isFeatured ? 36 : 24} className="text-[#007BFF] fill-[#007BFF]/10 shrink-0 mt-1" />
+                      )}
                   </h2>
                   
                   {/* Description */}

@@ -55,7 +55,7 @@ function initFirebase() {
           // Set to true to allow auto-refresh of App Check tokens
           isTokenAutoRefreshEnabled: true
         });
-        console.log("Firebase App Check initialized successfully.");
+
       } catch (appCheckErr) {
         console.warn("Failed to initialize Firebase App Check:", appCheckErr);
       }

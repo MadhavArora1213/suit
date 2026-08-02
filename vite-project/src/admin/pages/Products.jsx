@@ -6,7 +6,7 @@ import { getProducts, deleteProduct as storeDelete, notifyWebsite } from '../../
 const staticProducts = [
   { id: 't1', name: 'Embroidered Silk Suit Set', price: '₹4,299', boutique: 'Kala Mandir', badge: 'Silk Blend', collection: 'Trending', type: 'Anarkali', stock: 12, rating: 4.8, image: '/designer_suit_1.png' },
   { id: 't2', name: 'Chanderi Salwar Suit Set', price: '₹3,899', boutique: 'Zari Heritage', badge: 'Handloom', collection: 'Trending', type: 'Patiala', stock: 8, rating: 4.6, image: '/cotton_suit.png' },
-  { id: 't3', name: 'Designer Angrakha Suit Set', price: '₹5,499', boutique: 'Gulabo Jaipur', badge: 'Premium', collection: 'Trending', type: 'Sharara', stock: 5, rating: 4.9, image: '/sharara_suit.png' },
+  { id: 't3', name: 'Designer Angrakha Suit Set', price: '₹5,499', boutique: 'Mahalaksmi Silk Store', badge: 'Premium', collection: 'Trending', type: 'Sharara', stock: 5, rating: 4.9, image: '/sharara_suit.png' },
   { id: 't4', name: 'Pakistani Straight Suit Set', price: '₹4,799', boutique: 'Nazraana', badge: 'Verified', collection: 'New Arrivals', type: 'Pakistani', stock: 14, rating: 4.7, image: '/pakistani_suit.png' },
   { id: 'b1', name: 'Velvet Embroidered Suit Set', price: '₹8,999', boutique: 'Vastra', badge: 'Hot Seller', collection: 'Best Sellers', type: 'Anarkali', stock: 3, rating: 4.9, image: '/banarasi_suit.png' },
   { id: 'b2', name: 'Chikankari Handloom Suit Set', price: '₹7,499', boutique: 'Awadh Kraft', badge: 'Artisanal', collection: 'Best Sellers', type: 'Chikankari', stock: 7, rating: 4.8, image: '/chikankari_suit.png' },

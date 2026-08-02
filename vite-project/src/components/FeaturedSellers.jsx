@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { getBoutiques, getAllProducts } from '../utils/adminStore';
+import { BadgeCheck } from 'lucide-react';
 
 export default function FeaturedSellers({ setView, setSelectedBoutique }) {
   const allProducts = getAllProducts();
@@ -88,8 +89,11 @@ export default function FeaturedSellers({ setView, setSelectedBoutique }) {
                   
                   {/* Seller Info at Bottom of Polaroid */}
                   <div className="absolute bottom-4 md:bottom-6 left-0 w-full flex flex-col items-center px-4">
-                     <h3 className="text-3xl text-[#1A0008] font-medium" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                     <h3 className="text-3xl text-[#1A0008] font-medium flex items-center justify-center gap-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                        {seller.name}
+                       {seller.verified && (
+                         <BadgeCheck size={20} className="text-[#007BFF] fill-[#007BFF]/10 shrink-0 mt-1" />
+                       )}
                      </h3>
                      <p className="text-[#8B1A1A] text-[9px] tracking-[0.2em] uppercase font-bold mt-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                        Explore Workshop
