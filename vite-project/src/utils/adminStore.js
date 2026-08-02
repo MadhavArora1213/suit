@@ -1059,7 +1059,7 @@ const set  = (key, value) => {
     if (settingsKeys.includes(key)) {
       // Find which generic name this key corresponds to
       const objKey = Object.keys(KEYS).find(k => KEYS[k] === key);
-      if (objKey) {
+      if (objKey && auth && auth.currentUser) {
         setDoc(doc(db, 'settings', 'gurnaaz_store'), {
           [objKey]: value
         }, { merge: true }).catch(err => {

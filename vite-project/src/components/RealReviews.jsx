@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
+import { useRef, useState } from 'react';
 
 const COLUMNS = [
   {
     id: 'col-1',
-    offset: 'mt-16',
+    offset: 'mt-8 md:mt-16',
     items: [
       { id: 1, name: "Siddharth Joshi", quote: "The craftsmanship is unparalleled. I wear it with absolute pride.", isTall: true, image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400" }
     ]
@@ -18,14 +19,14 @@ const COLUMNS = [
   },
   {
     id: 'col-3',
-    offset: 'mt-24',
+    offset: 'mt-12 md:mt-24',
     items: [
       { id: 4, name: "Varun Malhotra", quote: "A masterpiece. Got so many compliments on this piece.", isTall: true, image: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=400" }
     ]
   },
   {
     id: 'col-4',
-    offset: 'mt-10',
+    offset: 'mt-4 md:mt-10',
     items: [
       { id: 5, name: "Ananya S.", quote: "My absolute favorite ethnic brand now.", isTall: false, image: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&q=80&w=400" },
       { id: 6, name: "Simran Kaur", quote: "Exceeded all expectations. Simply stunning.", isTall: false, image: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&q=80&w=400" }
@@ -33,14 +34,14 @@ const COLUMNS = [
   },
   {
     id: 'col-5',
-    offset: 'mt-12',
+    offset: 'mt-6 md:mt-12',
     items: [
       { id: 7, name: "Sameer Choudhury", quote: "The finest ethnic wear I have ever purchased. Highly recommended.", isTall: true, image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400" }
     ]
   },
   {
     id: 'col-6',
-    offset: 'mt-4',
+    offset: 'mt-2 md:mt-4',
     items: [
       { id: 8, name: "Rohit K.", quote: "Amazing quality and quick delivery.", isTall: false, image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400" },
       { id: 9, name: "Tanvi", quote: "Absolutely in love with the intricate embroidery.", isTall: false, image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400" }
@@ -51,8 +52,8 @@ const COLUMNS = [
 const ReviewCard = ({ item }) => {
   return (
     <div 
-      className={`relative w-[180px] md:w-[220px] rounded-3xl overflow-hidden shrink-0 group bg-[#F0EBE2] shadow-sm cursor-pointer transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(26,0,8,0.1)] ring-1 ring-[#1A0008]/10
-        ${item.isTall ? 'h-[280px] md:h-[340px]' : 'h-[180px] md:h-[210px]'}`}
+      className={`relative w-full md:w-[220px] rounded-3xl overflow-hidden shrink-0 group bg-[#F0EBE2] shadow-sm cursor-pointer transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(26,0,8,0.1)] ring-1 ring-[#1A0008]/10
+        ${item.isTall ? 'h-[240px] md:h-[340px]' : 'h-[160px] md:h-[210px]'}`}
     >
       {/* Background Image */}
       <img
@@ -69,7 +70,7 @@ const ReviewCard = ({ item }) => {
         <svg width="24" height="24" viewBox="0 0 24 24" fill="#8B1A1A" stroke="none" className="mb-3 opacity-80 transform -translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
           <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
         </svg>
-        <p className="text-[#1A0008] text-[13px] md:text-[15px] font-medium leading-relaxed transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700" 
+        <p className="text-[#1A0008] text-[12px] sm:text-[13px] md:text-[15px] font-medium leading-relaxed transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700" 
            style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           "{item.quote}"
         </p>
@@ -79,7 +80,7 @@ const ReviewCard = ({ item }) => {
       <div className="absolute inset-x-2 bottom-2 md:inset-x-3 md:bottom-3 rounded-2xl overflow-hidden pointer-events-none transform translate-y-0 group-hover:translate-y-4 group-hover:opacity-0 transition-all duration-500 ease-out z-10">
         <div className="absolute inset-0 bg-white/40 backdrop-blur-md border border-white/40" />
         <div className="relative px-4 py-3 flex flex-col justify-center items-center text-center">
-          <h4 className="text-[#1A0008] font-bold text-sm md:text-[15px] leading-tight tracking-wide" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <h4 className="text-[#1A0008] font-bold text-[12px] md:text-[15px] leading-tight tracking-wide" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             {item.name.split(' ').map((part, i) => (
               <span key={i} className="block">{part}</span>
             ))}
@@ -91,6 +92,28 @@ const ReviewCard = ({ item }) => {
 };
 
 export default function RealReviews() {
+  const scrollRef = useRef(null);
+  const [isDown, setIsDown] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const handleMouseDown = (e) => {
+    setIsDown(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
+  
+  const handleMouseLeave = () => setIsDown(false);
+  const handleMouseUp = () => setIsDown(false);
+  
+  const handleMouseMove = (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 2; // Fast scroll speed
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
+
   return (
     <section className="relative overflow-hidden py-24 md:py-36 border-y border-[#1A0008]/5 bg-[#FAF9F6]">
       
@@ -122,7 +145,7 @@ export default function RealReviews() {
             </h2>
           </div>
 
-          <div className="flex items-center gap-4 pb-2">
+          <div className="hidden md:flex items-center gap-4 pb-2">
             <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-[#1A0008]/40" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Swipe to explore
             </span>
@@ -137,8 +160,15 @@ export default function RealReviews() {
         </motion.div>
       </div>
 
-      {/* ═══ Staggered Column Scroll Layout ═══ */}
-      <div className="relative z-10 pl-6 md:pl-12 pr-12 pb-16 overflow-x-auto no-scrollbar flex items-start gap-4 md:gap-6 snap-x snap-mandatory cursor-grab active:cursor-grabbing pt-4">
+      {/* ═══ Staggered Column Layout ═══ */}
+      <div 
+        ref={scrollRef}
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        className={`relative z-10 px-4 md:pl-12 md:pr-12 pb-16 grid grid-cols-2 md:flex items-start gap-4 md:gap-6 pt-4 md:overflow-x-auto md:no-scrollbar md:cursor-grab md:active:cursor-grabbing ${isDown ? 'md:snap-none' : 'md:snap-x md:snap-mandatory'}`}
+      >
         {COLUMNS.map((col, i) => (
           <motion.div
             key={col.id}
@@ -146,7 +176,7 @@ export default function RealReviews() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.7, delay: i * 0.1, ease: "easeOut" }}
-            className={`flex flex-col gap-4 md:gap-6 snap-center shrink-0 ${col.offset}`}
+            className={`flex flex-col gap-4 md:gap-6 md:snap-center shrink-0 w-full md:w-auto ${col.offset}`}
           >
             {col.items.map((item) => (
               <ReviewCard key={item.id} item={item} />

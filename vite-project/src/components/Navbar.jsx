@@ -176,9 +176,9 @@ export default function Navbar({
                       <div className="w-1/4 flex flex-col border-r border-[#D4AF37]/10 pr-6">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Shop by Category</span>
                         <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-2">
-                          {navCategories.map((cat) => (
+                          {navCategories.map((cat, i) => (
                             <a
-                              key={cat.id || cat.name}
+                              key={`${cat.id || cat.name}-${i}`}
                               href={`/category/${cat.name.toLowerCase().replace(/ /g, '-')}`}
                               onClick={(e) => {
                                 e.preventDefault();
@@ -537,8 +537,8 @@ export default function Navbar({
               <div className="space-y-2">
                 <span className="text-[11px] tracking-[0.2em] text-[#1A0008]/40 uppercase font-bold block">SHOP CATEGORIES</span>
                 <div className="pl-4 flex flex-col gap-3">
-                  {navCategories.map((cat) => (
-                    <a key={cat.id || cat.name} href="#" onClick={(e) => {
+                  {navCategories.map((cat, i) => (
+                    <a key={`${cat.id || cat.name}-${i}`} href="#" onClick={(e) => {
                       e.preventDefault();
                       setSelectedCategory(cat.name);
                       setView('category');

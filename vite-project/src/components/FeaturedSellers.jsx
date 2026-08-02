@@ -98,13 +98,13 @@ export default function FeaturedSellers({ setView, setSelectedBoutique }) {
                 </div>
 
                 {/* Floating Logo Badge */}
-                <div className="absolute -top-6 -left-6 md:-left-8 w-20 h-20 md:w-24 md:h-24 rounded-full bg-white p-1 border border-[#D4AF37]/30 shadow-xl z-30 group-hover:scale-110 transition-transform duration-500">
+                <div className="absolute -top-6 -left-2 sm:-left-6 md:-left-8 w-20 h-20 md:w-24 md:h-24 rounded-full bg-white p-1 border border-[#D4AF37]/30 shadow-xl z-30 group-hover:scale-110 transition-transform duration-500">
                   <img src={seller.logo} alt="Logo" className="w-full h-full object-cover rounded-full" />
                 </div>
 
                 {/* Floating Products (Overlapping the Polaroid) */}
                 {sellerProducts.length > 0 && (
-                  <div className="absolute -bottom-10 -right-4 md:-right-8 flex gap-3 z-20">
+                  <div className="absolute -bottom-10 -right-1 sm:-right-4 md:-right-8 flex gap-3 z-20">
                     {sellerProducts.map((prod, i) => (
                       <div 
                         key={i} 

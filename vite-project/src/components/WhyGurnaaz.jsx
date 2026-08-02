@@ -24,17 +24,17 @@ export default function WhyGurnaaz() {
         </div>
 
         {/* The Exact Bento Grid Layout */}
-        <div className="relative w-full h-[1800px] md:h-[900px] flex flex-col md:flex-row gap-4 md:gap-6">
+        <div className="relative w-full h-auto xl:h-[900px] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
           
           {/* ================= LEFT COLUMN (25%) ================= */}
-          <div className="flex-1 flex flex-col gap-4 md:gap-6 h-full">
+          <div className="col-span-1 flex flex-col gap-4 md:gap-6 h-full order-2 xl:order-1">
             
             {/* Top Left (50%) - Heritage */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="h-[350px] md:h-[50%] bg-white border border-[#1A0008]/10 rounded-[32px] p-8 md:p-10 relative overflow-hidden shadow-sm flex flex-col justify-end group hover:border-[#1A0008]/30 transition-colors"
+              className="min-h-[350px] xl:min-h-0 xl:h-[50%] bg-white border border-[#1A0008]/10 rounded-[32px] p-8 md:p-10 relative overflow-hidden shadow-sm flex flex-col justify-end group hover:border-[#1A0008]/30 transition-colors"
             >
               <div className="relative z-20">
                 <span className="text-[#8B1A1A] text-[10px] uppercase tracking-widest font-bold block mb-3">01 / Heritage</span>
@@ -49,7 +49,7 @@ export default function WhyGurnaaz() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="h-[250px] md:h-[30%] bg-[#F0EBE2] border border-[#1A0008]/10 rounded-[32px] overflow-hidden shadow-sm relative p-8 flex flex-col justify-end group hover:border-[#1A0008]/30 transition-colors"
+              className="min-h-[250px] xl:min-h-0 xl:h-[30%] bg-[#F0EBE2] border border-[#1A0008]/10 rounded-[32px] overflow-hidden shadow-sm relative p-8 flex flex-col justify-end group hover:border-[#1A0008]/30 transition-colors"
             >
               <div className="relative z-10">
                 <span className="text-[#1A0008]/60 text-[10px] uppercase tracking-widest font-bold block mb-2">02 / Materials</span>
@@ -64,7 +64,7 @@ export default function WhyGurnaaz() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="h-[150px] md:h-[20%] bg-white border border-[#1A0008]/10 rounded-[32px] overflow-hidden shadow-sm p-6 flex flex-col justify-center group hover:border-[#1A0008]/30 transition-colors"
+              className="min-h-[150px] xl:min-h-0 xl:h-[20%] bg-white border border-[#1A0008]/10 rounded-[32px] overflow-hidden shadow-sm p-6 flex flex-col justify-center group hover:border-[#1A0008]/30 transition-colors"
             >
                <div className="relative z-10">
                   <span className="text-[#8B1A1A] text-[10px] uppercase tracking-widest font-bold block mb-1">03 / Stitching</span>
@@ -77,7 +77,7 @@ export default function WhyGurnaaz() {
 
 
           {/* ================= CENTER COLUMN (50%) ================= */}
-          <div className="flex-[2_2_0%] flex flex-col gap-4 md:gap-6 h-full">
+          <div className="col-span-1 md:col-span-2 flex flex-col gap-4 md:gap-6 h-full order-1 xl:order-2">
             
             {/* Top Center (40%) - Rigorous Quality */}
             <motion.div 
@@ -85,25 +85,25 @@ export default function WhyGurnaaz() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="h-[400px] md:h-[40%] bg-white border border-[#1A0008]/10 rounded-[40px] p-6 pb-20 md:p-8 md:pb-24 flex items-center shadow-sm relative overflow-hidden group hover:border-[#1A0008]/30 transition-colors"
+              className="min-h-[450px] xl:min-h-0 xl:h-[40%] bg-white border border-[#1A0008]/10 rounded-[40px] p-6 pb-8 md:p-8 md:pb-24 flex flex-col md:flex-row items-center shadow-sm relative overflow-hidden group hover:border-[#1A0008]/30 transition-colors"
             >
               <span className="absolute top-8 left-8 text-[#1A0008]/10 text-xs font-bold tracking-widest">GURNAAZ</span>
               
               {/* Arched Window Image - Indian Suit */}
-              <div className="w-1/2 h-full bg-[#E8DDD0] rounded-t-full rounded-b-[32px] overflow-hidden shadow-inner relative z-10 border border-[#FAF9F6]">
+              <div className="w-full h-[250px] md:w-1/2 md:h-full bg-[#E8DDD0] rounded-t-[32px] md:rounded-t-full md:rounded-b-[32px] overflow-hidden shadow-inner relative z-10 border border-[#FAF9F6] mb-6 md:mb-0">
                 <img src="/suit1.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 mix-blend-multiply" alt="Beautiful Punjabi Suit" />
               </div>
 
               {/* Text Right */}
-              <div className="w-1/2 pl-6 md:pl-10 relative z-10 pb-8">
+              <div className="w-full md:w-1/2 pl-0 md:pl-10 relative z-10 text-center md:text-left">
                 <span className="text-[#8B1A1A] px-3 py-1 bg-[#8B1A1A]/10 rounded-full text-[10px] uppercase tracking-widest font-bold inline-block mb-4">04 / Craftsmanship</span>
-                <h3 className="text-3xl md:text-5xl text-[#1A0008] font-light leading-tight mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Intricate<br/>Embroidery</h3>
+                <h3 className="text-3xl md:text-5xl text-[#1A0008] font-light leading-tight mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Intricate<br className="hidden md:block" />Embroidery</h3>
                 <p className="text-[#1A0008]/60 text-sm font-light leading-relaxed">Our heavy dupattas and kurtis feature authentic Phulkari, Zari, and Gota Patti work entirely hand-embroidered by artisans.</p>
               </div>
             </motion.div>
 
             {/* Bottom Center Row (60% split into two halves) */}
-            <div className="h-[500px] md:h-[60%] flex flex-col md:flex-row gap-4 md:gap-6">
+            <div className="h-auto xl:h-[60%] flex flex-col md:flex-row gap-4 md:gap-6">
               
               {/* Center Bottom-Left - Shipping */}
               <motion.div 
@@ -111,7 +111,7 @@ export default function WhyGurnaaz() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 }}
-                className="flex-1 bg-[#8B1A1A] rounded-[40px] p-8 pt-20 md:p-10 md:pt-32 md:pr-16 flex flex-col shadow-xl relative overflow-hidden"
+                className="flex-1 min-h-[300px] bg-[#8B1A1A] rounded-[40px] p-8 pt-12 md:p-10 md:pt-32 md:pr-16 flex flex-col justify-end shadow-xl relative overflow-hidden"
               >
                 <div className="relative z-10">
                   <span className="text-white/80 text-[10px] uppercase tracking-widest font-bold block mb-2">05 / Logistics</span>
@@ -126,11 +126,11 @@ export default function WhyGurnaaz() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5 }}
-                className="flex-1 bg-white border border-[#1A0008]/10 rounded-[40px] p-8 md:p-10 flex flex-col justify-end items-end text-right shadow-sm relative overflow-hidden group hover:border-[#1A0008]/30 transition-colors"
+                className="flex-1 min-h-[300px] bg-white border border-[#1A0008]/10 rounded-[40px] p-8 md:p-10 flex flex-col justify-end items-end text-right shadow-sm relative overflow-hidden group hover:border-[#1A0008]/30 transition-colors"
               >
                 <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]" />
                 
-                <div className="relative z-10 pl-12 md:pl-20 mt-auto">
+                <div className="relative z-10 pl-0 md:pl-20 mt-auto">
                   <span className="text-[#8B1A1A] text-[10px] uppercase tracking-widest font-bold block mb-2">06 / Presentation</span>
                   <h3 className="text-3xl md:text-4xl text-[#1A0008] font-light leading-tight mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     Unforgettable<br/>Unboxing
@@ -151,7 +151,7 @@ export default function WhyGurnaaz() {
 
 
           {/* ================= RIGHT COLUMN (25%) ================= */}
-          <div className="flex-1 flex flex-col gap-4 md:gap-6 h-full">
+          <div className="col-span-1 flex flex-col gap-4 md:gap-6 h-full order-3 xl:order-3">
             
             {/* Top Right (50%) - Timeless Elegance (IMAGE CARD) */}
             <motion.div 
@@ -159,7 +159,7 @@ export default function WhyGurnaaz() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6 }}
-              className="h-[350px] md:h-[50%] bg-[#E8DDD0] border border-[#1A0008]/10 rounded-[32px] overflow-hidden shadow-sm relative group"
+              className="min-h-[350px] xl:min-h-0 xl:h-[50%] bg-[#E8DDD0] border border-[#1A0008]/10 rounded-[32px] overflow-hidden shadow-sm relative group"
             >
               <img src="/suit2.png" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 mix-blend-multiply" alt="Authentic Punjabi Suit" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#FAF9F6]/90 via-[#FAF9F6]/20 to-transparent" />
@@ -176,7 +176,7 @@ export default function WhyGurnaaz() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.7 }}
-              className="h-[250px] md:h-[30%] bg-white border border-[#1A0008]/10 rounded-[32px] overflow-hidden shadow-sm p-8 flex flex-col justify-center group hover:border-[#1A0008]/30 transition-colors"
+              className="min-h-[250px] xl:min-h-0 xl:h-[30%] bg-white border border-[#1A0008]/10 rounded-[32px] overflow-hidden shadow-sm p-8 flex flex-col justify-center group hover:border-[#1A0008]/30 transition-colors"
             >
               <div className="relative z-10">
                 <span className="text-[#8B1A1A] text-[10px] uppercase tracking-widest font-bold block mb-2">08 / Values</span>
@@ -191,7 +191,7 @@ export default function WhyGurnaaz() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.8 }}
-              className="h-[150px] md:h-[20%] bg-white border border-[#1A0008]/10 rounded-[32px] shadow-sm p-6 flex flex-col justify-center group hover:border-[#1A0008]/30 transition-colors"
+              className="min-h-[150px] xl:min-h-0 xl:h-[20%] bg-white border border-[#1A0008]/10 rounded-[32px] shadow-sm p-6 flex flex-col justify-center group hover:border-[#1A0008]/30 transition-colors"
             >
               <span className="text-[#8B1A1A] text-[10px] uppercase tracking-widest font-bold block mb-1">09 / Convenience</span>
               <h3 className="text-xl text-[#1A0008] font-light leading-tight mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Ready to Wear</h3>
@@ -207,7 +207,7 @@ export default function WhyGurnaaz() {
             whileInView={{ scale: 1, opacity: 1, x: '-50%', y: '-50%' }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.9, type: "spring", bounce: 0.4 }}
-            className="hidden md:flex absolute top-1/2 left-1/2 w-[340px] h-[340px] rounded-full border-[16px] border-[#FAF9F6] overflow-hidden z-30 shadow-[0_30px_60px_rgba(26,0,8,0.1)] group items-center justify-center bg-[#E8DDD0]"
+            className="hidden xl:flex absolute top-1/2 left-1/2 w-[340px] h-[340px] rounded-full border-[16px] border-[#FAF9F6] overflow-hidden z-30 shadow-[0_30px_60px_rgba(26,0,8,0.1)] group items-center justify-center bg-[#E8DDD0] -translate-x-1/2 -translate-y-1/2"
           >
             {/* Valid beautiful Indian Suit Image */}
             <img 
