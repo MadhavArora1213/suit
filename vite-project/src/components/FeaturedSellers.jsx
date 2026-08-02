@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { staticBoutiques, getAllProducts } from '../utils/adminStore';
+import { getBoutiques, getAllProducts } from '../utils/adminStore';
 
 export default function FeaturedSellers({ setView, setSelectedBoutique }) {
   const allProducts = getAllProducts();
-  const sellers = Object.values(staticBoutiques).slice(0, 4); 
+  const sellers = getBoutiques().filter(b => b.isFeatured).slice(0, 4); 
 
   return (
     <section className="py-24 md:py-32 bg-[#FAF9F6] relative overflow-hidden">

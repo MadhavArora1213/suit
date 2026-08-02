@@ -83,7 +83,7 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
       setSelectedBoutique(name);
       setView('seller-shop');
     } else {
-      window.location.href = `/boutiques/${name.toLowerCase().replace(/ /g, '-')}`;
+      window.location.href = `/shops-and-boutiques/${name.toLowerCase().replace(/ /g, '-')}`;
     }
   };
 

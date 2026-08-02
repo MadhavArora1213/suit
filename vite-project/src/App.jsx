@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { auth, db } from './firebase'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { syncProducts, getAllProducts } from './utils/adminStore'
+import { syncProducts, getAllProducts, getBoutiques } from './utils/adminStore'
 import { motion, AnimatePresence } from 'framer-motion'
 import { User } from 'lucide-react'
 import './App.css'
@@ -60,8 +60,8 @@ function App() {
     if (path === '/collections') return 'collections';
     if (path.startsWith('/collections/')) return 'collection-detail';
     if (path.startsWith('/category/')) return 'category';
-    if (path === '/boutiques') return 'boutiques';
-    if (path.startsWith('/boutiques/')) return 'seller-shop';
+    if (path === '/shops-and-boutiques') return 'boutiques';
+    if (path.startsWith('/shops-and-boutiques/')) return 'seller-shop';
     if (path.startsWith('/shop/')) return 'seller-shop';
     if (path === '/contact') return 'contact';
     if (path === '/about') return 'about';
@@ -87,8 +87,8 @@ function App() {
   
   const getBoutiqueFromPath = () => {
     const path = window.location.pathname;
-    if (path.startsWith('/boutiques/')) {
-      const slug = path.replace('/boutiques/', '');
+    if (path.startsWith('/shops-and-boutiques/')) {
+      const slug = path.replace('/shops-and-boutiques/', '');
       return decodeURIComponent(slug).replace(/-/g, ' ');
     }
     if (path.startsWith('/shop/')) {
@@ -173,10 +173,12 @@ function App() {
       'collections': '/collections',
       'collection-detail': `/collections/${selectedCollectionSlug || ''}`,
       'category': `/category/${(selectedCategory || '').toLowerCase()}`,
-      'boutiques': '/boutiques',
-      'seller-shop': ['Rivaaj Store', 'Pehnawa', 'Ludhiana Silks', 'Amritsar Textiles', 'The Heritage Store'].includes(selectedBoutique) 
-          ? `/shop/${(selectedBoutique || '').toLowerCase().replace(/ /g, '-')}` 
-          : `/boutiques/${(selectedBoutique || '').toLowerCase().replace(/ /g, '-')}`,
+      'boutiques': '/shops-and-boutiques',
+      'seller-shop': (() => {
+          if (!selectedBoutique) return '/shops-and-boutiques';
+          const b = getBoutiques().find(b => b.name === selectedBoutique);
+          return `/${b?.type === 'Shop' ? 'shop' : 'shops-and-boutiques'}/${selectedBoutique.toLowerCase().replace(/ /g, '-')}`;
+      })(),
       'contact': '/contact',
       'about': '/about',
       'privacy': '/privacy',

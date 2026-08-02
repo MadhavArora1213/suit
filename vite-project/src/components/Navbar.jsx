@@ -315,7 +315,7 @@ export default function Navbar({
                                   setSelectedBoutique(btq.name);
                                   setView('seller-shop');
                                 } else {
-                                  window.location.href = `/boutiques/${btq.name.toLowerCase().replace(/ /g, '-')}`;
+                                  window.location.href = `/shops-and-boutiques/${btq.name.toLowerCase().replace(/ /g, '-')}`;
                                 }
                               }}
                               className="text-[16px] text-[#1A0008]/90 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
@@ -326,7 +326,7 @@ export default function Navbar({
                             </a>
                           ))}
                         </div>
-                        <a href="/boutiques" onClick={(e) => { e.preventDefault(); window.location.href = '/boutiques'; }}
+                        <a href="/shops-and-boutiques" onClick={(e) => { e.preventDefault(); window.location.href = '/shops-and-boutiques'; }}
                           className="mt-auto text-[9px] font-bold text-[#1A0008] hover:text-[#D4AF37] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
                           View All Boutiques <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
                         </a>
@@ -338,7 +338,7 @@ export default function Navbar({
                             setSelectedBoutique(feat.name);
                             setView('seller-shop');
                           } else {
-                            window.location.href = `/${feat.type === 'Shop' ? 'shop' : 'boutiques'}/${feat.name.toLowerCase().replace(/ /g, '-')}`;
+                            window.location.href = `/${feat.type === 'Shop' ? 'shop' : 'shops-and-boutiques'}/${feat.name.toLowerCase().replace(/ /g, '-')}`;
                           }
                         }}>
                           <img src={feat.coverImage || (index === 0 ? "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" : "/designer_suit_1.png")} alt={feat.name} className={`w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-110 ${index === 0 ? 'object-center' : 'object-top'}`} />

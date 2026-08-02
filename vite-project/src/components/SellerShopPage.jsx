@@ -246,7 +246,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
       {/* ═══════ COLLAGE HERO ═══════ */}
       <div ref={heroRef} className="relative w-full overflow-hidden bg-[#FAF9F6] border-b border-[#D4AF37]/15 pt-14 md:pt-16">
         
-        <button onClick={() => window.location.href = '/boutiques'} className="absolute top-4 left-4 md:top-6 md:left-12 z-50 flex items-center gap-2 bg-[#FAF9F6]/90 hover:bg-[#FAF9F6] text-[#1A0008] text-[9px] uppercase tracking-[0.2em] px-4 md:px-5 py-2 md:py-2.5 backdrop-blur-md shadow-lg transition-all rounded-full border border-[#D4AF37]/20 cursor-pointer hover:scale-105">
+        <button onClick={() => window.location.href = '/shops-and-boutiques'} className="absolute top-4 left-4 md:top-6 md:left-12 z-50 flex items-center gap-2 bg-[#FAF9F6]/90 hover:bg-[#FAF9F6] text-[#1A0008] text-[9px] uppercase tracking-[0.2em] px-4 md:px-5 py-2 md:py-2.5 backdrop-blur-md shadow-lg transition-all rounded-full border border-[#D4AF37]/20 cursor-pointer hover:scale-105">
           <ArrowLeft size={12} /> Directory
         </button>
 

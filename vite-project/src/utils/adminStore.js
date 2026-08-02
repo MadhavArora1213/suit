@@ -1040,6 +1040,24 @@ export const seedIfEmpty = () => {
       });
     }
   }
+
+  // Force seed the requested boutiques
+  const hasSeededBoutiques = localStorage.getItem('gurnaaz_boutiques_seeded_v8');
+  if (!hasSeededBoutiques) {
+    const defaultBoutiques = [
+      { id: 'b1', name: 'Mahalakshmi Silk Store', logo: '/banarasi_suit.png', coverImage: '/banarasi_suit.png', rating: 4.9, reviews: 156, location: 'Tanda, Hoshiarpur, Punjab', type: 'Shop', active: true, isFeatured: true, showInNavbar: true, description: 'One of the oldest and most trusted wholesale silk stores in Tanda. Specializing in authentic pure silk, Banarasi weaves, and traditional bridal handlooms.' },
+      { id: 'b2', name: 'Jagdambay Binny Store', logo: '/chikankari_suit.png', coverImage: '/chikankari_suit.png', rating: 4.8, reviews: 92, location: 'Tanda, Hoshiarpur, Punjab', type: 'Shop', active: true, isFeatured: true, showInNavbar: true, description: 'Your go-to destination for exquisite handcrafted Chikankari work. We offer premium unstitched suit sets and kurtas direct from the artisans.' },
+      { id: 'b3', name: 'Rivaakri', logo: '/sharara_suit.png', coverImage: '/sharara_suit.png', rating: 4.7, reviews: 210, location: 'Delhi', type: 'Boutique', active: true, isFeatured: true, showInNavbar: true, description: 'A modern designer boutique curating the finest contemporary ethnic wear. Famous for stylish Sharara sets, heavy party wear, and exclusive designer silhouettes.' },
+      { id: 'b4', name: 'The Luxury Store', logo: '/pakistani_suit.png', coverImage: '/pakistani_suit.png', rating: 5.0, reviews: 312, location: 'Mumbai', type: 'Boutique', active: true, isFeatured: true, showInNavbar: true, description: 'Premium fashion destination offering high-end luxury ethnic collections, including intricate Pakistani style straight suits and custom tailored festive edits.' },
+    ];
+    set(KEYS.boutiques, defaultBoutiques);
+    localStorage.setItem('gurnaaz_boutiques_seeded_v8', 'true');
+    if (auth && auth.currentUser) {
+      defaultBoutiques.forEach(b => {
+        setDoc(doc(db, 'boutiques', b.id), b, { merge: true }).catch(() => {});
+      });
+    }
+  }
 };
 
 // ── Generic helpers ──────────────────────────────────────────
@@ -1604,7 +1622,22 @@ export const staticBoutiques = {
 };
 
 // ── BOUTIQUES ────────────────────────────────────────────────
-export const getBoutiques = () => get(KEYS.boutiques, []);
+export const getBoutiques = () => {
+  const existing = get(KEYS.boutiques, []);
+  const hasSeededBoutiques = localStorage.getItem('gurnaaz_boutiques_seeded_v8');
+  if (!hasSeededBoutiques || existing.length === 0) {
+    const defaultBoutiques = [
+      { id: 'b1', name: 'Mahalakshmi Silk Store', logo: '/banarasi_suit.png', coverImage: '/banarasi_suit.png', rating: 4.9, reviews: 156, location: 'Tanda, Hoshiarpur, Punjab', type: 'Shop', active: true, isFeatured: true, showInNavbar: true, description: 'One of the oldest and most trusted wholesale silk stores in Tanda. Specializing in authentic pure silk, Banarasi weaves, and traditional bridal handlooms.' },
+      { id: 'b2', name: 'Jagdambay Binny Store', logo: '/chikankari_suit.png', coverImage: '/chikankari_suit.png', rating: 4.8, reviews: 92, location: 'Tanda, Hoshiarpur, Punjab', type: 'Shop', active: true, isFeatured: true, showInNavbar: true, description: 'Your go-to destination for exquisite handcrafted Chikankari work. We offer premium unstitched suit sets and kurtas direct from the artisans.' },
+      { id: 'b3', name: 'Rivaakri', logo: '/sharara_suit.png', coverImage: '/sharara_suit.png', rating: 4.7, reviews: 210, location: 'Delhi', type: 'Boutique', active: true, isFeatured: true, showInNavbar: true, description: 'A modern designer boutique curating the finest contemporary ethnic wear. Famous for stylish Sharara sets, heavy party wear, and exclusive designer silhouettes.' },
+      { id: 'b4', name: 'The Luxury Store', logo: '/pakistani_suit.png', coverImage: '/pakistani_suit.png', rating: 5.0, reviews: 312, location: 'Mumbai', type: 'Boutique', active: true, isFeatured: true, showInNavbar: true, description: 'Premium fashion destination offering high-end luxury ethnic collections, including intricate Pakistani style straight suits and custom tailored festive edits.' },
+    ];
+    set(KEYS.boutiques, defaultBoutiques);
+    localStorage.setItem('gurnaaz_boutiques_seeded_v8', 'true');
+    return defaultBoutiques;
+  }
+  return existing;
+};
 export const saveBoutiques = (arr) => set(KEYS.boutiques, arr);
 
 export const addBoutique = async (boutique) => {
