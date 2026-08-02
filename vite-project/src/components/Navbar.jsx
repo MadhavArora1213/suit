@@ -116,7 +116,7 @@ export default function Navbar({
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed left-0 right-0 z-[999] flex justify-center transition-all duration-700 ${scrolled ? 'top-4 px-4' : 'top-[32px] px-0'}`}
+        className={`fixed left-0 right-0 z-[999] flex justify-center transition-all duration-700 ${scrolled ? 'top-0 px-0 sm:top-4 sm:px-4' : 'top-[32px] px-0'}`}
       >
         {/* Main Nav */}
         <div className={`transition-all duration-500 flex flex-col relative w-full ${scrolled

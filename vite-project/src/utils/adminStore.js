@@ -21,14 +21,14 @@ import {
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 const KEYS = {
-  products:     'gurnaaz_products',
-  categories:   'gurnaaz_categories',
-  reviews:      'gurnaaz_reviews',
-  orders:       'gurnaaz_orders',
-  support:      'gurnaaz_support',
-  boutiques:    'gurnaaz_boutiques',
-  collections:  'gurnaaz_collections',
-  collectionTags: 'gurnaaz_collection_tags'
+  products:     'gurnaaz_products_v4',
+  categories:   'gurnaaz_categories_v4',
+  reviews:      'gurnaaz_reviews_v4',
+  orders:       'gurnaaz_orders_v4',
+  support:      'gurnaaz_support_v4',
+  boutiques:    'gurnaaz_boutiques_v4',
+  collections:  'gurnaaz_collections_v4',
+  collectionTags: 'gurnaaz_collection_tags_v4'
 };
 
 // ── Static Products Definition ────────────────────────────────

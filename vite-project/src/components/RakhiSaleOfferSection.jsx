@@ -129,13 +129,13 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
             </span>
           </h2>
 
-          <p className="mt-4 text-[#555] text-sm md:text-base max-w-2xl font-light tracking-wide leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="mt-4 px-2 text-[#555] text-sm md:text-base max-w-2xl font-light tracking-wide leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Explore special festive bundles featuring Designer Suits, Kashmiri Churi bangles, Gold Kadas, Kids Rakhis, and personalized audio gift box hampers.
           </p>
         </div>
 
         {/* High-End Fashion Staggered Editorial Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 mb-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 mb-10 items-center">
           
           {/* LEFT SIDE (5/12): Hero Magazine Cover */}
           <div className="lg:col-span-5 relative flex justify-center">
@@ -152,9 +152,9 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
               <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008] via-[#1A0008]/40 to-transparent opacity-90" />
               
               {/* Content overlay */}
-              <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end text-white z-20">
+              <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end items-center text-center text-white z-20">
                 <div className="mb-4">
-                  <span className="bg-[#D4AF37] text-[#1A0008] text-[9px] font-black uppercase px-4 py-1.5 rounded-full tracking-[0.25em] shadow-lg">
+                  <span className="bg-[#D4AF37] text-[#1A0008] text-[8px] sm:text-[9px] font-black uppercase px-3 sm:px-4 py-1.5 rounded-full tracking-[0.2em] shadow-lg whitespace-nowrap">
                     Grand Campaign
                   </span>
                 </div>
@@ -163,7 +163,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
                   Flat <span className="text-[#D4AF37] italic font-normal">50%</span> Off
                 </h3>
                 
-                <p className="text-[13px] text-gray-200 font-light mb-8 leading-relaxed max-w-[90%]">
+                <p className="text-[13px] text-gray-200 font-light mb-8 leading-relaxed max-w-[90%] mx-auto">
                   Exclusive Rakhi bundles featuring premium Silk Suits & audio QR gift hampers.
                 </p>
 
@@ -190,7 +190,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
                     </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full max-w-[280px]">
                   <div className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between">
                     <span className="text-[8px] text-gray-400 uppercase tracking-widest">Code</span>
                     <span className="font-mono text-sm font-bold text-[#D4AF37]">RAKHI50</span>
@@ -276,30 +276,72 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
           </div>
         </div>
 
-        {/* Customer Trust Strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center pt-6 border-t border-[#1A0008]/10">
-          <div className="p-4 bg-white rounded-2xl border border-gray-200/80 flex flex-col items-center shadow-sm">
-            <span className="text-2xl mb-1">🛡️</span>
-            <span className="text-xs font-bold text-[#1A0008]">100% Pure Handloom Silk</span>
-            <span className="text-[10px] text-gray-500 font-light">Crafted by Master Artisans</span>
+        {/* Unique Heritage Seal Editorial Trust Strip */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 border-t border-[#1A0008]/10 mt-4">
+          {/* Item 1 */}
+          <div className="flex flex-col items-center justify-center text-center relative group p-4 lg:p-6 overflow-hidden cursor-default">
+            {/* Giant Background Number */}
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[7rem] md:text-[9rem] font-black text-[#1A0008]/[0.03] select-none group-hover:text-[#D4AF37]/10 transition-colors duration-700 pointer-events-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              01
+            </span>
+            
+            {/* Glowing Icon Seal */}
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border border-[#D4AF37]/40 flex items-center justify-center mb-5 relative z-10 bg-white/50 backdrop-blur-sm group-hover:bg-[#1A0008] group-hover:border-[#1A0008] transition-all duration-500 shadow-[0_0_20px_rgba(212,175,55,0.1)] group-hover:shadow-[0_10px_30px_rgba(26,0,8,0.2)]">
+              <svg className="w-6 h-6 md:w-7 md:h-7 text-[#D4AF37] group-hover:scale-110 transition-transform duration-500" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </div>
+            
+            <h5 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-[#1A0008] mb-2 relative z-10 leading-tight">100% Pure Silk</h5>
+            <p className="text-[13px] md:text-[14px] text-gray-500 font-light relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>Crafted by master artisans</p>
           </div>
 
-          <div className="p-4 bg-white rounded-2xl border border-gray-200/80 flex flex-col items-center shadow-sm">
-            <span className="text-2xl mb-1">🎙️</span>
-            <span className="text-xs font-bold text-[#1A0008]">Behen Ki Awaaz Voice Card</span>
-            <span className="text-[10px] text-gray-500 font-light">Free inside every gift box</span>
+          {/* Item 2 */}
+          <div className="flex flex-col items-center justify-center text-center relative group p-4 lg:p-6 overflow-hidden cursor-default">
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[7rem] md:text-[9rem] font-black text-[#1A0008]/[0.03] select-none group-hover:text-[#D4AF37]/10 transition-colors duration-700 pointer-events-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              02
+            </span>
+            
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border border-[#D4AF37]/40 flex items-center justify-center mb-5 relative z-10 bg-white/50 backdrop-blur-sm group-hover:bg-[#1A0008] group-hover:border-[#1A0008] transition-all duration-500 shadow-[0_0_20px_rgba(212,175,55,0.1)] group-hover:shadow-[0_10px_30px_rgba(26,0,8,0.2)]">
+              <svg className="w-6 h-6 md:w-7 md:h-7 text-[#D4AF37] group-hover:scale-110 transition-transform duration-500" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+              </svg>
+            </div>
+            
+            <h5 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-[#1A0008] mb-2 relative z-10 leading-tight">Voice Card Included</h5>
+            <p className="text-[13px] md:text-[14px] text-gray-500 font-light relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>Free inside every gift box</p>
           </div>
 
-          <div className="p-4 bg-white rounded-2xl border border-gray-200/80 flex flex-col items-center shadow-sm">
-            <span className="text-2xl mb-1">🚚</span>
-            <span className="text-xs font-bold text-[#1A0008]">48-Hour Dispatch Guarantee</span>
-            <span className="text-[10px] text-gray-500 font-light">Express delivery before Rakhi</span>
+          {/* Item 3 */}
+          <div className="flex flex-col items-center justify-center text-center relative group p-4 lg:p-6 overflow-hidden cursor-default">
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[7rem] md:text-[9rem] font-black text-[#1A0008]/[0.03] select-none group-hover:text-[#D4AF37]/10 transition-colors duration-700 pointer-events-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              03
+            </span>
+            
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border border-[#D4AF37]/40 flex items-center justify-center mb-5 relative z-10 bg-white/50 backdrop-blur-sm group-hover:bg-[#1A0008] group-hover:border-[#1A0008] transition-all duration-500 shadow-[0_0_20px_rgba(212,175,55,0.1)] group-hover:shadow-[0_10px_30px_rgba(26,0,8,0.2)]">
+              <svg className="w-6 h-6 md:w-7 md:h-7 text-[#D4AF37] group-hover:scale-110 transition-transform duration-500" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            
+            <h5 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-[#1A0008] mb-2 relative z-10 leading-tight">2-7 Days Dispatch</h5>
+            <p className="text-[13px] md:text-[14px] text-gray-500 font-light relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>Express delivery before Rakhi</p>
           </div>
 
-          <div className="p-4 bg-white rounded-2xl border border-gray-200/80 flex flex-col items-center shadow-sm">
-            <span className="text-2xl mb-1">🎁</span>
-            <span className="text-xs font-bold text-[#1A0008]">Signature Velvet Packaging</span>
-            <span className="text-[10px] text-gray-500 font-light">Keepsake gift box included</span>
+          {/* Item 4 */}
+          <div className="flex flex-col items-center justify-center text-center relative group p-4 lg:p-6 overflow-hidden cursor-default">
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[7rem] md:text-[9rem] font-black text-[#1A0008]/[0.03] select-none group-hover:text-[#D4AF37]/10 transition-colors duration-700 pointer-events-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              04
+            </span>
+            
+            <div className="w-14 h-14 md:w-16 md:h-16 rounded-full border border-[#D4AF37]/40 flex items-center justify-center mb-5 relative z-10 bg-white/50 backdrop-blur-sm group-hover:bg-[#1A0008] group-hover:border-[#1A0008] transition-all duration-500 shadow-[0_0_20px_rgba(212,175,55,0.1)] group-hover:shadow-[0_10px_30px_rgba(26,0,8,0.2)]">
+              <svg className="w-6 h-6 md:w-7 md:h-7 text-[#D4AF37] group-hover:scale-110 transition-transform duration-500" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+            </div>
+            
+            <h5 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] text-[#1A0008] mb-2 relative z-10 leading-tight">Signature Velvet Box</h5>
+            <p className="text-[13px] md:text-[14px] text-gray-500 font-light relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>Keepsake gift box included</p>
           </div>
         </div>
 

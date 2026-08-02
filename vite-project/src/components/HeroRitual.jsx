@@ -42,33 +42,33 @@ export default function HeroRitual({ onSelectFilter }) {
         }} />
 
       {/* Main Headline */}
-      <div className="relative z-20 flex flex-col items-center text-center mt-20 md:mt-24 px-4">
-        <div className="inline-block bg-[#1A0008] text-[#F5D76E] font-bold px-4 py-1.5 rounded-full border border-[#D4AF37]/50 shadow-[0_4px_15px_rgba(0,0,0,0.1)] mb-4 uppercase tracking-[0.2em] text-xs" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="relative z-20 flex flex-col items-center text-center mt-16 sm:mt-20 md:mt-24 px-4">
+        <div className="inline-block bg-[#1A0008] text-[#F5D76E] font-bold px-4 py-1.5 rounded-full border border-[#D4AF37]/50 shadow-[0_4px_15px_rgba(0,0,0,0.1)] mb-4 uppercase tracking-[0.2em] text-[10px] sm:text-xs" style={{ fontFamily: "'DM Sans', sans-serif" }}>
           🔥 The Ultimate Rakhi Sale
         </div>
         
-        <h1 className="text-[10vw] md:text-[6vw] lg:text-[4.5vw] font-light leading-[1.1] tracking-tight text-[#1A0008] max-w-5xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+        <h1 className="text-[11vw] sm:text-[10vw] md:text-[6vw] lg:text-[4.5vw] font-light leading-[1.1] tracking-tight text-[#1A0008] max-w-5xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
           Celebrate the purest bond. Claim <br className="hidden md:block" />
-          the best offers on our <span className="relative inline-block px-2">
+          the best offers on our <span className="relative inline-block px-2 mt-2 sm:mt-0">
             <span className="relative z-10 text-[#8B1A1A] italic">exclusive collection.</span>
             {/* Soft Gold Highlight behind text */}
             <span className="absolute bottom-1 left-0 w-full h-[40%] bg-[#F5D76E]/60 -z-10 -rotate-1" />
           </span>
         </h1>
         
-        <p className="mt-6 text-[#555] text-[14px] md:text-[16px] max-w-2xl tracking-wide font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        <p className="mt-6 text-[#555] text-[13px] sm:text-[14px] md:text-[16px] max-w-2xl tracking-wide font-light px-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
           Up to 40% Off on premium ethnic suits and signature Rakhi boxes. <br className="hidden md:block" />
           Every order includes the exclusive 'Behen Ki Awaaz' QR card.
         </p>
 
         {mounted && (
           <div className="mt-6 flex flex-col items-center gap-4">
-            <div className="text-sm bg-white/80 backdrop-blur-md border-2 border-[#D4AF37] px-6 py-2.5 rounded-full shadow-[0_10px_30px_rgba(212,175,55,0.25)] flex items-center gap-3 font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              <span className="text-[#8B1A1A] tracking-widest text-[11px] flex items-center gap-1.5">
+            <div className="text-sm bg-white/80 backdrop-blur-md border-2 border-[#D4AF37] px-4 sm:px-6 py-2 sm:py-2.5 rounded-[2rem] sm:rounded-full shadow-[0_10px_30px_rgba(212,175,55,0.25)] flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <span className="text-[#8B1A1A] tracking-widest text-[10px] sm:text-[11px] flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-[#8B1A1A] animate-ping" />
                 FESTIVE SALE ENDS IN:
               </span>
-              <span className="text-[#1A0008] tabular-nums tracking-widest text-[13px] font-black">{String(timeLeft.days).padStart(2, '0')}d : {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.mins).padStart(2, '0')}m : {String(timeLeft.secs).padStart(2, '0')}s</span>
+              <span className="text-[#1A0008] tabular-nums tracking-widest text-[12px] sm:text-[13px] font-black mt-1 sm:mt-0">{String(timeLeft.days).padStart(2, '0')}d : {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.mins).padStart(2, '0')}m : {String(timeLeft.secs).padStart(2, '0')}s</span>
             </div>
 
             <button 
@@ -76,7 +76,7 @@ export default function HeroRitual({ onSelectFilter }) {
                 const el = document.getElementById('rakhi-offers-sale');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
-              className="mt-2 inline-flex items-center gap-2 bg-[#1A0008] hover:bg-[#8B1A1A] text-[#F5D76E] px-7 py-3 rounded-full text-xs uppercase tracking-[0.2em] font-bold transition-all transform hover:scale-105 shadow-xl border border-[#D4AF37]/40"
+              className="mt-2 inline-flex items-center gap-2 bg-[#1A0008] hover:bg-[#8B1A1A] text-[#F5D76E] px-6 sm:px-7 py-3 rounded-full text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold transition-all transform hover:scale-105 shadow-xl border border-[#D4AF37]/40"
             >
               Explore Exclusive Offers ↓
             </button>
@@ -85,26 +85,26 @@ export default function HeroRitual({ onSelectFilter }) {
       </div>
 
       {/* Overlapping Cards Container (Daisy Style in Light Theme) */}
-      <div className="relative z-10 w-full flex-grow mt-12 pb-28 flex justify-center items-center overflow-x-visible">
-        <div className="relative w-full max-w-[1100px] h-[400px] md:h-[500px] mx-auto">
+      <div className="relative z-10 w-full flex-grow mt-12 md:mt-12 pb-20 md:pb-28 flex justify-center items-center overflow-hidden md:overflow-x-visible px-2 sm:px-0">
+        <div className="relative w-full max-w-[1100px] h-[300px] sm:h-[400px] md:h-[500px] mx-auto">
           
           {/* Card 1: The Suit Photo (Polaroid style with Gold Border) */}
           <motion.div 
-            initial={{ opacity: 0, y: 100, rotate: -20 }}
-            animate={{ opacity: 1, y: 0, rotate: -12 }}
+            initial={{ opacity: 0, y: 100, rotate: -10 }}
+            animate={{ opacity: 1, y: 0, rotate: -6 }}
             transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
-            whileHover={{ scale: 1.05, rotate: -8, zIndex: 40 }}
-            className="absolute left-[2%] md:left-[6%] top-[10%] w-[180px] md:w-[270px] h-[260px] md:h-[370px] bg-white p-2.5 pb-10 border-2 border-[#D4AF37] rounded-xl shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group transition-all"
+            whileHover={{ scale: 1.05, rotate: -2, zIndex: 40 }}
+            className="absolute left-[2%] sm:left-[2%] md:left-[6%] top-[20%] sm:top-[10%] w-[90px] sm:w-[180px] md:w-[270px] h-[140px] sm:h-[260px] md:h-[370px] bg-white p-1.5 sm:p-2.5 pb-6 sm:pb-10 border-2 border-[#D4AF37] rounded-xl shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group transition-all"
           >
             <div className="w-full h-full overflow-hidden bg-[#E8DDD0] rounded-lg border border-gray-200 relative">
               <img src="/rakhi_suit_hero_shoot.jpg" alt="Rakhi Suit Model Shoot" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3 text-white text-xs font-bold">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2 sm:p-3 text-white text-[8px] sm:text-xs font-bold">
                 Silk Patiala & Silver Rakhi Set
               </div>
             </div>
             
             {/* Sticker Top Left */}
-            <div className="absolute -top-4 -left-6 bg-[#D4AF37] border-2 border-[#1A0008] px-3.5 py-1.5 rounded-lg text-[#1A0008] text-xs font-black tracking-widest rotate-[-10deg] shadow-[3px_3px_0px_rgba(26,0,8,1)]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <div className="absolute -top-2 sm:-top-4 -left-1 sm:-left-6 bg-[#D4AF37] border-2 border-[#1A0008] px-1.5 sm:px-3.5 py-1 sm:py-1.5 rounded-md sm:rounded-lg text-[#1A0008] text-[6px] sm:text-xs font-black tracking-widest rotate-[-6deg] shadow-[2px_2px_0px_rgba(26,0,8,1)] sm:shadow-[3px_3px_0px_rgba(26,0,8,1)]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               THE FESTIVE EDIT
             </div>
           </motion.div>
@@ -115,25 +115,25 @@ export default function HeroRitual({ onSelectFilter }) {
             animate={{ opacity: 1, y: 0, rotate: -2 }}
             transition={{ duration: 0.8, delay: 0.3, type: "spring" }}
             whileHover={{ scale: 1.05, rotate: 0, zIndex: 40 }}
-            className="absolute left-[22%] md:left-[24%] top-[5%] w-[200px] md:w-[310px] h-[290px] md:h-[410px] bg-[#1A0008] border-2 border-[#D4AF37] rounded-2xl p-6 shadow-[0_25px_60px_rgba(212,175,55,0.3)] z-20 flex flex-col justify-center items-center text-center text-white relative overflow-hidden"
+            className="absolute left-[24%] sm:left-[22%] md:left-[24%] top-[5%] w-[130px] sm:w-[200px] md:w-[310px] h-[190px] sm:h-[290px] md:h-[410px] bg-[#1A0008] border-2 border-[#D4AF37] rounded-xl sm:rounded-2xl p-2.5 sm:p-6 shadow-[0_25px_60px_rgba(212,175,55,0.3)] z-20 flex flex-col justify-center items-center text-center text-white relative overflow-hidden"
           >
             {/* Background glow */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#D4AF37]/30 via-transparent to-transparent opacity-60 pointer-events-none" />
             
-            <div className="w-16 h-16 md:w-20 md:h-20 bg-white border-2 border-[#D4AF37] p-1.5 rounded-xl mb-4 flex items-center justify-center relative z-10 shadow-[4px_4px_0px_rgba(212,175,55,1)]">
+            <div className="w-10 h-10 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-white border-2 border-[#D4AF37] p-1 sm:p-1.5 rounded-lg sm:rounded-xl mb-2 sm:mb-4 flex items-center justify-center relative z-10 shadow-[2px_2px_0px_rgba(212,175,55,1)] sm:shadow-[4px_4px_0px_rgba(212,175,55,1)]">
               {/* Dummy QR Code */}
               <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Gurnaaz+Rakhi+Special" alt="QR Code" className="w-full h-full object-contain opacity-90" />
             </div>
             
-            <h3 className="text-[28px] md:text-[36px] mb-2 leading-tight text-[#F5D76E] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h3 className="text-[16px] sm:text-[28px] md:text-[36px] mb-1 sm:mb-2 leading-tight text-[#F5D76E] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Behen<br/>Ki Awaaz 🎙️
             </h3>
             
-            <p className="text-[10px] md:text-[12px] text-[#FAF9F6]/90 border border-[#D4AF37]/40 p-2.5 rounded-xl w-full bg-white/10 relative z-10 backdrop-blur-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <p className="text-[6.5px] sm:text-[10px] md:text-[12px] text-[#FAF9F6]/90 border border-[#D4AF37]/40 p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl w-[95%] sm:w-full mx-auto bg-white/10 relative z-10 backdrop-blur-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Scan the QR code inside your gift box to play her voice note.
             </p>
             
-            <div className="absolute bottom-5 text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <div className="absolute bottom-2 sm:bottom-5 text-[6px] sm:text-[9px] tracking-[0.2em] sm:tracking-[0.3em] text-[#D4AF37] uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Scan to Play Audio
             </div>
           </motion.div>
@@ -144,51 +144,51 @@ export default function HeroRitual({ onSelectFilter }) {
             animate={{ opacity: 1, y: 0, rotate: 6 }}
             transition={{ duration: 0.8, delay: 0.4, type: "spring" }}
             whileHover={{ scale: 1.05, rotate: 3, zIndex: 40 }}
-            className="absolute right-[22%] md:right-[24%] top-[12%] md:top-[15%] w-[180px] md:w-[260px] h-[270px] md:h-[360px] bg-[#F5D76E] border-2 border-[#1A0008] rounded-2xl p-4 shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-30 flex flex-col justify-between"
+            className="absolute right-[20%] sm:right-[22%] md:right-[24%] top-[12%] md:top-[15%] w-[110px] sm:w-[180px] md:w-[260px] h-[165px] sm:h-[270px] md:h-[360px] bg-[#F5D76E] border-2 border-[#1A0008] rounded-xl sm:rounded-2xl p-1.5 sm:p-4 shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-30 flex flex-col justify-between"
           >
-            <div className="text-center text-xl md:text-2xl mt-4 text-[#1A0008] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <div className="text-center text-[12px] sm:text-xl md:text-2xl mt-2 sm:mt-4 text-[#1A0008] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Signature <br/> Silver Rakhis
             </div>
             <div className="flex-grow flex items-center justify-center">
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-[3px] border-[#1A0008] shadow-[4px_4px_0px_rgba(26,0,8,1)] bg-white p-1">
+              <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-[2px] sm:border-[3px] border-[#1A0008] shadow-[2px_2px_0px_rgba(26,0,8,1)] sm:shadow-[4px_4px_0px_rgba(26,0,8,1)] bg-white p-0.5 sm:p-1">
                 <img src="/rakhi_campaign_hero.png" alt="Signature Rakhi" className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform" />
               </div>
             </div>
-            <div className="text-[9px] md:text-[10px] border-t-2 border-[#1A0008]/20 pt-3 text-[#1A0008] text-center tracking-widest uppercase font-black" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <div className="text-[6px] sm:text-[9px] md:text-[10px] border-t-2 border-[#1A0008]/20 pt-1.5 sm:pt-3 text-[#1A0008] text-center tracking-widest uppercase font-black" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Included in Gift Hampers
             </div>
           </motion.div>
 
           {/* Card 4: Model Image 2 */}
           <motion.div 
-            initial={{ opacity: 0, y: 100, rotate: 15 }}
-            animate={{ opacity: 1, y: 0, rotate: 12 }}
+            initial={{ opacity: 0, y: 100, rotate: 10 }}
+            animate={{ opacity: 1, y: 0, rotate: 6 }}
             transition={{ duration: 0.8, delay: 0.5, type: "spring" }}
-            whileHover={{ scale: 1.05, rotate: 8, zIndex: 40 }}
-            className="absolute right-[2%] md:right-[6%] top-[8%] w-[160px] md:w-[250px] h-[240px] md:h-[330px] bg-white p-2.5 pb-10 border-2 border-[#D4AF37] rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group"
+            whileHover={{ scale: 1.05, rotate: 2, zIndex: 40 }}
+            className="absolute right-[1%] sm:right-[2%] md:right-[6%] top-[15%] md:top-[8%] w-[85px] sm:w-[160px] md:w-[250px] h-[135px] sm:h-[240px] md:h-[330px] bg-white p-1.5 sm:p-2.5 pb-6 sm:pb-10 border-2 border-[#D4AF37] rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group"
           >
             <div className="w-full h-full rounded-lg overflow-hidden bg-[#FAF9F6] border border-[#1A0008]/10">
               <img src="/designer_suit_1.png" alt="Designer Suit" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
             </div>
             
             {/* Sticker Bottom Right */}
-            <div className="absolute bottom-2 -right-4 bg-[#8B1A1A] border-2 border-[#1A0008] px-3 py-2 rounded-lg text-[#FAF9F6] text-[10px] font-bold tracking-wider rotate-[-5deg] shadow-[3px_3px_0px_rgba(26,0,8,1)] z-30" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <div className="absolute bottom-1 sm:bottom-2 -right-1 sm:-right-4 bg-[#8B1A1A] border-2 border-[#1A0008] px-1.5 sm:px-3 py-1 sm:py-2 rounded-md sm:rounded-lg text-[#FAF9F6] text-[5px] sm:text-[10px] font-bold tracking-wider rotate-[-6deg] shadow-[2px_2px_0px_rgba(26,0,8,1)] sm:shadow-[3px_3px_0px_rgba(26,0,8,1)] z-30" style={{ fontFamily: "'DM Sans', sans-serif" }}>
               GIFT HER THE BEST
             </div>
           </motion.div>
 
           {/* Spinning Circle Text */}
-          <div className="absolute top-[-20px] right-[20%] md:right-[30%] w-24 h-24 md:w-32 md:h-32 z-30">
+          <div className="absolute top-[-15px] sm:top-[-20px] right-[10%] sm:right-[20%] md:right-[30%] w-14 h-14 sm:w-24 sm:h-24 md:w-32 md:h-32 z-30">
             <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_12s_linear_infinite]">
               <path id="circlePath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
-              <text className="text-[11px] font-black tracking-[0.2em] fill-[#1A0008]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <text className="text-[9.5px] sm:text-[11px] font-black tracking-[0.2em] fill-[#1A0008]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 <textPath href="#circlePath">
                   FLAT 40% OFF SALE • LIVE IN BANARAS •
                 </textPath>
               </text>
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#F5D76E] border-2 border-[#1A0008] shadow-[2px_2px_0px_rgba(26,0,8,1)]"></div>
+              <div className="w-7 h-7 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#F5D76E] border-2 border-[#1A0008] shadow-[1px_1px_0px_rgba(26,0,8,1)] sm:shadow-[2px_2px_0px_rgba(26,0,8,1)]"></div>
             </div>
           </div>
 

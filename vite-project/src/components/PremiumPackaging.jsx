@@ -220,8 +220,8 @@ export default function PremiumPackaging() {
                 </div>
 
                 {/* Instruction Pill on the Lid */}
-                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/5 backdrop-blur-md px-8 py-3 rounded-full border border-white/10 animate-pulse shadow-xl">
-                  <span className="text-white/80 text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-white/5 backdrop-blur-md px-8 py-3 rounded-full border border-white/10 animate-pulse shadow-xl whitespace-nowrap">
+                  <span className="text-white/80 text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     Move Cursor to Peek Inside
                   </span>
                 </div>

@@ -15,6 +15,7 @@ import ShoppingReimagined from './ShoppingReimagined';
 import HeroRitual from './HeroRitual';
 import RakhiSaleOfferSection from './RakhiSaleOfferSection';
 import RakhiSuitCategoryShowcase from './RakhiSuitCategoryShowcase';
+import RakhiUnboxingExperience from './RakhiUnboxingExperience';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
@@ -103,6 +104,12 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
         addToCart={addToCart} 
         toggleFavorite={toggleFavorite} 
         favorites={favorites} 
+      />
+
+      {/* 4th Section: The Unboxing Experience & Emotion */}
+      <RakhiUnboxingExperience 
+        setView={setView} 
+        setSelectedCategory={setSelectedCategory} 
       />
 
       {/* Shopping, Reimagined Occasion Cards */}
