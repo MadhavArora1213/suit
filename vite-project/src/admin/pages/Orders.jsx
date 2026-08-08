@@ -3,17 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Eye, Edit2, ChevronDown, Package } from 'lucide-react';
 import { getOrders, syncOrders, updateOrderStatus } from '../../utils/adminStore';
 
-const orders = [
-  { id: '#ORD-1042', customer: 'Priya Sharma', email: 'priya@email.com', product: 'Banarasi Silk Suit', size: 'M (38)', qty: 1, amount: '₹9,299', status: 'Delivered', date: '27 Jun 2026', payment: 'UPI', city: 'Delhi' },
-  { id: '#ORD-1041', customer: 'Anjali Mehta', email: 'anjali@email.com', product: 'Chikankari Suit Set', size: 'L (40)', qty: 2, amount: '₹14,998', status: 'Shipped', date: '27 Jun 2026', payment: 'Card', city: 'Mumbai' },
-  { id: '#ORD-1040', customer: 'Ritu Verma', email: 'ritu@email.com', product: 'Anarkali Floral Suit', size: 'S (36)', qty: 1, amount: '₹6,899', status: 'Processing', date: '26 Jun 2026', payment: 'COD', city: 'Jaipur' },
-  { id: '#ORD-1039', customer: 'Sunita Joshi', email: 'sunita@email.com', product: 'Gota Patti Sharara', size: 'XL (42)', qty: 1, amount: '₹4,999', status: 'Pending', date: '26 Jun 2026', payment: 'UPI', city: 'Lucknow' },
-  { id: '#ORD-1038', customer: 'Deepa Gupta', email: 'deepa@email.com', product: 'Pakistani Straight Suit', size: 'M (38)', qty: 1, amount: '₹4,799', status: 'Delivered', date: '25 Jun 2026', payment: 'Card', city: 'Bangalore' },
-  { id: '#ORD-1037', customer: 'Meena Kapoor', email: 'meena@email.com', product: 'Royal Sharara Suit', size: 'L (40)', qty: 1, amount: '₹11,499', status: 'Cancelled', date: '25 Jun 2026', payment: 'UPI', city: 'Chennai' },
-  { id: '#ORD-1036', customer: 'Kavita Rao', email: 'kavita@email.com', product: 'Velvet Embroidered Suit', size: 'M (38)', qty: 2, amount: '₹17,998', status: 'Shipped', date: '24 Jun 2026', payment: 'Card', city: 'Hyderabad' },
-  { id: '#ORD-1035', customer: 'Sonal Patel', email: 'sonal@email.com', product: 'Cotton Patiala Suit', size: 'S (36)', qty: 3, amount: '₹7,497', status: 'Delivered', date: '24 Jun 2026', payment: 'COD', city: 'Ahmedabad' },
-];
-
 const statusConfig = {
   Delivered:  { bg: '#F0FDF8', text: '#10B981', dot: '#10B981' },
   Shipped:    { bg: '#EFF6FF', text: '#3B82F6', dot: '#3B82F6' },
@@ -30,25 +19,16 @@ export default function Orders() {
   const [orderData, setOrderData] = useState([]);
   const [expandedId, setExpandedId] = useState(null);
 
-  // Load and sync orders from database and localStorage
   useEffect(() => {
-    const loadAndMerge = (sourceOrders) => {
-      const merged = [...sourceOrders];
-      orders.forEach(mockOrder => {
-        if (!merged.some(o => (o.orderId || o.id) === mockOrder.id)) {
-          merged.push(mockOrder);
-        }
-      });
-      setOrderData(merged);
+    const loadOrders = (sourceOrders) => {
+      setOrderData(sourceOrders || []);
     };
 
-    // Load initial localStorage orders
     const local = getOrders();
-    loadAndMerge(local);
+    loadOrders(local);
 
-    // Sync in background from cloud Firestore database
     syncOrders((syncedList) => {
-      loadAndMerge(syncedList);
+      loadOrders(syncedList);
     });
   }, []);
 

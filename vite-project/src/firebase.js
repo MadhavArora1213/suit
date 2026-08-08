@@ -500,3 +500,22 @@ export async function deleteDocumentFromFirestore(collectionName, docId) {
   }
 }
 
+/**
+ * Deletes ALL documents from a Firestore collection
+ */
+export async function deleteAllFromFirestore(collectionName) {
+  if (!isFirebaseConfigured() || !db) return 0;
+  try {
+    const snapshot = await getDocs(collection(db, collectionName));
+    let count = 0;
+    for (const docSnap of snapshot.docs) {
+      await deleteDoc(doc(db, collectionName, docSnap.id));
+      count++;
+    }
+    return count;
+  } catch (error) {
+    console.error(`Firestore delete all error for ${collectionName}:`, error);
+    return 0;
+  }
+}
+

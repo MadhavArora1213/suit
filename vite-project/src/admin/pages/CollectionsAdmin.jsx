@@ -1,10 +1,20 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Edit2, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Plus, Trash2, Edit2, ToggleLeft, ToggleRight, Sparkles } from 'lucide-react';
 import { getCollections, saveCollections } from '../../utils/adminStore';
 
-export default function CollectionsAdmin({ setActivePage }) {
+const defaultCollections = [
+  { id: 'wedding', title: 'Wedding Collection', subtitle: 'Bridal Luxury Redefined', desc: 'Exquisite bridal and wedding wear featuring heavy embroidery, zardozi work, and rich fabrics perfect for your special day.', story: '', image: '', accent: '#D4AF37', category: 'All', tag: 'Seasonal', order: 1, active: true, isFeaturedMenu: false },
+  { id: 'festive', title: 'Festive Collection', subtitle: 'Celebrate in Style', desc: 'Stunning festive wear designed for celebrations, festivals, and special occasions with vibrant colors and premium craftsmanship.', story: '', image: '', accent: '#E85D75', category: 'All', tag: 'Seasonal', order: 2, active: true, isFeaturedMenu: false },
+  { id: 'daily-wear', title: 'Daily Wear Collection', subtitle: 'Everyday Luxe Essentials', desc: 'Comfortable yet elegant ethnic wear for everyday use. Lightweight fabrics and easy-care designs for the modern woman.', story: '', image: '', accent: '#6B8C90', category: 'All', tag: 'Everyday', order: 3, active: true, isFeaturedMenu: false },
+  { id: 'cotton-suits', title: 'Cotton Suits', subtitle: 'Pure Comfort, Pure Elegance', desc: 'Handpicked cotton suits featuring breathable fabrics, block prints, and traditional Indian craftsmanship for all seasons.', story: '', image: '', accent: '#BCA58A', category: 'All', tag: 'By Fabric', order: 4, active: true, isFeaturedMenu: false },
+  { id: 'pakistani', title: 'Pakistani Collection', subtitle: 'Cross-Border Elegance', desc: 'Premium Pakistani suits with straight cuts, digital prints, and contemporary silhouettes that define modern ethnic fashion.', story: '', image: '', accent: '#8B5CF6', category: 'Pakistani', tag: 'By Style', order: 5, active: true, isFeaturedMenu: false },
+  { id: 'readymade', title: 'Readymade Collection', subtitle: 'Ready to Wear, Ready to Shine', desc: 'Beautifully tailored readymade suits that offer perfect fit and finish. No tailoring needed - just wear and dazzle.', story: '', image: '', accent: '#F59E0B', category: 'All', tag: 'By Type', order: 6, active: true, isFeaturedMenu: false },
+];
+
+export default function CollectionsAdmin({ setActivePage, onEditCollection }) {
   const [collections, setCollections] = useState([]);
+  const [seeding, setSeeding] = useState(false);
 
   const loadData = () => {
     const data = getCollections();
@@ -34,9 +44,28 @@ export default function CollectionsAdmin({ setActivePage }) {
     }
   };
 
+  const handleSeedDefaults = async () => {
+    if (!window.confirm('Add 6 default collections? Existing collections will not be affected.')) return;
+    setSeeding(true);
+    try {
+      const existing = getCollections();
+      const existingIds = new Set(existing.map(c => c.id));
+      const newCollections = defaultCollections.filter(c => !existingIds.has(c.id));
+      if (newCollections.length === 0) {
+        alert('All default collections already exist!');
+        setSeeding(false);
+        return;
+      }
+      saveCollections([...existing, ...newCollections]);
+      alert(`Added ${newCollections.length} collections!`);
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+    setSeeding(false);
+  };
+
   const handleEdit = (c) => {
-    localStorage.setItem('editCollectionData', JSON.stringify(c));
-    setActivePage('edit-collection');
+    onEditCollection(c);
   };
 
   return (
@@ -46,15 +75,23 @@ export default function CollectionsAdmin({ setActivePage }) {
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Collections</h2>
           <p className="text-gray-500 text-xs sm:text-sm mt-1">Manage your curated collections and editorial edits.</p>
         </div>
-        <button
-          onClick={() => {
-            localStorage.removeItem('editCollectionData');
-            setActivePage('add-collection');
-          }}
-          className="flex items-center justify-center gap-2 bg-[#111111] text-white px-4 py-2 rounded-md hover:bg-black transition-colors text-sm"
-        >
-          <Plus size={16} /> Add Collection
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleSeedDefaults}
+            disabled={seeding}
+            className="flex items-center justify-center gap-2 bg-[#BCA58A] text-white px-4 py-2 rounded-md hover:bg-[#A8937A] transition-colors text-sm disabled:opacity-50"
+          >
+            <Sparkles size={16} /> {seeding ? 'Adding...' : 'Add Defaults'}
+          </button>
+          <button
+            onClick={() => {
+              setActivePage('add-collection');
+            }}
+            className="flex items-center justify-center gap-2 bg-[#111111] text-white px-4 py-2 rounded-md hover:bg-black transition-colors text-sm"
+          >
+            <Plus size={16} /> Add Collection
+          </button>
+        </div>
       </div>
 
       {/* Mobile Cards */}

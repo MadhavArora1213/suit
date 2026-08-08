@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ShoppingBag, ArrowUpRight, ChevronRight } from 'lucide-react';
 import { useState, useMemo, useEffect } from 'react';
-import { getAllProducts, getCollectionTags } from '../utils/adminStore';
+import { getAllProducts, getCollections, getCollectionTags } from '../utils/adminStore';
 
 
 export default function CollectionsPage({ setView, setSelectedCategory, setSelectedProduct, setSelectedCollectionSlug, addToCart }) {
@@ -13,7 +13,7 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
 
   useEffect(() => {
     const load = () => {
-      let data = JSON.parse(localStorage.getItem('gurnaaz_collections') || '[]');
+      let data = getCollections();
       data = data.filter(c => c.active).sort((a, b) => a.order - b.order);
       setCollections(data);
 

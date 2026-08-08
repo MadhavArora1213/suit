@@ -34,7 +34,10 @@ export default function AdminApp() {
   };
 
   const [activePage, setActivePage] = useState(getInitialAdminPage());
-
+  const [editProduct, setEditProduct] = useState(null);
+  const [editBoutique, setEditBoutique] = useState(null);
+  const [editCollection, setEditCollection] = useState(null);
+  const [editCollectionTag, setEditCollectionTag] = useState(null);
   const [storeReady, setStoreReady] = useState(false);
 
   useEffect(() => {
@@ -80,23 +83,23 @@ export default function AdminApp() {
   const renderPage = () => {
     switch (activePage) {
       case 'dashboard':    return <Dashboard setActivePage={setActivePage} />;
-      case 'products':     return <Products setActivePage={setActivePage} />;
-      case 'add-product':  return <AddProduct setActivePage={setActivePage} />;
+      case 'products':     return <Products setActivePage={setActivePage} onEditProduct={(p) => { setEditProduct(p); setActivePage('add-product'); }} />;
+      case 'add-product':  return <AddProduct setActivePage={setActivePage} editProduct={editProduct} />;
       case 'orders':       return <Orders />;
       case 'support':      return <SupportAdmin />;
       case 'users':        return <UsersAdmin />;
-      case 'collections':  return <CollectionsAdmin setActivePage={setActivePage} />;
+      case 'collections':  return <CollectionsAdmin setActivePage={setActivePage} onEditCollection={(c) => { setEditCollection(c); setActivePage('edit-collection'); }} />;
       case 'add-collection':
-      case 'edit-collection':return <AddCollection setActivePage={setActivePage} />;
-      case 'collection-tags': return <CollectionTagsAdmin setActivePage={setActivePage} />;
+      case 'edit-collection':return <AddCollection setActivePage={setActivePage} editCollection={editCollection} />;
+      case 'collection-tags': return <CollectionTagsAdmin setActivePage={setActivePage} onEditCollectionTag={(t) => { setEditCollectionTag(t); setActivePage('edit-collection-tag'); }} />;
       case 'add-collection-tag':
-      case 'edit-collection-tag': return <AddCollectionTag setActivePage={setActivePage} />;
+      case 'edit-collection-tag': return <AddCollectionTag setActivePage={setActivePage} editCollectionTag={editCollectionTag} />;
       case 'categories':   return <CategoriesAdmin setActivePage={setActivePage} />;
       case 'add-category':
       case 'edit-category':return <AddCategory setActivePage={setActivePage} />;
-      case 'boutiques':    return <BoutiquesAdmin setActivePage={setActivePage} />;
+      case 'boutiques':    return <BoutiquesAdmin setActivePage={setActivePage} onEditBoutique={(b) => { setEditBoutique(b); setActivePage('edit-boutique'); }} />;
       case 'add-boutique': 
-      case 'edit-boutique':return <AddBoutique setActivePage={setActivePage} />;
+      case 'edit-boutique':return <AddBoutique setActivePage={setActivePage} editBoutique={editBoutique} />;
       case 'settings':     return <Settings />;
       default:             return <Dashboard setActivePage={setActivePage} />;
     }

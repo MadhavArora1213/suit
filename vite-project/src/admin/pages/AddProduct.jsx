@@ -35,15 +35,7 @@ const Card = ({ title, subtitle, children }) => (
 );
 
 export default function AddProduct({ setActivePage, editProduct = null }) {
-  const [editData] = useState(() => {
-    const saved = localStorage.getItem('admin_edit_product');
-    if (saved) {
-      try { return JSON.parse(saved); } catch(e) { return null; }
-    }
-    return null;
-  });
-
-  const ep = editProduct || editData;
+  const ep = editProduct;
 
   const [form, setForm] = useState({
     name: ep?.name || '',
@@ -143,7 +135,6 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       addProduct(product);
     }
 
-    localStorage.removeItem('admin_edit_product');
     notifyWebsite();
     setSaving(false);
     setSaved(true);

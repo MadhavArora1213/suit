@@ -3,47 +3,20 @@ import { Heart, ShoppingBag, Eye, X, Star, Check } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getProducts } from '../utils/adminStore';
 
-const staticProducts = {
-  Trending: [
-    { id: 't1', name: 'Embroidered Silk Suit Set', price: '₹4,299', image: '/designer_suit_1.png', boutique: 'Kala Mandir', badge: 'Silk Blend' },
-    { id: 't2', name: 'Chanderi Salwar Suit Set', price: '₹3,899', image: '/cotton_suit.png', boutique: 'Zari Heritage', badge: 'Handloom' },
-    { id: 't3', name: 'Designer Angrakha Suit Set', price: '₹5,499', image: '/sharara_suit.png', boutique: 'Mahalaksmi Silk Store', badge: 'Premium' },
-    { id: 't4', name: 'Pakistani Straight Suit Set', price: '₹4,799', image: '/pakistani_suit.png', boutique: 'Nazraana', badge: 'Verified' },
-  ],
-  'New Arrivals': [
-    { id: 'n1', name: 'Floral Silk Anarkali Suit', price: '₹6,899', image: '/anarkali_suit.png', boutique: 'Silk Weaver', badge: 'New Edition' },
-    { id: 'n2', name: 'Classic Georgette Suit Set', price: '₹3,299', image: '/designer_suit_1.png', boutique: 'Poshak', badge: 'Lightweight' },
-    { id: 'n3', name: 'Cotton Patiala Salwar Suit', price: '₹2,499', image: '/patiala_suit.png', boutique: 'Jaipur Block', badge: '100% Cotton' },
-    { id: 'n4', name: 'Organza Dupatta Suit Set', price: '₹5,199', image: '/chikankari_suit.png', boutique: 'Rivaaz', badge: 'Best Price' },
-  ],
-  'Best Sellers': [
-    { id: 'b1', name: 'Velvet Embroidered Suit Set', price: '₹8,999', image: '/banarasi_suit.png', boutique: 'Vastra', badge: 'Hot Seller' },
-    { id: 'b2', name: 'Chikankari Handloom Suit Set', price: '₹7,499', image: '/chikankari_suit.png', boutique: 'Awadh Kraft', badge: 'Artisanal' },
-    { id: 'b3', name: 'Banarasi Brocade Suit Set', price: '₹9,299', image: '/banarasi_suit.png', boutique: 'Kashi Fabrics', badge: 'Heritage' },
-    { id: 'b4', name: 'Gota Patti Sharara Suit Set', price: '₹4,999', image: '/sharara_suit.png', boutique: 'Shagun Jaipur', badge: 'Best Seller' },
-  ],
-  'Festive Edit': [
-    { id: 'f1', name: 'Royal Sharara Suit Set', price: '₹11,499', image: '/sharara_suit.png', boutique: 'Rajputana', badge: 'Grand Wedding' },
-    { id: 'f2', name: 'Handcrafted Palazzo Suit Set', price: '₹8,299', image: '/pakistani_suit.png', boutique: 'Gulabi Dhaaga', badge: 'Silk Edit' },
-    { id: 'f3', name: 'Raw Silk Anarkali Suit Set', price: '₹13,999', image: '/anarkali_suit.png', boutique: 'Royal Heritage', badge: 'Exclusive' },
-    { id: 'f4', name: 'Heavy Zardozi Salwar Suit Set', price: '₹12,499', image: '/designer_suit_1.png', boutique: 'Lakhnavi Shaan', badge: 'Festive Special' },
-  ],
-};
-
 export default function FeaturedCollections({ cart = [], addToCart, favorites = {}, toggleFavorite }) {
   const [activeTab, setActiveTab] = useState('Trending');
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState('M');
-  const [products, setProducts] = useState(staticProducts);
+  const [products, setProducts] = useState({ Trending: [], 'New Arrivals': [], 'Best Sellers': [], 'Festive Edit': [] });
   const tabs = ['Trending', 'New Arrivals', 'Best Sellers', 'Festive Edit'];
 
   const loadProducts = () => {
     const adminProducts = getProducts();
     const merged = {
-      Trending: [...staticProducts.Trending],
-      'New Arrivals': [...staticProducts['New Arrivals']],
-      'Best Sellers': [...staticProducts['Best Sellers']],
-      'Festive Edit': [...staticProducts['Festive Edit']],
+      Trending: [],
+      'New Arrivals': [],
+      'Best Sellers': [],
+      'Festive Edit': [],
     };
 
     adminProducts.forEach((p) => {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getBoutiques, addBoutique, updateBoutique, deleteBoutique, fileToBase64 } from '../../utils/adminStore';
 import { Pencil, Trash2, Plus, X, Store, Image as ImageIcon } from 'lucide-react';
 
-export default function BoutiquesAdmin({ setActivePage }) {
+export default function BoutiquesAdmin({ setActivePage, onEditBoutique }) {
   const [boutiques, setBoutiques] = useState([]);
 
   useEffect(() => {
@@ -13,15 +13,13 @@ export default function BoutiquesAdmin({ setActivePage }) {
   }, []);
 
   const handleAdd = () => {
-    localStorage.removeItem('admin_edit_boutique');
     window.history.pushState(null, '', '/admin/add-boutique');
     setActivePage('add-boutique');
   };
 
   const handleEdit = (boutique) => {
-    localStorage.setItem('admin_edit_boutique', JSON.stringify(boutique));
     window.history.pushState(null, '', '/admin/edit-boutique');
-    setActivePage('edit-boutique');
+    onEditBoutique(boutique);
   };
 
   const handleDelete = async (id) => {

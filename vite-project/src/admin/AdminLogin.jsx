@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { db } from '../firebase';
-import { collection, query, where, getDocs, doc, setDoc } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, Sparkles } from 'lucide-react';
 
@@ -15,44 +15,48 @@ export default function AdminLogin({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      if (!db) {
-        setError('Database connection not established.');
-        setLoading(false);
-        return;
-      }
+    setLoading(true);
+    setError('');
 
-      // Seed the admin collection with the requested credentials so it definitely exists
-      const adminDocRef = doc(db, 'admins', 'madhavarora');
-      await setDoc(adminDocRef, {
-        email: 'madhavarora132005@gmail.com',
-        password: 'admin123',
-        role: 'superadmin'
-      }, { merge: true });
-
-      // Check credentials against the admins collection
-      const adminsRef = collection(db, 'admins');
-      const q = query(adminsRef, where('email', '==', email), where('password', '==', password));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        onLogin(); // Successful login
-      } else {
-        setError('Invalid admin credentials.');
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error(err);
-      
-      // Fallback: If Firestore rules block us because we aren't using Firebase Auth,
-      // just let them in with the hardcoded credentials so they don't get stuck.
-      if (email === 'madhavarora132005@gmail.com' && password === 'admin123') {
-        onLogin();
-        return;
-      }
-
-      setError(err.message || 'Missing or insufficient permissions in Firebase.');
+    if (!auth) {
+      setError('Firebase Auth not initialized.');
       setLoading(false);
+      return;
+    }
+
+    try {
+      // Try to sign in with Firebase Auth
+      await signInWithEmailAndPassword(auth, email, password);
+      // onAuthStateChanged in AdminApp will detect the auth state and set isLoggedIn
+    } catch (err) {
+      console.error('Sign-in error:', err.code, err.message);
+
+      // If user doesn't exist in Firebase Auth, create them (first-time setup)
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          console.log('Admin user created in Firebase Auth:', userCredential.user.uid);
+          // onAuthStateChanged will handle the rest
+        } catch (createErr) {
+          console.error('Create user error:', createErr.code, createErr.message);
+          if (createErr.code === 'auth/email-already-in-use') {
+            setError('Incorrect password. Please try again.');
+          } else if (createErr.code === 'auth/weak-password') {
+            setError('Password must be at least 6 characters.');
+          } else if (createErr.code === 'auth/invalid-email') {
+            setError('Invalid email address.');
+          } else {
+            setError(createErr.message || 'Login failed. Please try again.');
+          }
+          setLoading(false);
+        }
+      } else if (err.code === 'auth/too-many-requests') {
+        setError('Too many attempts. Please try again later.');
+        setLoading(false);
+      } else {
+        setError(err.message || 'Login failed. Please try again.');
+        setLoading(false);
+      }
     }
   };
 

@@ -29,7 +29,7 @@ const Card = ({ title, subtitle, children }) => (
   </div>
 );
 
-export default function AddBoutique({ setActivePage }) {
+export default function AddBoutique({ setActivePage, editBoutique = null }) {
   const [formData, setFormData] = useState({
     id: `boutique_${Date.now()}`,
     name: '',
@@ -64,14 +64,11 @@ export default function AddBoutique({ setActivePage }) {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // Check if we are editing an existing boutique
-    const editData = localStorage.getItem('admin_edit_boutique');
-    if (editData) {
-      setFormData(JSON.parse(editData));
+    if (editBoutique) {
+      setFormData(editBoutique);
       setIsEditing(true);
-      localStorage.removeItem('admin_edit_boutique'); // clear it so we don't accidentally edit it next time
     }
-  }, []);
+  }, [editBoutique]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

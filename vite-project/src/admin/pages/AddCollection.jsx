@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Check, Save, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { getCollections, saveCollections, getCollectionTags, fileToBase64, notifyWebsite } from '../../utils/adminStore';
 
-export default function AddCollection({ setActivePage }) {
+export default function AddCollection({ setActivePage, editCollection = null }) {
   const [isEditing, setIsEditing] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   
@@ -18,19 +18,17 @@ export default function AddCollection({ setActivePage }) {
   useEffect(() => {
     setAvailableTags(getCollectionTags().filter(t => t.active).sort((a,b) => a.order - b.order));
     
-    const editData = localStorage.getItem('editCollectionData');
-    if (editData) {
-      const parsed = JSON.parse(editData);
+    if (editCollection) {
       setFormData({
-        ...parsed,
-        imagePreview: parsed.image || ''
+        ...editCollection,
+        imagePreview: editCollection.image || ''
       });
       setIsEditing(true);
     } else {
       setIsEditing(false);
       setFormData(emptyForm);
     }
-  }, []);
+  }, [editCollection]);
 
   const handleImage = async (e) => {
     const file = e.target.files[0];
