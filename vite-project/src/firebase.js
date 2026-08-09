@@ -1,6 +1,7 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getFirestore, doc, setDoc, getDocs, collection, query, where, deleteDoc, onSnapshot } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 // Helper to get Firebase configuration dynamically from localStorage
@@ -33,6 +34,7 @@ function getFirebaseConfig() {
 let app;
 export let db = null;
 export let auth = null;
+export let storage = null;
 
 function initFirebase() {
   const firebaseConfig = getFirebaseConfig();
@@ -44,6 +46,18 @@ function initFirebase() {
     }
     db = getFirestore(app);
     auth = getAuth(app);
+    
+    // Explicitly set local persistence so sessions survive in incognito
+    setPersistence(auth, browserLocalPersistence).catch((err) => {
+      console.warn("Could not set local persistence:", err);
+    });
+    
+    try {
+      storage = getStorage(app);
+    } catch (storageErr) {
+      console.warn("Firebase Storage initialization failed:", storageErr);
+      storage = null;
+    }
     
     // Initialize App Check to protect against bots and unauthorized access
     // This requires a ReCAPTCHA v3 site key to be added in your .env file
@@ -64,11 +78,42 @@ function initFirebase() {
     console.error("Firebase initialization failed:", err);
     db = null;
     auth = null;
+    storage = null;
   }
 }
 
 // Initial initialization
 initFirebase();
+
+export async function uploadImageToFirebase(base64String, fileName) {
+  try {
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        imageBase64: base64String,
+        filename: fileName || Date.now() + '.jpg',
+        folder: 'products'
+      })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
+        return data.url;
+      }
+    }
+    
+    // If local API fails but doesn't throw, fallback to base64
+    console.warn("Local API upload failed, falling back to base64");
+    return base64String;
+  } catch (error) {
+    console.error("Local API upload error:", error);
+    return base64String; // fallback to base64 if upload fails
+  }
+}
 
 // Listen to runtime config changes (from Settings page saves)
 if (typeof window !== 'undefined') {
@@ -294,6 +339,7 @@ export async function saveProductToFirestore(productId, product) {
       originalPriceNum: Number(product.originalPriceNum || 0),
       boutique: product.boutique || '',
       badge: product.badge || '',
+      weight: Number(product.weight || 500),
       collection: product.collection || 'Trending',
       styleCategory: product.styleCategory || 'Traditional',
       suitType: product.suitType || 'Anarkali',
@@ -307,10 +353,12 @@ export async function saveProductToFirestore(productId, product) {
       igComments: product.igComments || '',
       videoUrl: product.videoUrl || '',
       reelUrl: product.reelUrl || '',
+      fitOptions: product.fitOptions || ['Stitched', 'Unstitched'],
       sizes: product.sizes || [],
       occasions: product.occasions || [],
       care: product.care || [],
       stockQty: product.stockQty || {},
+      stock: product.stock || 0,
       image: product.image || '',
       additionalImages: product.additionalImages || [],
       addedAt: product.addedAt || new Date().toISOString(),
@@ -355,7 +403,9 @@ export async function fetchProductsFromFirestore() {
     const querySnapshot = await getDocs(productsCol);
     const products = [];
     querySnapshot.forEach((docSnap) => {
-      products.push(docSnap.data());
+      const data = docSnap.data();
+      if (!data.id) data.id = docSnap.id;
+      products.push(data);
     });
     
     // Sort descending by addedAt

@@ -21,7 +21,7 @@ export default function Orders() {
 
   useEffect(() => {
     const loadOrders = (sourceOrders) => {
-      setOrderData(sourceOrders || []);
+      setOrderData(sourceOrders ? [...sourceOrders] : []);
     };
 
     const local = getOrders();

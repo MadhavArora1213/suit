@@ -6,7 +6,7 @@ import {
   BadgeCheck, MessageCircle, Ruler, RotateCcw, Package, Sparkles, Eye,
   Share2, ZoomIn, Clock, Users, Gem, Award, Feather
 } from 'lucide-react';
-import { getReviews, addReview, syncProductReviews, getAllProducts } from '../utils/adminStore';
+import { getReviews, addReview, updateReview, deleteReview, syncProductReviews, getAllProducts, fileToBase64 } from '../utils/adminStore';
 
 /* ═══ Thumbnail Strip (memoized) ═══ */
 const ThumbStrip = React.memo(function ThumbStrip({ images, current, onSelect, vertical = false }) {
@@ -49,8 +49,9 @@ const MarqueeBanner = React.memo(function MarqueeBanner() {
   );
 });
 
-export default function ProductDetailsPage({ product, setView, setSelectedCategory, setSelectedBoutique, addToCart, favorites = {}, toggleFavorite }) {
-  const [reviewsList, setReviewsList] = useState([]);
+export default function ProductDetailsPage({ product, setView, setSelectedCategory, setSelectedBoutique, addToCart, favorites = {}, toggleFavorite, user, requireLogin }) {
+  const [_reviewsRaw, setReviewsList] = useState([]);
+  const reviewsList = Array.isArray(_reviewsRaw) ? _reviewsRaw : [];
   const [openAccordions, setOpenAccordions] = useState({ details: true, size: false, material: false, shipping: false });
   const [pinCode, setPinCode] = useState('');
   const [pinChecked, setPinChecked] = useState(false);
@@ -58,10 +59,28 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
   const [reviewName, setReviewName] = useState('');
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
+  const [editReviewId, setEditReviewId] = useState(null);
+  const [reviewMedia, setReviewMedia] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [addedToBag, setAddedToBag] = useState(false);
-  const [selectedFit, setSelectedFit] = useState('Unstitched');
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedFit, setSelectedFit] = useState(product?.fitOptions?.[0] || 'Unstitched');
+  const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || 'M');
+
+  const isInStock = useMemo(() => {
+    if (!product) return false;
+    if (selectedFit === 'Stitched') {
+      if (product.stockQty && typeof product.stockQty === 'object') {
+        // If stockQty exists for this size, check it. Otherwise assume in stock for backward compatibility.
+        if (product.stockQty[selectedSize] !== undefined) {
+          return product.stockQty[selectedSize] > 0;
+        }
+      }
+      return true;
+    }
+    // For Unstitched / Semi-Stitched, assume in stock
+    return true; 
+  }, [selectedFit, selectedSize, product]);
   const [zoomedImg, setZoomedImg] = useState(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
@@ -81,7 +100,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
 
   useEffect(() => {
     if (product?.id) {
-      setReviewsList(getReviews(product.id));
+      setReviewsList(Array.isArray(getReviews(product.id)) ? getReviews(product.id) : []);
       syncProductReviews(product.id, (r) => setReviewsList(r));
     }
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -89,7 +108,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
     const defaultFit = product?.fitOptions?.includes('Unstitched') ? 'Unstitched' : (product?.fitOptions?.[0] || 'Stitched');
     setSelectedFit(defaultFit);
     setSelectedSize(null);
-    setCurrentImg(product?.additionalImages?.length ? 1 : 0);
+    setCurrentImg(0);
     return () => { clearTimeout(addedTimerRef.current); clearTimeout(copiedTimerRef.current); };
   }, [product]);
 
@@ -108,31 +127,31 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  if (!product) return null;
-
   // Memoized derivations
-  const allImages = useMemo(() => [product.image, ...(product.additionalImages || [])].filter(Boolean), [product]);
+  const allImages = useMemo(() => [product?.image, ...(product?.additionalImages || [])].filter(Boolean), [product]);
   const avgRating = useMemo(() => {
-    if (reviewsList.length > 0) return (reviewsList.reduce((s, r) => s + r.rating, 0) / reviewsList.length).toFixed(1);
-    return product.rating || '4.5';
-  }, [reviewsList, product.rating]);
+    if (reviewsList && reviewsList.length > 0) return (reviewsList.reduce((s, r) => s + r.rating, 0) / reviewsList.length).toFixed(1);
+    return product?.rating || '4.5';
+  }, [reviewsList, product?.rating]);
   const similarProducts = useMemo(() => {
-    return getAllProducts().filter(p => p.id !== product.id && (p.boutique === product.boutique || p.type === product.type)).slice(0, 6);
-  }, [product.id, product.boutique, product.type]);
+    return getAllProducts().filter(p => p.id !== product?.id && (p.boutique === product?.boutique || p.type === product?.type)).slice(0, 6);
+  }, [product?.id, product?.boutique, product?.type]);
   const discount = useMemo(() => {
-    const priceNum = parseInt(String(product.price).replace(/[^\d]/g, '')) || 0;
-    const origNum = parseInt(String(product.originalPrice).replace(/[^\d]/g, '')) || 0;
+    const priceNum = parseInt(String(product?.price || '').replace(/[^\d]/g, '')) || 0;
+    const origNum = parseInt(String(product?.originalPrice || '').replace(/[^\d]/g, '')) || 0;
     return origNum > priceNum ? Math.round(((origNum - priceNum) / origNum) * 100) : 0;
-  }, [product.price, product.originalPrice]);
+  }, [product?.price, product?.originalPrice]);
   const ratingDist = useMemo(() => {
+    const reviews = reviewsList || [];
     return [5, 4, 3, 2, 1].map(star => {
-      const count = reviewsList.filter(r => Math.round(r.rating) === star).length;
-      return { star, count, pct: reviewsList.length > 0 ? Math.round((count / reviewsList.length) * 100) : 0 };
+      const count = reviews.filter(r => Math.round(r.rating) === star).length;
+      return { star, count, pct: reviews.length > 0 ? Math.round((count / reviews.length) * 100) : 0 };
     });
   }, [reviewsList]);
 
   // Memoized handlers
   const handleAddToBag = useCallback(() => {
+    if (!product) return;
     const size = selectedFit === 'Stitched' ? (selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Stitched')) : selectedFit;
     const finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
     addToCart(product, finalSelection);
@@ -141,39 +160,134 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
     addedTimerRef.current = setTimeout(() => setAddedToBag(false), 2500);
   }, [addToCart, product, selectedSize, selectedFit]);
 
-  const handleReviewSubmit = useCallback((e) => {
+  const handleReviewSubmit = useCallback(async (e) => {
     e.preventDefault();
-    if (!reviewName.trim() || !reviewComment.trim()) return;
-    addReview(product.id, { name: reviewName, rating: reviewRating, review: reviewComment });
+    if (!product || !reviewName.trim() || !reviewComment.trim()) return;
+
+    setIsUploading(true);
+    const uploadedMediaUrls = [];
+    try {
+      for (const media of reviewMedia) {
+        if (!media.file) continue;
+        
+        // For images use compressed fileToBase64, for videos use raw base64
+        let base64;
+        if (media.type.startsWith('video/')) {
+          base64 = await new Promise((res, rej) => {
+            const r = new FileReader();
+            r.readAsDataURL(media.file);
+            r.onload = () => res(r.result);
+            r.onerror = rej;
+          });
+        } else {
+          base64 = await fileToBase64(media.file);
+        }
+
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            imageBase64: base64,
+            filename: media.file.name,
+            folder: 'reviews'
+          })
+        });
+        const data = await response.json();
+        if (data.success && data.url) {
+          uploadedMediaUrls.push({ url: data.url, type: media.type });
+        }
+      }
+    } catch (err) {
+      console.error('Error uploading media:', err);
+    }
+    setIsUploading(false);
+
+    if (editReviewId) {
+      updateReview(product.id, editReviewId, {
+        rating: reviewRating,
+        review: reviewComment,
+        media: uploadedMediaUrls.length > 0 ? uploadedMediaUrls : reviewMedia.filter(m => m.url),
+      });
+    } else {
+      addReview(product.id, { 
+        name: user.name || 'User', 
+        rating: reviewRating, 
+        review: reviewComment,
+        media: uploadedMediaUrls,
+        userId: user.uid
+      });
+    }
+
     setReviewsList(getReviews(product.id));
     setReviewName('');
     setReviewComment('');
     setReviewRating(5);
+    setReviewMedia([]);
+    setEditReviewId(null);
     setReviewSubmitted(true);
     setTimeout(() => { setReviewSubmitted(false); setShowReviewForm(false); }, 2000);
-  }, [product.id, reviewName, reviewRating, reviewComment]);
+  }, [product?.id, reviewName, reviewRating, reviewComment, reviewMedia, user, editReviewId]);
 
-  const nextImg = useCallback(() => setCurrentImg(p => (p + 1) % allImages.length), [allImages.length]);
-  const prevImg = useCallback(() => setCurrentImg(p => (p - 1 + allImages.length) % allImages.length), [allImages.length]);
+  const nextImg = useCallback(() => setCurrentImg(p => (p + 1) % (allImages.length || 1)), [allImages.length]);
+  const prevImg = useCallback(() => setCurrentImg(p => (p - 1 + (allImages.length || 1)) % (allImages.length || 1)), [allImages.length]);
 
   const onTouchStart = useCallback((e) => { touchEnd.current = null; touchStart.current = e.targetTouches[0].clientX; }, []);
   const onTouchMove = useCallback((e) => { touchEnd.current = e.targetTouches[0].clientX; }, []);
   const onTouchEnd = useCallback(() => {
     if (!touchStart.current || !touchEnd.current) return;
     const d = touchStart.current - touchEnd.current;
-    if (d > 50) setCurrentImg(p => (p + 1) % allImages.length);
-    if (d < -50) setCurrentImg(p => (p - 1 + allImages.length) % allImages.length);
+    if (d > 50) setCurrentImg(p => (p + 1) % (allImages.length || 1));
+    if (d < -50) setCurrentImg(p => (p - 1 + (allImages.length || 1)) % (allImages.length || 1));
   }, [allImages.length]);
 
   const shareProduct = useCallback(async () => {
+    if (!product) return;
     try { await navigator.share({ title: product.name, url: window.location.href }); }
     catch { navigator.clipboard?.writeText(window.location.href); setCopied(true); clearTimeout(copiedTimerRef.current); copiedTimerRef.current = setTimeout(() => setCopied(false), 2000); }
-  }, [product.name]);
+  }, [product?.name]);
 
   const toggleAccordion = useCallback((key) => setOpenAccordions(p => ({ ...p, [key]: !p[key] })), []);
 
+  if (!product) return (
+    <div className="min-h-screen bg-[#FAF9F6]">
+      <div className="max-w-7xl mx-auto px-4 pt-20 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <div className="aspect-[3/4] bg-gradient-to-br from-[#E8DDD0] via-[#F0E8DC] to-[#E8DDD0] rounded-2xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2s_infinite]" />
+            </div>
+            <div className="flex gap-2">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="w-16 h-16 bg-gradient-to-br from-[#E8DDD0] to-[#F0E8DC] rounded-xl relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2s_infinite]" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-4 pt-4">
+            <div className="h-3 bg-[#E8DDD0] rounded-full w-1/3" />
+            <div className="h-7 bg-gradient-to-r from-[#1A1A1A] to-[#333] rounded-lg w-2/3 opacity-10" />
+            <div className="h-5 bg-[#D4AF37] rounded-full w-1/4 opacity-30" />
+            <div className="h-9 bg-[#1A1A1A] rounded-xl w-1/3 mt-6 opacity-10" />
+            <div className="space-y-3 mt-8">
+              <div className="h-2.5 bg-[#E8DDD0] rounded-full w-full" />
+              <div className="h-2.5 bg-[#E8DDD0] rounded-full w-5/6" />
+              <div className="h-2.5 bg-[#E8DDD0] rounded-full w-4/6" />
+              <div className="h-2.5 bg-[#E8DDD0] rounded-full w-3/4" />
+            </div>
+            <div className="flex gap-3 mt-6">
+              <div className="h-12 bg-[#1A1A1A] rounded-xl flex-1 opacity-10" />
+              <div className="h-12 bg-[#D4AF37] rounded-xl flex-1 opacity-20" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <style>{`@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}`}</style>
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#222] pt-[72px]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+    <div className="min-h-screen bg-[#FAF9F6] text-[#222] pt-[120px]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
 
       <MarqueeBanner />
 
@@ -194,11 +308,11 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
       </nav>
 
       {/* ═══ Main ═══ */}
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-10 py-6 lg:py-10 pb-28 lg:pb-10">
-        <div className="flex flex-col lg:flex-row gap-5 lg:gap-12 items-start">
+      <div className="max-w-[1100px] mx-auto px-4 lg:px-8 py-4 lg:py-6 pb-20 lg:pb-6">
+        <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 items-start">
 
           {/* ─── LEFT: GALLERY ─── */}
-          <div className="w-full lg:w-[45%] lg:sticky lg:top-[80px] shrink-0">
+          <div className="w-full lg:w-[38%] lg:sticky lg:top-[120px] shrink-0">
             {/* Desktop */}
             <div className="gallery-desktop hidden lg:flex gap-3">
               <ThumbStrip images={allImages} current={currentImg} onSelect={setCurrentImg} vertical />
@@ -282,7 +396,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
           </div>
 
           {/* ─── RIGHT: PRODUCT INFO ─── */}
-          <div className="w-full lg:w-[55%]">
+          <div className="w-full lg:w-[62%]">
             <div className="lg:pl-2">
 
               {/* Boutique + Share */}
@@ -298,7 +412,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
               </div>
 
               {/* Title */}
-              <h1 className="text-[26px] sm:text-[30px] lg:text-[36px] font-semibold text-[#1a1a1a] leading-[1.1] mb-2 tracking-[-0.01em]"
+              <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-semibold text-[#1a1a1a] leading-[1.1] mb-2 tracking-[-0.01em]"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 {product.name}
               </h1>
@@ -321,32 +435,69 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
               {/* Price + Urgency */}
               <div className="mb-4">
                 <div className="flex items-baseline gap-3 mb-1">
-                  <span className="text-[32px] lg:text-[38px] font-bold text-[#1a1a1a] leading-none tracking-tight">{product.price}</span>
+                  <span className="text-[28px] lg:text-[32px] font-bold text-[#1a1a1a] leading-none tracking-tight">{product.price}</span>
                   {product.originalPrice && (
                     <>
-                      <span className="text-[15px] text-gray-400 line-through decoration-1">{product.originalPrice}</span>
+                      <span className="text-[14px] text-gray-400 line-through decoration-1">{product.originalPrice}</span>
                       {discount > 0 && <span className="text-[11px] font-bold text-white bg-[#c0392b] px-2 py-0.5 rounded-full">SAVE {discount}%</span>}
                     </>
                   )}
-                  <span className="ml-auto flex items-center gap-1.5 text-[11px] text-[#c0392b] font-bold">
-                    <Clock size={12} /> Only {urgency} left
+                  <span className={`ml-auto flex items-center gap-1.5 text-[11px] font-bold ${isInStock ? 'text-[#2e7d32]' : 'text-[#c0392b]'}`}>
+                    {isInStock ? <><Check size={13} strokeWidth={2.5} /> In Stock</> : <><X size={13} strokeWidth={2.5} /> Out of Stock</>}
                   </span>
                 </div>
-                <p className="text-[11px] text-gray-400">Inclusive of all taxes &middot; Free shipping above ₹999</p>
+                <p className="text-[11px] text-gray-400">Inclusive of all taxes</p>
               </div>
 
               {/* Action Buttons */}
-              <div ref={buyBtnRef} className="mb-4">
+              <div ref={buyBtnRef} className="flex items-center gap-2.5 mb-5">
+                <motion.button onClick={handleAddToBag} whileTap={isInStock ? { scale: 0.97 } : {}} disabled={!isInStock}
+                  className={`flex-1 h-[46px] flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] rounded-xl sm:rounded-2xl transition-all duration-500 ${
+                    !isInStock 
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
+                      : addedToBag
+                        ? 'bg-[#2e7d32] text-white shadow-xl shadow-[#2e7d32]/30 cursor-pointer'
+                        : 'bg-gradient-to-r from-[#8B2252] to-[#a02d62] text-white shadow-xl shadow-[#8B2252]/25 hover:shadow-[#8B2252]/40 hover:scale-[1.01] cursor-pointer'
+                  }`}>
+                  {addedToBag ? <><Check size={16} strokeWidth={3} className="shrink-0" /> <span className="hidden sm:inline">Added</span></> : <><ShoppingBag size={16} className="shrink-0" /> Add to Bag</>}
+                </motion.button>
+                
+                <button onClick={() => { 
+                    if (!isInStock) return;
+                    const size = selectedFit === 'Stitched' ? (selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Stitched')) : selectedFit;
+                    const finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
+                    addToCart(product, finalSelection); 
+                    setView('checkout'); 
+                  }}
+                  disabled={!isInStock}
+                  className={`flex-1 h-[46px] flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.12em] rounded-xl sm:rounded-2xl border-2 transition-all duration-500 ${
+                    !isInStock
+                      ? 'border-gray-200 text-gray-400 cursor-not-allowed bg-white'
+                      : 'border-[#222] text-[#222] hover:bg-[#222] hover:text-white cursor-pointer hover:shadow-lg'
+                  }`}>
+                  <Sparkles size={14} className="shrink-0" /> Buy Now
+                </button>
+
+                <button onClick={() => toggleFavorite(product.id)}
+                  className={`w-[46px] h-[46px] flex items-center justify-center rounded-xl sm:rounded-2xl border-2 transition-all cursor-pointer shrink-0 ${
+                    favorites[product.id] ? 'bg-rose-50 border-rose-300 text-rose-500' : 'border-gray-200 text-gray-400 hover:border-rose-300 hover:text-rose-400'
+                  }`}>
+                  <Heart size={18} className={favorites[product.id] ? 'fill-current' : ''} />
+                </button>
+              </div>
+
+              {/* Fit and Size Selection */}
+              <div className="mb-4 bg-[#faf8f5] rounded-2xl p-4 border border-[#ebe5de]">
                 {product.fitOptions && product.fitOptions.length > 0 && (
                   <div className="mb-4">
-                    <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2 block">Select Fit</span>
-                    <div className="flex flex-wrap gap-3">
+                    <span className="text-[11px] font-bold text-[#8B2252] uppercase tracking-wider mb-2 block">1. Select Fit</span>
+                    <div className="flex flex-wrap gap-2">
                       {['Unstitched', 'Semi-Stitched', 'Stitched'].filter(f => product.fitOptions.includes(f)).map(fit => (
                         <button key={fit} type="button" onClick={() => setSelectedFit(fit)}
-                          className={`flex-1 py-3 rounded-xl text-[12px] font-bold border-2 transition-all cursor-pointer ${
+                          className={`flex-1 py-2.5 rounded-xl text-[11px] font-bold border-2 transition-all cursor-pointer ${
                             selectedFit === fit
                               ? 'border-[#8B2252] bg-[#8B2252] text-white shadow-md'
-                              : 'border-gray-200 text-gray-600 hover:border-[#8B2252] hover:text-[#8B2252]'
+                              : 'border-gray-200 text-gray-600 bg-white hover:border-[#8B2252] hover:text-[#8B2252]'
                           }`}>
                           {fit === 'Stitched' ? 'Readymade (Stitched)' : (fit === 'Semi-Stitched' ? 'Semi-Stitched' : 'Unstitched Fabric')}
                         </button>
@@ -356,18 +507,17 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                 )}
                 
                 {selectedFit === 'Stitched' && product.sizes && product.sizes.length > 0 && (
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Select Size</span>
-                      <button onClick={() => setShowSizeGuide(true)} className="text-[10px] text-[#8B2252] font-semibold underline cursor-pointer">Size Guide</button>
+                  <div>
+                    <div className="mb-2">
+                      <span className="text-[11px] font-bold text-[#8B2252] uppercase tracking-wider">2. Select Size</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {product.sizes.map(s => (
                         <button key={s} type="button" onClick={() => setSelectedSize(s)}
-                          className={`px-4 py-2.5 rounded-xl text-[11px] font-bold border-2 transition-all cursor-pointer ${
+                          className={`px-3.5 py-2 rounded-xl text-[11px] font-bold border-2 transition-all cursor-pointer ${
                             selectedSize === s
                               ? 'border-[#8B2252] bg-[#8B2252] text-white shadow-md'
-                              : 'border-gray-200 text-gray-600 hover:border-[#8B2252] hover:text-[#8B2252]'
+                              : 'border-gray-200 text-gray-600 bg-white hover:border-[#8B2252] hover:text-[#8B2252]'
                           }`}>
                           {s}
                         </button>
@@ -375,33 +525,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                     </div>
                   </div>
                 )}
-                <div className="flex items-center gap-3 mb-2.5">
-                  <motion.button onClick={handleAddToBag} whileTap={{ scale: 0.97 }}
-                    className={`flex-1 h-[52px] flex items-center justify-center gap-2.5 text-[12px] font-bold uppercase tracking-[0.12em] rounded-2xl transition-all duration-500 cursor-pointer ${
-                      addedToBag
-                        ? 'bg-[#2e7d32] text-white shadow-xl shadow-[#2e7d32]/30'
-                        : 'bg-gradient-to-r from-[#8B2252] to-[#a02d62] text-white shadow-xl shadow-[#8B2252]/25 hover:shadow-[#8B2252]/40 hover:scale-[1.01]'
-                    }`}>
-                    {addedToBag ? <><Check size={18} strokeWidth={3} /> Added to Bag</> : <><ShoppingBag size={18} /> Add to Bag</>}
-                  </motion.button>
-                  <button onClick={() => toggleFavorite(product.id)}
-                    className={`w-[52px] h-[52px] flex items-center justify-center rounded-2xl border-2 transition-all cursor-pointer shrink-0 ${
-                      favorites[product.id] ? 'bg-rose-50 border-rose-300 text-rose-500' : 'border-gray-200 text-gray-400 hover:border-rose-300 hover:text-rose-400'
-                    }`}>
-                    <Heart size={18} className={favorites[product.id] ? 'fill-current' : ''} />
-                  </button>
-                </div>
-                <button onClick={() => { 
-                    const size = selectedFit === 'Stitched' ? (selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Stitched')) : selectedFit;
-                    const finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
-                    addToCart(product, finalSelection); 
-                    setView('checkout'); 
-                  }}
-                  className="w-full h-[46px] flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em] rounded-2xl border-2 border-[#222] text-[#222] hover:bg-[#222] hover:text-white transition-all duration-500 cursor-pointer hover:shadow-lg">
-                  <Sparkles size={14} /> Buy Now
-                </button>
               </div>
-
               {/* Description */}
               <p className="text-[13px] text-[#666] leading-[1.7] mb-4 max-w-[52ch]">
                 {product.shortDesc || 'An exquisite handcrafted piece, designed for those who appreciate true luxury. Every detail tells a story of heritage and artisanal excellence.'}
@@ -411,8 +535,8 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
               <div className="grid grid-cols-3 gap-3 mb-5">
                 {[
                   { icon: <ShieldCheck size={20} />, label: '100% Authentic', sub: 'Verified seller', color: '#2e7d32' },
-                  { icon: <Truck size={20} />, label: 'Free Delivery', sub: 'Orders above ₹999', color: '#8B2252' },
-                  { icon: <RotateCcw size={20} />, label: 'Easy Returns', sub: '14-day policy', color: '#D4AF37' },
+                  { icon: <Gem size={20} />, label: 'Premium Quality', sub: 'Handcrafted', color: '#8B2252' },
+                  { icon: <Award size={20} />, label: 'Top Rated', sub: 'Customer favorite', color: '#D4AF37' },
                 ].map((b, i) => (
                   <div key={i} className="flex flex-col items-center gap-2 py-4 px-2 bg-white rounded-2xl border border-[#f0ece6]/60 hover:border-[#e0d8ce] transition-colors">
                     <span style={{ color: b.color }}>{b.icon}</span>
@@ -444,7 +568,6 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                       className="mt-4 pt-4 border-t border-gray-100 space-y-2.5 overflow-hidden">
                       <p className="text-xs text-gray-600 flex items-center gap-2.5"><Check size={14} className="text-[#2e7d32] shrink-0" /> Delivery by <strong className="text-[#222]">Jul 30 – Aug 2</strong></p>
                       <p className="text-xs text-gray-600 flex items-center gap-2.5"><Check size={14} className="text-[#2e7d32] shrink-0" /> Cash on delivery available</p>
-                      <p className="text-xs text-gray-600 flex items-center gap-2.5"><RotateCcw size={14} className="text-gray-300 shrink-0" /> Easy 14-day return & exchange</p>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -459,8 +582,9 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                       <div className="bg-[#faf8f5] rounded-xl p-4">
                         <table className="w-full text-xs"><tbody>
                           {[
-                            ['Type', product.type || 'Suit Set'], ['Pattern', 'Embroidered'], ['Occasion', 'Festive / Wedding'],
-                            ['Sleeve', 'Full Sleeves'], ['Neckline', 'Round Neck'], ['Set Contains', 'Kurta + Bottom + Dupatta'],
+                            ['Type', product.type || 'Suit Set'], 
+                            ['Style', product.styleCategory || 'Traditional'], 
+                            ['Occasions', product.occasions?.join(', ') || 'Festive, Wedding'],
                           ].map(([k, v]) => (
                             <tr key={k} className="border-b border-gray-100/80 last:border-0">
                               <td className="py-2.5 pr-6 text-gray-400 font-medium w-[130px]">{k}</td>
@@ -473,21 +597,24 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                   )},
                   { key: 'size', title: 'Size & Fit', icon: <Ruler size={15} />, content: (
                     <div className="text-[13px] text-gray-500 leading-relaxed space-y-3">
-                      <p>The model (height 5'7") is wearing size <strong className="text-[#222]">M</strong></p>
+                      {product.sizes && product.sizes.length > 0 && (
+                        <p>Available Sizes: <strong className="text-[#222]">{product.sizes.join(', ')}</strong></p>
+                      )}
                       <p>Regular fit — fits true to size, take your normal size.</p>
                       <div className="flex flex-wrap gap-2 pt-1">
-                        {["Model 5'7\"", 'Relaxed fit', 'Tailoring friendly'].map((tag) => (
-                          <span key={tag} className="inline-flex items-center rounded-full border border-[#ebe5de] bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#6e6158]">{tag}</span>
-                        ))}
+                        {(product.fitOptions || ['Stitched', 'Unstitched']).map((tag) => {
+                          const label = tag === 'Stitched' ? 'Readymade (Stitched)' : (tag === 'Unstitched' ? 'Unstitched Fabric' : tag);
+                          return (
+                            <span key={tag} className="inline-flex items-center rounded-full border border-[#ebe5de] bg-white px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#6e6158]">{label}</span>
+                          );
+                        })}
                       </div>
-                      <button onClick={() => setShowSizeGuide(true)}
-                        className="text-[12px] font-bold text-[#8B2252] underline underline-offset-2 cursor-pointer hover:text-[#6f1b42] transition-colors">View Size Guide</button>
                     </div>
                   )},
                   { key: 'material', title: 'Material & Care', icon: <Sparkles size={15} />, content: (
                     <div className="text-[13px] text-gray-500 leading-relaxed space-y-3">
                       <p><strong className="text-[#222]">Fabric:</strong> {product.fabricName || 'Pure Silk'}</p>
-                      <p>{product.fabricDesc || 'High-quality handwoven fabric with fine threads and premium finish.'}</p>
+                      {product.fabricDesc && <p>{product.fabricDesc}</p>}
                       <div className="flex flex-wrap gap-2 mt-3">
                         {(product.care || ['Dry Clean Only', 'Do Not Bleach', 'Iron on Low Heat', 'Store in Dry Place']).map((c, i) => (
                           <span key={i} className="inline-flex items-center gap-1.5 bg-[#faf8f5] border border-[#ebe5de] rounded-full px-3 py-1.5 text-[11px] font-medium text-gray-600">
@@ -497,11 +624,9 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                       </div>
                     </div>
                   )},
-                  { key: 'shipping', title: 'Shipping & Returns', icon: <Package size={15} />, content: (
+                  { key: 'shipping', title: 'Shipping Information', icon: <Package size={15} />, content: (
                     <div className="text-[13px] text-gray-500 leading-relaxed space-y-3">
-                      <p className="flex items-start gap-2.5"><Truck size={15} className="text-[#8B2252] shrink-0 mt-0.5" /> Free shipping on orders above ₹999.</p>
                       <p className="flex items-start gap-2.5"><Package size={15} className="text-[#8B2252] shrink-0 mt-0.5" /> Standard delivery: 4-7 business days.</p>
-                      <p className="flex items-start gap-2.5"><RotateCcw size={15} className="text-[#8B2252] shrink-0 mt-0.5" /> Easy 14-day returns on unworn items with tags intact.</p>
                     </div>
                   )}
                 ].map((acc, idx) => (
@@ -597,7 +722,15 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                     </div>
                   ))}
                 </div>
-                <button onClick={() => setShowReviewForm(true)}
+                <button onClick={() => {
+                  if (!user) { requireLogin(); return; }
+                  setEditReviewId(null);
+                  setReviewName(user.name || '');
+                  setReviewRating(5);
+                  setReviewComment('');
+                  setReviewMedia([]);
+                  setShowReviewForm(true);
+                }}
                   className="mt-6 w-full py-3 text-[11px] font-bold uppercase tracking-wider bg-[#8B2252] text-white rounded-xl hover:bg-[#6f1b42] transition-all duration-300 cursor-pointer">
                   Write a Review
                 </button>
@@ -628,8 +761,45 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                         <div className="flex items-center gap-0.5 bg-[#2e7d32] text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
                           {r.rating} <Star size={8} className="fill-current" />
                         </div>
+                        {user && user.uid === r.userId && (
+                          <div className="flex items-center gap-2 ml-2">
+                            <button onClick={() => {
+                              setEditReviewId(r.id);
+                              setReviewName(r.name);
+                              setReviewRating(r.rating);
+                              setReviewComment(r.review);
+                              setReviewMedia(r.media || []);
+                              setShowReviewForm(true);
+                            }} className="text-[10px] uppercase font-bold tracking-wider text-gray-400 hover:text-[#8B2252]">
+                              Edit
+                            </button>
+                            <span className="text-gray-300">|</span>
+                            <button type="button" onClick={async (e) => {
+                              e.preventDefault();
+                              if (window.confirm("Are you sure you want to delete your review?")) {
+                                await deleteReview(product.id, r.id);
+                                setReviewsList(getReviews(product.id));
+                              }
+                            }} className="text-[10px] uppercase font-bold tracking-wider text-gray-400 hover:text-red-500">
+                              Delete
+                            </button>
+                          </div>
+                        )}
                       </div>
-                      <p className="text-[13px] text-[#444] leading-relaxed pl-12">{r.review}</p>
+                      <p className="text-[13px] text-[#444] leading-relaxed pl-12 mb-3">{r.review}</p>
+                      {r.media && r.media.length > 0 && (
+                        <div className="pl-12 flex flex-wrap gap-2">
+                          {r.media.map((m, mIdx) => (
+                            <div key={mIdx} className="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+                              {m.type.startsWith('video/') ? (
+                                <video src={m.url} className="w-full h-full object-cover" muted />
+                              ) : (
+                                <img src={m.url} alt="Review Media" className="w-full h-full object-cover" loading="lazy" />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -699,12 +869,12 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
       {/* ═══ Review Modal ═══ */}
       <AnimatePresence>
         {showReviewForm && (
-          <div className="fixed inset-0 z-[200] flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm" onClick={() => setShowReviewForm(false)}>
+          <div className="fixed inset-0 z-[9999] flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setShowReviewForm(false)}>
             <motion.div initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 80, opacity: 0 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              onClick={e => e.stopPropagation()} className="bg-white rounded-t-3xl md:rounded-3xl p-7 w-full md:w-[90%] max-w-lg relative shadow-2xl">
+              onClick={e => e.stopPropagation()} className="bg-white rounded-3xl p-7 w-full md:w-[90%] max-w-lg relative shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-[#222]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Write a Review</h3>
+                <h3 className="text-xl font-bold text-[#222]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{editReviewId ? 'Edit Your Review' : 'Write a Review'}</h3>
                 <button onClick={() => setShowReviewForm(false)} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:text-[#222] hover:bg-gray-200 cursor-pointer transition-colors">
                   <X size={17} />
                 </button>
@@ -712,8 +882,8 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
               <form onSubmit={handleReviewSubmit} className="space-y-5">
                 <div>
                   <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2 block">Your Name</label>
-                  <input type="text" required value={reviewName} onChange={e => setReviewName(e.target.value)} placeholder="Enter your name"
-                    className="w-full bg-[#faf8f5] border border-gray-200 focus:border-[#8B2252] focus:ring-2 focus:ring-[#8B2252]/10 outline-none px-4 py-3.5 text-sm rounded-xl transition-all" />
+                  <input type="text" value={user?.name || reviewName} disabled
+                    className="w-full bg-gray-100/50 border border-gray-200 text-gray-500 cursor-not-allowed outline-none px-4 py-3.5 text-sm rounded-xl" />
                 </div>
                 <div>
                   <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3 block">Rating</label>
@@ -741,6 +911,56 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                   <textarea rows={4} required value={reviewComment} onChange={e => setReviewComment(e.target.value)} placeholder="Share your experience..."
                     className="w-full bg-[#faf8f5] border border-gray-200 focus:border-[#8B2252] focus:ring-2 focus:ring-[#8B2252]/10 outline-none px-4 py-3.5 text-sm rounded-xl resize-none transition-all" />
                 </div>
+                
+                {/* File Upload Section */}
+                <div>
+                  <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-2 flex items-center justify-between">
+                    <span>Add Photo or Video</span>
+                    <span className="text-[9px] text-gray-400">Max: 5MB (Img), 10MB (Vid)</span>
+                  </label>
+                  <input type="file" multiple accept="image/*,video/*"
+                    className="hidden" id="reviewMediaInput"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files);
+                      const validFiles = files.filter(f => {
+                        if (f.type.startsWith('video/') && f.size > 10 * 1024 * 1024) {
+                          alert(`Video ${f.name} is larger than 10MB.`);
+                          return false;
+                        }
+                        if (f.type.startsWith('image/') && f.size > 5 * 1024 * 1024) {
+                          alert(`Image ${f.name} is larger than 5MB.`);
+                          return false;
+                        }
+                        return true;
+                      });
+                      const newMedia = validFiles.map(f => ({
+                        file: f,
+                        type: f.type,
+                        preview: URL.createObjectURL(f)
+                      }));
+                      setReviewMedia(prev => [...prev, ...newMedia]);
+                    }}
+                  />
+                  <div className="flex flex-wrap gap-3">
+                    {reviewMedia.map((media, idx) => (
+                      <div key={idx} className="relative w-16 h-16 rounded-xl border border-gray-200 overflow-hidden group">
+                        {media.type.startsWith('video/') ? (
+                          <video src={media.preview} className="w-full h-full object-cover" />
+                        ) : (
+                          <img src={media.preview} alt="preview" className="w-full h-full object-cover" />
+                        )}
+                        <button type="button" onClick={() => setReviewMedia(prev => prev.filter((_, i) => i !== idx))}
+                          className="absolute inset-0 bg-black/40 items-center justify-center hidden group-hover:flex transition-all">
+                          <X size={16} className="text-white" />
+                        </button>
+                      </div>
+                    ))}
+                    <label htmlFor="reviewMediaInput" className="w-16 h-16 rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 hover:text-[#8B2252] hover:border-[#8B2252] cursor-pointer transition-colors bg-[#faf8f5]">
+                      <span className="text-2xl font-light">+</span>
+                    </label>
+                  </div>
+                </div>
+
                 <AnimatePresence>
                   {reviewSubmitted && (
                     <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-sm text-[#2e7d32] font-semibold flex items-center gap-1.5">
@@ -748,8 +968,11 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                     </motion.p>
                   )}
                 </AnimatePresence>
-                <button type="submit" className="w-full bg-gradient-to-r from-[#8B2252] to-[#a02d62] text-white py-4 text-[12px] font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer hover:shadow-lg hover:shadow-[#8B2252]/25">
-                  Submit Review
+                <button type="submit" disabled={isUploading}
+                  className={`w-full py-4 text-[12px] font-bold uppercase tracking-wider rounded-xl transition-all ${
+                    isUploading ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-gradient-to-r from-[#8B2252] to-[#a02d62] text-white cursor-pointer hover:shadow-lg hover:shadow-[#8B2252]/25'
+                  }`}>
+                  {isUploading ? 'Submitting...' : 'Submit Review'}
                 </button>
               </form>
             </motion.div>

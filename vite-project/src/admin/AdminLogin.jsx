@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { auth } from '../firebase';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, Sparkles } from 'lucide-react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import { signOut } from 'firebase/auth';
 
 const P = '#111111';
 
@@ -25,38 +28,18 @@ export default function AdminLogin({ onLogin }) {
     }
 
     try {
-      // Try to sign in with Firebase Auth
-      await signInWithEmailAndPassword(auth, email, password);
-      // onAuthStateChanged in AdminApp will detect the auth state and set isLoggedIn
-    } catch (err) {
-      console.error('Sign-in error:', err.code, err.message);
-
-      // If user doesn't exist in Firebase Auth, create them (first-time setup)
-      if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
-        try {
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          console.log('Admin user created in Firebase Auth:', userCredential.user.uid);
-          // onAuthStateChanged will handle the rest
-        } catch (createErr) {
-          console.error('Create user error:', createErr.code, createErr.message);
-          if (createErr.code === 'auth/email-already-in-use') {
-            setError('Incorrect password. Please try again.');
-          } else if (createErr.code === 'auth/weak-password') {
-            setError('Password must be at least 6 characters.');
-          } else if (createErr.code === 'auth/invalid-email') {
-            setError('Invalid email address.');
-          } else {
-            setError(createErr.message || 'Login failed. Please try again.');
-          }
-          setLoading(false);
-        }
-      } else if (err.code === 'auth/too-many-requests') {
-        setError('Too many attempts. Please try again later.');
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      
+      const adminDoc = await getDoc(doc(db, 'admins', userCred.user.email.toLowerCase()));
+      if (!adminDoc.exists()) {
+        await signOut(auth);
+        setError('Access denied. You are not authorized as an admin.');
         setLoading(false);
-      } else {
-        setError(err.message || 'Login failed. Please try again.');
-        setLoading(false);
+        return;
       }
+    } catch (err) {
+      setError('Invalid email or password. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -108,7 +91,7 @@ export default function AdminLogin({ onLogin }) {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="madhavarora132005@gmail.com"
+                  placeholder="admin@gurnaaz.com"
                   required
                   className="w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm text-[#1A1A1A] placeholder-[#A8BCBE] border border-[#E8DDD0] bg-[#FAF9F6] focus:outline-none transition-all"
                   onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.12)`; e.target.style.background = '#fff'; }}

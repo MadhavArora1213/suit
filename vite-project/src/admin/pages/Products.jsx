@@ -23,7 +23,7 @@ export default function Products({ setActivePage, onEditProduct }) {
   const categories = ['All', 'Trending', 'New Arrivals', 'Best Sellers', 'Festive Edit'];
 
   const filtered = products.filter(p => {
-    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || (p.boutique || '').toLowerCase().includes(search.toLowerCase());
+    const matchSearch = (p.name || '').toLowerCase().includes(search.toLowerCase()) || (p.boutique || '').toLowerCase().includes(search.toLowerCase());
     const matchCat = filterCat === 'All' || p.category === filterCat || p.collection === filterCat;
     return matchSearch && matchCat;
   });
@@ -96,13 +96,20 @@ export default function Products({ setActivePage, onEditProduct }) {
             >
               {/* Image */}
               <div className="relative h-36 sm:h-44 bg-[#F8F4F9] overflow-hidden">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                {product.image ? (
+                  <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-xs text-[#9E9189]">No Image</div>
+                )}
                 <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#111111] text-[9px] sm:text-[11px] font-bold tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg border border-[#111111]/20">
                   {product.badge}
                 </span>
-                <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${product.stock <= 3 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
-                  {product.stock <= 3 ? `Low: ${product.stock}` : `${product.stock} in stock`}
+                <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${
+                  (product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 
+                  ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                  {(product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 ? 'In Stock' : 'Out of Stock'}
                 </span>
+
                 {/* Action overlay */}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
                   <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}

@@ -23,7 +23,8 @@ export const memoryStore = {
   orders: [],
   support: [],
   collections: [],
-  collectionTags: []
+  collectionTags: [],
+  coupons: []
 };
 
 // INITIALIZATION
@@ -45,6 +46,9 @@ export const initializeStore = async () => {
 
     const collectionTags = await fetchCollectionFromFirestore('collectionTags');
     memoryStore.collectionTags = collectionTags || [];
+
+    const coupons = await fetchCollectionFromFirestore('coupons');
+    memoryStore.coupons = coupons || [];
 
     // Initialize reviews (group by productId if they are flat in Firestore)
     const reviews = await fetchCollectionFromFirestore('reviews');
@@ -80,7 +84,13 @@ export const getCollectionTags = () => memoryStore.collectionTags;
 export const getBoutiques = () => memoryStore.boutiques;
 export const getOrders = () => memoryStore.orders;
 export const getSupportTickets = () => memoryStore.support;
+export const getCoupons = () => memoryStore.coupons;
 export const getReviews = (productId) => memoryStore.reviews[productId] || [];
+export const getAllReviews = () => {
+  const all = [];
+  Object.values(memoryStore.reviews).forEach(arr => all.push(...arr));
+  return all.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+};
 export const getBoutiqueProfile = (boutiqueName) => {
   if (!boutiqueName) return null;
   const name = boutiqueName.trim().toLowerCase();
@@ -142,6 +152,29 @@ export const deleteBoutique = async (id) => {
   memoryStore.boutiques = memoryStore.boutiques.filter(b => b.id !== id);
 };
 
+export const addCoupon = async (coupon) => {
+  memoryStore.coupons.push(coupon);
+  if (isFirebaseConfigured()) await saveDocumentToFirestore('coupons', coupon.id.toString(), coupon);
+  notifyWebsite();
+};
+export const updateCoupon = async (id, data) => {
+  memoryStore.coupons = memoryStore.coupons.map(c => c.id === id ? { ...c, ...data } : c);
+  if (isFirebaseConfigured()) {
+    const coupon = memoryStore.coupons.find(c => c.id === id);
+    if (coupon) await saveDocumentToFirestore('coupons', id.toString(), coupon);
+  }
+  notifyWebsite();
+};
+export const deleteCoupon = async (id) => {
+  memoryStore.coupons = memoryStore.coupons.filter(c => c.id !== id);
+  if (isFirebaseConfigured()) {
+    import('firebase/firestore').then(({ doc, deleteDoc }) => {
+      deleteDoc(doc(db, 'coupons', id.toString())).catch(console.error);
+    });
+  }
+  notifyWebsite();
+};
+
 export const addOrder = (order) => {
   memoryStore.orders.unshift(order);
   if (isFirebaseConfigured()) saveOrderToFirestore(order.orderId || order.id, order).catch(console.error);
@@ -189,6 +222,48 @@ export const addReview = (productId, review) => {
   }
 };
 
+export const updateReview = (productId, reviewId, updatedData) => {
+  if (memoryStore.reviews[productId]) {
+    memoryStore.reviews[productId] = memoryStore.reviews[productId].map(r => 
+      r.id === reviewId ? { ...r, ...updatedData } : r
+    );
+    
+    const reviews = memoryStore.reviews[productId];
+    const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+    const formattedAvg = parseFloat(avg.toFixed(1));
+    updateProduct(productId, { rating: formattedAvg });
+    
+    if (isFirebaseConfigured()) {
+      const updatedReview = memoryStore.reviews[productId].find(r => r.id === reviewId);
+      if (updatedReview) {
+        saveDocumentToFirestore('reviews', reviewId, updatedReview)
+          .then(() => saveProductRatingToFirestore(productId, formattedAvg, reviews.length))
+          .catch(console.error);
+      }
+    }
+  }
+};
+
+export const deleteReview = async (productId, reviewId) => {
+  if (memoryStore.reviews[productId]) {
+    memoryStore.reviews[productId] = memoryStore.reviews[productId].filter(r => r.id !== reviewId);
+    
+    // Recalculate average rating
+    const reviews = memoryStore.reviews[productId];
+    const avg = reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) : 0;
+    const formattedAvg = parseFloat(avg.toFixed(1));
+    updateProduct(productId, { rating: formattedAvg });
+
+    if (isFirebaseConfigured()) {
+      import('firebase/firestore').then(({ doc, deleteDoc }) => {
+        deleteDoc(doc(db, 'reviews', reviewId))
+          .then(() => saveProductRatingToFirestore(productId, formattedAvg, reviews.length))
+          .catch(console.error);
+      });
+    }
+  }
+};
+
 export const syncProductReviews = async (productId, onSyncComplete) => {
   if (!isFirebaseConfigured()) return;
   try {
@@ -226,8 +301,8 @@ export const fileToBase64 = (file) =>
         const canvas = document.createElement('canvas');
         let width = img.width;
         let height = img.height;
-        const MAX_WIDTH = 1200;
-        const MAX_HEIGHT = 1200;
+        const MAX_WIDTH = 600;
+        const MAX_HEIGHT = 600;
         if (width > height) {
           if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
         } else {
@@ -237,7 +312,7 @@ export const fileToBase64 = (file) =>
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/jpeg', 0.7));
+        resolve(canvas.toDataURL('image/jpeg', 0.6));
       };
       img.onerror = reject;
       img.src = e.target.result;

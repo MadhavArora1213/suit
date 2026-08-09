@@ -17,8 +17,8 @@ export default function CollectionsAdmin({ setActivePage, onEditCollection }) {
   const [seeding, setSeeding] = useState(false);
 
   const loadData = () => {
-    const data = getCollections();
-    data.sort((a, b) => a.order - b.order);
+    const data = [...getCollections()]; // Create a copy to trigger re-render
+    data.sort((a, b) => (a.order || 0) - (b.order || 0));
     setCollections(data);
   };
 

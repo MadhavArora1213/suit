@@ -1,7 +1,8 @@
 // Force HMR trigger for new routes
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
+import { doc, getDoc } from 'firebase/firestore';
 import { initializeStore } from '../utils/adminStore';
 import AdminLogin from './AdminLogin';
 import AdminLayout from './AdminLayout';
@@ -20,6 +21,8 @@ import UsersAdmin from './pages/UsersAdmin';
 import Settings from './pages/Settings';
 import BoutiquesAdmin from './pages/BoutiquesAdmin';
 import AddBoutique from './pages/AddBoutique';
+import ReviewsAdmin from './pages/ReviewsAdmin';
+import CouponsAdmin from './pages/CouponsAdmin';
 
 export default function AdminApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -57,8 +60,25 @@ export default function AdminApp() {
         setAuthLoading(false);
         return;
       }
-      onAuthStateChanged(auth, (user) => {
-        setIsLoggedIn(!!user);
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          try {
+            const adminDoc = await getDoc(doc(db, 'admins', user.email.toLowerCase()));
+            if (adminDoc.exists()) {
+              setIsLoggedIn(true);
+            } else {
+              // Kick out non-admin users
+              await signOut(auth);
+              setIsLoggedIn(false);
+            }
+          } catch (err) {
+            console.error("Admin verification error", err);
+            await signOut(auth);
+            setIsLoggedIn(false);
+          }
+        } else {
+          setIsLoggedIn(false);
+        }
         setAuthLoading(false);
       });
     };
@@ -86,6 +106,8 @@ export default function AdminApp() {
       case 'products':     return <Products setActivePage={setActivePage} onEditProduct={(p) => { setEditProduct(p); setActivePage('add-product'); }} />;
       case 'add-product':  return <AddProduct setActivePage={setActivePage} editProduct={editProduct} />;
       case 'orders':       return <Orders />;
+      case 'reviews':      return <ReviewsAdmin />;
+      case 'coupons':      return <CouponsAdmin />;
       case 'support':      return <SupportAdmin />;
       case 'users':        return <UsersAdmin />;
       case 'collections':  return <CollectionsAdmin setActivePage={setActivePage} onEditCollection={(c) => { setEditCollection(c); setActivePage('edit-collection'); }} />;

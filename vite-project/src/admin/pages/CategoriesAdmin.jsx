@@ -8,7 +8,10 @@ export default function CategoriesAdmin({ setActivePage }) {
   const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
-    setCategories(getCategories());
+    const handleUpdate = () => setCategories([...getCategories()]);
+    handleUpdate();
+    window.addEventListener('admin-data-updated', handleUpdate);
+    return () => window.removeEventListener('admin-data-updated', handleUpdate);
   }, []);
 
   const openAdd = () => {

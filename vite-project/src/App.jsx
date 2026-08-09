@@ -97,7 +97,9 @@ function App() {
   const getCollectionFromPath = () => {
     const path = window.location.pathname;
     if (path.startsWith('/collections/')) {
-      return path.replace('/collections/', '');
+      let slug = path.replace('/collections/', '');
+      if (slug.endsWith('/')) slug = slug.slice(0, -1);
+      return decodeURIComponent(slug);
     }
     return null;
   };
@@ -152,6 +154,17 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const handler = () => {
+      if (view === 'product-details') {
+        const found = getProductFromPath();
+        if (found) setSelectedProduct(found);
+      }
+    };
+    window.addEventListener('admin-data-updated', handler);
+    return () => window.removeEventListener('admin-data-updated', handler);
+  }, [view, selectedProduct]);
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         try {
@@ -159,6 +172,13 @@ function App() {
           if (userDoc.exists()) {
             const data = userDoc.data();
             setUser(data);
+            
+            if (data.cart) {
+              setCart(data.cart);
+            } else {
+              setCart([]);
+            }
+
             if (data.favorites) {
               setFavorites(data.favorites);
             } else {
@@ -179,6 +199,7 @@ function App() {
       } else {
         setUser(null);
         setFavorites({});
+        setCart([]);
       }
     });
     return () => unsubscribe();
@@ -208,7 +229,7 @@ function App() {
       'profile': '/profile',
       'shop': '/shop',
       'home': '/sell',
-      'product-details': `/product/${selectedProduct?.name ? selectedProduct.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : ''}`,
+      'product-details': selectedProduct?.name ? `/product/${selectedProduct.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}` : null,
     };
     if (pathMap[view] && window.location.pathname !== pathMap[view]) {
       window.history.pushState(null, '', pathMap[view]);
@@ -245,41 +266,70 @@ function App() {
     } catch (e) {
       console.error("Logout error", e);
     }
-    setUser(null)
-    window.location.href = '/'
+    setUser(null);
+    setCart([]);
+    setFavorites({});
+    window.location.href = '/';
   }
 
-  const addToCart = (product, size = 'M') => {
-    setCart((prev) => {
-      const existingIndex = prev.findIndex(
-        (item) => item.id === product.id && item.size === size
-      )
-      if (existingIndex > -1) {
-        const updated = [...prev]
-        updated[existingIndex] = {
-          ...updated[existingIndex],
-          quantity: updated[existingIndex].quantity + 1,
-        }
-        return updated
-      }
-      return [...prev, { ...product, size, quantity: 1 }]
-    })
-  }
-
-  const removeFromCart = (productId, size) => {
-    setCart((prev) => prev.filter((item) => !(item.id === productId && item.size === size)))
-  }
-
-  const updateCartQty = (productId, size, qty) => {
-    if (qty <= 0) {
-      removeFromCart(productId, size)
-      return
+  const addToCart = async (product, size = 'M') => {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
     }
-    setCart((prev) =>
-      prev.map((item) =>
-        item.id === productId && item.size === size ? { ...item, quantity: qty } : item
-      )
-    )
+    
+    const existingIndex = cart.findIndex(
+      (item) => item.id === product.id && item.size === size
+    );
+    let newCart = [...cart];
+    if (existingIndex > -1) {
+      newCart[existingIndex] = {
+        ...newCart[existingIndex],
+        quantity: newCart[existingIndex].quantity + 1,
+      };
+    } else {
+      newCart.push({ ...product, size, quantity: 1 });
+    }
+    setCart(newCart);
+    const ts = Date.now();
+
+    try {
+      await setDoc(doc(db, 'users', user.uid), { cart: newCart, cartUpdatedAt: ts }, { merge: true });
+    } catch (err) {
+      console.error("Error syncing cart:", err);
+    }
+  }
+
+  const removeFromCart = async (productId, size) => {
+    const newCart = cart.filter((item) => !(item.id === productId && item.size === size));
+    setCart(newCart);
+    const ts = Date.now();
+    if (user) {
+      try {
+        await setDoc(doc(db, 'users', user.uid), { cart: newCart, cartUpdatedAt: ts }, { merge: true });
+      } catch (err) {
+        console.error("Error syncing cart:", err);
+      }
+    }
+  }
+
+  const updateCartQty = async (productId, size, qty) => {
+    if (qty <= 0) {
+      removeFromCart(productId, size);
+      return;
+    }
+    const newCart = cart.map((item) =>
+      item.id === productId && item.size === size ? { ...item, quantity: qty } : item
+    );
+    setCart(newCart);
+    const ts = Date.now();
+    if (user) {
+      try {
+        await setDoc(doc(db, 'users', user.uid), { cart: newCart, cartUpdatedAt: ts }, { merge: true });
+      } catch (err) {
+        console.error("Error syncing cart:", err);
+      }
+    }
   }
 
   const toggleFavorite = async (productId) => {
@@ -313,14 +363,6 @@ function App() {
       )}
     </AnimatePresence>
   );
-
-  if (!storeReady) {
-    return (
-      <div className="h-screen w-screen bg-[#FAF9F6] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#8B1A1A] border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
 
   if (!loadingComplete && isHomeRoute) return <LoadingScreen onComplete={handleLoadComplete} />
 
@@ -447,6 +489,8 @@ function App() {
           addToCart={addToCart}
           favorites={favorites}
           toggleFavorite={toggleFavorite}
+          user={user}
+          requireLogin={() => setShowLoginModal(true)}
         />
       )}
 
@@ -458,6 +502,8 @@ function App() {
           addToCart={addToCart}
           favorites={favorites}
           toggleFavorite={toggleFavorite}
+          user={user}
+          requireLogin={() => setShowLoginModal(true)}
         />
       )}
 
@@ -468,6 +514,8 @@ function App() {
           setSelectedProduct={setSelectedProduct}
           setSelectedCollectionSlug={setSelectedCollectionSlug}
           addToCart={addToCart}
+          user={user}
+          requireLogin={() => setShowLoginModal(true)}
         />
       )}
 
@@ -481,6 +529,8 @@ function App() {
           addToCart={addToCart}
           favorites={favorites}
           toggleFavorite={toggleFavorite}
+          user={user}
+          requireLogin={() => setShowLoginModal(true)}
         />
       )}
 
@@ -493,6 +543,18 @@ function App() {
           addToCart={addToCart}
           favorites={favorites}
           toggleFavorite={toggleFavorite}
+          user={user}
+          requireLogin={() => setShowLoginModal(true)}
+        />
+      )}
+
+      {view === 'wishlist' && (
+        <WishlistPage
+          allProducts={getAllProducts()}
+          favorites={favorites}
+          toggleFavorite={toggleFavorite}
+          addToCart={addToCart}
+          setView={setView}
         />
       )}
 
@@ -500,6 +562,8 @@ function App() {
         <BoutiquesPage 
           setView={setView}
           setSelectedBoutique={setSelectedBoutique}
+          user={user}
+          requireLogin={() => setShowLoginModal(true)}
         />
       )}
 
@@ -511,6 +575,8 @@ function App() {
           addToCart={addToCart}
           favorites={favorites}
           toggleFavorite={toggleFavorite}
+          user={user}
+          requireLogin={() => setShowLoginModal(true)}
         />
       )}
 

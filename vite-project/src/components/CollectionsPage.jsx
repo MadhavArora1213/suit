@@ -43,7 +43,7 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
   const spotlight = collections.length > 0 ? collections[0] : null;
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] mt-[80px] md:mt-[110px]">
+    <div className="min-h-screen bg-[#FAF9F6] pt-14 md:pt-16">
       {/* ── Cinematic Hero ── */}
       <div className="relative h-[70vh] md:h-[80vh] overflow-hidden">
         <img src="/luxury_edit.png" alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
@@ -212,23 +212,23 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
 
       {/* ── Featured Spotlight (first item when "All") ── */}
       {activeTag === 'All' && spotlight && (
-        <div className="max-w-[1600px] mx-auto px-6 md:px-12 mt-10">
+        <div className="max-w-[1600px] mx-auto px-6 md:px-12 mt-20 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             onClick={() => { setSelectedCollectionSlug(spotlight.id); setView('collection-detail'); }}
-            className="group relative h-[50vh] md:h-[60vh] overflow-hidden cursor-pointer"
+            className="group relative h-[60vh] md:h-[75vh] overflow-hidden cursor-pointer"
           >
             <img src={spotlight.image} alt={spotlight.title} className="absolute inset-0 w-full h-full object-cover object-[center_20%] transition-transform duration-1000 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
 
-            <div className="relative h-full flex flex-col justify-end p-6 sm:p-10 md:p-16 max-w-2xl">
+            <div className="relative h-full flex flex-col justify-end p-8 sm:p-12 md:pl-24 md:pr-20 md:pt-20 md:pb-20 max-w-3xl">
               <span className="text-[#D4AF37] text-[9px] tracking-[0.4em] uppercase font-bold mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Featured Collection
               </span>
-              <h2 className="text-3xl sm:text-5xl md:text-7xl font-light text-white leading-none mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <h2 className="text-3xl sm:text-4xl md:text-6xl font-light text-white leading-tight mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 {spotlight.title} <br /><span className="italic text-[#D4AF37]">{spotlight.subtitle}</span>
               </h2>
               <div className="w-12 h-px bg-[#D4AF37] mb-6" />

@@ -6,8 +6,8 @@ export default function BoutiquesAdmin({ setActivePage, onEditBoutique }) {
   const [boutiques, setBoutiques] = useState([]);
 
   useEffect(() => {
-    setBoutiques(getBoutiques());
-    const handleUpdate = () => setBoutiques(getBoutiques());
+    setBoutiques([...getBoutiques()]);
+    const handleUpdate = () => setBoutiques([...getBoutiques()]);
     window.addEventListener('admin-data-updated', handleUpdate);
     return () => window.removeEventListener('admin-data-updated', handleUpdate);
   }, []);
@@ -25,7 +25,7 @@ export default function BoutiquesAdmin({ setActivePage, onEditBoutique }) {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this boutique?")) {
       await deleteBoutique(id);
-      setBoutiques(getBoutiques());
+      setBoutiques([...getBoutiques()]);
     }
   };
 

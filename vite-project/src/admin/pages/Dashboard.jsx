@@ -178,10 +178,10 @@ export default function Dashboard({ setActivePage }) {
 
   useEffect(() => {
     const loadData = () => {
-      setProducts(getProducts());
-      setOrders(getOrders());
-      setBoutiques(getBoutiques());
-      setCategories(getCategories());
+      setProducts([...getProducts()]);
+      setOrders([...getOrders()]);
+      setBoutiques([...getBoutiques()]);
+      setCategories([...getCategories()]);
     };
 
     loadData();
@@ -221,10 +221,10 @@ export default function Dashboard({ setActivePage }) {
   // Also reload from localStorage after a short delay (in case Firestore syncs later)
   useEffect(() => {
     const t = setTimeout(() => {
-      setProducts(getProducts());
-      setOrders(getOrders());
-      setBoutiques(getBoutiques());
-      setCategories(getCategories());
+      setProducts([...getProducts()]);
+      setOrders([...getOrders()]);
+      setBoutiques([...getBoutiques()]);
+      setCategories([...getCategories()]);
     }, 2000);
     return () => clearTimeout(t);
   }, []);

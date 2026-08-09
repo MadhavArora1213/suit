@@ -116,8 +116,8 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
       
       {/* Product Details */}
       <div className="pt-4 px-1 flex flex-col gap-1.5 transition-transform duration-300 group-hover:translate-y-1">
-        <h3 className="text-[15px] font-light text-[#1A0008]/90 group-hover:text-[#1A0008] transition-colors line-clamp-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
-        <p className="text-[14px] font-medium text-[#D4AF37] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.price}</p>
+        <h3 className="text-[16px] font-semibold text-[#1A0008] group-hover:text-[#8B1A1A] transition-colors line-clamp-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
+        <p className="text-[15px] font-bold text-[#1A0008] tracking-wide">{product.price}</p>
       </div>
     </motion.div>
   );
@@ -169,32 +169,31 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    const prof = getBoutiqueProfile(boutiqueName);
-    setProfile(prof);
-
-    const allProds = getAllProducts();
     
-    const suitImages = [
-      '/custom_suit_1.png',
-      '/custom_suit_2.png',
-      '/custom_suit_3.png',
-      '/custom_suit_4.png',
-      '/custom_suit_5.png',
-      '/custom_suit_6.png'
-    ];
+    const loadData = () => {
+      const prof = getBoutiqueProfile(boutiqueName);
+      setProfile(prof);
 
-    const boutiqueProds = allProds.filter(p => {
-      if (!p.boutique || !boutiqueName) return false;
-      const pb = p.boutique.trim().toLowerCase();
-      const bn = boutiqueName.trim().toLowerCase();
-      return pb.includes(bn) || bn.includes(pb);
-    }).map((prod, index) => ({
-      ...prod,
-      image: suitImages[index % suitImages.length]
-    }));
+      const allProds = getAllProducts();
+      const boutiqueProds = allProds.filter(p => {
+        if (!p.boutique || !boutiqueName) return false;
+        const pb = p.boutique.replace(/[- ]/g, '').toLowerCase();
+        const bn = boutiqueName.replace(/[- ]/g, '').toLowerCase();
+        return pb === bn || pb.includes(bn) || bn.includes(pb);
+      });
+      
+      setProducts(boutiqueProds);
+      setFilteredProducts(boutiqueProds);
+    };
+
+    loadData();
+    window.addEventListener('admin-data-updated', loadData);
+    window.addEventListener('gurnaaz-firebase-updated', loadData);
     
-    setProducts(boutiqueProds);
-    setFilteredProducts(boutiqueProds);
+    return () => {
+      window.removeEventListener('admin-data-updated', loadData);
+      window.removeEventListener('gurnaaz-firebase-updated', loadData);
+    };
   }, [boutiqueName]);
 
   useEffect(() => {

@@ -7,8 +7,8 @@ export default function CollectionTagsAdmin({ setActivePage, onEditCollectionTag
   const [tags, setTags] = useState([]);
 
   const loadData = () => {
-    const data = getCollectionTags();
-    data.sort((a, b) => a.order - b.order);
+    const data = [...getCollectionTags()];
+    data.sort((a, b) => (a.order || 0) - (b.order || 0));
     setTags(data);
   };
 
