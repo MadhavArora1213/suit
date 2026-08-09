@@ -40,6 +40,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
 
   const [form, setForm] = useState({
     name: ep?.name || '',
+    color: ep?.color || '',
     weight: ep?.weight || '500',
     price: ep?.price?.replace('₹', '').replace(/,/g, '') || '',
     originalPrice: ep?.originalPrice?.replace('₹', '').replace(/,/g, '') || '',
@@ -130,6 +131,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
     const product = {
       id: ep?.id || `admin_${Date.now()}`,
       name: form.name,
+      color: form.color,
       weight: Number(form.weight) || 500,
       price: `₹${Number(form.price).toLocaleString('en-IN')}`,
       priceNum: Number(form.price),
@@ -218,6 +220,10 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 <div>
                   <Label>Original MRP (₹)</Label>
                   <Input type="number" value={form.originalPrice} onChange={e => update('originalPrice', e.target.value)} placeholder="e.g. 5999" />
+                </div>
+                <div>
+                  <Label>Color(s)</Label>
+                  <Input value={form.color} onChange={e => update('color', e.target.value)} placeholder="e.g. Mustard, Wine" />
                 </div>
                 <div>
                   <Label>Weight (g)</Label>

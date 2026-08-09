@@ -9,7 +9,7 @@ export default function Products({ setActivePage, onEditProduct }) {
   const [deleteId, setDeleteId] = useState(null);
 
   const loadAll = () => {
-    return getProducts().map(p => ({ ...p, category: p.collection, source: 'admin' }));
+    return getProducts().map(p => ({ ...p, source: 'admin' }));
   };
 
   const [products, setProducts] = useState(loadAll);
@@ -140,7 +140,7 @@ export default function Products({ setActivePage, onEditProduct }) {
                     <span className="text-[10px] sm:text-xs text-[#6B6B6B]">{product.rating}</span>
                   </div>
                 </div>
-                <span className="inline-block mt-1.5 sm:mt-2 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E8DDD0] text-[#111111]">{product.category}</span>
+                <span className="inline-block mt-1.5 sm:mt-2 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E8DDD0] text-[#111111]">{product.category || product.collection}</span>
               </div>
             </motion.div>
           ))}

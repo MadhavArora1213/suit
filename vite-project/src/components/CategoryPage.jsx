@@ -161,13 +161,29 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   ];
 
   const colorsList = useMemo(() => {
-    return baseColors.filter(color => {
-      const regex = new RegExp(`\\b${color.name}\\b`, 'i');
-      return products.some(p => {
+    const c = new Set();
+    
+    // 1. Extract explicit colors set via Admin Panel (p.color)
+    products.forEach(p => {
+      if (p.color) {
+        p.color.split(',').forEach(col => {
+          if (col.trim()) c.add(col.trim().toLowerCase());
+        });
+      }
+    });
+
+    // 2. Fallback to legacy text search against baseColors for older products
+    baseColors.forEach(bc => {
+      const regex = new RegExp(`\\b${bc.name}\\b`, 'i');
+      if (products.some(p => {
         const text = `${p.name || ''} ${p.desc || ''} ${p.shortDesc || ''} ${p.type || ''} ${p.suitType || ''} ${p.collection || ''} ${p.fabricDetails || ''} ${p.fabricName || ''}`;
         return regex.test(text);
-      });
+      })) {
+        c.add(bc.name.toLowerCase());
+      }
     });
+
+    return [...c].filter(Boolean).map(color => color.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')).sort();
   }, [products]);
 
   const toggleFilter = (setter, value) => {
@@ -205,6 +221,9 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
     }
     if (selectedColors.length > 0) {
       result = result.filter(p => selectedColors.some(c => {
+        // Match explicit color field
+        if (p.color && p.color.toLowerCase().includes(c.toLowerCase())) return true;
+        // Match legacy text
         const regex = new RegExp(`\\b${c}\\b`, 'i');
         return regex.test(getText(p));
       }));
@@ -409,20 +428,34 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                 </FilterAccordion>
               )}
 
-              <FilterAccordion title="Color" defaultOpen={false}>
-                <div className="flex flex-wrap gap-3">
-                  {colorsList.map(c => {
-                    const isSelected = selectedColors.includes(c.name);
-                    return (
-                      <button key={c.name} onClick={() => toggleFilter(setSelectedColors, c.name)} title={c.name}
-                        className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all cursor-pointer ${isSelected ? 'border-gray-400 scale-110 shadow-md' : 'border-gray-200 hover:border-gray-300'}`}
-                        style={{ backgroundColor: c.hex }}>
-                        {isSelected && <Check size={12} className={c.name === 'White' || c.name === 'Yellow' ? 'text-black' : 'text-white'} />}
-                      </button>
-                    );
-                  })}
-                </div>
-              </FilterAccordion>
+              {colorsList.length > 0 && (
+                <FilterAccordion title="Color" defaultOpen={false}>
+                  <div className="flex flex-wrap gap-3">
+                    {colorsList.map(c => {
+                      const isSelected = selectedColors.includes(c);
+                      const baseColor = baseColors.find(bc => bc.name.toLowerCase() === c.toLowerCase());
+                      
+                      if (baseColor) {
+                        return (
+                          <button key={c} onClick={() => toggleFilter(setSelectedColors, c)} title={c}
+                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all cursor-pointer ${isSelected ? 'border-gray-400 scale-110 shadow-md' : 'border-[#1A0008]/10 hover:border-gray-300'}`}
+                            style={{ backgroundColor: baseColor.hex }}>
+                            {isSelected && <Check size={12} className={baseColor.name === 'White' || baseColor.name === 'Yellow' || baseColor.name === 'Ivory' ? 'text-black' : 'text-white'} />}
+                          </button>
+                        );
+                      } else {
+                        // Custom color tag
+                        return (
+                          <button key={c} onClick={() => toggleFilter(setSelectedColors, c)}
+                            className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${isSelected ? 'border-[#1A0008] bg-[#1A0008] text-white' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
+                            {c}
+                          </button>
+                        );
+                      }
+                    })}
+                  </div>
+                </FilterAccordion>
+              )}
 
               {/* Accordion: Occasion */}
               <FilterAccordion title="Occasion" defaultOpen={false}>
