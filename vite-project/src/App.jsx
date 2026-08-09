@@ -120,9 +120,8 @@ function App() {
   const getCategoryFromPath = () => {
     const path = window.location.pathname;
     if (path.startsWith('/category/')) {
-      // capitalizes first letter (e.g. anarkali -> Anarkali)
-      const cat = path.replace('/category/', '');
-      return cat.charAt(0).toUpperCase() + cat.slice(1);
+      const slug = decodeURIComponent(path.replace('/category/', ''));
+      return slug.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
     return null;
   };
@@ -149,6 +148,7 @@ function App() {
 
   useEffect(() => {
     syncProducts(() => {
+      window.isLiveSyncComplete = true;
       window.dispatchEvent(new CustomEvent('admin-data-updated'));
     });
   }, []);
@@ -210,7 +210,7 @@ function App() {
       'customer-home': '/',
       'collections': '/collections',
       'collection-detail': `/collections/${selectedCollectionSlug || ''}`,
-      'category': `/category/${(selectedCategory || '').toLowerCase()}`,
+      'category': `/category/${(selectedCategory || '').toLowerCase().replace(/ /g, '-')}`,
       'boutiques': '/shops-and-boutiques',
       'seller-shop': (() => {
           if (!selectedBoutique) return '/shops-and-boutiques';
