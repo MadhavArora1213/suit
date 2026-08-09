@@ -147,16 +147,28 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
     return { globalMinPrice: min, globalMaxPrice: max };
   }, [products]);
 
-  const colorsList = [
-    { name: 'Red', hex: '#E74C3C' },
-    { name: 'Blue', hex: '#3498DB' },
-    { name: 'Green', hex: '#2ECC71' },
-    { name: 'Pink', hex: '#F1948A' },
-    { name: 'Black', hex: '#1A0008' },
-    { name: 'White', hex: '#FFFFFF' },
-    { name: 'Yellow', hex: '#F1C40F' },
-    { name: 'Wine', hex: '#722F37' }
+  const baseColors = [
+    { name: 'Red', hex: '#E74C3C' }, { name: 'Blue', hex: '#3498DB' }, { name: 'Green', hex: '#2ECC71' },
+    { name: 'Pink', hex: '#F1948A' }, { name: 'Black', hex: '#1A0008' }, { name: 'White', hex: '#FFFFFF' },
+    { name: 'Yellow', hex: '#F1C40F' }, { name: 'Wine', hex: '#722F37' }, { name: 'Maroon', hex: '#800000' },
+    { name: 'Purple', hex: '#8E44AD' }, { name: 'Peach', hex: '#FFCBA4' }, { name: 'Orange', hex: '#E67E22' },
+    { name: 'Beige', hex: '#F5F5DC' }, { name: 'Mustard', hex: '#FFDB58' }, { name: 'Olive', hex: '#808000' },
+    { name: 'Teal', hex: '#008080' }, { name: 'Navy', hex: '#000080' }, { name: 'Grey', hex: '#7F8C8D' },
+    { name: 'Brown', hex: '#8B4513' }, { name: 'Gold', hex: '#FFD700' }, { name: 'Silver', hex: '#C0C0C0' },
+    { name: 'Ivory', hex: '#FFFFF0' }, { name: 'Magenta', hex: '#FF00FF' }, { name: 'Lavender', hex: '#E6E6FA' },
+    { name: 'Turquoise', hex: '#40E0D0' }, { name: 'Coral', hex: '#FF7F50' }, { name: 'Mint', hex: '#98FF98' },
+    { name: 'Indigo', hex: '#4B0082' }, { name: 'Rose', hex: '#FF007F' }, { name: 'Cyan', hex: '#00FFFF' }
   ];
+
+  const colorsList = useMemo(() => {
+    return baseColors.filter(color => {
+      const regex = new RegExp(`\\b${color.name}\\b`, 'i');
+      return products.some(p => {
+        const text = `${p.name || ''} ${p.desc || ''} ${p.shortDesc || ''} ${p.type || ''} ${p.suitType || ''} ${p.collection || ''} ${p.fabricDetails || ''} ${p.fabricName || ''}`;
+        return regex.test(text);
+      });
+    });
+  }, [products]);
 
   const toggleFilter = (setter, value) => {
     setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
@@ -192,7 +204,10 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
       ));
     }
     if (selectedColors.length > 0) {
-      result = result.filter(p => selectedColors.some(c => getText(p).includes(c.toLowerCase())));
+      result = result.filter(p => selectedColors.some(c => {
+        const regex = new RegExp(`\\b${c}\\b`, 'i');
+        return regex.test(getText(p));
+      }));
     }
     if (selectedOccasions.length > 0) {
       result = result.filter(p => selectedOccasions.some(o => 
