@@ -123,7 +123,7 @@ export default function Navbar({
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed left-0 right-0 z-[999] flex justify-center transition-all duration-700 ${scrolled ? 'top-0 px-0 sm:top-4 sm:px-4' : 'top-[32px] px-0'}`}
+        className={`fixed left-0 right-0 z-[999] flex justify-center transition-all duration-700 ${scrolled ? 'top-4 px-4' : 'top-[32px] px-0'}`}
       >
         {/* Main Nav */}
         <div className={`transition-all duration-500 flex flex-col relative w-full ${scrolled
@@ -191,10 +191,15 @@ export default function Navbar({
                       {/* Col 1: Shop By Category */}
                       <div className="w-[35%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Shop by Category</span>
+<<<<<<< HEAD
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-2">
+                          {navCategories.map((cat) => (
+=======
                         <div className="grid grid-cols-2 gap-x-8 gap-y-3 mt-2">
                           {navCategories.map((cat, i) => (
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
                             <a
-                              key={`${cat.id || cat.name}-${i}`}
+                              key={cat.id || cat.name}
                               href={`/category/${cat.name.toLowerCase().replace(/ /g, '-')}`}
                               onClick={(e) => {
                                 e.preventDefault();
@@ -555,8 +560,8 @@ export default function Navbar({
               <div className="space-y-2">
                 <span className="text-[11px] tracking-[0.2em] text-[#1A0008]/40 uppercase font-bold block">SHOP CATEGORIES</span>
                 <div className="pl-4 flex flex-col gap-3">
-                  {navCategories.map((cat, i) => (
-                    <a key={`${cat.id || cat.name}-${i}`} href="#" onClick={(e) => {
+                  {navCategories.map((cat) => (
+                    <a key={cat.id || cat.name} href="#" onClick={(e) => {
                       e.preventDefault();
                       setSelectedCategory(cat.name);
                       setView('category');

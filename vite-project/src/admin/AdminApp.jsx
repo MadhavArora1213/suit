@@ -21,8 +21,13 @@ import UsersAdmin from './pages/UsersAdmin';
 import Settings from './pages/Settings';
 import BoutiquesAdmin from './pages/BoutiquesAdmin';
 import AddBoutique from './pages/AddBoutique';
+<<<<<<< HEAD
+import FestiveItemsAdmin from './pages/FestiveItemsAdmin';
+import AddFestiveItem from './pages/AddFestiveItem';
+=======
 import ReviewsAdmin from './pages/ReviewsAdmin';
 import CouponsAdmin from './pages/CouponsAdmin';
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
 
 export default function AdminApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -103,8 +108,16 @@ export default function AdminApp() {
   const renderPage = () => {
     switch (activePage) {
       case 'dashboard':    return <Dashboard setActivePage={setActivePage} />;
+<<<<<<< HEAD
+      case 'products':     return <Products setActivePage={setActivePage} />;
+      case 'add-product':  return <AddProduct setActivePage={setActivePage} />;
+      case 'festive-items':return <FestiveItemsAdmin setActivePage={setActivePage} />;
+      case 'add-festive-item':
+      case 'edit-festive-item':return <AddFestiveItem setActivePage={setActivePage} />;
+=======
       case 'products':     return <Products setActivePage={setActivePage} onEditProduct={(p) => { setEditProduct(p); setActivePage('add-product'); }} />;
       case 'add-product':  return <AddProduct setActivePage={setActivePage} editProduct={editProduct} />;
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
       case 'orders':       return <Orders />;
       case 'reviews':      return <ReviewsAdmin />;
       case 'coupons':      return <CouponsAdmin />;
