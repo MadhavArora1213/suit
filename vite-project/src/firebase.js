@@ -317,7 +317,9 @@ export async function fetchOrdersFromFirestore() {
     orders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
     return orders;
   } catch (error) {
-    console.error("Firestore fetch orders error: ", error);
+    if (error.code !== 'permission-denied') {
+      console.error("Firestore fetch orders error: ", error);
+    }
     return [];
   }
 }
@@ -521,7 +523,9 @@ export async function fetchCollectionFromFirestore(collectionName) {
     });
     return results;
   } catch (error) {
-    console.error(`Firestore fetch error for ${collectionName}:`, error);
+    if (error.code !== 'permission-denied') {
+      console.error(`Firestore fetch error for ${collectionName}:`, error);
+    }
     return [];
   }
 }
