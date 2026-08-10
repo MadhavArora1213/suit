@@ -191,13 +191,8 @@ export default function Navbar({
                       {/* Col 1: Shop By Category */}
                       <div className="w-[35%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Shop by Category</span>
-<<<<<<< HEAD
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-2">
-                          {navCategories.map((cat) => (
-=======
                         <div className="grid grid-cols-2 gap-x-8 gap-y-3 mt-2">
                           {navCategories.map((cat, i) => (
->>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
                             <a
                               key={cat.id || cat.name}
                               href={`/category/${cat.name.toLowerCase().replace(/ /g, '-')}`}

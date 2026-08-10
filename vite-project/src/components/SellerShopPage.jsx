@@ -117,7 +117,14 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
       {/* Product Details */}
       <div className="pt-4 px-1 flex flex-col gap-1.5 transition-transform duration-300 group-hover:translate-y-1">
         <h3 className="text-[16px] font-semibold text-[#1A0008] group-hover:text-[#8B1A1A] transition-colors line-clamp-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
-        <p className="text-[15px] font-bold text-[#1A0008] tracking-wide">{product.price}</p>
+        <p className="text-[15px] font-bold text-[#1A0008] tracking-wide flex items-center gap-2">
+          {product.originalPrice && (
+            <span className="text-[12px] text-gray-500 line-through font-normal">
+              {product.originalPrice}
+            </span>
+          )}
+          <span>{product.price}</span>
+        </p>
       </div>
     </motion.div>
   );
@@ -158,6 +165,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   const [sortBy, setSortBy] = useState('default');
   const [filters, setFilters] = useState({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' });
   const [showMobileFilter, setShowMobileFilter] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -184,13 +192,23 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
       
       setProducts(boutiqueProds);
       setFilteredProducts(boutiqueProds);
+      
+      // If we got products, or if a reasonable time passed, stop loading
+      if (boutiqueProds.length > 0) {
+        setLoading(false);
+      }
     };
 
     loadData();
+    
+    // Fallback: stop loading after 2.5s even if no products found (in case shop is actually empty)
+    const timer = setTimeout(() => setLoading(false), 2500);
+
     window.addEventListener('admin-data-updated', loadData);
     window.addEventListener('gurnaaz-firebase-updated', loadData);
     
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('admin-data-updated', loadData);
       window.removeEventListener('gurnaaz-firebase-updated', loadData);
     };
@@ -253,6 +271,54 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   const workOptions = [{ value: 'All', label: 'All Work' }, { value: 'Embroidery', label: 'Hand Embroidery' }, { value: 'Zari', label: 'Zari Work' }, { value: 'Gota Patti', label: 'Gota Patti' }, { value: 'Printed', label: 'Printed' }];
 
   if (!profile) return null;
+
+  if (loading) {
+    return (
+      <div className="bg-[#FAF9F6] min-h-screen text-[#1A0008] overflow-hidden">
+        {/* Skeleton Hero */}
+        <div className="relative w-full overflow-hidden border-b border-[#D4AF37]/15 pt-14 md:pt-16">
+          <div className="md:hidden relative z-10 w-full px-5 py-6">
+            <div className="w-full aspect-[4/3] rounded-[16px] bg-black/5 animate-pulse border-[4px] border-[#FAF9F6]"></div>
+          </div>
+          <div className="hidden md:flex relative z-10 w-full max-w-[1200px] mx-auto px-6 py-10 items-center justify-center gap-6">
+            <div className="w-[22%] max-w-[220px] aspect-[3/4] rounded-[20px] bg-black/5 animate-pulse rotate-[-6deg]"></div>
+            <div className="w-[55%] max-w-[700px] aspect-[16/10] rounded-[32px] bg-black/5 animate-pulse z-10"></div>
+            <div className="w-[22%] max-w-[220px] aspect-[3/4] rounded-[20px] bg-black/5 animate-pulse rotate-[6deg]"></div>
+          </div>
+        </div>
+        {/* Skeleton Action Bar */}
+        <div className="border-b border-[#D4AF37]/15 py-3">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between">
+            <div className="w-32 h-4 bg-black/5 animate-pulse rounded"></div>
+            <div className="w-48 h-10 bg-black/5 animate-pulse rounded-xl"></div>
+          </div>
+        </div>
+        {/* Skeleton Content */}
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-12 py-8 md:py-12 flex flex-col xl:flex-row gap-8 md:gap-12">
+          {/* Skeleton Sidebar */}
+          <div className="hidden xl:block w-64 flex-shrink-0">
+            <div className="h-[600px] bg-black/5 animate-pulse rounded-3xl"></div>
+          </div>
+          {/* Skeleton Grid */}
+          <div className="flex-1">
+            <div className="flex justify-between items-end mb-8 border-b border-[#D4AF37]/15 pb-4">
+              <div className="w-48 h-10 bg-black/5 animate-pulse rounded"></div>
+              <div className="w-32 h-10 bg-black/5 animate-pulse rounded-xl"></div>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-6 sm:gap-y-10">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                <div key={n} className="flex flex-col gap-3">
+                  <div className="aspect-[3/4] bg-black/5 animate-pulse rounded-2xl"></div>
+                  <div className="w-3/4 h-4 bg-black/5 animate-pulse rounded"></div>
+                  <div className="w-1/2 h-4 bg-black/5 animate-pulse rounded"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen text-[#1A0008] overflow-hidden">

@@ -289,7 +289,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
               {[
                 { label: 'Collection Tab', key: 'collection', options: ['Trending', 'New Arrivals', 'Best Sellers', 'Festive Edit', 'Summer', 'Monsoon', 'Wedding', 'Pastel', 'Black', 'Luxury', 'Punjabi', 'Bridal', 'Velvet', 'Pure Silk', 'Cotton', 'Georgette', 'Organza', 'Casual', 'Party'] },
                 { label: 'Style Category', key: 'styleCategory', options: ['Traditional', 'Designer', 'Party', 'Casual', 'Bridal', 'Ethnic', 'Fusion', 'Contemporary', 'Royal', 'Heritage', 'Minimalist', 'Boho', 'Indo Western', 'Western Wear', 'Festive', 'Workwear'] },
-                { label: 'Suit Type', key: 'suitType', options: ['Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi', 'Lehenga', 'Palazzo Suit', 'Gown', 'Kurti Set', 'Straight Cut', 'A-Line', 'Cotton Suit', 'Georgette Suit', 'Silk Suit', 'Floor Length', 'Indo Western'] },
+                { label: 'Suit Type', key: 'suitType', options: ['Co-ord Set', 'Faarshi Salwar Suit', 'Anarkali', 'Sharara', 'Patiala', 'Pakistani', 'Chikankari', 'Banarasi', 'Lehenga', 'Palazzo Suit', 'Gown', 'Kurti Set', 'Straight Cut', 'A-Line', 'Cotton Suit', 'Georgette Suit', 'Silk Suit', 'Floor Length', 'Indo Western'] },
               ].map(({ label, key, options }) => (
                 <div key={key}>
                   <Label required>{label}</Label>
