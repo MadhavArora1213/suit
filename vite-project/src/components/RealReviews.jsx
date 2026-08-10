@@ -51,8 +51,13 @@ const COLUMNS = [
 const ReviewCard = ({ item }) => {
   return (
     <div 
+<<<<<<< HEAD
       className={`relative w-[180px] md:w-[220px] rounded-3xl overflow-hidden shrink-0 group bg-[#F0EBE2] shadow-sm cursor-pointer transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(26,0,8,0.1)] ring-1 ring-[#1A0008]/10
         ${item.isTall ? 'h-[280px] md:h-[340px]' : 'h-[180px] md:h-[210px]'}`}
+=======
+      className={`relative w-full rounded-3xl overflow-hidden group bg-[#F0EBE2] shadow-sm cursor-pointer transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(26,0,8,0.1)] ring-1 ring-[#1A0008]/10
+        ${item.isTall ? 'h-[240px] md:h-[340px]' : 'h-[160px] md:h-[210px]'}`}
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
     >
       {/* Background Image */}
       <img
@@ -62,7 +67,7 @@ const ReviewCard = ({ item }) => {
       />
       
       {/* Light Hover Overlay */}
-      <div className="absolute inset-0 bg-[#FAF9F6]/0 group-hover:bg-[#FAF9F6]/80 backdrop-blur-[2px] transition-all duration-500 ease-out" />
+      <div className="absolute inset-0 bg-[#FAF9F6]/80 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out" />
 
       {/* Hover Quote Text */}
       <div className="absolute inset-0 p-5 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 ease-out z-20">
@@ -137,24 +142,33 @@ export default function RealReviews() {
         </motion.div>
       </div>
 
+<<<<<<< HEAD
       {/* ═══ Staggered Column Scroll Layout ═══ */}
       <div className="relative z-10 pl-6 md:pl-12 pr-12 pb-16 overflow-x-auto no-scrollbar flex items-start gap-4 md:gap-6 snap-x snap-mandatory cursor-grab active:cursor-grabbing pt-4">
+=======
+      {/* ═══ Staggered Column Layout ═══ */}
+      <div 
+        className="relative z-10 px-4 md:px-12 pb-16 grid grid-cols-2 md:grid-cols-6 items-start gap-3 md:gap-4 lg:gap-6 pt-4"
+      >
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
         {COLUMNS.map((col, i) => (
           <motion.div
             key={col.id}
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.7, delay: i * 0.1, ease: "easeOut" }}
+<<<<<<< HEAD
             className={`flex flex-col gap-4 md:gap-6 snap-center shrink-0 ${col.offset}`}
+=======
+            className={`flex flex-col gap-4 md:gap-6 w-full ${col.offset}`}
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
           >
             {col.items.map((item) => (
               <ReviewCard key={item.id} item={item} />
             ))}
           </motion.div>
         ))}
-        {/* Extra padding right for scroll end */}
-        <div className="w-24 shrink-0" />
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `

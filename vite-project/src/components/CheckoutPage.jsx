@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, CreditCard, Shield, AlertCircle, ShoppingBag, Truck, MessageSquare } from 'lucide-react';
-import { addOrder } from '../utils/adminStore';
+import { addOrder, getCoupons, getProducts } from '../utils/adminStore';
 import { RAZORPAY_KEY_ID, initiateRazorpayPayment } from '../utils/razorpay';
 
 export default function CheckoutPage({ cart, setView, clearCart }) {
@@ -10,6 +10,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
   const [paymentMode, setPaymentMode] = useState('online'); // online, cod
   const [processingPayment, setProcessingPayment] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
+  const [isLocalDelivery, setIsLocalDelivery] = useState(false);
   
   // Forms
   const [formData, setFormData] = useState({
@@ -24,6 +25,9 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
 
   const [couponCode, setCouponCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const [appliedPromoName, setAppliedPromoName] = useState('');
+  const [shippingCost, setShippingCost] = useState(0);
+  const [isFetchingShipping, setIsFetchingShipping] = useState(false);
 
   const [orderId] = useState(() => 'GN-' + Math.floor(100000 + Math.random() * 900000));
   const [finalOrderCart, setFinalOrderCart] = useState([]);
@@ -35,31 +39,120 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
   }, 0);
 
   const applyPromoCode = () => {
-    if (couponCode.toUpperCase() === 'SUITE15') {
+    const coupons = getCoupons();
+    const match = coupons.find(c => c.code === couponCode.toUpperCase().replace(/\s+/g, ''));
+    if (match) {
       const subtotal = getSubtotal();
-      const discount = Math.round(subtotal * 0.15);
+      const discount = Number((subtotal * (match.discountPercentage / 100)).toFixed(2));
       setAppliedDiscount(discount);
-      alert('Promo Code SUITE15 applied! Extra 15% discount loaded.');
+      setAppliedPromoName(match.code);
+      alert(`Promo Code ${match.code} applied! Flat ${match.discountPercentage}% discount loaded.`);
     } else {
-      alert('Invalid coupon code. Try SUITE15.');
+      alert('Invalid coupon code. Please check and try again.');
     }
   };
 
   const getGrandTotal = () => {
-    return getSubtotal() - appliedDiscount;
+    return getSubtotal() - appliedDiscount + shippingCost;
   };
+
+  useEffect(() => {
+    const fetchShippingCost = async () => {
+      if (checkoutStep === 2 && formData.zip) {
+        setIsFetchingShipping(true);
+        try {
+          const liveProducts = getProducts();
+          const chargeableCart = cart.filter(item => {
+            const liveProduct = liveProducts.find(p => p.id === item.id);
+            return (liveProduct ? liveProduct.shippingType : item.shippingType) !== 'Free';
+          });
+          if (chargeableCart.length === 0) {
+            setShippingCost(0);
+            setIsFetchingShipping(false);
+            return;
+          }
+          const weight = chargeableCart.reduce((total, item) => total + (item.quantity * (item.weight || 500)), 0) || 500;
+          const pt = paymentMode === 'cod' ? 'cod' : 'prepaid';
+          const response = await fetch(`/api/delhivery-shipping?zip=${formData.zip}&weight=${weight}&pt=${pt}`);
+          if (response.ok) {
+            const data = await response.json();
+            const cost = (Array.isArray(data) ? data[0]?.total_amount : data?.value?.[0]?.total_amount) || 0;
+            setShippingCost(cost);
+          }
+        } catch (err) {
+          console.error("Shipping cost error:", err);
+        } finally {
+          setIsFetchingShipping(false);
+        }
+      }
+    };
+    // We already fetch in handleAddressSubmit initially, so this will primarily catch paymentMode toggles.
+    fetchShippingCost();
+  }, [paymentMode]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAddressSubmit = (e) => {
+  const handleAddressSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.address || !formData.city || !formData.state || !formData.zip) {
       alert('Please fill in all required shipping fields.');
       return;
     }
+    
+    setProcessingPayment(true);
+    setLoadingMsg('Calculating Shipping & Serviceability...');
+    setIsFetchingShipping(true);
+
+    try {
+      const liveProducts = getProducts();
+      const chargeableCart = cart.filter(item => {
+        const liveProduct = liveProducts.find(p => p.id === item.id);
+        return (liveProduct ? liveProduct.shippingType : item.shippingType) !== 'Free';
+      });
+      const weight = chargeableCart.reduce((total, item) => total + (item.quantity * (item.weight || 500)), 0) || 500;
+      const pt = paymentMode === 'cod' ? 'cod' : 'prepaid';
+
+      const fetchPromises = [fetch(`/api/delhivery-pincode?zip=${formData.zip}`)];
+      if (chargeableCart.length > 0) {
+        fetchPromises.push(fetch(`/api/delhivery-shipping?zip=${formData.zip}&weight=${weight}&pt=${pt}`));
+      }
+      
+      const responses = await Promise.all(fetchPromises);
+      const data = await responses[0].json();
+      
+      if (responses.length > 1 && responses[1].ok) {
+        const shippingData = await responses[1].json();
+        const cost = (Array.isArray(shippingData) ? shippingData[0]?.total_amount : shippingData?.value?.[0]?.total_amount) || 0;
+        setShippingCost(cost);
+      } else if (chargeableCart.length === 0) {
+        setShippingCost(0);
+      }
+      setIsFetchingShipping(false);
+      
+      const postalData = data.delivery_codes?.[0]?.postal_code;
+      const isDelhiveryCod = postalData?.cod === "Y";
+      
+      const district = (postalData?.district || "").toLowerCase();
+      const city = (postalData?.city || "").toLowerCase();
+      
+      const validLocalAreas = ['jalandhar', 'hoshiarpur', 'mukerian', 'nawanshahr', 'kapurthala', 'phagwara', 'dasuya', 'tanda', 'adampur', 'bhogpur'];
+      const isLocalArea = validLocalAreas.some(area => district.includes(area) || city.includes(area));
+      
+      const isCodAvailable = isDelhiveryCod && isLocalArea;
+      setIsLocalDelivery(isCodAvailable);
+      if (!isCodAvailable) {
+        setPaymentMode('online');
+      }
+    } catch (err) {
+      console.error("Delhivery API Error:", err);
+      setIsLocalDelivery(false);
+      setPaymentMode('online');
+    }
+
+    setProcessingPayment(false);
     setCheckoutStep(2);
   };
 
@@ -80,7 +173,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
       amountNum: grandTotal,
       payment: paymentStr,
       paymentId: paymentId || '',
-      status: 'Pending',
+      status: 'Processing',
+      shippingCost: shippingCost,
       date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
       createdAt: new Date().toISOString(),
       items: cart.map(item => ({
@@ -93,8 +187,65 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
       })),
       subtotal: subtotal,
       discount: appliedDiscount,
+      promoCode: appliedPromoName,
       grandTotal: grandTotal
     };
+  };
+
+  const sendConfirmationEmail = async (orderRecord) => {
+    try {
+      const htmlContent = `
+        <div style="font-family: Arial, sans-serif; color: #1A0008; max-width: 600px; margin: 0 auto; border: 1px solid #D4AF37; padding: 30px; border-radius: 8px;">
+          <h2 style="color: #005461; margin-bottom: 5px;">Order Placed Successfully!</h2>
+          <p style="font-size: 14px; color: #6B6B6B; margin-top: 0;">Order ID: <strong>${orderRecord.orderId}</strong></p>
+          
+          <p>Hi ${orderRecord.customer},</p>
+          <p>Thank you for shopping with Gurnaaz. Your order has been confirmed and is being prepared for boutique packaging.</p>
+          
+          <div style="background: #FAF9F6; padding: 15px; margin: 20px 0; border: 1px solid #E8DDD0; border-radius: 4px;">
+            <p style="margin: 0 0 10px 0;"><strong>Payment Mode:</strong> ${orderRecord.payment}</p>
+            <p style="margin: 0;"><strong>Grand Total:</strong> ₹${orderRecord.grandTotal.toLocaleString()}</p>
+          </div>
+
+          <h3 style="border-bottom: 1px solid #D4AF37; padding-bottom: 5px; color: #1A0008;">Delivery Address</h3>
+          <p style="color: #444; line-height: 1.5;">
+            ${orderRecord.customer} - ${orderRecord.phone}<br/>
+            ${orderRecord.address}<br/>
+            ${orderRecord.city}, ${orderRecord.state} - ${orderRecord.zip}
+          </p>
+
+          <h3 style="border-bottom: 1px solid #D4AF37; padding-bottom: 5px; color: #1A0008; margin-top: 25px;">Order Summary</h3>
+          <ul style="list-style-type: none; padding: 0;">
+            ${orderRecord.items.map(item => `
+              <li style="padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+                <div>
+                  <strong>${item.name}</strong><br/>
+                  <span style="font-size: 12px; color: #666;">Size: ${item.size} | Qty: ${item.quantity}</span>
+                </div>
+                <strong>${item.price}</strong>
+              </li>
+            `).join('')}
+          </ul>
+          
+          <p style="margin-top: 30px; font-size: 12px; color: #888; text-align: center;">
+            Need help? Reply to this email or contact us on WhatsApp.<br/>
+            <strong>Gurnaaz Premium Ethnic Wear</strong>
+          </p>
+        </div>
+      `;
+
+      await fetch('/api/brevo/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toEmail: orderRecord.email,
+          subject: `Order Confirmation - ${orderRecord.orderId} from Gurnaaz`,
+          htmlContent
+        })
+      });
+    } catch (err) {
+      console.error('Failed to send confirmation email', err);
+    }
   };
 
   const finalizeOrder = (paymentStr, paymentId) => {
@@ -102,6 +253,10 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
     addOrder(orderRecord);
     setFinalOrderCart([...cart]);
     setFinalPaymentMode(paymentStr);
+    
+    // Send confirmation email asynchronously
+    sendConfirmationEmail(orderRecord);
+    
     setProcessingPayment(false);
     setCheckoutStep(3);
     clearCart();
@@ -155,7 +310,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
     const totalAmount = finalOrderCart.reduce((total, item) => {
       const priceNum = parseInt(item.price.replace(/[^\d]/g, ''), 10);
       return total + priceNum * item.quantity;
-    }, 0) - appliedDiscount;
+    }, 0) - appliedDiscount + shippingCost;
 
     return (
       <motion.div 
@@ -176,7 +331,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
           </div>
 
           <p className="text-xs text-[#6B6B6B] leading-relaxed text-center w-full max-w-[550px] mx-auto">
-            Your transaction has been securely authorized. We have sent a purchase invoice confirmation to <strong>{formData.email || 'your email'}</strong>. Your order is prepared for immediate boutique packaging.
+            Your transaction has been securely authorized. We have sent a purchase invoice confirmation to <strong>{formData.email || 'your email'}</strong>. Your order is prepared for immediate boutique packaging. You will receive your Tracking ID via Email and SMS once your order is dispatched.
           </p>
 
           {/* Invoice Summary Card */}
@@ -217,17 +372,17 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
             <div className="border-t border-[#D4AF37]/10 pt-4 space-y-2 text-xs">
               <div className="flex justify-between text-[#6B6B6B]">
                 <span>Items Subtotal</span>
-                <span>₹{(totalAmount + appliedDiscount).toLocaleString()}</span>
+                <span>₹{(totalAmount + appliedDiscount - shippingCost).toLocaleString()}</span>
               </div>
               {appliedDiscount > 0 && (
                 <div className="flex justify-between text-emerald-600 font-semibold">
-                  <span>Promo Code Discount (SUITE15)</span>
+                  <span>Promo Code Discount ({appliedPromoName})</span>
                   <span>-₹{appliedDiscount.toLocaleString()}</span>
                 </div>
               )}
               <div className="flex justify-between text-[#6B6B6B]">
-                <span>Boutique Dispatch & Delivery</span>
-                <span className="text-emerald-600">FREE</span>
+                <span>Shipping & Delivery</span>
+                <span className="text-[#1A0008] font-bold">{shippingCost > 0 ? `₹${shippingCost}` : 'FREE'}</span>
               </div>
               <div className="border-t border-[#D4AF37]/20 pt-3 flex justify-between text-sm font-bold text-[#1A0008]">
                 <span>Grand Total Paid</span>
@@ -244,20 +399,10 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
           </div>
 
           {/* Call to Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full mt-4">
-            <a 
-              href={`https://wa.me/919877275894?text=Hi%20Gurnaaz%20Support,%20I%20have%20placed%20order%20${orderId}%20for%20amount%20Rs.%20${totalAmount.toLocaleString()}.%20Please%20provide%20delivery%20updates.`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 bg-[#25D366] hover:bg-[#20ba59] text-white py-4 rounded text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-2 transition-colors shadow shadow-emerald-200/50"
-            >
-              <MessageSquare size={14} />
-              <span>Trace on WhatsApp</span>
-            </a>
-
+          <div className="w-full mt-4 flex justify-center">
             <button 
               onClick={() => window.location.href = '/'}
-              className="flex-1 border border-[#D4AF37]/35 hover:border-[#1A0008] text-[#1A0008] py-4 rounded text-xs font-bold tracking-widest uppercase transition-all"
+              className="w-full sm:w-auto px-12 border border-[#D4AF37]/35 hover:border-[#1A0008] text-[#1A0008] hover:bg-[#1A0008] hover:text-white py-4 rounded text-xs font-bold tracking-widest uppercase transition-all"
             >
               Back to Storefront
             </button>
@@ -457,8 +602,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
               {/* STEP 2: Secure Payment Gateways */}
               {checkoutStep === 2 && (
                 <div className="bg-white border border-[#D4AF37]/15 p-8 rounded shadow-sm space-y-8">
-                  <div>
-                    <h3 className="text-2xl font-light border-b border-[#D4AF37]/10 pb-4 text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                        <div>
+                          <h3 className="text-2xl font-light border-b border-[#D4AF37]/10 pb-4 text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                       Secure Checkout Gateway
                     </h3>
                     <p className="text-xs text-[#6B6B6B] mt-1">Pay securely via Razorpay. Card, UPI, Netbanking & more.</p>
@@ -466,25 +611,53 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
 
                   {/* Payment mode selectors */}
                   <div className="grid grid-cols-2 gap-3">
-                    {[
-                      { id: 'online', label: 'Pay Online', icon: <CreditCard size={16} />, desc: 'Card / UPI / Netbanking' },
-                      { id: 'cod', label: 'COD (Cash)', icon: <Truck size={16} />, desc: 'Pay on delivery' }
-                    ].map(mode => (
+                    <button 
+                      type="button"
+                      onClick={() => setPaymentMode('online')}
+                      className={`py-4 border flex flex-col items-center gap-1.5 text-[10px] tracking-wider uppercase font-bold transition-all rounded cursor-pointer ${
+                        paymentMode === 'online' 
+                          ? 'bg-[#E8DDD0]/30 border-[#D4AF37] text-[#005461]' 
+                          : 'border-[#D4AF37]/25 hover:border-[#1A0008] text-[#6B6B6B]'
+                      }`}
+                    >
+                      <CreditCard size={16} />
+                      <span>Pay Online</span>
+                      <span className="text-[8px] normal-case tracking-normal font-normal text-[#999]">Card / UPI / Netbanking</span>
+                    </button>
+
+                    <div className="relative">
                       <button 
-                        key={mode.id}
-                        onClick={() => setPaymentMode(mode.id)}
-                        className={`py-4 border flex flex-col items-center gap-1.5 text-[10px] tracking-wider uppercase font-bold transition-all rounded cursor-pointer ${
-                          paymentMode === mode.id 
+                        type="button"
+                        onClick={() => { if (isLocalDelivery) setPaymentMode('cod'); }}
+                        disabled={!isLocalDelivery}
+                        className={`w-full h-full py-4 border flex flex-col items-center gap-1.5 text-[10px] tracking-wider uppercase font-bold transition-all rounded ${
+                          !isLocalDelivery ? 'opacity-40 cursor-not-allowed bg-gray-50' : 'cursor-pointer'
+                        } ${
+                          paymentMode === 'cod' 
                             ? 'bg-[#E8DDD0]/30 border-[#D4AF37] text-[#005461]' 
                             : 'border-[#D4AF37]/25 hover:border-[#1A0008] text-[#6B6B6B]'
                         }`}
                       >
-                        {mode.icon}
-                        <span>{mode.label}</span>
-                        <span className="text-[8px] normal-case tracking-normal font-normal text-[#999]">{mode.desc}</span>
+                        <Truck size={16} />
+                        <span>COD (Cash)</span>
+                        <span className="text-[8px] normal-case tracking-normal font-normal text-[#999]">Pay on delivery</span>
                       </button>
-                    ))}
+                      {!isLocalDelivery && (
+                         <div className="absolute top-2 right-2 text-red-500 opacity-60" title="Not available in your area">
+                           <AlertCircle size={14}/>
+                         </div>
+                      )}
+                    </div>
                   </div>
+                  
+                  {!isLocalDelivery && (
+                    <div className="bg-red-50/50 border border-red-100 p-3 rounded flex items-start gap-2.5">
+                      <AlertCircle size={16} className="text-red-500 mt-0.5 flex-shrink-0" />
+                      <p className="text-[10px] text-red-700/80 font-bold tracking-wide uppercase leading-relaxed">
+                        Cash on Delivery is currently only available for local deliveries within Jalandhar, Hoshiarpur, and Mukerian regions.
+                      </p>
+                    </div>
+                  )}
 
                   <form onSubmit={handlePaymentSubmit} className="space-y-6 pt-4 border-t border-[#D4AF37]/10">
                     
@@ -557,7 +730,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                       APPLY
                     </button>
                   </div>
-                  <p className="text-[9px] text-[#6B6B6B] leading-relaxed">Use coupon code <span className="font-bold text-[#D4AF37]">SUITE15</span> to get flat 15% off on your first boutique suit purchase.</p>
+                  <p className="text-[9px] text-[#6B6B6B] leading-relaxed">Enter your valid promo code below to claim your discount.</p>
                 </div>
               )}
 
@@ -594,8 +767,18 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                     </div>
                   )}
                   <div className="flex justify-between">
-                    <span>Boutique Dispatch</span>
-                    <span className="text-emerald-600">FREE</span>
+                    <span>Shipping Charges</span>
+                    <span className="text-[#1A0008] font-bold">
+                      {cart.length > 0 && cart.every(item => {
+                          const liveProduct = getProducts().find(p => p.id === item.id);
+                          return (liveProduct ? liveProduct.shippingType : item.shippingType) === 'Free';
+                        })
+                        ? 'FREE'
+                        : checkoutStep === 1 
+                          ? 'PENDING...' 
+                          : (isFetchingShipping ? 'CALCULATING...' : (shippingCost === 0 ? 'FREE' : `₹${shippingCost.toLocaleString()}`))
+                      }
+                    </span>
                   </div>
                   <div className="border-t border-[#D4AF37]/10 mt-2 pt-2 flex justify-between text-sm text-[#1A0008] font-bold">
                     <span>Grand Total</span>

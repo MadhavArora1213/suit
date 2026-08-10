@@ -116,16 +116,16 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
       
       {/* Product Details */}
       <div className="pt-4 px-1 flex flex-col gap-1.5 transition-transform duration-300 group-hover:translate-y-1">
-        <h3 className="text-[15px] font-light text-[#1A0008]/90 group-hover:text-[#1A0008] transition-colors line-clamp-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
-        <p className="text-[14px] font-medium text-[#D4AF37] tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.price}</p>
+        <h3 className="text-[16px] font-semibold text-[#1A0008] group-hover:text-[#8B1A1A] transition-colors line-clamp-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{product.name}</h3>
+        <p className="text-[15px] font-bold text-[#1A0008] tracking-wide">{product.price}</p>
       </div>
     </motion.div>
   );
 }
 
 /* ─── FILTER ─── */
-function FilterSection({ title, options, selected, onSelect }) {
-  const [open, setOpen] = useState(true);
+function FilterSection({ title, options, selected, onSelect, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-[#D4AF37]/15 pb-4 mb-4">
       <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between py-2 group cursor-pointer">
@@ -169,32 +169,31 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    const prof = getBoutiqueProfile(boutiqueName);
-    setProfile(prof);
-
-    const allProds = getAllProducts();
     
-    const suitImages = [
-      '/custom_suit_1.png',
-      '/custom_suit_2.png',
-      '/custom_suit_3.png',
-      '/custom_suit_4.png',
-      '/custom_suit_5.png',
-      '/custom_suit_6.png'
-    ];
+    const loadData = () => {
+      const prof = getBoutiqueProfile(boutiqueName);
+      setProfile(prof);
 
-    const boutiqueProds = allProds.filter(p => {
-      if (!p.boutique || !boutiqueName) return false;
-      const pb = p.boutique.trim().toLowerCase();
-      const bn = boutiqueName.trim().toLowerCase();
-      return pb.includes(bn) || bn.includes(pb);
-    }).map((prod, index) => ({
-      ...prod,
-      image: suitImages[index % suitImages.length]
-    }));
+      const allProds = getAllProducts();
+      const boutiqueProds = allProds.filter(p => {
+        if (!p.boutique || !boutiqueName) return false;
+        const pb = p.boutique.replace(/[- ]/g, '').toLowerCase();
+        const bn = boutiqueName.replace(/[- ]/g, '').toLowerCase();
+        return pb === bn || pb.includes(bn) || bn.includes(pb);
+      });
+      
+      setProducts(boutiqueProds);
+      setFilteredProducts(boutiqueProds);
+    };
+
+    loadData();
+    window.addEventListener('admin-data-updated', loadData);
+    window.addEventListener('gurnaaz-firebase-updated', loadData);
     
-    setProducts(boutiqueProds);
-    setFilteredProducts(boutiqueProds);
+    return () => {
+      window.removeEventListener('admin-data-updated', loadData);
+      window.removeEventListener('gurnaaz-firebase-updated', loadData);
+    };
   }, [boutiqueName]);
 
   useEffect(() => {
@@ -207,9 +206,14 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     if (filters.price !== 'All') {
       result = result.filter(p => {
         const price = parseInt(p.price.replace(/[^0-9]/g, ''));
-        if (filters.price === 'Under 5K') return price < 5000;
-        if (filters.price === '5K - 10K') return price >= 5000 && price <= 10000;
-        if (filters.price === 'Over 10K') return price > 10000;
+        if (filters.price === 'Under 500') return price < 500;
+        if (filters.price === '500 - 800') return price >= 500 && price <= 800;
+        if (filters.price === '800 - 1000') return price >= 800 && price <= 1000;
+        if (filters.price === '1000 - 1500') return price >= 1000 && price <= 1500;
+        if (filters.price === '1500 - 2000') return price >= 1500 && price <= 2000;
+        if (filters.price === '2000 - 3000') return price >= 2000 && price <= 3000;
+        if (filters.price === '3000 - 5000') return price >= 3000 && price <= 5000;
+        if (filters.price === 'Over 5000') return price > 5000;
         return true;
       });
     }
@@ -222,7 +226,17 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   const fabricOptions = [{ value: 'All', label: 'All Fabrics' }, { value: 'Silk', label: 'Pure Silk' }, { value: 'Georgette', label: 'Georgette' }, { value: 'Cotton', label: 'Cotton' }, { value: 'Banarasi', label: 'Banarasi' }, { value: 'Chiffon', label: 'Chiffon' }];
   const occasionOptions = [{ value: 'All', label: 'All Occasions' }, { value: 'Festive', label: 'Festive Wear' }, { value: 'Wedding', label: 'Wedding Guest' }, { value: 'Casual', label: 'Casual Wear' }];
   const colorOptions = [{ value: 'All', label: 'All Colors' }, { value: 'Red', label: 'Red' }, { value: 'Blue', label: 'Blue' }, { value: 'Green', label: 'Green' }, { value: 'Pink', label: 'Pink' }, { value: 'Black', label: 'Black' }];
-  const priceOptions = [{ value: 'All', label: 'Any Price' }, { value: 'Under 5K', label: 'Under ₹5,000' }, { value: '5K - 10K', label: '₹5,000 - ₹10,000' }, { value: 'Over 10K', label: 'Over ₹10,000' }];
+  const priceOptions = [
+    { value: 'All', label: 'Any Price' },
+    { value: 'Under 500', label: 'Under ₹500' },
+    { value: '500 - 800', label: '₹500 - ₹800' },
+    { value: '800 - 1000', label: '₹800 - ₹1,000' },
+    { value: '1000 - 1500', label: '₹1,000 - ₹1,500' },
+    { value: '1500 - 2000', label: '₹1,500 - ₹2,000' },
+    { value: '2000 - 3000', label: '₹2,000 - ₹3,000' },
+    { value: '3000 - 5000', label: '₹3,000 - ₹5,000' },
+    { value: 'Over 5000', label: 'Over ₹5,000' }
+  ];
   const sizeOptions = [
     { value: 'All', label: 'All Sizes' },
     { value: 'Unstitched', label: 'Unstitched' },
@@ -246,7 +260,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
       {/* ═══════ COLLAGE HERO ═══════ */}
       <div ref={heroRef} className="relative w-full overflow-hidden bg-[#FAF9F6] border-b border-[#D4AF37]/15 pt-14 md:pt-16">
         
-        <button onClick={() => window.location.href = '/boutiques'} className="absolute top-4 left-4 md:top-6 md:left-12 z-50 flex items-center gap-2 bg-[#FAF9F6]/90 hover:bg-[#FAF9F6] text-[#1A0008] text-[9px] uppercase tracking-[0.2em] px-4 md:px-5 py-2 md:py-2.5 backdrop-blur-md shadow-lg transition-all rounded-full border border-[#D4AF37]/20 cursor-pointer hover:scale-105">
+        <button onClick={() => window.location.href = '/shops-and-boutiques'} className="absolute top-4 left-4 md:top-6 md:left-12 z-50 flex items-center gap-2 bg-[#FAF9F6]/90 hover:bg-[#FAF9F6] text-[#1A0008] text-[9px] uppercase tracking-[0.2em] px-4 md:px-5 py-2 md:py-2.5 backdrop-blur-md shadow-lg transition-all rounded-full border border-[#D4AF37]/20 cursor-pointer hover:scale-105">
           <ArrowLeft size={12} /> Directory
         </button>
 
@@ -261,8 +275,11 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-5 text-center flex flex-col items-center">
               <span className="text-[7px] font-bold tracking-[0.2em] uppercase text-[#D4AF37] mb-1.5">The Artisan Collection</span>
-              <h1 className="text-xl font-light text-white tracking-tight mb-2 break-words px-1" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}>
+              <h1 className="text-xl font-light text-white tracking-tight mb-2 break-words px-1 flex items-center justify-center gap-2" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}>
                 {profile.name}
+                {(profile.verified || profile.gstVerified) && (
+                  <BadgeCheck size={16} className="text-[#007BFF] fill-white/10 shrink-0" />
+                )}
               </h1>
               <div className="flex items-center justify-center gap-2 text-[7px] font-bold tracking-[0.15em] uppercase text-white/80">
                 {profile.address && <span className="flex items-center gap-1"><MapPin size={10} className="text-[#D4AF37]"/> {profile.address.split(',').slice(-1)[0]}</span>}
@@ -287,16 +304,19 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
             <div className="absolute inset-x-0 bottom-0 p-8 lg:p-12 text-center flex flex-col items-center">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: [0.25, 1, 0.5, 1] }} className="space-y-3">
                 <span className="text-[10px] font-bold tracking-[0.4em] uppercase text-[#D4AF37] drop-shadow-md">The Artisan Collection</span>
-                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white tracking-tight drop-shadow-2xl" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 4px 20px rgba(0,0,0,0.6)" }}>
+                <h1 className="text-4xl lg:text-5xl xl:text-6xl font-light text-white tracking-tight drop-shadow-2xl flex items-center justify-center gap-3" style={{ fontFamily: "'Cormorant Garamond', serif", textShadow: "0 4px 20px rgba(0,0,0,0.6)" }}>
                   {profile.name}
+                  {(profile.verified || profile.gstVerified) && (
+                    <BadgeCheck size={32} className="text-[#007BFF] fill-white/10 shrink-0 mt-2" />
+                  )}
                 </h1>
                 <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-bold tracking-[0.2em] uppercase text-white/90 pt-3">
                   {profile.address && <span className="flex items-center gap-1.5"><MapPin size={12} className="text-[#D4AF37]"/> {profile.address.split(',').slice(-1)[0]}</span>}
                   <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full" />
                   <span className="flex items-center gap-1.5"><Star size={12} className="text-[#D4AF37] fill-current" /> {profile.rating || 4.8}</span>
                   <span className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full" />
-                  {profile.gstVerified ? (
-                    <span className="flex items-center gap-1.5"><BadgeCheck size={12} className="text-[#10B981]"/> Verified Partner</span>
+                  {profile.verified || profile.gstVerified ? (
+                    <span className="flex items-center gap-1.5"><BadgeCheck size={12} className="text-[#007BFF]"/> Verified Partner</span>
                   ) : (
                     <span className="flex items-center gap-1.5 opacity-80"><BadgeCheck size={12} className="text-white/60"/> Unverified</span>
                   )}
@@ -418,12 +438,12 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
                     </button>
                   </div>
                 </div>
-                <FilterSection title="Fabric" options={fabricOptions} selected={filters.fabric} onSelect={(v) => setFilters(f => ({ ...f, fabric: v }))} />
-                <FilterSection title="Color" options={colorOptions} selected={filters.color} onSelect={(v) => setFilters(f => ({ ...f, color: v }))} />
-                <FilterSection title="Work / Pattern" options={workOptions} selected={filters.work} onSelect={(v) => setFilters(f => ({ ...f, work: v }))} />
-                <FilterSection title="Occasion" options={occasionOptions} selected={filters.occasion} onSelect={(v) => setFilters(f => ({ ...f, occasion: v }))} />
-                <FilterSection title="Size" options={sizeOptions} selected={filters.size} onSelect={(v) => setFilters(f => ({ ...f, size: v }))} />
-                <FilterSection title="Price" options={priceOptions} selected={filters.price} onSelect={(v) => setFilters(f => ({ ...f, price: v }))} />
+                <FilterSection title="Fabric" options={fabricOptions} selected={filters.fabric} onSelect={(v) => setFilters(f => ({ ...f, fabric: v }))} defaultOpen={true} />
+                <FilterSection title="Color" options={colorOptions} selected={filters.color} onSelect={(v) => setFilters(f => ({ ...f, color: v }))} defaultOpen={true} />
+                <FilterSection title="Work / Pattern" options={workOptions} selected={filters.work} onSelect={(v) => setFilters(f => ({ ...f, work: v }))} defaultOpen={true} />
+                <FilterSection title="Occasion" options={occasionOptions} selected={filters.occasion} onSelect={(v) => setFilters(f => ({ ...f, occasion: v }))} defaultOpen={true} />
+                <FilterSection title="Size" options={sizeOptions} selected={filters.size} onSelect={(v) => setFilters(f => ({ ...f, size: v }))} defaultOpen={true} />
+                <FilterSection title="Price" options={priceOptions} selected={filters.price} onSelect={(v) => setFilters(f => ({ ...f, price: v }))} defaultOpen={true} />
               </div>
             </motion.div>
           </>

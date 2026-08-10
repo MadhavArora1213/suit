@@ -188,7 +188,7 @@ export default function ContactPage({ setView, user }) {
             console.error("Brevo API Error:", errData);
             alert("Failed to send email. Check browser console for Brevo error.");
           } else {
-            console.log("Brevo email sent successfully!");
+
           }
         })
         .catch(err => console.error("Brevo Network Error:", err));

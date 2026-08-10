@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Check, Save, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { getCategories, saveCategories, fileToBase64, notifyWebsite } from '../../utils/adminStore';
+import { uploadImageToFirebase } from '../../firebase';
 
 export default function AddCategory({ setActivePage }) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -19,6 +20,7 @@ export default function AddCategory({ setActivePage }) {
     active: true
   });
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const cats = getCategories();
@@ -64,15 +66,33 @@ export default function AddCategory({ setActivePage }) {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name.trim()) return alert("Category Name is required");
+
+    setSaving(true);
+    let uploadedImage1 = form.image;
+    let uploadedImage2 = form.image2;
+
+    if (form.imagePreview && form.imagePreview.startsWith('data:image')) {
+       uploadedImage1 = await uploadImageToFirebase(form.imagePreview, `cat_${Date.now()}_1.jpg`);
+    } else if (!uploadedImage1) {
+       uploadedImage1 = '/designer_suit_1.png';
+    }
+
+    if (form.image2Preview && form.image2Preview.startsWith('data:image')) {
+       uploadedImage2 = await uploadImageToFirebase(form.image2Preview, `cat_${Date.now()}_2.jpg`);
+    } else if (!uploadedImage2) {
+       uploadedImage2 = '/anarkali_suit.png';
+    }
 
     const allCats = getCategories();
     const finalData = {
       ...form,
-      image: form.imagePreview || form.image || '/designer_suit_1.png',
-      image2: form.image2Preview || form.image2 || '/anarkali_suit.png'
+      image: uploadedImage1,
+      image2: uploadedImage2
     };
+    delete finalData.imagePreview;
+    delete finalData.image2Preview;
 
     if (editId) {
       const updated = allCats.map(c => c.id.toString() === editId ? { ...c, ...finalData } : c);
@@ -83,6 +103,7 @@ export default function AddCategory({ setActivePage }) {
     }
     
     notifyWebsite();
+    setSaving(false);
     setSaved(true);
     setTimeout(() => {
       setSaved(false);
@@ -109,9 +130,9 @@ export default function AddCategory({ setActivePage }) {
             <p className="text-sm text-[#9E9189] mt-1">Configure layout, details, and imagery for this collection category.</p>
           </div>
         </div>
-        <button onClick={handleSave} className="flex items-center gap-2 bg-[#111111] hover:bg-[#000000] text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-[#111111]/20 transition-all">
-          {saved ? <Check size={16} /> : <Save size={16} />}
-          {saved ? 'Saved Successfully' : 'Save Category'}
+        <button onClick={handleSave} disabled={saving} className="flex items-center gap-2 bg-[#111111] hover:bg-[#000000] text-white px-6 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-[#111111]/20 transition-all disabled:opacity-70">
+          {saving ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : saved ? <Check size={16} /> : <Save size={16} />}
+          {saving ? 'Saving...' : saved ? 'Saved Successfully' : 'Save Category'}
         </button>
       </div>
 

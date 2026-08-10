@@ -1,8 +1,9 @@
 // Force HMR trigger for new routes
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth } from '../firebase';
-import { seedIfEmpty } from '../utils/adminStore';
+import { auth, db } from '../firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { initializeStore } from '../utils/adminStore';
 import AdminLogin from './AdminLogin';
 import AdminLayout from './AdminLayout';
 import Dashboard from './pages/Dashboard';
@@ -20,8 +21,13 @@ import UsersAdmin from './pages/UsersAdmin';
 import Settings from './pages/Settings';
 import BoutiquesAdmin from './pages/BoutiquesAdmin';
 import AddBoutique from './pages/AddBoutique';
+<<<<<<< HEAD
 import FestiveItemsAdmin from './pages/FestiveItemsAdmin';
 import AddFestiveItem from './pages/AddFestiveItem';
+=======
+import ReviewsAdmin from './pages/ReviewsAdmin';
+import CouponsAdmin from './pages/CouponsAdmin';
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
 
 export default function AdminApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,6 +42,11 @@ export default function AdminApp() {
   };
 
   const [activePage, setActivePage] = useState(getInitialAdminPage());
+  const [editProduct, setEditProduct] = useState(null);
+  const [editBoutique, setEditBoutique] = useState(null);
+  const [editCollection, setEditCollection] = useState(null);
+  const [editCollectionTag, setEditCollectionTag] = useState(null);
+  const [storeReady, setStoreReady] = useState(false);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -46,20 +57,37 @@ export default function AdminApp() {
   }, []);
 
   useEffect(() => {
-    seedIfEmpty();
-    if (!auth) {
-      setAuthLoading(false);
-      return;
-    }
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
+    const initAdmin = async () => {
+      await initializeStore();
+      setStoreReady(true);
+      
+      if (!auth) {
+        setAuthLoading(false);
+        return;
       }
-      setAuthLoading(false);
-    });
-    return () => unsubscribe();
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          try {
+            const adminDoc = await getDoc(doc(db, 'admins', user.email.toLowerCase()));
+            if (adminDoc.exists()) {
+              setIsLoggedIn(true);
+            } else {
+              // Kick out non-admin users
+              await signOut(auth);
+              setIsLoggedIn(false);
+            }
+          } catch (err) {
+            console.error("Admin verification error", err);
+            await signOut(auth);
+            setIsLoggedIn(false);
+          }
+        } else {
+          setIsLoggedIn(false);
+        }
+        setAuthLoading(false);
+      });
+    };
+    initAdmin();
   }, []);
 
   const handleLogout = async () => {
@@ -69,7 +97,7 @@ export default function AdminApp() {
     setIsLoggedIn(false);
   };
 
-  if (authLoading) {
+  if (authLoading || !storeReady) {
     return <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center">Loading Admin...</div>;
   }
 
@@ -80,26 +108,33 @@ export default function AdminApp() {
   const renderPage = () => {
     switch (activePage) {
       case 'dashboard':    return <Dashboard setActivePage={setActivePage} />;
+<<<<<<< HEAD
       case 'products':     return <Products setActivePage={setActivePage} />;
       case 'add-product':  return <AddProduct setActivePage={setActivePage} />;
       case 'festive-items':return <FestiveItemsAdmin setActivePage={setActivePage} />;
       case 'add-festive-item':
       case 'edit-festive-item':return <AddFestiveItem setActivePage={setActivePage} />;
+=======
+      case 'products':     return <Products setActivePage={setActivePage} onEditProduct={(p) => { setEditProduct(p); setActivePage('add-product'); }} />;
+      case 'add-product':  return <AddProduct setActivePage={setActivePage} editProduct={editProduct} />;
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
       case 'orders':       return <Orders />;
+      case 'reviews':      return <ReviewsAdmin />;
+      case 'coupons':      return <CouponsAdmin />;
       case 'support':      return <SupportAdmin />;
       case 'users':        return <UsersAdmin />;
-      case 'collections':  return <CollectionsAdmin setActivePage={setActivePage} />;
+      case 'collections':  return <CollectionsAdmin setActivePage={setActivePage} onEditCollection={(c) => { setEditCollection(c); setActivePage('edit-collection'); }} />;
       case 'add-collection':
-      case 'edit-collection':return <AddCollection setActivePage={setActivePage} />;
-      case 'collection-tags': return <CollectionTagsAdmin setActivePage={setActivePage} />;
+      case 'edit-collection':return <AddCollection setActivePage={setActivePage} editCollection={editCollection} />;
+      case 'collection-tags': return <CollectionTagsAdmin setActivePage={setActivePage} onEditCollectionTag={(t) => { setEditCollectionTag(t); setActivePage('edit-collection-tag'); }} />;
       case 'add-collection-tag':
-      case 'edit-collection-tag': return <AddCollectionTag setActivePage={setActivePage} />;
+      case 'edit-collection-tag': return <AddCollectionTag setActivePage={setActivePage} editCollectionTag={editCollectionTag} />;
       case 'categories':   return <CategoriesAdmin setActivePage={setActivePage} />;
       case 'add-category':
       case 'edit-category':return <AddCategory setActivePage={setActivePage} />;
-      case 'boutiques':    return <BoutiquesAdmin setActivePage={setActivePage} />;
+      case 'boutiques':    return <BoutiquesAdmin setActivePage={setActivePage} onEditBoutique={(b) => { setEditBoutique(b); setActivePage('edit-boutique'); }} />;
       case 'add-boutique': 
-      case 'edit-boutique':return <AddBoutique setActivePage={setActivePage} />;
+      case 'edit-boutique':return <AddBoutique setActivePage={setActivePage} editBoutique={editBoutique} />;
       case 'settings':     return <Settings />;
       default:             return <Dashboard setActivePage={setActivePage} />;
     }

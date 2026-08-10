@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ShoppingBag, ArrowUpRight, ChevronRight } from 'lucide-react';
 import { useState, useMemo, useEffect } from 'react';
-import { getAllProducts, getCollectionTags } from '../utils/adminStore';
+import { getAllProducts, getCollections, getCollectionTags } from '../utils/adminStore';
 
 
 export default function CollectionsPage({ setView, setSelectedCategory, setSelectedProduct, setSelectedCollectionSlug, addToCart }) {
@@ -10,10 +10,12 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
   const [collections, setCollections] = useState([]);
   const [tags, setTags] = useState([]);
   const [tagIcons, setTagIcons] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let timeoutId;
     const load = () => {
-      let data = JSON.parse(localStorage.getItem('gurnaaz_collections') || '[]');
+      let data = getCollections();
       data = data.filter(c => c.active).sort((a, b) => a.order - b.order);
       setCollections(data);
 
@@ -25,10 +27,26 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
         iconsMap[t.name] = t.icon;
       });
       setTagIcons(iconsMap);
+      setTagIcons(iconsMap);
+
+      // If data is populated, turn off loading shortly. If empty, fallback after 1.5s
+      clearTimeout(timeoutId);
+      if (data.length > 0) {
+        setLoading(false);
+      } else {
+        if (window.isLiveSyncComplete) {
+          setLoading(false);
+        } else {
+          timeoutId = setTimeout(() => setLoading(false), 8000);
+        }
+      }
     };
     load();
     window.addEventListener('admin-data-updated', load);
-    return () => window.removeEventListener('admin-data-updated', load);
+    return () => {
+      window.removeEventListener('admin-data-updated', load);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const allProducts = useMemo(() => getAllProducts(), []);
@@ -43,7 +61,7 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
   const spotlight = collections.length > 0 ? collections[0] : null;
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] mt-[80px] md:mt-[110px]">
+    <div className="min-h-screen bg-[#FAF9F6] pt-14 md:pt-16">
       {/* ── Cinematic Hero ── */}
       <div className="relative h-[70vh] md:h-[80vh] overflow-hidden">
         <img src="/luxury_edit.png" alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
@@ -212,23 +230,23 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
 
       {/* ── Featured Spotlight (first item when "All") ── */}
       {activeTag === 'All' && spotlight && (
-        <div className="max-w-[1600px] mx-auto px-6 md:px-12 mt-10">
+        <div className="max-w-[1600px] mx-auto px-6 md:px-12 mt-20 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             onClick={() => { setSelectedCollectionSlug(spotlight.id); setView('collection-detail'); }}
-            className="group relative h-[50vh] md:h-[60vh] overflow-hidden cursor-pointer"
+            className="group relative h-[60vh] md:h-[75vh] overflow-hidden cursor-pointer"
           >
             <img src={spotlight.image} alt={spotlight.title} className="absolute inset-0 w-full h-full object-cover object-[center_20%] transition-transform duration-1000 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
 
-            <div className="relative h-full flex flex-col justify-end p-6 sm:p-10 md:p-16 max-w-2xl">
+            <div className="relative h-full flex flex-col justify-end p-8 sm:p-12 md:pl-24 md:pr-20 md:pt-20 md:pb-20 max-w-3xl">
               <span className="text-[#D4AF37] text-[9px] tracking-[0.4em] uppercase font-bold mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Featured Collection
               </span>
-              <h2 className="text-3xl sm:text-5xl md:text-7xl font-light text-white leading-none mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <h2 className="text-3xl sm:text-4xl md:text-6xl font-light text-white leading-tight mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 {spotlight.title} <br /><span className="italic text-[#D4AF37]">{spotlight.subtitle}</span>
               </h2>
               <div className="w-12 h-px bg-[#D4AF37] mb-6" />
@@ -268,71 +286,90 @@ export default function CollectionsPage({ setView, setSelectedCategory, setSelec
         </div>
 
         <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTag}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
-          >
-            {filteredCollections.map((collection, index) => (
-              <motion.div
-                key={collection.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.06 }}
-                onMouseEnter={() => setHoveredId(collection.id)}
-                onMouseLeave={() => setHoveredId(null)}
-                onClick={() => { setSelectedCollectionSlug(collection.id); setView('collection-detail'); }}
-                className="group flex flex-col cursor-pointer"
-              >
-                {/* Image Wrapper */}
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-[#E8DDD0] mb-5 group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500">
-                  <img
-                    src={collection.image}
-                    alt={collection.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                  
-                  {/* Floating Tag */}
-                  <div className="absolute top-4 left-4 z-10">
-                    <span
-                      className="bg-white/90 backdrop-blur-md text-[9px] font-bold tracking-[0.2em] uppercase px-4 py-2 rounded-full shadow-sm text-gray-800"
+          {loading ? (
+            <motion.div
+              key="skeleton"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                <div key={i} className="flex flex-col animate-pulse">
+                  <div className="relative aspect-[4/5] bg-[#E8DDD0]/50 rounded-[20px] mb-5"></div>
+                  <div className="h-7 bg-[#E8DDD0]/50 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-[#E8DDD0]/50 rounded w-full mb-1"></div>
+                  <div className="h-4 bg-[#E8DDD0]/50 rounded w-5/6"></div>
+                </div>
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div
+              key={activeTag}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+            >
+              {filteredCollections.map((collection, index) => (
+                <motion.div
+                  key={collection.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.06 }}
+                  onMouseEnter={() => setHoveredId(collection.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  onClick={() => { setSelectedCollectionSlug(collection.id); setView('collection-detail'); }}
+                  className="group flex flex-col cursor-pointer"
+                >
+                  {/* Image Wrapper */}
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-[#E8DDD0] mb-5 group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500">
+                    <img
+                      src={collection.image}
+                      alt={collection.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    />
+                    
+                    {/* Floating Tag */}
+                    <div className="absolute top-4 left-4 z-10">
+                      <span
+                        className="bg-white/90 backdrop-blur-md text-[9px] font-bold tracking-[0.2em] uppercase px-4 py-2 rounded-full shadow-sm text-gray-800"
+                      >
+                        {collection.tag}
+                      </span>
+                    </div>
+
+                    {/* Glassmorphism Explore Button */}
+                    <div className="absolute inset-x-4 bottom-4 translate-y-16 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20">
+                       <div className="w-full bg-white/85 backdrop-blur-md text-[#1A0008] py-3.5 rounded-full text-[11px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#1A0008] hover:text-white transition-colors shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+                          Explore Collection <ArrowRight size={14} />
+                       </div>
+                    </div>
+                  </div>
+
+                  {/* Content below */}
+                  <div className="flex flex-col px-2">
+                    <h3
+                      className="text-xl sm:text-2xl md:text-3xl font-medium text-[#1A0008] leading-tight mb-2 group-hover:text-[#D4AF37] transition-colors"
+                      style={{ fontFamily: "'Cormorant Garamond', serif" }}
                     >
-                      {collection.tag}
-                    </span>
+                      {collection.title}{' '}
+                      <span className="italic text-gray-400 font-light">
+                        {collection.subtitle}
+                      </span>
+                    </h3>
+                    <p
+                      className="text-gray-500 text-[13px] leading-relaxed line-clamp-2"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      {collection.desc}
+                    </p>
                   </div>
-
-                  {/* Glassmorphism Explore Button */}
-                  <div className="absolute inset-x-4 bottom-4 translate-y-16 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20">
-                     <div className="w-full bg-white/85 backdrop-blur-md text-[#1A0008] py-3.5 rounded-full text-[11px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#1A0008] hover:text-white transition-colors shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
-                        Explore Collection <ArrowRight size={14} />
-                     </div>
-                  </div>
-                </div>
-
-                {/* Content below */}
-                <div className="flex flex-col px-2">
-                  <h3
-                    className="text-xl sm:text-2xl md:text-3xl font-medium text-[#1A0008] leading-tight mb-2 group-hover:text-[#D4AF37] transition-colors"
-                    style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                  >
-                    {collection.title}{' '}
-                    <span className="italic text-gray-400 font-light">
-                      {collection.subtitle}
-                    </span>
-                  </h3>
-                  <p
-                    className="text-gray-500 text-[13px] leading-relaxed line-clamp-2"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
-                  >
-                    {collection.desc}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 

@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, X, Check, Save, ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { getCollections, saveCollections, getCollectionTags, fileToBase64, notifyWebsite } from '../../utils/adminStore';
+import { uploadImageToFirebase } from '../../firebase';
 
-export default function AddCollection({ setActivePage }) {
+export default function AddCollection({ setActivePage, editCollection = null }) {
   const [isEditing, setIsEditing] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   
@@ -18,19 +19,17 @@ export default function AddCollection({ setActivePage }) {
   useEffect(() => {
     setAvailableTags(getCollectionTags().filter(t => t.active).sort((a,b) => a.order - b.order));
     
-    const editData = localStorage.getItem('editCollectionData');
-    if (editData) {
-      const parsed = JSON.parse(editData);
+    if (editCollection) {
       setFormData({
-        ...parsed,
-        imagePreview: parsed.image || ''
+        ...editCollection,
+        imagePreview: editCollection.image || ''
       });
       setIsEditing(true);
     } else {
       setIsEditing(false);
       setFormData(emptyForm);
     }
-  }, []);
+  }, [editCollection]);
 
   const handleImage = async (e) => {
     const file = e.target.files[0];
@@ -43,7 +42,7 @@ export default function AddCollection({ setActivePage }) {
     setFormData({ ...formData, image: '', imagePreview: '' });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.title || !formData.id) {
       alert("Please provide at least an ID and a Title.");
       return;
@@ -51,6 +50,12 @@ export default function AddCollection({ setActivePage }) {
 
     const dataToSave = { ...formData };
     delete dataToSave.imagePreview; // don't need to save preview
+    
+    // Upload image to Firebase Storage if it's a new base64 image
+    if (dataToSave.image && dataToSave.image.startsWith('data:image')) {
+      const url = await uploadImageToFirebase(dataToSave.image, `collection_${dataToSave.id}_${Date.now()}.jpg`);
+      dataToSave.image = url;
+    }
 
     let collections = getCollections();
 

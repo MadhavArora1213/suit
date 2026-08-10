@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Edit2, ToggleLeft, ToggleRight } from 'lucide-react';
 import { getCollectionTags, saveCollectionTags } from '../../utils/adminStore';
 
-export default function CollectionTagsAdmin({ setActivePage }) {
+export default function CollectionTagsAdmin({ setActivePage, onEditCollectionTag }) {
   const [tags, setTags] = useState([]);
 
   const loadData = () => {
-    const data = getCollectionTags();
-    data.sort((a, b) => a.order - b.order);
+    const data = [...getCollectionTags()];
+    data.sort((a, b) => (a.order || 0) - (b.order || 0));
     setTags(data);
   };
 
@@ -35,8 +35,7 @@ export default function CollectionTagsAdmin({ setActivePage }) {
   };
 
   const handleEdit = (t) => {
-    localStorage.setItem('editCollectionTagData', JSON.stringify(t));
-    setActivePage('edit-collection-tag');
+    onEditCollectionTag(t);
   };
 
   return (
@@ -48,7 +47,6 @@ export default function CollectionTagsAdmin({ setActivePage }) {
         </div>
         <button
           onClick={() => {
-            localStorage.removeItem('editCollectionTagData');
             setActivePage('add-collection-tag');
           }}
           className="flex items-center justify-center gap-2 bg-[#111111] text-white px-4 py-2 rounded-md hover:bg-black transition-colors text-sm"

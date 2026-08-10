@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 
 function getTimeLeft() {
   const now = new Date();
-  const rakhi = new Date(now.getFullYear(), 7, 28, 0, 0, 0);
+  const rakhi = new Date(now.getFullYear(), 7, 28, 23, 59, 59);
   if (now > rakhi) {
     rakhi.setFullYear(rakhi.getFullYear() + 1);
   }
@@ -56,8 +56,13 @@ export default function HeroRitual({ onSelectFilter }) {
           </span>
         </h1>
         
+<<<<<<< HEAD
         <p className="mt-6 text-[#555] text-[14px] md:text-[16px] max-w-2xl tracking-wide font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>
           Up to 40% Off on premium ethnic suits and signature Rakhi boxes. <br className="hidden md:block" />
+=======
+        <p className="mt-6 text-[#555] text-[13px] sm:text-[14px] md:text-[16px] max-w-2xl tracking-wide font-light px-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          Up to 50% Off on premium ethnic suits and signature Rakhi boxes. <br className="hidden md:block" />
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
           Every order includes the exclusive 'Behen Ki Awaaz' QR card.
         </p>
 
@@ -85,8 +90,13 @@ export default function HeroRitual({ onSelectFilter }) {
       </div>
 
       {/* Overlapping Cards Container (Daisy Style in Light Theme) */}
+<<<<<<< HEAD
       <div className="relative z-10 w-full flex-grow mt-12 pb-28 flex justify-center items-center overflow-x-visible">
         <div className="relative w-full max-w-[1100px] h-[400px] md:h-[500px] mx-auto">
+=======
+      <div className="relative z-10 w-full flex-grow mt-12 md:mt-12 pb-20 md:pb-28 flex justify-center items-center overflow-x-clip overflow-y-visible px-2 sm:px-0">
+        <div className="relative w-full max-w-[1100px] h-[300px] sm:h-[400px] md:h-[500px] mx-auto">
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
           
           {/* Card 1: The Suit Photo (Polaroid style with Gold Border) */}
           <motion.div 
@@ -178,12 +188,21 @@ export default function HeroRitual({ onSelectFilter }) {
           </motion.div>
 
           {/* Spinning Circle Text */}
+<<<<<<< HEAD
           <div className="absolute top-[-20px] right-[20%] md:right-[30%] w-24 h-24 md:w-32 md:h-32 z-30">
             <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_12s_linear_infinite]">
               <path id="circlePath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
               <text className="text-[11px] font-black tracking-[0.2em] fill-[#1A0008]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 <textPath href="#circlePath">
                   FLAT 40% OFF SALE • LIVE IN BANARAS •
+=======
+          <div className="absolute top-[-15px] sm:top-[-20px] right-[10%] sm:right-[20%] md:right-[30%] w-14 h-14 sm:w-24 sm:h-24 md:w-32 md:h-32 z-30">
+            <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible animate-[spin_12s_linear_infinite]">
+              <path id="circlePath" d="M 50, 50 m -42, 0 a 42,42 0 1,1 84,0 a 42,42 0 1,1 -84,0" fill="none" />
+              <text className="text-[9px] sm:text-[10px] font-black tracking-[0.2em] fill-[#1A0008]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                <textPath href="#circlePath" startOffset="0%">
+                  UP TO 50% OFF SALE • LIVE IN BANARAS •
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
                 </textPath>
               </text>
             </svg>

@@ -41,8 +41,8 @@ export default function Navbar({
     setNavBoutiques(bts.filter(b => b.type !== 'Shop'));
     setNavShops(bts.filter(b => b.type === 'Shop'));
     setNavFeatured(bts.filter(b => b.isFeatured === true).slice(0, 2));
-    setNavCategories(getCategories().filter(c => c.active).sort((a,b) => a.order - b.order));
-    setDynamicCollections(getCollections().filter(c => c.active).sort((a,b) => a.order - b.order));
+    setNavCategories(getCategories().filter(c => c.active !== false).sort((a,b) => (a.order || 0) - (b.order || 0)));
+    setDynamicCollections(getCollections().filter(c => c.active !== false).sort((a,b) => (a.order || 0) - (b.order || 0)));
     
     const handleUpdate = () => {
       setAllProducts(getAllProducts());
@@ -50,8 +50,8 @@ export default function Navbar({
       setNavBoutiques(updatedBts.filter(b => b.type !== 'Shop'));
       setNavShops(updatedBts.filter(b => b.type === 'Shop'));
       setNavFeatured(updatedBts.filter(b => b.isFeatured === true).slice(0, 2));
-      setNavCategories(getCategories().filter(c => c.active).sort((a,b) => a.order - b.order));
-      setDynamicCollections(getCollections().filter(c => c.active).sort((a,b) => a.order - b.order));
+      setNavCategories(getCategories().filter(c => c.active !== false).sort((a,b) => (a.order || 0) - (b.order || 0)));
+      setDynamicCollections(getCollections().filter(c => c.active !== false).sort((a,b) => (a.order || 0) - (b.order || 0)));
     };
     window.addEventListener('admin-data-updated', handleUpdate);
     return () => window.removeEventListener('admin-data-updated', handleUpdate);
@@ -96,15 +96,11 @@ export default function Navbar({
           {[...Array(6)].map((_, i) => (
             <div key={i} className="flex gap-8 items-center">
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                🔥 FLAT 40% OFF : THE ULTIMATE RAKHI SALE IS LIVE
+                🔥 UP TO 50% OFF : THE ULTIMATE RAKHI SALE IS LIVE
               </span>
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#FAF9F6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                SECURE YOUR SIGNATURE LOOK BEFORE IT'S GONE
-              </span>
-              <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
-              <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                COMPLIMENTARY WORLDWIDE SHIPPING OVER $200
+                NEW ARRIVALS EVERY WEEK
               </span>
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
             </div>
@@ -173,10 +169,15 @@ export default function Navbar({
                     <div className="w-full h-full flex gap-8 p-8 bg-white/60 rounded-xl relative z-10">
 
                       {/* Col 1: Shop By Category */}
-                      <div className="w-1/4 flex flex-col border-r border-[#D4AF37]/10 pr-6">
+                      <div className="w-[35%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Shop by Category</span>
+<<<<<<< HEAD
                         <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-2">
                           {navCategories.map((cat) => (
+=======
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-3 mt-2">
+                          {navCategories.map((cat, i) => (
+>>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
                             <a
                               key={cat.id || cat.name}
                               href={`/category/${cat.name.toLowerCase().replace(/ /g, '-')}`}
@@ -196,7 +197,7 @@ export default function Navbar({
                       </div>
 
                       {/* Col 2: Curated Edits */}
-                      <div className="w-1/4 flex flex-col border-r border-[#D4AF37]/10 px-6">
+                      <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 px-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Curated Edits</span>
                         <div className="flex flex-col gap-3.5 mt-2">
                           {dynamicCollections.slice(0, 7).map((edit) => (
@@ -227,7 +228,7 @@ export default function Navbar({
 
                       {/* Col 3: Featured Image 1 */}
                       {col3 && (
-                      <div className="w-1/4 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-2 shadow-lg" onClick={() => {
+                      <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-4 shadow-lg" onClick={() => {
                         if (setSelectedCollectionSlug) {
                           setSelectedCollectionSlug(col3.id);
                           setView('collection-detail');
@@ -259,7 +260,7 @@ export default function Navbar({
                         <div className="absolute bottom-5 left-5 text-white pr-4">
                           <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#D4AF37]">{col4.tag || 'New Arrival'}</span>
                           <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{col4.title}</h3>
-                          <p className="text-[10px] tracking-wider opacity-80 line-clamp-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>{col4.desc || col4.subtitle}</p>
+                          <p className="text-[10px] tracking-wider opacity-80" style={{ fontFamily: "'DM Sans', sans-serif" }}>{col4.desc || col4.subtitle}</p>
                         </div>
                       </div>
                       )}
@@ -275,7 +276,7 @@ export default function Navbar({
                     <div className="w-full h-full flex gap-8 p-8 bg-white/60 rounded-xl relative z-10">
 
                       {/* Col 1: Top Shops */}
-                      <div className="w-1/4 flex flex-col border-r border-[#D4AF37]/10 pr-6">
+                      <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Top Shops</span>
                         <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
                           {navShops.map((shop) => (
@@ -302,7 +303,7 @@ export default function Navbar({
                       </div>
 
                       {/* Col 2: Top Boutiques */}
-                      <div className="w-1/4 flex flex-col border-r border-[#D4AF37]/10 px-6">
+                      <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 px-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Top Boutiques</span>
                         <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
                           {navBoutiques.map((btq) => (
@@ -315,7 +316,7 @@ export default function Navbar({
                                   setSelectedBoutique(btq.name);
                                   setView('seller-shop');
                                 } else {
-                                  window.location.href = `/boutiques/${btq.name.toLowerCase().replace(/ /g, '-')}`;
+                                  window.location.href = `/shops-and-boutiques/${btq.name.toLowerCase().replace(/ /g, '-')}`;
                                 }
                               }}
                               className="text-[16px] text-[#1A0008]/90 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
@@ -326,19 +327,19 @@ export default function Navbar({
                             </a>
                           ))}
                         </div>
-                        <a href="/boutiques" onClick={(e) => { e.preventDefault(); window.location.href = '/boutiques'; }}
+                        <a href="/shops-and-boutiques" onClick={(e) => { e.preventDefault(); window.location.href = '/shops-and-boutiques'; }}
                           className="mt-auto text-[9px] font-bold text-[#1A0008] hover:text-[#D4AF37] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
                           View All Boutiques <ArrowRight size={12} className="group-hover/link:translate-x-1 transition-transform" />
                         </a>
                       </div>
 
                       {navFeatured.map((feat, index) => (
-                        <div key={feat.id} className={`${index === 0 ? 'w-1/4 ml-2' : 'flex-1'} h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg`} onClick={() => {
+                        <div key={feat.id} className={`${index === 0 ? 'w-[32%] ml-4' : 'flex-1'} h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg`} onClick={() => {
                           if (setSelectedBoutique) {
                             setSelectedBoutique(feat.name);
                             setView('seller-shop');
                           } else {
-                            window.location.href = `/${feat.type === 'Shop' ? 'shop' : 'boutiques'}/${feat.name.toLowerCase().replace(/ /g, '-')}`;
+                            window.location.href = `/${feat.type === 'Shop' ? 'shop' : 'shops-and-boutiques'}/${feat.name.toLowerCase().replace(/ /g, '-')}`;
                           }
                         }}>
                           <img src={feat.coverImage || (index === 0 ? "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" : "/designer_suit_1.png")} alt={feat.name} className={`w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-110 ${index === 0 ? 'object-center' : 'object-top'}`} />
@@ -348,7 +349,7 @@ export default function Navbar({
                               {feat.gstVerified ? 'Premium Partner' : 'Trending'}
                             </span>
                             <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{feat.name}</h3>
-                            <p className="text-[10px] tracking-wider opacity-90 leading-relaxed font-light mb-4 line-clamp-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                            <p className="text-[10px] tracking-wider opacity-90 leading-relaxed font-light mb-4" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                               {feat.description || 'Exclusive collections and designer wear.'}
                             </p>
                             <div className="flex items-center gap-2 text-[9px] font-bold tracking-[0.2em] uppercase w-max group-hover/img:text-[#D4AF37] transition-colors">
@@ -492,15 +493,17 @@ export default function Navbar({
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
+      </motion.nav>
 
       {/* Mobile Drawer */}
       <AnimatePresence>
         {isOpen && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[190] lg:hidden" />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000] lg:hidden" />
             <motion.div initial={{ opacity: 0, x: '100%' }} animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: '100%' }} transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 bottom-0 right-0 w-[85vw] max-w-[320px] bg-white border-l border-[#D4AF37]/10 shadow-2xl z-[200] p-6 flex flex-col gap-5 lg:hidden overflow-y-auto h-[100dvh]">
+              className="fixed top-0 bottom-0 right-0 w-[85vw] max-w-[320px] bg-white border-l border-[#D4AF37]/10 shadow-2xl z-[1001] p-6 flex flex-col gap-5 lg:hidden overflow-y-auto h-[100dvh]">
               <div className="flex justify-between items-center border-b border-[#D4AF37]/15 pb-4 shrink-0">
                 <span className="text-lg tracking-[0.2em] text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}>MENU</span>
                 <button onClick={() => setIsOpen(false)} className="text-[#6B6B6B] hover:text-[#1A0008] cursor-pointer"><X size={20} /></button>
@@ -608,7 +611,7 @@ export default function Navbar({
       {/* Cart Drawer */}
       <AnimatePresence>
         {cartOpen && (
-          <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="fixed inset-0 z-[1000] overflow-hidden">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setCartOpen(false)} className="absolute inset-0 bg-black/70 backdrop-blur-sm cursor-pointer" />
             <div className="absolute inset-y-0 right-0 max-w-full flex">
@@ -690,7 +693,7 @@ export default function Navbar({
       {/* Wishlist Drawer */}
       <AnimatePresence>
         {wishlistOpen && (
-          <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="fixed inset-0 z-[1000] overflow-hidden">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setWishlistOpen(false)} className="absolute inset-0 bg-black/70 backdrop-blur-sm cursor-pointer" />
             <div className="absolute inset-y-0 right-0 max-w-full flex">
@@ -756,7 +759,7 @@ export default function Navbar({
       {/* Checkout QR Code Modal */}
       <AnimatePresence>
         {checkoutOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -822,8 +825,6 @@ export default function Navbar({
           </div>
         )}
       </AnimatePresence>
-      </div>
-    </motion.nav>
     </>
   );
 }

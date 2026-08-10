@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Upload, Plus, X, Check, Star } from 'lucide-react';
-import { addProduct, updateProduct, fileToBase64, notifyWebsite, getBoutiques } from '../../utils/adminStore';
+import { addProduct, updateProduct, fileToBase64, notifyWebsite, getBoutiques, getCategories } from '../../utils/adminStore';
+import { uploadImageToFirebase } from '../../firebase';
 
 const P = '#111111';
 
@@ -35,22 +36,17 @@ const Card = ({ title, subtitle, children }) => (
 );
 
 export default function AddProduct({ setActivePage, editProduct = null }) {
-  const [editData] = useState(() => {
-    const saved = localStorage.getItem('admin_edit_product');
-    if (saved) {
-      try { return JSON.parse(saved); } catch(e) { return null; }
-    }
-    return null;
-  });
-
-  const ep = editProduct || editData;
+  const ep = editProduct;
 
   const [form, setForm] = useState({
     name: ep?.name || '',
+    color: ep?.color || '',
+    weight: ep?.weight || '500',
     price: ep?.price?.replace('₹', '').replace(/,/g, '') || '',
     originalPrice: ep?.originalPrice?.replace('₹', '').replace(/,/g, '') || '',
     boutique: ep?.boutique || '',
     badge: ep?.badge || '',
+    category: ep?.category || '',
     collection: ep?.collection || 'Trending',
     styleCategory: ep?.styleCategory || 'Traditional',
     suitType: ep?.suitType || ep?.type || 'Anarkali',
@@ -63,22 +59,25 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
     igComments: ep?.igComments || '',
     videoUrl: ep?.videoUrl || '',
     reelUrl: ep?.reelUrl || '',
+    shippingType: ep?.shippingType || 'Calculate',
   });
 
   const [selectedFits, setSelectedFits] = useState(ep?.fitOptions || ['Unstitched', 'Stitched']);
-  const [selectedSizes, setSelectedSizes] = useState(ep?.sizes || []);
+  const [selectedSizes, setSelectedSizes] = useState(Array.isArray(ep?.sizes) ? ep.sizes : []);
   const [selectedOccasions, setSelectedOccasions] = useState(ep?.occasions || []);
   const [selectedCare, setSelectedCare] = useState(ep?.care || []);
   const [stockQty, setStockQty] = useState(ep?.stockQty || {});
   const [mainImage, setMainImage] = useState(ep?.image || null);
   const [additionalImages, setAdditionalImages] = useState(ep?.additionalImages || []);
   const [boutiques, setBoutiques] = useState([]);
+  const [globalCategories, setGlobalCategories] = useState([]);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const list = getBoutiques();
     setBoutiques(list.filter(b => b.active !== false));
+    setGlobalCategories(getCategories().filter(c => c.active !== false));
   }, []);
 
   const update = (key, val) => setForm(f => ({ ...f, [key]: val }));
@@ -103,16 +102,45 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       alert('Product name and price are required.');
       return;
     }
+
+    const totalImages = (mainImage ? 1 : 0) + additionalImages.length;
+    if (totalImages < 1 || totalImages > 5) {
+      alert('Please upload between 1 and 5 images in total.');
+      return;
+    }
+
     setSaving(true);
+    
+    // Upload images to Firebase Storage to avoid Firestore document size limits
+    let finalMainImage = mainImage || '/designer_suit_1.png';
+    if (mainImage && mainImage.startsWith('data:image')) {
+      finalMainImage = await uploadImageToFirebase(mainImage, `main_${Date.now()}.jpg`);
+    }
+    
+    const finalAdditionalImages = [];
+    for (let i = 0; i < additionalImages.length; i++) {
+      if (additionalImages[i].startsWith('data:image')) {
+        const url = await uploadImageToFirebase(additionalImages[i], `add_${Date.now()}_${i}.jpg`);
+        finalAdditionalImages.push(url);
+      } else {
+        finalAdditionalImages.push(additionalImages[i]);
+      }
+    }
+
+    const totalStock = Object.values(stockQty).reduce((acc, curr) => acc + (Number(curr) || 0), 0);
+
     const product = {
       id: ep?.id || `admin_${Date.now()}`,
       name: form.name,
+      color: form.color,
+      weight: Number(form.weight) || 500,
       price: `₹${Number(form.price).toLocaleString('en-IN')}`,
       priceNum: Number(form.price),
       originalPrice: form.originalPrice ? `₹${Number(form.originalPrice).toLocaleString('en-IN')}` : null,
       originalPriceNum: Number(form.originalPrice) || 0,
       boutique: form.boutique,
       badge: form.badge,
+      category: form.category,
       collection: form.collection,
       styleCategory: form.styleCategory,
       suitType: form.suitType,
@@ -131,8 +159,10 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       occasions: selectedOccasions,
       care: selectedCare,
       stockQty,
-      image: mainImage || '/designer_suit_1.png',
-      additionalImages,
+      stock: totalStock,
+      shippingType: form.shippingType,
+      image: finalMainImage,
+      additionalImages: finalAdditionalImages,
       addedAt: ep?.addedAt || new Date().toISOString(),
       source: 'admin',
     };
@@ -143,7 +173,6 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       addProduct(product);
     }
 
-    localStorage.removeItem('admin_edit_product');
     notifyWebsite();
     setSaving(false);
     setSaved(true);
@@ -185,7 +214,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 <Label required>Product Name</Label>
                 <Input value={form.name} onChange={e => update('name', e.target.value)} placeholder="e.g. Embroidered Silk Suit Set" />
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                   <Label required>Selling Price (₹)</Label>
                   <Input type="number" value={form.price} onChange={e => update('price', e.target.value)} placeholder="e.g. 4299" />
@@ -193,6 +222,24 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 <div>
                   <Label>Original MRP (₹)</Label>
                   <Input type="number" value={form.originalPrice} onChange={e => update('originalPrice', e.target.value)} placeholder="e.g. 5999" />
+                </div>
+                <div>
+                  <Label>Color(s)</Label>
+                  <Input value={form.color} onChange={e => update('color', e.target.value)} placeholder="e.g. Mustard, Wine" />
+                </div>
+                <div>
+                  <Label>Weight (g)</Label>
+                  <Input type="number" value={form.weight} onChange={e => update('weight', e.target.value)} placeholder="e.g. 500" />
+                </div>
+                <div>
+                  <Label required>Shipping Type</Label>
+                  <select value={form.shippingType} onChange={e => update('shippingType', e.target.value)}
+                    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none appearance-none cursor-pointer transition-all"
+                    onFocus={e => { e.target.style.borderColor = P; }}
+                    onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }}>
+                    <option value="Calculate">Calculate at Checkout</option>
+                    <option value="Free">Free Shipping</option>
+                  </select>
                 </div>
                 <div>
                   <Label required>Boutique / Seller</Label>
@@ -226,7 +273,19 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
 
           {/* Categorization */}
           <Card title="Categorization" subtitle="Controls which tab and filters the product appears under on the website">
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div>
+                <Label>Global Category</Label>
+                <select value={form.category} onChange={e => update('category', e.target.value)}
+                  className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none appearance-none cursor-pointer transition-all"
+                  onFocus={e => { e.target.style.borderColor = P; }}
+                  onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }}>
+                  <option value="">No Category</option>
+                  {globalCategories.map(c => (
+                    <option key={c.id} value={c.name}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
               {[
                 { label: 'Collection Tab', key: 'collection', options: ['Trending', 'New Arrivals', 'Best Sellers', 'Festive Edit', 'Summer', 'Monsoon', 'Wedding', 'Pastel', 'Black', 'Luxury', 'Punjabi', 'Bridal', 'Velvet', 'Pure Silk', 'Cotton', 'Georgette', 'Organza', 'Casual', 'Party'] },
                 { label: 'Style Category', key: 'styleCategory', options: ['Traditional', 'Designer', 'Party', 'Casual', 'Bridal', 'Ethnic', 'Fusion', 'Contemporary', 'Royal', 'Heritage', 'Minimalist', 'Boho', 'Indo Western', 'Western Wear', 'Festive', 'Workwear'] },
@@ -338,13 +397,14 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                     </div>
                     <span className="text-sm font-semibold text-[#1A1A1A]">{size}</span>
                     {selectedSizes.includes(size) && (
-                      <input type="number" min="0" value={stockQty[size] || ''}
-                        onChange={e => { e.stopPropagation(); setStockQty(prev => ({ ...prev, [size]: e.target.value })); }}
-                        onClick={e => e.stopPropagation()}
-                        placeholder="Qty"
-                        className="ml-auto w-16 px-2 py-1 border border-[#E8DDD0] rounded-lg text-sm text-center focus:outline-none bg-white"
-                        onFocus={e => { e.stopPropagation(); e.target.style.borderColor = P; }}
-                        onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }} />
+                      <button type="button" onClick={e => e.stopPropagation()}
+                        className="ml-auto px-3 py-1 rounded-lg text-[11px] font-bold transition-all"
+                        style={stockQty[size] > 0
+                          ? { background: '#D1FAE5', color: '#065F46', border: '1px solid #6EE7B7' }
+                          : { background: '#FEE2E2', color: '#991B1B', border: '1px solid #FCA5A5' }}
+                        onClick={e => { e.stopPropagation(); setStockQty(prev => ({ ...prev, [size]: prev[size] > 0 ? 0 : 1 })); }}>
+                        {stockQty[size] > 0 ? 'In Stock' : 'Out of Stock'}
+                      </button>
                     )}
                   </div>
                 ))}

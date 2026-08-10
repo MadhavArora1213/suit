@@ -1,28 +1,15 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Edit2, Trash2, Eye, Star, RefreshCw } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, Eye, Star } from 'lucide-react';
 import { getProducts, deleteProduct as storeDelete, notifyWebsite } from '../../utils/adminStore';
 
-const staticProducts = [
-  { id: 't1', name: 'Embroidered Silk Suit Set', price: '₹4,299', boutique: 'Kala Mandir', badge: 'Silk Blend', collection: 'Trending', type: 'Anarkali', stock: 12, rating: 4.8, image: '/designer_suit_1.png' },
-  { id: 't2', name: 'Chanderi Salwar Suit Set', price: '₹3,899', boutique: 'Zari Heritage', badge: 'Handloom', collection: 'Trending', type: 'Patiala', stock: 8, rating: 4.6, image: '/cotton_suit.png' },
-  { id: 't3', name: 'Designer Angrakha Suit Set', price: '₹5,499', boutique: 'Gulabo Jaipur', badge: 'Premium', collection: 'Trending', type: 'Sharara', stock: 5, rating: 4.9, image: '/sharara_suit.png' },
-  { id: 't4', name: 'Pakistani Straight Suit Set', price: '₹4,799', boutique: 'Nazraana', badge: 'Verified', collection: 'New Arrivals', type: 'Pakistani', stock: 14, rating: 4.7, image: '/pakistani_suit.png' },
-  { id: 'b1', name: 'Velvet Embroidered Suit Set', price: '₹8,999', boutique: 'Vastra', badge: 'Hot Seller', collection: 'Best Sellers', type: 'Anarkali', stock: 3, rating: 4.9, image: '/banarasi_suit.png' },
-  { id: 'b2', name: 'Chikankari Handloom Suit Set', price: '₹7,499', boutique: 'Awadh Kraft', badge: 'Artisanal', collection: 'Best Sellers', type: 'Chikankari', stock: 7, rating: 4.8, image: '/chikankari_suit.png' },
-  { id: 'f1', name: 'Royal Sharara Suit Set', price: '₹11,499', boutique: 'Rajputana', badge: 'Grand Wedding', collection: 'Festive Edit', type: 'Sharara', stock: 2, rating: 5.0, image: '/sharara_suit.png' },
-  { id: 'f3', name: 'Raw Silk Anarkali Suit Set', price: '₹13,999', boutique: 'Royal Heritage', badge: 'Exclusive', collection: 'Festive Edit', type: 'Anarkali', stock: 1, rating: 4.9, image: '/anarkali_suit.png' },
-];
-
-export default function Products({ setActivePage }) {
+export default function Products({ setActivePage, onEditProduct }) {
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('All');
   const [deleteId, setDeleteId] = useState(null);
 
   const loadAll = () => {
-    const adminProducts = getProducts().map(p => ({ ...p, category: p.collection, source: 'admin' }));
-    const adminIds = new Set(adminProducts.map(p => p.id));
-    return [...adminProducts, ...staticProducts.filter(p => !adminIds.has(p.id))];
+    return getProducts().map(p => ({ ...p, source: 'admin' }));
   };
 
   const [products, setProducts] = useState(loadAll);
@@ -36,7 +23,7 @@ export default function Products({ setActivePage }) {
   const categories = ['All', 'Trending', 'New Arrivals', 'Best Sellers', 'Festive Edit'];
 
   const filtered = products.filter(p => {
-    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || (p.boutique || '').toLowerCase().includes(search.toLowerCase());
+    const matchSearch = (p.name || '').toLowerCase().includes(search.toLowerCase()) || (p.boutique || '').toLowerCase().includes(search.toLowerCase());
     const matchCat = filterCat === 'All' || p.category === filterCat || p.collection === filterCat;
     return matchSearch && matchCat;
   });
@@ -109,13 +96,20 @@ export default function Products({ setActivePage }) {
             >
               {/* Image */}
               <div className="relative h-36 sm:h-44 bg-[#F8F4F9] overflow-hidden">
-                <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                {product.image ? (
+                  <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-xs text-[#9E9189]">No Image</div>
+                )}
                 <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#111111] text-[9px] sm:text-[11px] font-bold tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg border border-[#111111]/20">
                   {product.badge}
                 </span>
-                <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${product.stock <= 3 ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
-                  {product.stock <= 3 ? `Low: ${product.stock}` : `${product.stock} in stock`}
+                <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${
+                  (product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 
+                  ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                  {(product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 ? 'In Stock' : 'Out of Stock'}
                 </span>
+
                 {/* Action overlay */}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
                   <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
@@ -123,7 +117,7 @@ export default function Products({ setActivePage }) {
                     <Eye size={15} />
                   </motion.button>
                   <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-                    onClick={() => { localStorage.setItem('admin_edit_product', JSON.stringify(product)); setActivePage('add-product'); }}
+                    onClick={() => onEditProduct(product)}
                     className="w-9 h-9 bg-[#111111] rounded-full flex items-center justify-center text-white shadow-md">
                     <Edit2 size={15} />
                   </motion.button>
@@ -146,7 +140,7 @@ export default function Products({ setActivePage }) {
                     <span className="text-[10px] sm:text-xs text-[#6B6B6B]">{product.rating}</span>
                   </div>
                 </div>
-                <span className="inline-block mt-1.5 sm:mt-2 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E8DDD0] text-[#111111]">{product.category}</span>
+                <span className="inline-block mt-1.5 sm:mt-2 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E8DDD0] text-[#111111]">{product.category || product.collection}</span>
               </div>
             </motion.div>
           ))}

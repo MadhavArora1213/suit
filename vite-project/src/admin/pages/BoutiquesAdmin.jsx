@@ -2,32 +2,30 @@ import { useState, useEffect } from 'react';
 import { getBoutiques, addBoutique, updateBoutique, deleteBoutique, fileToBase64 } from '../../utils/adminStore';
 import { Pencil, Trash2, Plus, X, Store, Image as ImageIcon } from 'lucide-react';
 
-export default function BoutiquesAdmin({ setActivePage }) {
+export default function BoutiquesAdmin({ setActivePage, onEditBoutique }) {
   const [boutiques, setBoutiques] = useState([]);
 
   useEffect(() => {
-    setBoutiques(getBoutiques());
-    const handleUpdate = () => setBoutiques(getBoutiques());
+    setBoutiques([...getBoutiques()]);
+    const handleUpdate = () => setBoutiques([...getBoutiques()]);
     window.addEventListener('admin-data-updated', handleUpdate);
     return () => window.removeEventListener('admin-data-updated', handleUpdate);
   }, []);
 
   const handleAdd = () => {
-    localStorage.removeItem('admin_edit_boutique');
     window.history.pushState(null, '', '/admin/add-boutique');
     setActivePage('add-boutique');
   };
 
   const handleEdit = (boutique) => {
-    localStorage.setItem('admin_edit_boutique', JSON.stringify(boutique));
     window.history.pushState(null, '', '/admin/edit-boutique');
-    setActivePage('edit-boutique');
+    onEditBoutique(boutique);
   };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this boutique?")) {
       await deleteBoutique(id);
-      setBoutiques(getBoutiques());
+      setBoutiques([...getBoutiques()]);
     }
   };
 

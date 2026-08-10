@@ -23,18 +23,8 @@ const MARKETING_LINES = [
   "The collection that'll make your friends ask \"where did you get that?\"",
 ];
 
-const STORAGE_KEY = 'gurnaaz_waitlist_line_index';
-
 function getNextLineIndex() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    const lastIndex = stored !== null ? parseInt(stored, 10) : -1;
-    const nextIndex = (lastIndex + 1) % MARKETING_LINES.length;
-    localStorage.setItem(STORAGE_KEY, nextIndex.toString());
-    return nextIndex;
-  } catch {
-    return Math.floor(Math.random() * MARKETING_LINES.length);
-  }
+  return Math.floor(Math.random() * MARKETING_LINES.length);
 }
 
 export default function WaitlistPage() {

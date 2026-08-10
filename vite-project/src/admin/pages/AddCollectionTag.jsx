@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Save, ArrowLeft } from 'lucide-react';
 import { getCollectionTags, saveCollectionTags, notifyWebsite } from '../../utils/adminStore';
 
-export default function AddCollectionTag({ setActivePage }) {
+export default function AddCollectionTag({ setActivePage, editCollectionTag = null }) {
   const [isEditing, setIsEditing] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   
@@ -14,16 +14,14 @@ export default function AddCollectionTag({ setActivePage }) {
   const [formData, setFormData] = useState(emptyForm);
 
   useEffect(() => {
-    const editData = localStorage.getItem('editCollectionTagData');
-    if (editData) {
-      const parsed = JSON.parse(editData);
-      setFormData(parsed);
+    if (editCollectionTag) {
+      setFormData(editCollectionTag);
       setIsEditing(true);
     } else {
       setIsEditing(false);
       setFormData(emptyForm);
     }
-  }, []);
+  }, [editCollectionTag]);
 
   const handleSave = () => {
     if (!formData.name || !formData.id) {

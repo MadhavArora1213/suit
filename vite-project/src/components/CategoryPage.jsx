@@ -25,13 +25,14 @@ function FilterAccordion({ title, children, defaultOpen = true }) {
 export default function CategoryPage({ categoryName, setView, setSelectedProduct, addToCart, favorites = {}, toggleFavorite }) {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   
   // Sort
   const [sortOption, setSortOption] = useState('newest');
 
-  // Advanced Filters
+  // Filters
   const [selectedBoutiques, setSelectedBoutiques] = useState([]);
-  const [selectedPrices, setSelectedPrices] = useState([]);
+  const [selectedMaxPrice, setSelectedMaxPrice] = useState(null);
   const [selectedFabrics, setSelectedFabrics] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedOccasions, setSelectedOccasions] = useState([]);
@@ -56,40 +57,134 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const all = getAllProducts();
-    if (categoryName === 'All') {
-      setProducts(all);
-      return;
-    }
-    const categoryFiltered = all.filter(p => {
-      const typeMatch = (p.type || p.suitType || '').toLowerCase() === categoryName.toLowerCase();
-      const colMatch = (p.collection || '').toLowerCase() === categoryName.toLowerCase();
-      const catMatch = (p.category || '').toLowerCase() === categoryName.toLowerCase();
-      return typeMatch || colMatch || catMatch;
-    });
-    setProducts(categoryFiltered);
+    let timeoutId;
+    
+    const fetchAndFilterProducts = () => {
+      const all = getAllProducts();
+      let finalProducts = [];
+      if (categoryName === 'All') {
+        finalProducts = all;
+      } else {
+        finalProducts = all.filter(p => {
+          const typeMatch = (p.type || p.suitType || '').toLowerCase() === categoryName.toLowerCase();
+          const colMatch = (p.collection || '').toLowerCase() === categoryName.toLowerCase();
+          const catMatch = (p.category || '').toLowerCase() === categoryName.toLowerCase();
+          return typeMatch || colMatch || catMatch;
+        });
+      }
+      setProducts(finalProducts);
+      
+      clearTimeout(timeoutId);
+      if (finalProducts.length > 0) {
+        setLoading(false);
+      } else {
+        if (window.isLiveSyncComplete) {
+          setLoading(false);
+        } else {
+          timeoutId = setTimeout(() => setLoading(false), 8000);
+        }
+      }
+    };
+
+    fetchAndFilterProducts();
+
+    window.addEventListener('admin-data-updated', fetchAndFilterProducts);
+    return () => {
+      window.removeEventListener('admin-data-updated', fetchAndFilterProducts);
+      clearTimeout(timeoutId);
+    };
   }, [categoryName]);
 
   const boutiques = useMemo(() => [...new Set(products.map(p => p.boutique).filter(Boolean))], [products]);
   
-  const fabricsList = ['Cotton', 'Silk', 'Georgette', 'Velvet', 'Organza', 'Chanderi'];
-  const occasionsList = ['Casual', 'Festive', 'Wedding', 'Party'];
-  const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
-  const pricesList = [
-    { id: 'under5k', label: 'Under ₹5,000' },
-    { id: '5k-10k', label: '₹5,000 - ₹10,000' },
-    { id: 'over10k', label: 'Over ₹10,000' }
+  const fabricsList = useMemo(() => {
+    const f = new Set();
+    products.forEach(p => {
+      if (p.fabricName) f.add(p.fabricName.trim());
+    });
+    return [...f].filter(Boolean).sort();
+  }, [products]);
+
+  const occasionsList = useMemo(() => {
+    const o = new Set();
+    products.forEach(p => {
+      if (p.occasions && Array.isArray(p.occasions)) {
+        p.occasions.forEach(occ => o.add(occ.trim()));
+      }
+    });
+    return [...o].filter(Boolean).sort();
+  }, [products]);
+
+  const sizesList = useMemo(() => {
+    const s = new Set();
+    products.forEach(p => {
+      if (p.sizes && Array.isArray(p.sizes)) p.sizes.forEach(sz => s.add(sz.trim()));
+      if (p.fitOptions && Array.isArray(p.fitOptions)) p.fitOptions.forEach(sz => s.add(sz.trim()));
+    });
+    const order = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
+    return [...s].filter(Boolean).sort((a, b) => {
+      let idxA = order.indexOf(a);
+      let idxB = order.indexOf(b);
+      if (idxA === -1) idxA = 999;
+      if (idxB === -1) idxB = 999;
+      if (idxA === 999 && idxB === 999) return a.localeCompare(b);
+      return idxA - idxB;
+    });
+  }, [products]);
+
+  const { globalMinPrice, globalMaxPrice } = useMemo(() => {
+    if (products.length === 0) return { globalMinPrice: 0, globalMaxPrice: 10000 };
+    let min = Infinity;
+    let max = -Infinity;
+    products.forEach(p => {
+      const price = p.priceNum || parseInt((p.price || '0').toString().replace(/[^\d]/g, ''), 10) || 0;
+      if (price < min) min = price;
+      if (price > max) max = price;
+    });
+    if (min === Infinity) min = 0;
+    if (max === -Infinity) max = 10000;
+    if (min === max) max = min + 1000;
+    return { globalMinPrice: min, globalMaxPrice: max };
+  }, [products]);
+
+  const baseColors = [
+    { name: 'Red', hex: '#E74C3C' }, { name: 'Blue', hex: '#3498DB' }, { name: 'Green', hex: '#2ECC71' },
+    { name: 'Pink', hex: '#F1948A' }, { name: 'Black', hex: '#1A0008' }, { name: 'White', hex: '#FFFFFF' },
+    { name: 'Yellow', hex: '#F1C40F' }, { name: 'Wine', hex: '#722F37' }, { name: 'Maroon', hex: '#800000' },
+    { name: 'Purple', hex: '#8E44AD' }, { name: 'Peach', hex: '#FFCBA4' }, { name: 'Orange', hex: '#E67E22' },
+    { name: 'Beige', hex: '#F5F5DC' }, { name: 'Mustard', hex: '#FFDB58' }, { name: 'Olive', hex: '#808000' },
+    { name: 'Teal', hex: '#008080' }, { name: 'Navy', hex: '#000080' }, { name: 'Grey', hex: '#7F8C8D' },
+    { name: 'Brown', hex: '#8B4513' }, { name: 'Gold', hex: '#FFD700' }, { name: 'Silver', hex: '#C0C0C0' },
+    { name: 'Ivory', hex: '#FFFFF0' }, { name: 'Magenta', hex: '#FF00FF' }, { name: 'Lavender', hex: '#E6E6FA' },
+    { name: 'Turquoise', hex: '#40E0D0' }, { name: 'Coral', hex: '#FF7F50' }, { name: 'Mint', hex: '#98FF98' },
+    { name: 'Indigo', hex: '#4B0082' }, { name: 'Rose', hex: '#FF007F' }, { name: 'Cyan', hex: '#00FFFF' }
   ];
-  const colorsList = [
-    { name: 'Red', hex: '#E74C3C' },
-    { name: 'Blue', hex: '#3498DB' },
-    { name: 'Green', hex: '#2ECC71' },
-    { name: 'Pink', hex: '#F1948A' },
-    { name: 'Black', hex: '#1A0008' },
-    { name: 'White', hex: '#FFFFFF' },
-    { name: 'Yellow', hex: '#F1C40F' },
-    { name: 'Wine', hex: '#722F37' }
-  ];
+
+  const colorsList = useMemo(() => {
+    const c = new Set();
+    
+    // 1. Extract explicit colors set via Admin Panel (p.color)
+    products.forEach(p => {
+      if (p.color) {
+        p.color.split(',').forEach(col => {
+          if (col.trim()) c.add(col.trim().toLowerCase());
+        });
+      }
+    });
+
+    // 2. Fallback to legacy text search against baseColors for older products
+    baseColors.forEach(bc => {
+      const regex = new RegExp(`\\b${bc.name}\\b`, 'i');
+      if (products.some(p => {
+        const text = `${p.name || ''} ${p.desc || ''} ${p.shortDesc || ''} ${p.type || ''} ${p.suitType || ''} ${p.collection || ''} ${p.fabricDetails || ''} ${p.fabricName || ''}`;
+        return regex.test(text);
+      })) {
+        c.add(bc.name.toLowerCase());
+      }
+    });
+
+    return [...c].filter(Boolean).map(color => color.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')).sort();
+  }, [products]);
 
   const toggleFilter = (setter, value) => {
     setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
@@ -97,7 +192,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
   const clearAllFilters = () => {
     setSelectedBoutiques([]);
-    setSelectedPrices([]);
+    setSelectedMaxPrice(null);
     setSelectedFabrics([]);
     setSelectedColors([]);
     setSelectedOccasions([]);
@@ -109,29 +204,42 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
     if (selectedBoutiques.length > 0) result = result.filter(p => selectedBoutiques.includes(p.boutique));
     
-    if (selectedPrices.length > 0) {
+    if (selectedMaxPrice !== null) {
       result = result.filter(p => {
-        const price = p.priceNum || parseInt(p.price.replace(/[^\d]/g, ''), 10);
-        if (selectedPrices.includes('under5k') && price < 5000) return true;
-        if (selectedPrices.includes('5k-10k') && price >= 5000 && price <= 10000) return true;
-        if (selectedPrices.includes('over10k') && price > 10000) return true;
-        return false;
+        const price = p.priceNum || parseInt((p.price || '0').toString().replace(/[^\d]/g, ''), 10) || 0;
+        return price <= selectedMaxPrice;
       });
     }
 
-    const getText = (p) => `${p.name} ${p.desc} ${p.type} ${p.collection} ${p.fabricDetails || ''}`.toLowerCase();
+    const getText = (p) => `${p.name || ''} ${p.desc || ''} ${p.shortDesc || ''} ${p.type || ''} ${p.suitType || ''} ${p.collection || ''} ${p.fabricDetails || ''} ${p.fabricName || ''}`.toLowerCase();
 
     if (selectedFabrics.length > 0) {
-      result = result.filter(p => selectedFabrics.some(f => getText(p).includes(f.toLowerCase())));
+      result = result.filter(p => selectedFabrics.some(f => 
+        (p.fabricName && p.fabricName.toLowerCase().includes(f.toLowerCase())) ||
+        getText(p).includes(f.toLowerCase())
+      ));
     }
     if (selectedColors.length > 0) {
-      result = result.filter(p => selectedColors.some(c => getText(p).includes(c.toLowerCase())));
+      result = result.filter(p => selectedColors.some(c => {
+        // Match explicit color field
+        if (p.color && p.color.toLowerCase().includes(c.toLowerCase())) return true;
+        // Match legacy text
+        const regex = new RegExp(`\\b${c}\\b`, 'i');
+        return regex.test(getText(p));
+      }));
     }
     if (selectedOccasions.length > 0) {
-      result = result.filter(p => selectedOccasions.some(o => getText(p).includes(o.toLowerCase())));
+      result = result.filter(p => selectedOccasions.some(o => 
+        (p.occasions && p.occasions.map(x=>x.toLowerCase()).includes(o.toLowerCase())) ||
+        getText(p).includes(o.toLowerCase())
+      ));
     }
     if (selectedSizes.length > 0) {
-      result = result.filter(p => selectedSizes.some(s => getText(p).includes(s.toLowerCase())));
+      result = result.filter(p => selectedSizes.some(s => 
+        (p.sizes && p.sizes.map(x=>x.toLowerCase()).includes(s.toLowerCase())) ||
+        (p.fitOptions && p.fitOptions.map(x=>x.toLowerCase()).includes(s.toLowerCase())) ||
+        getText(p).includes(s.toLowerCase())
+      ));
     }
 
     if (sortOption === 'price-low') {
@@ -145,9 +253,9 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
     }
 
     return result;
-  }, [products, selectedBoutiques, selectedPrices, selectedFabrics, selectedColors, selectedOccasions, selectedSizes, sortOption]);
+  }, [products, selectedBoutiques, selectedMaxPrice, selectedFabrics, selectedColors, selectedOccasions, selectedSizes, sortOption]);
 
-  const activeFilterCount = selectedBoutiques.length + selectedPrices.length + selectedFabrics.length + selectedColors.length + selectedOccasions.length + selectedSizes.length;
+  const activeFilterCount = selectedBoutiques.length + (selectedMaxPrice !== null ? 1 : 0) + selectedFabrics.length + selectedColors.length + selectedOccasions.length + selectedSizes.length;
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -157,11 +265,9 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   return (
     <div className="min-h-screen bg-[#FAF9F6] mt-[110px] selection:bg-[#D4AF37] selection:text-white">
       
-      {/* ── 10/10 Avant-Garde Hero Section (Compact & Uncropped) ── */}
       <div className="relative w-full max-w-[1800px] mx-auto px-6 md:px-12 pt-4 pb-6 overflow-hidden">
         <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-12 relative">
           
-          {/* Typography / Left Side */}
           <div className="w-full lg:w-1/2 flex flex-col justify-center z-20">
             <motion.div 
               initial={{ opacity: 0, y: 30 }} 
@@ -203,7 +309,6 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
             </motion.div>
           </div>
 
-          {/* Imagery / Right Side (Dual Portrait Layout to prevent cropping) */}
           <div className="w-full lg:w-1/2 flex justify-end gap-3 md:gap-4 pl-4 md:pl-0">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -227,11 +332,9 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
         </div>
       </div>
 
-      {/* ── Main Collection Layout ── */}
       <div id="collection-start" className="max-w-[1800px] mx-auto px-6 md:px-12 pt-2 pb-32">
         <div className="flex flex-col lg:flex-row gap-16 xl:gap-24">
           
-          {/* ── Minimalist Left Sidebar Filters ── */}
           <div className="w-full lg:w-[260px] shrink-0">
             <div className="sticky top-[120px] max-h-[calc(100vh-140px)] overflow-y-auto pr-4 pb-10 scrollbar-thin scrollbar-thumb-[#D4AF37]/30 scrollbar-track-transparent">
               
@@ -249,7 +352,6 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                 )}
               </div>
 
-              {/* Accordion: Sort */}
               <FilterAccordion title="Sort Collection" defaultOpen={true}>
                 <div className="flex flex-col gap-4">
                   {[
@@ -272,24 +374,31 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                 </div>
               </FilterAccordion>
 
-              {/* Accordion: Price */}
               <FilterAccordion title="Price Point" defaultOpen={false}>
-                <div className="space-y-4">
-                  {pricesList.map(p => (
-                    <label key={p.id} className="flex items-center gap-4 cursor-pointer group">
-                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedPrices.includes(p.id) ? 'border-[#D4AF37] bg-[#D4AF37]' : 'border-[#1A0008]/20 group-hover:border-[#D4AF37]/50'}`}>
-                        <Check size={10} className={`text-white transition-opacity ${selectedPrices.includes(p.id) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
-                      </div>
-                      <span className={`text-[13px] transition-colors duration-300 ${selectedPrices.includes(p.id) ? 'text-[#1A0008] font-medium' : 'text-[#1A0008]/60 group-hover:text-[#1A0008]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {p.label}
-                      </span>
-                      <input type="checkbox" className="hidden" checked={selectedPrices.includes(p.id)} onChange={() => toggleFilter(setSelectedPrices, p.id)} />
-                    </label>
-                  ))}
+                <div className="pt-2 pb-4 px-1">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-xs text-[#1A0008]/60 font-medium font-sans">₹{globalMinPrice.toLocaleString('en-IN')}</span>
+                    <span className="text-xs text-[#1A0008] font-bold font-sans">
+                      ₹{(selectedMaxPrice !== null ? selectedMaxPrice : globalMaxPrice).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <input 
+                    type="range" 
+                    min={globalMinPrice} 
+                    max={globalMaxPrice}
+                    step={100}
+                    value={selectedMaxPrice !== null ? selectedMaxPrice : globalMaxPrice}
+                    onChange={(e) => setSelectedMaxPrice(Number(e.target.value))}
+                    className="w-full h-1 bg-[#D4AF37]/30 rounded-lg appearance-none cursor-pointer focus:outline-none"
+                    style={{ accentColor: '#1A0008' }}
+                  />
+                  <div className="flex justify-between items-center mt-3">
+                    <span className="text-[9px] text-[#1A0008]/40 uppercase tracking-widest font-bold">Min</span>
+                    <span className="text-[9px] text-[#1A0008]/40 uppercase tracking-widest font-bold">Max</span>
+                  </div>
                 </div>
               </FilterAccordion>
 
-              {/* Accordion: Size */}
               <FilterAccordion title="Size" defaultOpen={false}>
                 <div className="flex flex-wrap gap-2">
                   {sizesList.map(s => (
@@ -301,38 +410,52 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                 </div>
               </FilterAccordion>
 
-              {/* Accordion: Fabric */}
-              <FilterAccordion title="Fabric" defaultOpen={false}>
-                <div className="space-y-4">
-                  {fabricsList.map(f => (
-                    <label key={f} className="flex items-center gap-4 cursor-pointer group">
-                      <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedFabrics.includes(f) ? 'border-[#D4AF37] bg-[#D4AF37]' : 'border-[#1A0008]/20 group-hover:border-[#D4AF37]/50'}`}>
-                        <Check size={10} className={`text-white transition-opacity ${selectedFabrics.includes(f) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
-                      </div>
-                      <span className={`text-[13px] transition-colors duration-300 ${selectedFabrics.includes(f) ? 'text-[#1A0008] font-medium' : 'text-[#1A0008]/60 group-hover:text-[#1A0008]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {f}
-                      </span>
-                      <input type="checkbox" className="hidden" checked={selectedFabrics.includes(f)} onChange={() => toggleFilter(setSelectedFabrics, f)} />
-                    </label>
-                  ))}
-                </div>
-              </FilterAccordion>
+              {fabricsList.length > 0 && (
+                <FilterAccordion title="Fabric" defaultOpen={false}>
+                  <div className="space-y-4">
+                    {fabricsList.map(f => (
+                      <label key={f} className="flex items-center gap-4 cursor-pointer group">
+                        <div className={`w-3.5 h-3.5 flex items-center justify-center transition-all duration-300 border ${selectedFabrics.includes(f) ? 'border-[#D4AF37] bg-[#D4AF37]' : 'border-[#1A0008]/20 group-hover:border-[#D4AF37]/50'}`}>
+                          <Check size={10} className={`text-white transition-opacity ${selectedFabrics.includes(f) ? 'opacity-100' : 'opacity-0'}`} strokeWidth={3} />
+                        </div>
+                        <span className={`text-[13px] transition-colors duration-300 ${selectedFabrics.includes(f) ? 'text-[#1A0008] font-medium' : 'text-[#1A0008]/60 group-hover:text-[#1A0008]'}`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                          {f}
+                        </span>
+                        <input type="checkbox" className="hidden" checked={selectedFabrics.includes(f)} onChange={() => toggleFilter(setSelectedFabrics, f)} />
+                      </label>
+                    ))}
+                  </div>
+                </FilterAccordion>
+              )}
 
-              {/* Accordion: Color */}
-              <FilterAccordion title="Color" defaultOpen={false}>
-                <div className="flex flex-wrap gap-3">
-                  {colorsList.map(c => {
-                    const isSelected = selectedColors.includes(c.name);
-                    return (
-                      <button key={c.name} onClick={() => toggleFilter(setSelectedColors, c.name)} title={c.name}
-                        className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all cursor-pointer ${isSelected ? 'border-gray-400 scale-110 shadow-md' : 'border-gray-200 hover:border-gray-300'}`}
-                        style={{ backgroundColor: c.hex }}>
-                        {isSelected && <Check size={12} className={c.name === 'White' || c.name === 'Yellow' ? 'text-black' : 'text-white'} />}
-                      </button>
-                    );
-                  })}
-                </div>
-              </FilterAccordion>
+              {colorsList.length > 0 && (
+                <FilterAccordion title="Color" defaultOpen={false}>
+                  <div className="flex flex-wrap gap-3">
+                    {colorsList.map(c => {
+                      const isSelected = selectedColors.includes(c);
+                      const baseColor = baseColors.find(bc => bc.name.toLowerCase() === c.toLowerCase());
+                      
+                      if (baseColor) {
+                        return (
+                          <button key={c} onClick={() => toggleFilter(setSelectedColors, c)} title={c}
+                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all cursor-pointer ${isSelected ? 'border-gray-400 scale-110 shadow-md' : 'border-[#1A0008]/10 hover:border-gray-300'}`}
+                            style={{ backgroundColor: baseColor.hex }}>
+                            {isSelected && <Check size={12} className={baseColor.name === 'White' || baseColor.name === 'Yellow' || baseColor.name === 'Ivory' ? 'text-black' : 'text-white'} />}
+                          </button>
+                        );
+                      } else {
+                        // Custom color tag
+                        return (
+                          <button key={c} onClick={() => toggleFilter(setSelectedColors, c)}
+                            className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${isSelected ? 'border-[#1A0008] bg-[#1A0008] text-white' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
+                            {c}
+                          </button>
+                        );
+                      }
+                    })}
+                  </div>
+                </FilterAccordion>
+              )}
 
               {/* Accordion: Occasion */}
               <FilterAccordion title="Occasion" defaultOpen={false}>
@@ -383,7 +506,23 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
             </div>
 
             <AnimatePresence mode="wait">
-              {filteredProducts.length === 0 ? (
+              {loading ? (
+                <motion.div
+                  key="skeleton"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16"
+                >
+                  {[1, 2, 3, 4, 5, 6].map(i => (
+                    <div key={i} className="flex flex-col animate-pulse">
+                      <div className="relative aspect-[4/5] bg-[#E8DDD0]/50 rounded-2xl mb-5 border border-[#1A0008]/5"></div>
+                      <div className="h-6 bg-[#E8DDD0]/50 rounded w-3/4 mb-2 mt-2"></div>
+                      <div className="h-4 bg-[#E8DDD0]/50 rounded w-1/3 mb-1"></div>
+                    </div>
+                  ))}
+                </motion.div>
+              ) : filteredProducts.length === 0 ? (
                 <motion.div 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

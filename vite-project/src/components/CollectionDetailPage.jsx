@@ -39,19 +39,19 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
   const [selectedNecks, setSelectedNecks] = useState([]);
 
   const [collection, setCollection] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
     const load = () => {
       const allCols = getCollections();
-      const col = allCols.find(c => c.id === slug);
+      const col = allCols.find(c => (c.id || '').toLowerCase() === (slug || '').toLowerCase());
       setCollection(col || null);
+      setAllProducts(getAllProducts());
     };
     load();
     window.addEventListener('admin-data-updated', load);
     return () => window.removeEventListener('admin-data-updated', load);
   }, [slug]);
-
-  const allProducts = useMemo(() => getAllProducts(), []);
 
   const products = useMemo(() => {
     if (!collection) return [];
@@ -196,6 +196,54 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
   const activeFilterCount = selectedBoutiques.length + selectedPrices.length + selectedCategories.length + selectedFabrics.length + selectedColors.length + selectedOccasions.length + selectedSizes.length + selectedPatterns.length + selectedStyles.length + selectedSleeves.length + selectedNecks.length;
 
   if (!collection) {
+    if (getCollections().length === 0) {
+      return (
+        <div className="min-h-screen bg-[#FAF9F6] mt-[80px] md:mt-[110px] pb-16 overflow-hidden">
+          {/* Hero Skeleton */}
+          <div className="relative w-full h-auto min-h-0 md:h-[70vh] md:min-h-[450px] bg-[#FAF9F6] overflow-hidden flex items-center justify-center border-b border-gray-200 py-10 md:py-0">
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 md:gap-12 w-full max-w-7xl px-5 sm:px-8">
+              <div className="w-full md:w-1/2 flex justify-center md:justify-end">
+                <div className="relative w-44 h-60 sm:w-52 sm:h-72 md:w-[350px] md:h-[450px] bg-gray-200 animate-pulse rounded-[120px] sm:rounded-[140px] md:rounded-[200px] shadow-sm"></div>
+              </div>
+              <div className="w-full md:w-1/2 text-center md:text-left flex flex-col items-center md:items-start">
+                <div className="w-24 h-2 bg-gray-200 animate-pulse mb-6"></div>
+                <div className="w-64 h-12 md:h-16 bg-gray-200 animate-pulse mb-4"></div>
+                <div className="w-48 h-8 md:h-10 bg-gray-200 animate-pulse mb-6"></div>
+                <div className="w-full max-w-md space-y-2">
+                  <div className="w-full h-3 bg-gray-200 animate-pulse"></div>
+                  <div className="w-5/6 h-3 bg-gray-200 animate-pulse"></div>
+                  <div className="w-4/6 h-3 bg-gray-200 animate-pulse"></div>
+                </div>
+                <div className="w-32 h-4 bg-gray-200 animate-pulse mt-8 md:mt-10"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Grid Skeleton */}
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-4 md:px-8 py-16 flex items-start gap-6 md:gap-8">
+            <div className="hidden md:block w-[280px] flex-shrink-0">
+              <div className="w-full h-8 bg-gray-200 animate-pulse mb-6"></div>
+              {[1, 2, 3, 4, 5].map(i => (
+                <div key={i} className="w-full h-12 bg-gray-200 animate-pulse mb-4 rounded-sm"></div>
+              ))}
+            </div>
+            <div className="flex-1 w-full min-w-0">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 sm:gap-x-4 md:gap-x-8 gap-y-8 sm:gap-y-12 w-full px-2 sm:px-4 md:px-0">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                  <div key={i} className="flex flex-col w-full group">
+                    <div className="w-full aspect-[3/4] rounded-[16px] bg-gray-200 animate-pulse mb-4"></div>
+                    <div className="w-3/4 h-4 bg-gray-200 animate-pulse mb-2"></div>
+                    <div className="w-1/4 h-3 bg-gray-200 animate-pulse mb-2"></div>
+                    <div className="w-1/2 h-2 bg-gray-200 animate-pulse mt-auto"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center mt-[80px] md:mt-[110px]">
         <div className="text-center">
@@ -467,8 +515,13 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 sm:gap-x-4 md:gap-x-8 gap-y-8 sm:gap-y-12 py-6 md:py-8 w-full px-2 sm:px-4 md:px-8">
               {filteredProducts.map((product) => {
-                const originalPriceNum = Math.round(product.priceNum * 1.4);
-                const originalPriceStr = formatPrice(originalPriceNum);
+                const hasCustomOriginalPrice = !!product.originalPrice;
+                const originalPriceNum = hasCustomOriginalPrice 
+                  ? parseInt(product.originalPrice.replace(/[^\d]/g, ''), 10) 
+                  : Math.round(product.priceNum * 1.4);
+                const originalPriceStr = hasCustomOriginalPrice 
+                  ? product.originalPrice 
+                  : formatPrice(originalPriceNum);
                 
                 return (
                   <motion.div 

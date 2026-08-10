@@ -11,7 +11,7 @@ export default function SupportAdmin() {
   const [filterStatus, setFilterStatus] = useState('all');
 
   useEffect(() => {
-    const load = () => setTickets(getSupportTickets());
+    const load = () => setTickets([...getSupportTickets()]);
     load();
     syncSupportTickets(); // Fetch latest from DB
     window.addEventListener('admin-data-updated', load);
@@ -20,7 +20,7 @@ export default function SupportAdmin() {
 
   const updateStatus = async (id, newStatus) => {
     await updateSupportTicketStatus(id, newStatus);
-    setTickets(getSupportTickets());
+    setTickets([...getSupportTickets()]);
   };
 
   const filteredTickets = tickets.filter(t => {

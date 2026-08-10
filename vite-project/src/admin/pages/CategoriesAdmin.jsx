@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, Edit2, ToggleLeft, ToggleRight } from 'lucide-react';
-import { getCategories, saveCategories, notifyWebsite } from '../../utils/adminStore';
+import { getCategories, saveCategories, deleteCategory, notifyWebsite } from '../../utils/adminStore';
 
 export default function CategoriesAdmin({ setActivePage }) {
   const [categories, setCategories] = useState([]);
   const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
-    setCategories(getCategories());
+    const handleUpdate = () => setCategories([...getCategories()]);
+    handleUpdate();
+    window.addEventListener('admin-data-updated', handleUpdate);
+    return () => window.removeEventListener('admin-data-updated', handleUpdate);
   }, []);
 
   const openAdd = () => {
@@ -33,9 +36,9 @@ export default function CategoriesAdmin({ setActivePage }) {
   };
 
   const handleDelete = (id) => {
+    deleteCategory(id);
     const nextCategories = categories.filter(c => c.id !== id);
     setCategories(nextCategories);
-    triggerSave(nextCategories);
     setDeleteId(null);
   };
 

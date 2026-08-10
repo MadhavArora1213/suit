@@ -16,6 +16,8 @@ const navItems = [
   { id: 'collections',  label: 'Collections',  icon: Grid },
   { id: 'collection-tags', label: 'Collection Tags', icon: Tag },
   { id: 'categories',   label: 'Categories',   icon: FolderOpen },
+  { id: 'reviews',      label: 'Reviews',      icon: Star },
+  { id: 'coupons',      label: 'Coupons',      icon: Tag },
   { id: 'support',      label: 'Support Tickets', icon: MessageSquare },
   { id: 'settings',     label: 'Settings',     icon: Settings },
 ];

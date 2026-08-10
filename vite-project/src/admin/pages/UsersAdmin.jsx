@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Search, Mail, Phone, Calendar, User as UserIcon, ShieldAlert } from 'lucide-react';
-import { collection, query, getDocs } from 'firebase/firestore';
+import { collection, query, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 export default function UsersAdmin() {
@@ -10,32 +10,29 @@ export default function UsersAdmin() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        if (!db) {
-          setLoading(false);
-          return;
-        }
-        const q = query(collection(db, 'users'));
-        const querySnapshot = await getDocs(q);
-        const fetchedUsers = [];
-        querySnapshot.forEach((doc) => {
-          fetchedUsers.push({ id: doc.id, ...doc.data() });
-        });
-        // Sort client-side to avoid Firestore orderBy issues
-        fetchedUsers.sort((a, b) => {
-          const aTime = a.createdAt?.seconds || 0;
-          const bTime = b.createdAt?.seconds || 0;
-          return bTime - aTime;
-        });
-        setUsers(fetchedUsers);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsers();
+    if (!db) {
+      setLoading(false);
+      return;
+    }
+    const q = query(collection(db, 'users'));
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      const fetchedUsers = [];
+      querySnapshot.forEach((doc) => {
+        fetchedUsers.push({ id: doc.id, ...doc.data() });
+      });
+      // Sort client-side to avoid Firestore orderBy issues
+      fetchedUsers.sort((a, b) => {
+        const aTime = a.createdAt?.seconds || 0;
+        const bTime = b.createdAt?.seconds || 0;
+        return bTime - aTime;
+      });
+      setUsers(fetchedUsers);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching users:", error);
+      setLoading(false);
+    });
+    return () => unsub();
   }, []);
 
   const filteredUsers = users.filter(user => 

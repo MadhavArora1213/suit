@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import { db } from '../firebase';
-import { collection, query, where, getDocs, doc, setDoc } from 'firebase/firestore';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, Sparkles } from 'lucide-react';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import { signOut } from 'firebase/auth';
 
 const P = '#111111';
 
@@ -15,43 +18,27 @@ export default function AdminLogin({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    if (!auth) {
+      setError('Firebase Auth not initialized.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      if (!db) {
-        setError('Database connection not established.');
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      
+      const adminDoc = await getDoc(doc(db, 'admins', userCred.user.email.toLowerCase()));
+      if (!adminDoc.exists()) {
+        await signOut(auth);
+        setError('Access denied. You are not authorized as an admin.');
         setLoading(false);
         return;
-      }
-
-      // Seed the admin collection with the requested credentials so it definitely exists
-      const adminDocRef = doc(db, 'admins', 'madhavarora');
-      await setDoc(adminDocRef, {
-        email: 'madhavarora132005@gmail.com',
-        password: 'admin123',
-        role: 'superadmin'
-      }, { merge: true });
-
-      // Check credentials against the admins collection
-      const adminsRef = collection(db, 'admins');
-      const q = query(adminsRef, where('email', '==', email), where('password', '==', password));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        onLogin(); // Successful login
-      } else {
-        setError('Invalid admin credentials.');
-        setLoading(false);
       }
     } catch (err) {
-      console.error(err);
-      
-      // Fallback: If Firestore rules block us because we aren't using Firebase Auth,
-      // just let them in with the hardcoded credentials so they don't get stuck.
-      if (email === 'madhavarora132005@gmail.com' && password === 'admin123') {
-        onLogin();
-        return;
-      }
-
-      setError(err.message || 'Missing or insufficient permissions in Firebase.');
+      setError('Invalid email or password. Please try again.');
       setLoading(false);
     }
   };
@@ -104,7 +91,7 @@ export default function AdminLogin({ onLogin }) {
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="madhavarora132005@gmail.com"
+                  placeholder="admin@gurnaaz.com"
                   required
                   className="w-full pl-10 pr-4 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm text-[#1A1A1A] placeholder-[#A8BCBE] border border-[#E8DDD0] bg-[#FAF9F6] focus:outline-none transition-all"
                   onFocus={e => { e.target.style.borderColor = P; e.target.style.boxShadow = `0 0 0 3px rgba(17,17,17,0.12)`; e.target.style.background = '#fff'; }}
