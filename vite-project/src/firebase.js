@@ -86,6 +86,10 @@ function initFirebase() {
 initFirebase();
 
 export async function uploadImageToFirebase(base64String, fileName) {
+  if (!base64String) return '';
+  if (base64String.startsWith('http') || base64String.startsWith('/uploads')) return base64String;
+
+  // Save to local public/uploads folder via Vite API plugin
   try {
     const response = await fetch('/api/upload', {
       method: 'POST',
@@ -106,7 +110,6 @@ export async function uploadImageToFirebase(base64String, fileName) {
       }
     }
     
-    // If local API fails but doesn't throw, fallback to base64
     console.warn("Local API upload failed, falling back to base64");
     return base64String;
   } catch (error) {

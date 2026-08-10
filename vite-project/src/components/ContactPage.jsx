@@ -35,8 +35,8 @@ export default function ContactPage({ setView, user }) {
     if (user) {
       setFormData(prev => ({
         ...prev,
-        name: user.name || user.displayName || prev.name,
-        email: user.email || prev.email
+        name: user.name || user.displayName || prev.name || '',
+        email: user.email || prev.email || ''
       }));
     }
   }, [user]);
@@ -350,20 +350,22 @@ export default function ContactPage({ setView, user }) {
                   {['Full Name', 'Email Address'].map((placeholder) => {
                     const isEmail = placeholder.includes('Email');
                     const value = isEmail ? formData.email : formData.name;
-                    const isActive = focused === placeholder || value.trim() !== '';
+                    const isActive = focused === placeholder || (value && value.trim() !== '');
+                    const isReadOnly = !!user && (isEmail ? !!user.email : !!(user.name || user.displayName));
+                    
                     return (
                       <div key={placeholder} className="relative">
                         <input
                           required
                           type={isEmail ? 'email' : 'text'}
                           placeholder=" "
-                          value={value}
+                          value={value || ''}
                           onChange={(e) => setFormData({ ...formData, [isEmail ? 'email' : 'name']: e.target.value })}
-                          onFocus={() => !user && setFocused(placeholder)}
-                          onBlur={() => !user && setFocused(null)}
-                          className={`w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors peer ${user ? 'opacity-70 cursor-not-allowed' : ''}`}
-                          style={{ borderColor: (focused === placeholder && !user) ? '#D4AF37' : 'rgba(255,255,255,0.12)' }}
-                          readOnly={!!user}
+                          onFocus={() => !isReadOnly && setFocused(placeholder)}
+                          onBlur={() => !isReadOnly && setFocused(null)}
+                          className={`w-full bg-transparent border-b py-3 text-sm text-white focus:outline-none transition-colors peer ${isReadOnly ? 'opacity-70 cursor-not-allowed' : ''}`}
+                          style={{ borderColor: (focused === placeholder && !isReadOnly) ? '#D4AF37' : 'rgba(255,255,255,0.12)' }}
+                          readOnly={isReadOnly}
                         />
                         <label
                           className="absolute left-0 text-xs transition-all duration-300 pointer-events-none"
@@ -371,7 +373,7 @@ export default function ContactPage({ setView, user }) {
                             top: isActive ? '-16px' : '12px',
                             fontSize: isActive ? '9px' : '13px',
                             letterSpacing: isActive ? '0.2em' : '0',
-                            color: (focused === placeholder && !user) ? '#D4AF37' : 'rgba(255,255,255,0.35)',
+                            color: (focused === placeholder && !isReadOnly) ? '#D4AF37' : 'rgba(255,255,255,0.35)',
                             textTransform: isActive ? 'uppercase' : 'none',
                             fontWeight: isActive ? '700' : '400',
                           }}

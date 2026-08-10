@@ -34,12 +34,12 @@ export default function uploadApiPlugin() {
             return;
           }
 
-          // Strip off the data:image/...;base64, prefix
-          const matches = imageBase64.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-          if (!matches || matches.length !== 3) {
+          // Strip off the data:image/...;base64, prefix safely
+          const base64Parts = imageBase64.split(';base64,');
+          if (base64Parts.length !== 2) {
             throw new Error('Invalid base64 format');
           }
-          const imageBuffer = Buffer.from(matches[2], 'base64');
+          const imageBuffer = Buffer.from(base64Parts[1], 'base64');
           
           // Generate safe and unique filename
           const ext = path.extname(filename) || '.jpg';
