@@ -157,7 +157,6 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
                     </div>
                 </div>
 
-<<<<<<< HEAD
                 <div className="flex gap-2">
                   <div className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between">
                     <span className="text-[8px] text-gray-400 uppercase tracking-widest">Code</span>
@@ -167,9 +166,6 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
                     {copied ? <span className="text-sm font-bold">✓</span> : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>}
                   </button>
                 </div>
-=======
-
->>>>>>> aa180a84696430bc746da8dbb638cb663024ea8a
               </div>
             </div>
             
