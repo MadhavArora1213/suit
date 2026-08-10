@@ -86,13 +86,15 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
           }}
         />
 
-        {/* Absolute Badges */}
-        <div className="absolute top-4 left-4 flex flex-col gap-2 z-10" style={{ transform: "translateZ(20px)" }}>
-          {product.badge && (
-            <span className="bg-[#FAF9F6]/95 backdrop-blur-sm text-[#1A0008] text-[9px] font-semibold tracking-[0.15em] uppercase px-3 py-1.5 rounded-md border border-[#D4AF37]/20 shadow-sm">{product.badge}</span>
-          )}
-        </div>
-        
+        {/* Diagonal Premium Sash */}
+        {product.badge && (
+          <div className="absolute top-0 left-0 overflow-hidden w-28 h-28 z-20 rounded-tl-2xl pointer-events-none" style={{ transform: "translateZ(20px)" }}>
+            <div className="absolute top-5 -left-8 w-[150px] bg-gradient-to-r from-[#8B1A1A] to-[#601010] text-[#FAF9F6] text-[8px] font-black tracking-[0.25em] uppercase py-1.5 text-center shadow-lg border-y border-[#D4AF37]/40" style={{ transform: "rotate(-45deg)" }}>
+              {product.badge}
+            </div>
+          </div>
+        )}
+
         <button onClick={(e) => { e.stopPropagation(); toggleFavorite(product.id); }}
           style={{ transform: "translateZ(30px)" }}
           className={`absolute top-4 right-4 p-2.5 rounded-full transition-all duration-300 z-20 shadow-md ${
@@ -102,7 +104,7 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
         </button>
 
         {/* Hover Action Sheet */}
-        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-[0.25,1,0.5,1] flex gap-2" style={{ transform: "translateZ(40px)" }}>
+        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-[150%] group-hover:translate-y-0 transition-transform duration-700 ease-[0.25,1,0.5,1] flex gap-2">
           <button onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setView('product-details'); }}
             className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#FAF9F6]/95 backdrop-blur-md text-[#1A0008] hover:bg-[#1A0008] hover:text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg border border-[#D4AF37]/20">
             <Eye size={12} /> View
