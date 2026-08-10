@@ -33,29 +33,21 @@ export const initializeStore = async () => {
   if (!isFirebaseConfigured()) return;
 
   try {
-    const products = await fetchProductsFromFirestore();
-    memoryStore.products = products || [];
+    const safeFetch = async (fetchPromise, fallback = []) => {
+      try { return (await fetchPromise) || fallback; }
+      catch (e) { console.warn("Firestore fetch warning:", e.message); return fallback; }
+    };
 
-    const boutiques = await fetchCollectionFromFirestore('boutiques');
-    memoryStore.boutiques = boutiques || [];
-
-    const categories = await fetchCollectionFromFirestore('categories');
-    memoryStore.categories = categories || [];
-
-    const collections = await fetchCollectionFromFirestore('collections');
-    memoryStore.collections = collections || [];
-
-    const collectionTags = await fetchCollectionFromFirestore('collectionTags');
-    memoryStore.collectionTags = collectionTags || [];
-
-    const coupons = await fetchCollectionFromFirestore('coupons');
-    memoryStore.coupons = coupons || [];
-
-    const festiveOffers = await fetchCollectionFromFirestore('festiveOffers');
-    memoryStore.festiveOffers = festiveOffers || [];
+    memoryStore.products = await safeFetch(fetchProductsFromFirestore());
+    memoryStore.boutiques = await safeFetch(fetchCollectionFromFirestore('boutiques'));
+    memoryStore.categories = await safeFetch(fetchCollectionFromFirestore('categories'));
+    memoryStore.collections = await safeFetch(fetchCollectionFromFirestore('collections'));
+    memoryStore.collectionTags = await safeFetch(fetchCollectionFromFirestore('collectionTags'));
+    memoryStore.coupons = await safeFetch(fetchCollectionFromFirestore('coupons'));
+    memoryStore.festiveOffers = await safeFetch(fetchCollectionFromFirestore('festiveOffers'));
 
     // Initialize reviews (group by productId if they are flat in Firestore)
-    const reviews = await fetchCollectionFromFirestore('reviews');
+    const reviews = await safeFetch(fetchCollectionFromFirestore('reviews'));
     memoryStore.reviews = {};
     if (reviews && reviews.length > 0) {
       reviews.forEach(r => {
@@ -66,16 +58,13 @@ export const initializeStore = async () => {
       });
     }
 
-    const orders = await fetchCollectionFromFirestore('orders');
-    memoryStore.orders = orders || [];
-
-    const contacts = await fetchCollectionFromFirestore('contacts');
-    memoryStore.support = contacts || [];
+    memoryStore.orders = await safeFetch(fetchCollectionFromFirestore('orders'));
+    memoryStore.support = await safeFetch(fetchCollectionFromFirestore('contacts'));
 
     notifyWebsite();
 
   } catch (err) {
-    console.error("Failed to initialize store:", err);
+    console.error("Critical failure initializing store:", err);
   }
 };
 
