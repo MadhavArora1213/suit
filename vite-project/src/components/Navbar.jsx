@@ -96,15 +96,11 @@ export default function Navbar({
           {[...Array(6)].map((_, i) => (
             <div key={i} className="flex gap-8 items-center">
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                🔥 FLAT 40% OFF : THE ULTIMATE RAKHI SALE IS LIVE
+                🔥 UP TO 50% OFF : THE ULTIMATE RAKHI SALE IS LIVE
               </span>
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#FAF9F6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                SECURE YOUR SIGNATURE LOOK BEFORE IT'S GONE
-              </span>
-              <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
-              <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                COMPLIMENTARY WORLDWIDE SHIPPING OVER $200
+                NEW ARRIVALS EVERY WEEK
               </span>
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
             </div>

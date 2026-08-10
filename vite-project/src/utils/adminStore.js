@@ -126,6 +126,16 @@ export const saveCategories = (arr) => {
     arr.forEach(c => saveDocumentToFirestore('categories', c.id.toString(), c));
 };
 
+export const deleteCategory = async (id) => {
+  memoryStore.categories = memoryStore.categories.filter(c => c.id !== id);
+  if (isFirebaseConfigured()) {
+    import('firebase/firestore').then(({ doc, deleteDoc }) => {
+      deleteDoc(doc(db, 'categories', id.toString())).catch(console.error);
+    });
+  }
+  notifyWebsite();
+};
+
 export const saveCollections = (arr) => {
     memoryStore.collections = arr;
     arr.forEach(c => saveDocumentToFirestore('collections', c.id.toString(), c));

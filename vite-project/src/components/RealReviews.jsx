@@ -52,7 +52,7 @@ const COLUMNS = [
 const ReviewCard = ({ item }) => {
   return (
     <div 
-      className={`relative w-full md:w-[220px] rounded-3xl overflow-hidden shrink-0 group bg-[#F0EBE2] shadow-sm cursor-pointer transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(26,0,8,0.1)] ring-1 ring-[#1A0008]/10
+      className={`relative w-full rounded-3xl overflow-hidden group bg-[#F0EBE2] shadow-sm cursor-pointer transition-all duration-700 ease-out hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(26,0,8,0.1)] ring-1 ring-[#1A0008]/10
         ${item.isTall ? 'h-[240px] md:h-[340px]' : 'h-[160px] md:h-[210px]'}`}
     >
       {/* Background Image */}
@@ -63,7 +63,7 @@ const ReviewCard = ({ item }) => {
       />
       
       {/* Light Hover Overlay */}
-      <div className="absolute inset-0 bg-[#FAF9F6]/0 group-hover:bg-[#FAF9F6]/80 backdrop-blur-[2px] transition-all duration-500 ease-out" />
+      <div className="absolute inset-0 bg-[#FAF9F6]/80 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out" />
 
       {/* Hover Quote Text */}
       <div className="absolute inset-0 p-5 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 ease-out z-20">
@@ -92,28 +92,6 @@ const ReviewCard = ({ item }) => {
 };
 
 export default function RealReviews() {
-  const scrollRef = useRef(null);
-  const [isDown, setIsDown] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const handleMouseDown = (e) => {
-    setIsDown(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-  };
-  
-  const handleMouseLeave = () => setIsDown(false);
-  const handleMouseUp = () => setIsDown(false);
-  
-  const handleMouseMove = (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Fast scroll speed
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
-
   return (
     <section className="relative overflow-hidden py-24 md:py-36 border-y border-[#1A0008]/5 bg-[#FAF9F6]">
       
@@ -162,29 +140,22 @@ export default function RealReviews() {
 
       {/* ═══ Staggered Column Layout ═══ */}
       <div 
-        ref={scrollRef}
-        onMouseDown={handleMouseDown}
-        onMouseLeave={handleMouseLeave}
-        onMouseUp={handleMouseUp}
-        onMouseMove={handleMouseMove}
-        className={`relative z-10 px-4 md:pl-12 md:pr-12 pb-16 grid grid-cols-2 md:flex items-start gap-4 md:gap-6 pt-4 md:overflow-x-auto md:no-scrollbar md:cursor-grab md:active:cursor-grabbing ${isDown ? 'md:snap-none' : 'md:snap-x md:snap-mandatory'}`}
+        className="relative z-10 px-4 md:px-12 pb-16 grid grid-cols-2 md:grid-cols-6 items-start gap-3 md:gap-4 lg:gap-6 pt-4"
       >
         {COLUMNS.map((col, i) => (
           <motion.div
             key={col.id}
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.7, delay: i * 0.1, ease: "easeOut" }}
-            className={`flex flex-col gap-4 md:gap-6 md:snap-center shrink-0 w-full md:w-auto ${col.offset}`}
+            className={`flex flex-col gap-4 md:gap-6 w-full ${col.offset}`}
           >
             {col.items.map((item) => (
               <ReviewCard key={item.id} item={item} />
             ))}
           </motion.div>
         ))}
-        {/* Extra padding right for scroll end */}
-        <div className="w-24 shrink-0" />
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `

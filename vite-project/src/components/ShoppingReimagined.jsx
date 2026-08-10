@@ -1,17 +1,35 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-
-const CRAFTS = [
-  { id: 'intro', title: 'Signature Collections', subtitle: 'Shop by Fabric', type: 'intro' },
-  { id: 'banarasi', title: 'The Banarasi Weave', subtitle: 'Royal, heavy silk with intricate zari work originating from Varanasi.', image: '/banarasi_suit.png' },
-  { id: 'chikankari', title: 'Pure Chikankari', subtitle: 'Delicate and artful hand embroidery from the heart of Lucknow.', image: '/chikankari_suit.png' },
-  { id: 'pakistani', title: 'Pakistani Silhouettes', subtitle: 'Long, flowing kameez paired with wide trousers for a dramatic look.', image: '/pakistani_suit.png' },
-  { id: 'patiala', title: 'Classic Patiala', subtitle: 'Voluminous pleats and a short kurti for the traditional Punjabi drape.', image: '/patiala_suit.png' },
-  { id: 'cotton', title: 'Breathable Cottons', subtitle: 'Minimalist, comfortable ethnic wear tailored for everyday luxury.', image: '/cotton_suit.png' }
-];
+import { getCategories } from '../utils/adminStore';
 
 export default function ShoppingReimagined({ setView, setSelectedCategory }) {
   const targetRef = useRef(null);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchAndSetCategories = () => {
+      const activeCats = getCategories()
+        .filter(c => c.active !== false)
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+      setCategories(activeCats);
+    };
+    
+    fetchAndSetCategories();
+    window.addEventListener('admin-data-updated', fetchAndSetCategories);
+    return () => window.removeEventListener('admin-data-updated', fetchAndSetCategories);
+  }, []);
+
+  // Construct dynamic CRAFTS array
+  const dynamicCrafts = [
+    { id: 'intro', title: 'Signature Collections', subtitle: 'Shop by Fabric', type: 'intro' },
+    ...categories.map(cat => ({
+      id: cat.id || cat.name,
+      title: cat.name,
+      subtitle: cat.tagline || 'Explore our exclusive collection.',
+      image: cat.image || '/placeholder_suit.png',
+      type: 'craft'
+    }))
+  ];
   
   // The section is 300vh tall to allow for plenty of scrolling time
   const { scrollYProgress } = useScroll({
@@ -37,7 +55,7 @@ export default function ShoppingReimagined({ setView, setSelectedCategory }) {
         
         <motion.div style={{ x }} className="flex gap-8 md:gap-16 px-6 md:px-[10vw]">
           
-          {CRAFTS.map((craft, idx) => {
+          {dynamicCrafts.map((craft, idx) => {
             
             // Intro Slide
             if (craft.type === 'intro') {
@@ -91,7 +109,7 @@ export default function ShoppingReimagined({ setView, setSelectedCategory }) {
                   </p>
                   <button 
                     onClick={() => {
-                      if (setSelectedCategory) setSelectedCategory(craft.title.includes('Banarasi') ? 'Banarasi' : craft.title.includes('Chikankari') ? 'Chikankari' : craft.title.includes('Pakistani') ? 'Pakistani' : craft.title.includes('Patiala') ? 'Patiala' : 'All');
+                      if (setSelectedCategory) setSelectedCategory(craft.title);
                       if (setView) setView('category');
                     }} 
                     className="inline-flex items-center gap-2 text-white/70 hover:text-white uppercase tracking-widest text-[10px] font-bold transition-colors cursor-pointer w-fit"

@@ -378,6 +378,7 @@ function AppContent() {
       
       <Suspense fallback={<div className="h-screen w-full flex items-center justify-center pt-[110px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1A0008]"></div></div>}>
         <Routes>
+          {/* 
           <Route path="/sell" element={
             <>
               <Hero addToCart={addToCart} />
@@ -393,6 +394,7 @@ function AppContent() {
               <Newsletter />
             </>
           } />
+          */}
 
           <Route path="/shop" element={<CategoryPage categoryName="All" {...commonProps} />} />
           <Route path="/category/:categorySlug" element={<CategoryPageWrapper {...commonProps} />} />

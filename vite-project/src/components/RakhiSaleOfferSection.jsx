@@ -89,7 +89,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
           className="flex items-center gap-10 font-bold text-xs uppercase tracking-[0.25em]"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
-          <span>✨ RAKSHA BANDHAN FESTIVAL SALE • FLAT 50% OFF CODE "RAKHI50"</span>
+          <span>✨ RAKSHA BANDHAN FESTIVAL SALE • UP TO 50% OFF</span>
           <span>✦</span>
           <span>FREE 925 SILVER RAKHI WITH EVERY SUIT</span>
           <span>✦</span>
@@ -97,7 +97,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
           <span>✦</span>
           <span>COMPLIMENTARY EXPRESS WORLDWIDE DISPATCH</span>
           <span>✦</span>
-          <span>✨ RAKSHA BANDHAN FESTIVAL SALE • FLAT 50% OFF CODE "RAKHI50"</span>
+          <span>✨ RAKSHA BANDHAN FESTIVAL SALE • UP TO 50% OFF</span>
           <span>✦</span>
         </motion.div>
       </div>
@@ -160,7 +160,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
                 </div>
                 
                 <h3 className="text-5xl lg:text-6xl font-light leading-[1.05] mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                  Flat <span className="text-[#D4AF37] italic font-normal">50%</span> Off
+                  Up to <span className="text-[#D4AF37] italic font-normal">50%</span> Off
                 </h3>
                 
                 <p className="text-[13px] text-gray-200 font-light mb-8 leading-relaxed max-w-[90%] mx-auto">
@@ -190,15 +190,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
                     </div>
                 </div>
 
-                <div className="flex gap-2 w-full max-w-[280px]">
-                  <div className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between">
-                    <span className="text-[8px] text-gray-400 uppercase tracking-widest">Code</span>
-                    <span className="font-mono text-sm font-bold text-[#D4AF37]">RAKHI50</span>
-                  </div>
-                  <button onClick={handleCopyCode} className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-[#1A0008] hover:bg-[#D4AF37] transition-colors shrink-0">
-                    {copied ? <span className="text-sm font-bold">✓</span> : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>}
-                  </button>
-                </div>
+
               </div>
             </div>
             
