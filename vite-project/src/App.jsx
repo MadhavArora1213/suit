@@ -181,8 +181,11 @@ function AppContent() {
     } else {
       // Fallback for parameterized routes that should be handled directly via navigation
       console.warn("setView called with parameterized view:", viewName, "Consider using standard React Router links.");
-      if (viewName === 'category') navigate('/category/all');
-      if (viewName === 'seller-shop') navigate('/shops-and-boutiques');
+      setTimeout(() => {
+        const path = window.location.pathname;
+        if (viewName === 'category' && !path.includes('/category')) navigate('/category/all');
+        if (viewName === 'seller-shop' && !path.includes('/shop')) navigate('/shops-and-boutiques');
+      }, 50);
     }
   };
 

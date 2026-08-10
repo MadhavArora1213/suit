@@ -169,9 +169,9 @@ export default function Navbar({
                     <div className="w-full h-full flex gap-8 p-8 bg-white/60 rounded-xl relative z-10">
 
                       {/* Col 1: Shop By Category */}
-                      <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
+                      <div className="w-[35%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Shop by Category</span>
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-3 mt-2">
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-3 mt-2">
                           {navCategories.map((cat, i) => (
                             <a
                               key={`${cat.id || cat.name}-${i}`}
@@ -223,7 +223,7 @@ export default function Navbar({
 
                       {/* Col 3: Featured Image 1 */}
                       {col3 && (
-                      <div className="w-[32%] h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-4 shadow-lg" onClick={() => {
+                      <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-4 shadow-lg" onClick={() => {
                         if (setSelectedCollectionSlug) {
                           setSelectedCollectionSlug(col3.id);
                           setView('collection-detail');

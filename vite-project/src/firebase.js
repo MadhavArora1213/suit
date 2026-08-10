@@ -355,6 +355,7 @@ export async function saveProductToFirestore(productId, product) {
       igComments: product.igComments || '',
       videoUrl: product.videoUrl || '',
       reelUrl: product.reelUrl || '',
+      shippingType: product.shippingType || 'Calculate',
       fitOptions: product.fitOptions || ['Stitched', 'Unstitched'],
       sizes: product.sizes || [],
       occasions: product.occasions || [],

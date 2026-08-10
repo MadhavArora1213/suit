@@ -59,6 +59,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
     igComments: ep?.igComments || '',
     videoUrl: ep?.videoUrl || '',
     reelUrl: ep?.reelUrl || '',
+    shippingType: ep?.shippingType || 'Calculate',
   });
 
   const [selectedFits, setSelectedFits] = useState(ep?.fitOptions || ['Unstitched', 'Stitched']);
@@ -159,6 +160,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       care: selectedCare,
       stockQty,
       stock: totalStock,
+      shippingType: form.shippingType,
       image: finalMainImage,
       additionalImages: finalAdditionalImages,
       addedAt: ep?.addedAt || new Date().toISOString(),
@@ -228,6 +230,16 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 <div>
                   <Label>Weight (g)</Label>
                   <Input type="number" value={form.weight} onChange={e => update('weight', e.target.value)} placeholder="e.g. 500" />
+                </div>
+                <div>
+                  <Label required>Shipping Type</Label>
+                  <select value={form.shippingType} onChange={e => update('shippingType', e.target.value)}
+                    className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none appearance-none cursor-pointer transition-all"
+                    onFocus={e => { e.target.style.borderColor = P; }}
+                    onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }}>
+                    <option value="Calculate">Calculate at Checkout</option>
+                    <option value="Free">Free Shipping</option>
+                  </select>
                 </div>
                 <div>
                   <Label required>Boutique / Seller</Label>

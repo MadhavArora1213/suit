@@ -86,7 +86,6 @@ export default function BoutiquesPage({ setView, setSelectedBoutique }) {
   const handleBoutiqueClick = (name) => {
     if (setSelectedBoutique) {
       setSelectedBoutique(name);
-      setView('seller-shop');
     } else {
       window.location.href = `/shops-and-boutiques/${name.toLowerCase().replace(/ /g, '-')}`;
     }
