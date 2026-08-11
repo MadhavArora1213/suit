@@ -281,6 +281,8 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                   onFocus={e => { e.target.style.borderColor = P; }}
                   onBlur={e => { e.target.style.borderColor = '#E8DDD0'; }}>
                   <option value="">No Category</option>
+                  <option value="Suit Sets">Suit Sets</option>
+                  <option value="Kurta Sets">Kurta Sets</option>
                   {globalCategories.map(c => (
                     <option key={c.id} value={c.name}>{c.name}</option>
                   ))}
