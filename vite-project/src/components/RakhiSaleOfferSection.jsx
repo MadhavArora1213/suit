@@ -119,68 +119,49 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
               <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008] via-[#1A0008]/40 to-transparent opacity-90" />
               
               {/* Content overlay */}
-              <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end text-white z-20">
-                <div className="mb-4">
-                  <span className="bg-[#D4AF37] text-[#1A0008] text-[9px] font-black uppercase px-4 py-1.5 rounded-full tracking-[0.25em] shadow-lg">
+              <div className="absolute inset-0 p-5 sm:p-8 md:p-10 flex flex-col justify-end text-white z-20">
+                <div className="mb-3 sm:mb-4">
+                  <span className="bg-[#D4AF37] text-[#1A0008] text-[8px] sm:text-[9px] font-black uppercase px-3 sm:px-4 py-1 sm:py-1.5 rounded-full tracking-[0.2em] sm:tracking-[0.25em] shadow-lg">
                     Grand Campaign
                   </span>
                 </div>
                 
-                <h3 className="text-5xl lg:text-6xl font-light leading-[1.05] mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                <h3 className="text-4xl sm:text-5xl lg:text-6xl font-light leading-[1.05] mb-2 sm:mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                   Up to <span className="text-[#D4AF37] italic font-normal">50%</span> Off
                 </h3>
                 
-                <p className="text-[13px] text-gray-200 font-light mb-8 leading-relaxed max-w-[90%]">
+                <p className="text-[11px] sm:text-[13px] text-gray-200 font-light mb-6 sm:mb-8 leading-relaxed max-w-[100%] sm:max-w-[90%]">
                   Exclusive Rakhi bundles featuring premium Silk Suits & audio QR gift hampers.
                 </p>
 
                 {/* Minimalist Floating Timer */}
-                <div className="flex items-center justify-between gap-3 mb-8 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 shadow-inner">
+                <div className="flex items-center justify-between gap-1 sm:gap-3 mb-6 sm:mb-8 bg-white/10 backdrop-blur-md p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl border border-white/20 shadow-inner">
                     <div className="flex flex-col items-center flex-1">
-                      <span className="text-xl font-light text-white tabular-nums">{String(timeLeft.days).padStart(2, '0')}</span>
-                      <span className="text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-1">Days</span>
+                      <span className="text-base sm:text-xl font-light text-white tabular-nums">{String(timeLeft.days).padStart(2, '0')}</span>
+                      <span className="text-[6px] sm:text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-0.5 sm:mt-1">Days</span>
                     </div>
-                    <span className="text-white/30 text-xl font-light">:</span>
+                    <span className="text-white/30 text-base sm:text-xl font-light">:</span>
                     <div className="flex flex-col items-center flex-1">
-                      <span className="text-xl font-light text-white tabular-nums">{String(timeLeft.hours).padStart(2, '0')}</span>
-                      <span className="text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-1">Hrs</span>
+                      <span className="text-base sm:text-xl font-light text-white tabular-nums">{String(timeLeft.hours).padStart(2, '0')}</span>
+                      <span className="text-[6px] sm:text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-0.5 sm:mt-1">Hrs</span>
                     </div>
-                    <span className="text-white/30 text-xl font-light">:</span>
+                    <span className="text-white/30 text-base sm:text-xl font-light">:</span>
                     <div className="flex flex-col items-center flex-1">
-                      <span className="text-xl font-light text-white tabular-nums">{String(timeLeft.mins).padStart(2, '0')}</span>
-                      <span className="text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-1">Mins</span>
+                      <span className="text-base sm:text-xl font-light text-white tabular-nums">{String(timeLeft.mins).padStart(2, '0')}</span>
+                      <span className="text-[6px] sm:text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-0.5 sm:mt-1">Mins</span>
                     </div>
-                    <span className="text-white/30 text-xl font-light">:</span>
+                    <span className="text-white/30 text-base sm:text-xl font-light">:</span>
                     <div className="flex flex-col items-center flex-1">
-                      <span className="text-xl font-light text-white tabular-nums">{String(timeLeft.secs).padStart(2, '0')}</span>
-                      <span className="text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-1">Secs</span>
+                      <span className="text-base sm:text-xl font-light text-white tabular-nums">{String(timeLeft.secs).padStart(2, '0')}</span>
+                      <span className="text-[6px] sm:text-[7px] text-[#D4AF37] uppercase font-bold tracking-widest mt-0.5 sm:mt-1">Secs</span>
                     </div>
                 </div>
 
-                <div className="flex gap-2">
-                  <div className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between">
-                    <span className="text-[8px] text-gray-400 uppercase tracking-widest">Code</span>
-                    <span className="font-mono text-sm font-bold text-[#D4AF37]">RAKHI50</span>
-                  </div>
-                  <button onClick={handleCopyCode} className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-[#1A0008] hover:bg-[#D4AF37] transition-colors shrink-0">
-                    {copied ? <span className="text-sm font-bold">✓</span> : <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>}
-                  </button>
-                </div>
+
               </div>
             </div>
             
-            {/* Rotating Graphic Badge */}
-            <div className="absolute top-12 -right-6 lg:-right-10 w-28 h-28 bg-[#D4AF37] rounded-full flex items-center justify-center animate-[spin_12s_linear_infinite] shadow-[0_10px_30px_rgba(212,175,55,0.4)] z-20 border-4 border-[#FAF9F6] hidden md:flex">
-               <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
-                 <path id="textPath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="transparent" />
-                 <text className="text-[11.5px] font-black uppercase tracking-[0.25em]" fill="#1A0008">
-                   <textPath href="#textPath" startOffset="0%">★ LIMITED EDITION ★ FESTIVE SALE</textPath>
-                 </text>
-               </svg>
-               <div className="absolute inset-0 flex items-center justify-center">
-                 <span className="text-xl">✨</span>
-               </div>
-            </div>
+
           </div>
 
           {/* RIGHT SIDE (7/12): Staggered Bare Capsule Products */}

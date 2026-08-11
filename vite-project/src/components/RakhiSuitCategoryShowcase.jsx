@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAllProducts } from '../utils/adminStore';
 
@@ -16,6 +16,17 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
   const [products, setProducts] = useState([]);
   const [activeTab, setActiveTab] = useState('all');
   const [quickViewProduct, setQuickViewProduct] = useState(null);
+  const scrollContainerRef = useRef(null);
+
+  const scrollTabs = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 250;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   useEffect(() => {
     setProducts(getAllProducts());
@@ -84,18 +95,31 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
           </p>
         </div>
 
-        {/* Category Tabs Bar */}
-        <div className="w-full flex justify-center mb-12">
-          <div className="flex items-center gap-2 md:gap-3 overflow-x-auto py-2.5 px-4 max-w-full rounded-2xl md:rounded-full bg-[#1A0008]/5 border border-[#1A0008]/10 backdrop-blur-md no-scrollbar">
+        {/* Category Tabs Bar with Arrows */}
+        <div className="w-full relative flex items-center mb-10 md:mb-12">
+          
+          {/* Left Arrow */}
+          <button 
+            onClick={() => scrollTabs('left')} 
+            className="absolute left-0 z-20 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-white shadow-lg border border-gray-200 text-gray-700 hover:text-[#8B1A1A] hover:bg-gray-50 transition-all -ml-2 md:-ml-4 focus:outline-none"
+            aria-label="Scroll Left"
+          >
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+          </button>
+
+          <div 
+            ref={scrollContainerRef}
+            className="w-full flex items-center justify-start gap-2 md:gap-3 overflow-x-auto py-3 px-8 md:px-10 rounded-2xl md:rounded-full bg-[#1A0008]/5 border border-[#1A0008]/10 backdrop-blur-md no-scrollbar snap-x scroll-smooth"
+          >
             {CATEGORIES.map((cat) => {
               const isActive = activeTab === cat.id;
               return (
                 <button
                   key={cat.id}
                   onClick={() => setActiveTab(cat.id)}
-                  className={`shrink-0 px-5 py-2.5 rounded-full text-xs font-bold tracking-wider transition-all duration-300 flex items-center gap-2 border ${
+                  className={`snap-center shrink-0 px-5 py-2.5 rounded-full text-xs font-bold tracking-wider transition-all duration-300 flex items-center gap-2 border ${
                     isActive
-                      ? 'bg-[#1A0008] text-[#F5D76E] border-[#D4AF37] shadow-[0_8px_20px_rgba(26,0,8,0.3)] scale-105'
+                      ? 'bg-[#1A0008] text-[#F5D76E] border-[#D4AF37] shadow-[0_8px_20px_rgba(26,0,8,0.3)] md:scale-105'
                       : 'bg-white text-gray-800 border-gray-200/90 hover:border-[#8B1A1A] hover:text-[#8B1A1A] hover:shadow-md'
                   }`}
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
@@ -106,6 +130,15 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
               );
             })}
           </div>
+
+          {/* Right Arrow */}
+          <button 
+            onClick={() => scrollTabs('right')} 
+            className="absolute right-0 z-20 w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-white shadow-lg border border-gray-200 text-gray-700 hover:text-[#8B1A1A] hover:bg-gray-50 transition-all -mr-2 md:-mr-4 focus:outline-none"
+            aria-label="Scroll Right"
+          >
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+          </button>
         </div>
 
         {/* Products Grid */}

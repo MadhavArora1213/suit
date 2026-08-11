@@ -290,6 +290,52 @@ function AppContent() {
     </AnimatePresence>
   );
 
+  const AuthModal = (
+    <AnimatePresence>
+      {showLoginModal && (
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pt-24 sm:pt-4 bg-black/60 backdrop-blur-sm"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
+             className="bg-[#FAF9F6] p-6 sm:p-8 md:p-12 max-w-[400px] w-full border border-[#D4AF37]/30 text-center relative overflow-hidden mx-3 sm:mx-4"
+            style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }}
+          >
+            <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle at top center, #D4AF37 0%, transparent 70%)' }} />
+            <div className="w-16 h-16 rounded-full bg-[#1A0008]/5 flex items-center justify-center text-[#D4AF37] mx-auto mb-6 relative z-10 border border-[#D4AF37]/20">
+              <User size={28} strokeWidth={1.5} />
+            </div>
+            <h3 className="text-3xl font-light text-[#1A0008] mb-3 relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              Login Required
+            </h3>
+            <p className="text-[13px] text-[#1A0008]/60 mb-8 relative z-10 leading-relaxed font-light">
+              Please sign in to your Gurnaaz account to add items to bag or wishlist.
+            </p>
+            <div className="flex flex-col gap-3 relative z-10">
+              <button
+                onClick={() => {
+                  sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
+                  setShowLoginModal(false);
+                  navigate('/login');
+                }}
+                className="w-full bg-[#1A0008] text-white py-3.5 text-[11px] uppercase tracking-[0.2em] font-semibold hover:bg-[#D4AF37] transition-colors duration-300"
+              >
+                Log In Now
+              </button>
+              <button
+                onClick={() => setShowLoginModal(false)}
+                className="w-full py-3.5 text-[11px] uppercase tracking-[0.2em] text-[#1A0008]/40 font-semibold hover:text-[#1A0008] transition-colors duration-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   if (!loadingComplete && isHomeRoute) return <LoadingScreen onComplete={handleLoadComplete} />
 
   // Common Props for many pages
@@ -310,6 +356,7 @@ function AppContent() {
     return (
       <>
         <Toast />
+        {AuthModal}
         <CustomerHomePage 
           {...commonProps}
           cart={cart} 
@@ -327,49 +374,7 @@ function AppContent() {
       <ScrollToTop />
       
       {/* Auth Required Modal */}
-      <AnimatePresence>
-        {showLoginModal && (
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pt-24 sm:pt-4 bg-black/60 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
-               className="bg-[#FAF9F6] p-6 sm:p-8 md:p-12 max-w-[400px] w-full border border-[#D4AF37]/30 text-center relative overflow-hidden mx-3 sm:mx-4"
-              style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))' }}
-            >
-              <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ background: 'radial-gradient(circle at top center, #D4AF37 0%, transparent 70%)' }} />
-              <div className="w-16 h-16 rounded-full bg-[#1A0008]/5 flex items-center justify-center text-[#D4AF37] mx-auto mb-6 relative z-10 border border-[#D4AF37]/20">
-                <User size={28} strokeWidth={1.5} />
-              </div>
-              <h3 className="text-3xl font-light text-[#1A0008] mb-3 relative z-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                Login Required
-              </h3>
-              <p className="text-[13px] text-[#1A0008]/60 mb-8 relative z-10 leading-relaxed font-light">
-                Please sign in to your Gurnaaz account to save items to your wishlist.
-              </p>
-              <div className="flex flex-col gap-3 relative z-10">
-                <button
-                  onClick={() => {
-                    sessionStorage.setItem('redirectAfterLogin', window.location.pathname);
-                    setShowLoginModal(false);
-                    navigate('/login');
-                  }}
-                  className="w-full bg-[#1A0008] text-white py-3.5 text-[11px] uppercase tracking-[0.2em] font-semibold hover:bg-[#D4AF37] transition-colors duration-300"
-                >
-                  Log In Now
-                </button>
-                <button
-                  onClick={() => setShowLoginModal(false)}
-                  className="w-full py-3.5 text-[11px] uppercase tracking-[0.2em] text-[#1A0008]/40 font-semibold hover:text-[#1A0008] transition-colors duration-300"
-                >
-                  Cancel
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {AuthModal}
 
       <Navbar 
         {...commonProps}
