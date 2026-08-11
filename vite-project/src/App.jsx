@@ -121,7 +121,7 @@ function AppContent() {
           const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
           if (userDoc.exists()) {
             const data = userDoc.data();
-            setUser(data);
+            setUser({ ...data, uid: currentUser.uid });
             if (data.cart) setCart(data.cart);
             else setCart([]);
             if (data.favorites) setFavorites(data.favorites);

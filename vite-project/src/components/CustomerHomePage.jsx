@@ -103,6 +103,7 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
         addToCart={addToCart} 
         toggleFavorite={toggleFavorite} 
         favorites={favorites} 
+        user={user}
       />
 
       {/* Shopping, Reimagined Occasion Cards */}

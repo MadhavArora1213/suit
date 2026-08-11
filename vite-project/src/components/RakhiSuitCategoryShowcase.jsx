@@ -12,11 +12,20 @@ const CATEGORIES = [
   { id: 'hampers', label: 'Gift Box Hampers', type: 'Gift Box', icon: '🎁' },
 ];
 
-export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct, addToCart, toggleFavorite, favorites }) {
+export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct, addToCart, toggleFavorite, favorites, user }) {
   const [products, setProducts] = useState([]);
   const [activeTab, setActiveTab] = useState('all');
   const [quickViewProduct, setQuickViewProduct] = useState(null);
+  const [toastMessage, setToastMessage] = useState('');
   const scrollContainerRef = useRef(null);
+
+  const handleAddToCart = (product) => {
+    if (addToCart) addToCart(product);
+    if (user) {
+      setToastMessage('Successfully added to cart');
+      setTimeout(() => setToastMessage(''), 3000);
+    }
+  };
 
   const scrollTabs = (direction) => {
     if (scrollContainerRef.current) {
@@ -220,7 +229,7 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (addToCart) addToCart(product);
+                          handleAddToCart(product);
                         }}
                         className="px-3.5 py-2 bg-[#1A0008] hover:bg-[#8B1A1A] text-[#F5D76E] text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1"
                       >
@@ -281,7 +290,7 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
                   <div className="flex gap-3 pt-4 border-t border-gray-100">
                     <button
                       onClick={() => {
-                        if (addToCart) addToCart(quickViewProduct);
+                        handleAddToCart(quickViewProduct);
                         setQuickViewProduct(null);
                       }}
                       className="flex-1 py-3 bg-[#1A0008] hover:bg-[#8B1A1A] text-[#F5D76E] text-xs font-bold uppercase tracking-widest rounded-xl transition-all shadow-lg"
@@ -303,6 +312,20 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
               </div>
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[10000] bg-[#1A0008] text-[#F5D76E] px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 border border-[#D4AF37]/30"
+          >
+            <span className="text-lg">✨</span>
+            <span className="text-sm font-medium tracking-wide">{toastMessage}</span>
+          </motion.div>
         )}
       </AnimatePresence>
     </section>
