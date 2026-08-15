@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Upload, Plus, X, Check, Star } from 'lucide-react';
+import { ArrowLeft, Upload, Plus, X, Check, Star, MousePointer, Eye, BarChart2 } from 'lucide-react';
 import { addProduct, updateProduct, fileToBase64, notifyWebsite, getBoutiques, getCategories } from '../../utils/adminStore';
 import { uploadImageToFirebase } from '../../firebase';
 
@@ -245,6 +245,34 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
            : 'Save Product'}
         </motion.button>
       </div>
+
+      {/* Product Tracking Analytics if Editing */}
+      {ep && (
+        <div className="bg-white rounded-2xl border border-[#E8DDD0] p-4 flex flex-wrap items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#8B2252]/10 flex items-center justify-center text-[#8B2252]">
+              <BarChart2 size={18} />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-[#1A1A1A]">Product Link & View Performance</h4>
+              <p className="text-xs text-[#6B8C90]">Live tracking metrics for {ep.name}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="bg-[#FAF9F6] border border-[#E8DDD0] px-4 py-2 rounded-xl flex items-center gap-2">
+              <MousePointer size={14} className="text-[#8B2252]" />
+              <span className="text-xs font-bold text-[#1A1A1A]">{ep.clicksCount || ep.clicks || 0} Link Clicks</span>
+            </div>
+            <div className="bg-[#FAF9F6] border border-[#E8DDD0] px-4 py-2 rounded-xl flex items-center gap-2">
+              <Eye size={14} className="text-[#111111]" />
+              <span className="text-xs font-bold text-[#1A1A1A]">{ep.viewsCount || ep.views || 0} Detail Views</span>
+            </div>
+            <div className="bg-[#111111] text-white px-3 py-2 rounded-xl text-xs font-bold">
+              {((ep.viewsCount || ep.views || 0) > 0 ? (((ep.clicksCount || ep.clicks || 0) / (ep.viewsCount || ep.views || 0)) * 100).toFixed(0) : (ep.clicksCount || ep.clicks || 0) > 0 ? 100 : 0)}% CTR
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* FULL-WIDTH 3-column grid */}
       <div className="grid grid-cols-1 xl:grid-cols-5 gap-5">

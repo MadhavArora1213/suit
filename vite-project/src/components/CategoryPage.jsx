@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ShoppingBag, Eye, SlidersHorizontal, Check, ChevronDown, ChevronUp, Heart } from 'lucide-react';
 import { getAllProducts, getCategories } from '../utils/adminStore';
 
-function FilterAccordion({ title, children, defaultOpen = true }) {
+function FilterAccordion({ title, children, defaultOpen = false }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-[#1A0008]/10 pb-5 mb-5">
@@ -133,7 +133,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   }, [products]);
 
   const { globalMinPrice, globalMaxPrice } = useMemo(() => {
-    if (products.length === 0) return { globalMinPrice: 0, globalMaxPrice: 10000 };
+    if (products.length === 0) return { globalMinPrice: 1000, globalMaxPrice: 10000 };
     let min = Infinity;
     let max = -Infinity;
     products.forEach(p => {
@@ -141,8 +141,8 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
       if (price < min) min = price;
       if (price > max) max = price;
     });
-    if (min === Infinity) min = 0;
-    if (max === -Infinity) max = 10000;
+    if (min === Infinity || min > 1000) min = 1000;
+    if (max === -Infinity || max < 10000) max = 10000;
     if (min === max) max = min + 1000;
     return { globalMinPrice: min, globalMaxPrice: max };
   }, [products]);
@@ -162,24 +162,16 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
   const colorsList = useMemo(() => {
     const c = new Set();
-
-    // 1. Extract explicit colors set via Admin Panel (p.color)
     products.forEach(p => {
       if (p.color) {
         p.color.split(',').forEach(col => {
           if (col.trim()) c.add(col.trim().toLowerCase());
         });
       }
-    });
-
-    // 2. Fallback to legacy text search against baseColors for older products
-    baseColors.forEach(bc => {
-      const regex = new RegExp(`\\b${bc.name}\\b`, 'i');
-      if (products.some(p => {
-        const text = `${p.name || ''} ${p.desc || ''} ${p.shortDesc || ''} ${p.type || ''} ${p.suitType || ''} ${p.collection || ''} ${p.fabricDetails || ''} ${p.fabricName || ''}`;
-        return regex.test(text);
-      })) {
-        c.add(bc.name.toLowerCase());
+      if (p.colorVariants) {
+        Object.values(p.colorVariants).forEach(v => {
+          if (v.name) c.add(v.name.trim().toLowerCase());
+        });
       }
     });
 
@@ -352,7 +344,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                 )}
               </div>
 
-              <FilterAccordion title="Sort Collection" defaultOpen={true}>
+              <FilterAccordion title="Sort Collection" defaultOpen={false}>
                 <div className="flex flex-col gap-4">
                   {[
                     { id: 'newest', label: 'Latest Arrivals' },
@@ -430,28 +422,15 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
               {colorsList.length > 0 && (
                 <FilterAccordion title="Color" defaultOpen={false}>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2">
                     {colorsList.map(c => {
                       const isSelected = selectedColors.includes(c);
-                      const baseColor = baseColors.find(bc => bc.name.toLowerCase() === c.toLowerCase());
-
-                      if (baseColor) {
-                        return (
-                          <button key={c} onClick={() => toggleFilter(setSelectedColors, c)} title={c}
-                            className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all cursor-pointer ${isSelected ? 'border-gray-400 scale-110 shadow-md' : 'border-[#1A0008]/10 hover:border-gray-300'}`}
-                            style={{ backgroundColor: baseColor.hex }}>
-                            {isSelected && <Check size={12} className={baseColor.name === 'White' || baseColor.name === 'Yellow' || baseColor.name === 'Ivory' ? 'text-black' : 'text-white'} />}
-                          </button>
-                        );
-                      } else {
-                        // Custom color tag
-                        return (
-                          <button key={c} onClick={() => toggleFilter(setSelectedColors, c)}
-                            className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${isSelected ? 'border-[#1A0008] bg-[#1A0008] text-white' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
-                            {c}
-                          </button>
-                        );
-                      }
+                      return (
+                        <button key={c} onClick={() => toggleFilter(setSelectedColors, c)}
+                          className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${isSelected ? 'border-[#1A0008] bg-[#1A0008] text-white' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
+                          {c}
+                        </button>
+                      );
                     })}
                   </div>
                 </FilterAccordion>

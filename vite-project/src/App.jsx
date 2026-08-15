@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocat
 import { auth, db } from './firebase'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { syncProducts, getAllProducts, getBoutiques } from './utils/adminStore'
+import { syncProducts, getAllProducts, getBoutiques, recordProductClick, recordProductView } from './utils/adminStore'
 import { motion, AnimatePresence } from 'framer-motion'
 import { User } from 'lucide-react'
 import './App.css'
@@ -74,6 +74,13 @@ const ProductDetailsPageWrapper = (props) => {
   const allProds = getAllProducts();
   const product = allProds.find(p => p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === productSlug) || 
                   allProds.find(p => String(p.id) === productSlug) || null;
+
+  useEffect(() => {
+    if (product?.id) {
+      recordProductView(product.id);
+    }
+  }, [product?.id]);
+
   return <ProductDetailsPage product={product} {...props} />
 }
 
@@ -192,6 +199,9 @@ function AppContent() {
   const setSelectedCategory = (cat) => navigate(`/category/${(cat || '').toLowerCase().replace(/ /g, '-')}`);
   const setSelectedCollectionSlug = (slug) => navigate(`/collections/${slug || ''}`);
   const setSelectedProduct = (product) => {
+    if (product?.id) {
+      recordProductClick(product.id);
+    }
     if (product?.name) {
       navigate(`/product/${product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`);
     }

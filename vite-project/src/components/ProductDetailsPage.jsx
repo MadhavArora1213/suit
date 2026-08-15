@@ -6,7 +6,7 @@ import {
   BadgeCheck, MessageCircle, Ruler, RotateCcw, Package, Sparkles, Eye,
   Share2, ZoomIn, Clock, Users, Gem, Award, Feather
 } from 'lucide-react';
-import { getReviews, addReview, updateReview, deleteReview, syncProductReviews, getAllProducts, fileToBase64 } from '../utils/adminStore';
+import { getReviews, addReview, updateReview, deleteReview, syncProductReviews, getAllProducts, fileToBase64, recordProductView, recordProductClick } from '../utils/adminStore';
 
 /* ═══ Thumbnail Strip (memoized) ═══ */
 const ThumbStrip = React.memo(function ThumbStrip({ images, current, onSelect, vertical = false }) {
@@ -103,6 +103,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
     if (product?.id) {
       setReviewsList(Array.isArray(getReviews(product.id)) ? getReviews(product.id) : []);
       syncProductReviews(product.id, (r) => setReviewsList(r));
+      recordProductView(product.id);
     }
     window.scrollTo({ top: 0, behavior: 'auto' });
     setAddedToBag(false);
@@ -450,7 +451,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                 <span className="text-[11px] text-gray-400">({reviewsList.length})</span>
                 <span className="text-gray-300">|</span>
                 <span className="text-[11px] text-[#8B2252] font-semibold flex items-center gap-1">
-                  <Users size={11} /> {viewers} viewing
+                  <Eye size={11} /> {Math.max(1, (product.viewsCount || product.views || 0))} views
                 </span>
               </div>
 
@@ -594,32 +595,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                 ))}
               </div>
 
-              {/* Delivery */}
-              <div className="border border-[#ebe5de] rounded-2xl p-5 mb-5 bg-white">
-                <div className="flex items-center gap-2.5 mb-3.5">
-                  <div className="w-8 h-8 rounded-full bg-[#8B2252]/10 flex items-center justify-center">
-                    <Truck size={14} className="text-[#8B2252]" />
-                  </div>
-                  <span className="text-[13px] font-bold text-[#222]">Delivery Options</span>
-                </div>
-                <div className="flex gap-2.5">
-                  <input type="text" value={pinCode}
-                    onChange={(e) => { setPinCode(e.target.value.replace(/\D/g, '').slice(0, 6)); setPinChecked(false); }}
-                    placeholder="Enter pincode"
-                    className="flex-1 bg-[#faf8f5] border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#8B2252] focus:ring-2 focus:ring-[#8B2252]/10 transition-all placeholder:text-gray-300" maxLength={6} />
-                  <button onClick={() => { if (pinCode.length >= 5) setPinChecked(true); }}
-                    className="px-6 py-3 text-[11px] font-bold text-[#8B2252] uppercase tracking-wider border border-[#8B2252] rounded-xl hover:bg-[#8B2252] hover:text-white transition-all cursor-pointer shrink-0">Check</button>
-                </div>
-                <AnimatePresence>
-                  {pinChecked && (
-                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
-                      className="mt-4 pt-4 border-t border-gray-100 space-y-2.5 overflow-hidden">
-                      <p className="text-xs text-gray-600 flex items-center gap-2.5"><Check size={14} className="text-[#2e7d32] shrink-0" /> Delivery by <strong className="text-[#222]">Jul 30 – Aug 2</strong></p>
-                      <p className="text-xs text-gray-600 flex items-center gap-2.5"><Check size={14} className="text-[#2e7d32] shrink-0" /> Cash on delivery available</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+
 
               {/* Accordions */}
               <div className="border border-[#ebe5de] rounded-2xl overflow-hidden bg-white">

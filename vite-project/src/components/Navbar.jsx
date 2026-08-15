@@ -111,7 +111,7 @@ export default function Navbar({
               </span>
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#FAF9F6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                NEW ARRIVALS EVERY WEEK
+                NEW ARRIVALS EVERY DAY
               </span>
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
             </div>
@@ -196,22 +196,28 @@ export default function Navbar({
                       <div className="w-[35%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Shop by Category</span>
                         <div className="grid grid-cols-2 gap-x-8 gap-y-3 mt-2">
-                          {navCategories.map((cat, i) => (
-                            <a
-                              key={cat.id || cat.name}
-                              href={`/category/${cat.name.toLowerCase().replace(/ /g, '-')}`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setSelectedCategory(cat.name);
-                                setView('category');
-                              }}
-                              className="text-[12px] text-[#1A0008]/80 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide w-max relative group/cat"
-                              style={{ fontFamily: "'DM Sans', sans-serif" }}
-                            >
-                              {cat.name}
-                              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover/cat:w-full opacity-50" />
-                            </a>
-                          ))}
+                          {navCategories.length > 0 ? (
+                            navCategories.map((cat, i) => (
+                              <a
+                                key={cat.id || cat.name}
+                                href={`/category/${cat.name.toLowerCase().replace(/ /g, '-')}`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  setSelectedCategory(cat.name);
+                                  setView('category');
+                                }}
+                                className="text-[12px] text-[#1A0008]/80 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide w-max relative group/cat"
+                                style={{ fontFamily: "'DM Sans', sans-serif" }}
+                              >
+                                {cat.name}
+                                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover/cat:w-full opacity-50" />
+                              </a>
+                            ))
+                          ) : (
+                            [1, 2, 3, 4, 5, 6].map(i => (
+                              <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-24 my-1"></div>
+                            ))
+                          )}
                         </div>
                       </div>
 
@@ -219,25 +225,31 @@ export default function Navbar({
                       <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 px-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Curated Edits</span>
                         <div className="flex flex-col gap-3.5 mt-2">
-                          {dynamicCollections.slice(0, 7).map((edit) => (
-                            <a
-                              key={edit.id}
-                              href={`/collections/${edit.id}`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                if (setSelectedCollectionSlug) {
-                                  setSelectedCollectionSlug(edit.id);
-                                  setView('collection-detail');
-                                } else {
-                                  window.location.href = `/collections/${edit.id}`;
-                                }
-                              }}
-                              className="text-[15px] text-[#1A0008]/90 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-light tracking-wide relative w-max"
-                              style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}
-                            >
-                              {edit.title}
-                            </a>
-                          ))}
+                          {dynamicCollections.length > 0 ? (
+                            dynamicCollections.slice(0, 7).map((edit) => (
+                              <a
+                                key={edit.id}
+                                href={`/collections/${edit.id}`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  if (setSelectedCollectionSlug) {
+                                    setSelectedCollectionSlug(edit.id);
+                                    setView('collection-detail');
+                                  } else {
+                                    window.location.href = `/collections/${edit.id}`;
+                                  }
+                                }}
+                                className="text-[15px] text-[#1A0008]/90 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-light tracking-wide relative w-max"
+                                style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic' }}
+                              >
+                                {edit.title}
+                              </a>
+                            ))
+                          ) : (
+                            [1, 2, 3, 4, 5].map(i => (
+                              <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-28 my-1"></div>
+                            ))
+                          )}
                         </div>
                         <a href="/collections" onClick={(e) => { e.preventDefault(); window.location.href = '/collections'; }}
                           className="mt-auto text-[9px] font-bold text-[#1A0008] hover:text-[#D4AF37] tracking-[0.2em] uppercase flex items-center gap-2 group/link">
@@ -246,42 +258,46 @@ export default function Navbar({
                       </div>
 
                       {/* Col 3: Featured Image 1 */}
-                      {col3 && (
-                      <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-4 shadow-lg" onClick={() => {
-                        if (setSelectedCollectionSlug) {
-                          setSelectedCollectionSlug(col3.id);
-                          setView('collection-detail');
-                        } else {
-                          window.location.href = `/collections/${col3.id}`;
-                        }
-                      }}>
-                        <img src={col3.image} alt={col3.title} className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                        <div className="absolute bottom-5 left-5 text-white">
-                          <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#D4AF37]">{col3.tag || 'Featured'}</span>
-                          <h3 className="text-2xl font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{col3.title}</h3>
+                      {col3 ? (
+                        <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-4 shadow-lg" onClick={() => {
+                          if (setSelectedCollectionSlug) {
+                            setSelectedCollectionSlug(col3.id);
+                            setView('collection-detail');
+                          } else {
+                            window.location.href = `/collections/${col3.id}`;
+                          }
+                        }}>
+                          <img src={col3.image} alt={col3.title} className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute bottom-5 left-5 text-white">
+                            <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#D4AF37]">{col3.tag || 'Featured'}</span>
+                            <h3 className="text-2xl font-light tracking-wide" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{col3.title}</h3>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="flex-1 h-full bg-[#E8DDD0]/40 rounded-xl ml-4 animate-pulse border border-[#D4AF37]/10" />
                       )}
 
                       {/* Col 4: Featured Image 2 */}
-                      {col4 && (
-                      <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg" onClick={() => {
-                        if (setSelectedCollectionSlug) {
-                          setSelectedCollectionSlug(col4.id);
-                          setView('collection-detail');
-                        } else {
-                          window.location.href = `/collections/${col4.id}`;
-                        }
-                      }}>
-                        <img src={col4.image} alt={col4.title} className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                        <div className="absolute bottom-5 left-5 text-white pr-4">
-                          <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#D4AF37]">{col4.tag || 'New Arrival'}</span>
-                          <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{col4.title}</h3>
-                          <p className="text-[10px] tracking-wider opacity-80" style={{ fontFamily: "'DM Sans', sans-serif" }}>{col4.desc || col4.subtitle}</p>
+                      {col4 ? (
+                        <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg" onClick={() => {
+                          if (setSelectedCollectionSlug) {
+                            setSelectedCollectionSlug(col4.id);
+                            setView('collection-detail');
+                          } else {
+                            window.location.href = `/collections/${col4.id}`;
+                          }
+                        }}>
+                          <img src={col4.image} alt={col4.title} className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-110" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                          <div className="absolute bottom-5 left-5 text-white pr-4">
+                            <span className="text-[8px] tracking-[0.3em] font-bold uppercase mb-1 block text-[#D4AF37]">{col4.tag || 'New Arrival'}</span>
+                            <h3 className="text-3xl font-light tracking-wide mb-1" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{col4.title}</h3>
+                            <p className="text-[10px] tracking-wider opacity-80" style={{ fontFamily: "'DM Sans', sans-serif" }}>{col4.desc || col4.subtitle}</p>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="flex-1 h-full bg-[#E8DDD0]/40 rounded-xl animate-pulse border border-[#D4AF37]/10" />
                       )}
 
                     </div>
@@ -297,26 +313,32 @@ export default function Navbar({
                       <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Top Shops</span>
                         <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
-                          {navShops.map((shop) => (
-                            <a
-                              key={shop.id}
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                if (setSelectedBoutique) {
-                                  setSelectedBoutique(shop.name);
-                                  setView('seller-shop');
-                                } else {
-                                  window.location.href = `/shop/${shop.name.toLowerCase().replace(/ /g, '-')}`;
-                                }
-                              }}
-                              className="text-[16px] text-[#1A0008]/90 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
-                              style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                            >
-                              {shop.name}
-                              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover/btq:w-full opacity-50" />
-                            </a>
-                          ))}
+                          {navShops.length > 0 ? (
+                            navShops.map((shop) => (
+                              <a
+                                key={shop.id}
+                                href="#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  if (setSelectedBoutique) {
+                                    setSelectedBoutique(shop.name);
+                                    setView('seller-shop');
+                                  } else {
+                                    window.location.href = `/shop/${shop.name.toLowerCase().replace(/ /g, '-')}`;
+                                  }
+                                }}
+                                className="text-[16px] text-[#1A0008]/90 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
+                                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                              >
+                                {shop.name}
+                                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover/btq:w-full opacity-50" />
+                              </a>
+                            ))
+                          ) : (
+                            [1, 2, 3, 4].map(i => (
+                              <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-24 my-1"></div>
+                            ))
+                          )}
                         </div>
                       </div>
 
@@ -324,26 +346,32 @@ export default function Navbar({
                       <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 px-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Top Boutiques</span>
                         <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
-                          {navBoutiques.map((btq) => (
-                            <a
-                              key={btq.id}
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                if (setSelectedBoutique) {
-                                  setSelectedBoutique(btq.name);
-                                  setView('seller-shop');
-                                } else {
-                                  window.location.href = `/shops-and-boutiques/${btq.name.toLowerCase().replace(/ /g, '-')}`;
-                                }
-                              }}
-                              className="text-[16px] text-[#1A0008]/90 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
-                              style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                            >
-                              {btq.name}
-                              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover/btq:w-full opacity-50" />
-                            </a>
-                          ))}
+                          {navBoutiques.length > 0 ? (
+                            navBoutiques.map((btq) => (
+                              <a
+                                key={btq.id}
+                                href="#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  if (setSelectedBoutique) {
+                                    setSelectedBoutique(btq.name);
+                                    setView('seller-shop');
+                                  } else {
+                                    window.location.href = `/shops-and-boutiques/${btq.name.toLowerCase().replace(/ /g, '-')}`;
+                                  }
+                                }}
+                                className="text-[16px] text-[#1A0008]/90 hover:text-[#D4AF37] hover:translate-x-1 transition-all duration-300 font-medium tracking-wide relative w-max group/btq"
+                                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                              >
+                                {btq.name}
+                                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover/btq:w-full opacity-50" />
+                              </a>
+                            ))
+                          ) : (
+                            [1, 2, 3, 4].map(i => (
+                              <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-28 my-1"></div>
+                            ))
+                          )}
                         </div>
                         <a href="/shops-and-boutiques" onClick={(e) => { e.preventDefault(); window.location.href = '/shops-and-boutiques'; }}
                           className="mt-auto text-[9px] font-bold text-[#1A0008] hover:text-[#D4AF37] tracking-[0.2em] uppercase flex items-center gap-2 group/link">

@@ -68,7 +68,32 @@ export const initializeStore = async () => {
   }
 };
 
-// GETTERS
+export const defaultCategories = [
+  { id: '1', name: 'Anarkali Suits', active: true, order: 1 },
+  { id: '2', name: 'Sharara Suits', active: true, order: 2 },
+  { id: '3', name: 'Patiala Suits', active: true, order: 3 },
+  { id: '4', name: 'Lehenga Sets', active: true, order: 4 },
+  { id: '5', name: 'Palazzo Suits', active: true, order: 5 },
+  { id: '6', name: 'Silk Sarees', active: true, order: 6 },
+  { id: '7', name: 'Straight Cut', active: true, order: 7 },
+  { id: '8', name: 'Designer Dupattas', active: true, order: 8 }
+];
+
+export const defaultCollections = [
+  { id: 'festive', title: 'Festive Edit', subtitle: 'Royal Celebration Wear', category: 'Festive', isFeaturedMenu: true, image: '/anarkali_suit.png', active: true, order: 1 },
+  { id: 'wedding', title: 'Bridal & Wedding', subtitle: 'Heavy Zari & Dori', category: 'Wedding', isFeaturedMenu: true, image: '/designer_suit_1.png', active: true, order: 2 },
+  { id: 'velvet', title: 'Royal Velvet', subtitle: 'Pure Kashmiri Velvet', category: 'Velvet', image: '/designer_suit_1.png', active: true, order: 3 },
+  { id: 'silk', title: 'Pure Raw Silk', subtitle: 'Traditional Weaves', category: 'Silk', image: '/anarkali_suit.png', active: true, order: 4 },
+  { id: 'pastel', title: 'Pastel Dreams', subtitle: 'Soft & Elegant Tones', category: 'Pastel', image: '/designer_suit_1.png', active: true, order: 5 },
+  { id: 'black', title: 'Midnight Black', subtitle: 'Noir Elegance', category: 'Black', image: '/anarkali_suit.png', active: true, order: 6 },
+  { id: 'luxury', title: 'Haute Couture', subtitle: 'Handcrafted Masterpieces', category: 'Luxury', image: '/designer_suit_1.png', active: true, order: 7 }
+];
+
+export const defaultBoutiques = [
+  { id: '1', name: 'Gurnaaz Heritage', type: 'Boutique', showInNavbar: true, isFeatured: true, coverImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80', description: 'Handcrafted royal ethnic suits & lehengas.' },
+  { id: '2', name: 'Kashmiri Silk Studio', type: 'Shop', showInNavbar: true, isFeatured: true, coverImage: '/designer_suit_1.png', description: 'Authentic Kashmiri Tilla & Zari work.' }
+];
+
 export const getAllProducts = () => memoryStore.products;
 export const getProducts = () => memoryStore.products;
 export const getCategories = () => memoryStore.categories;
@@ -125,6 +150,24 @@ export const updateProduct = (id, data) => {
 export const deleteProduct = (id) => {
   memoryStore.products = memoryStore.products.filter(p => p.id !== id);
   if (isFirebaseConfigured()) deleteProductFromFirestore(id).catch(console.error);
+};
+
+export const recordProductView = (id) => {
+  if (!id) return;
+  const prod = memoryStore.products.find(p => String(p.id) === String(id));
+  if (!prod) return;
+  const currentViews = (prod.viewsCount || prod.views || 0) + 1;
+  updateProduct(id, { viewsCount: currentViews, views: currentViews });
+  notifyWebsite();
+};
+
+export const recordProductClick = (id, clickType = 'card_click') => {
+  if (!id) return;
+  const prod = memoryStore.products.find(p => String(p.id) === String(id));
+  if (!prod) return;
+  const currentClicks = (prod.clicksCount || prod.clicks || 0) + 1;
+  updateProduct(id, { clicksCount: currentClicks, clicks: currentClicks });
+  notifyWebsite();
 };
 
 export const saveFestiveOffers = (arr) => {

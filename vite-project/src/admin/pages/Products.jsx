@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Edit2, Trash2, Eye, Star } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, Eye, Star, MousePointer, BarChart2, TrendingUp } from 'lucide-react';
 import { getProducts, deleteProduct as storeDelete, notifyWebsite } from '../../utils/adminStore';
 
 export default function Products({ setActivePage, onEditProduct }) {
@@ -35,6 +35,11 @@ export default function Products({ setActivePage, onEditProduct }) {
     setDeleteId(null);
   };
 
+  // Analytics totals
+  const totalViews = products.reduce((acc, p) => acc + (p.viewsCount || p.views || 0), 0);
+  const totalClicks = products.reduce((acc, p) => acc + (p.clicksCount || p.clicks || 0), 0);
+  const mostClickedProduct = [...products].sort((a, b) => (b.clicksCount || b.clicks || 0) - (a.clicksCount || a.clicks || 0))[0];
+
   return (
     <div className="space-y-5">
       {/* Header */}
@@ -46,10 +51,44 @@ export default function Products({ setActivePage, onEditProduct }) {
         <motion.button
           whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
           onClick={() => setActivePage('add-product')}
-          className="flex items-center justify-center gap-2 bg-[#111111] text-white px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-md shadow-[#111111]/25 hover:shadow-lg transition-shadow w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 bg-[#111111] text-white px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold shadow-md shadow-[#111111]/25 hover:shadow-lg transition-shadow w-full sm:w-auto cursor-pointer"
         >
           <Plus size={14} /> Add Product
         </motion.button>
+      </div>
+
+      {/* Analytics Summary Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="bg-white rounded-2xl border border-[#E8DDD0] p-4 flex items-center gap-3.5 shadow-sm">
+          <div className="w-10 h-10 rounded-xl bg-[#FAF9F6] border border-[#E8DDD0] flex items-center justify-center text-[#111111]">
+            <MousePointer size={18} />
+          </div>
+          <div>
+            <p className="text-[10px] uppercase font-bold text-[#9E9189] tracking-wider">Total Product Clicks</p>
+            <p className="text-xl font-bold text-[#111111]">{totalClicks.toLocaleString()}</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-[#E8DDD0] p-4 flex items-center gap-3.5 shadow-sm">
+          <div className="w-10 h-10 rounded-xl bg-[#FAF9F6] border border-[#E8DDD0] flex items-center justify-center text-[#8B2252]">
+            <Eye size={18} />
+          </div>
+          <div>
+            <p className="text-[10px] uppercase font-bold text-[#9E9189] tracking-wider">Total Detail Views</p>
+            <p className="text-xl font-bold text-[#111111]">{totalViews.toLocaleString()}</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-[#E8DDD0] p-4 flex items-center gap-3.5 shadow-sm">
+          <div className="w-10 h-10 rounded-xl bg-[#FAF9F6] border border-[#E8DDD0] flex items-center justify-center text-[#D4AF37]">
+            <TrendingUp size={18} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] uppercase font-bold text-[#9E9189] tracking-wider">Top Clicked Product</p>
+            <p className="text-xs font-bold text-[#111111] truncate">{mostClickedProduct?.name || 'N/A'}</p>
+            <p className="text-[10px] text-[#8B2252] font-semibold">{mostClickedProduct ? `${mostClickedProduct.clicksCount || mostClickedProduct.clicks || 0} clicks` : '0 clicks'}</p>
+          </div>
+        </div>
       </div>
 
       {/* Filters */}
@@ -69,7 +108,7 @@ export default function Products({ setActivePage, onEditProduct }) {
             <button
               key={cat}
               onClick={() => setFilterCat(cat)}
-              className={`px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-[10px] sm:text-xs font-semibold transition-all ${
+              className={`px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-[10px] sm:text-xs font-semibold transition-all cursor-pointer ${
                 filterCat === cat
                   ? 'bg-[#111111] text-white shadow-sm'
                   : 'bg-[#F8F4F9] text-[#6B6B6B] hover:bg-[#F0EAE2]'
@@ -84,66 +123,90 @@ export default function Products({ setActivePage, onEditProduct }) {
       {/* Products Grid */}
       <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4">
         <AnimatePresence mode="popLayout">
-          {filtered.map((product, i) => (
-            <motion.div
-              layout
-              key={product.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ delay: i * 0.04, duration: 0.35 }}
-              className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden group hover:shadow-lg hover:shadow-[#111111]/10 hover:border-[#111111]/30 transition-all duration-300"
-            >
-              {/* Image */}
-              <div className="relative h-36 sm:h-44 bg-[#F8F4F9] overflow-hidden">
-                {product.image ? (
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-xs text-[#9E9189]">No Image</div>
-                )}
-                <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#111111] text-[9px] sm:text-[11px] font-bold tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg border border-[#111111]/20">
-                  {product.badge}
-                </span>
-                <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${
-                  (product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 
-                  ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                  {(product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 ? 'In Stock' : 'Out of Stock'}
-                </span>
+          {filtered.map((product, i) => {
+            const clicks = product.clicksCount || product.clicks || 0;
+            const views = product.viewsCount || product.views || 0;
+            const ctr = views > 0 ? ((clicks / views) * 100).toFixed(0) : (clicks > 0 ? 100 : 0);
 
-                {/* Action overlay */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-                    className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1A1A1A] shadow-md">
-                    <Eye size={15} />
-                  </motion.button>
-                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-                    onClick={() => onEditProduct(product)}
-                    className="w-9 h-9 bg-[#111111] rounded-full flex items-center justify-center text-white shadow-md">
-                    <Edit2 size={15} />
-                  </motion.button>
-                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-                    onClick={() => setDeleteId(product.id)}
-                    className="w-9 h-9 bg-red-500 rounded-full flex items-center justify-center text-white shadow-md">
-                    <Trash2 size={15} />
-                  </motion.button>
-                </div>
-              </div>
+            return (
+              <motion.div
+                layout
+                key={product.id}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ delay: i * 0.04, duration: 0.35 }}
+                className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden group hover:shadow-lg hover:shadow-[#111111]/10 hover:border-[#111111]/30 transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  {/* Image */}
+                  <div className="relative h-36 sm:h-44 bg-[#F8F4F9] overflow-hidden">
+                    {product.image ? (
+                      <img src={product.image} alt={product.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xs text-[#9E9189]">No Image</div>
+                    )}
+                    <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#111111] text-[9px] sm:text-[11px] font-bold tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg border border-[#111111]/20">
+                      {product.badge}
+                    </span>
+                    <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${
+                      (product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 
+                      ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                      {(product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 ? 'In Stock' : 'Out of Stock'}
+                    </span>
 
-              {/* Info */}
-              <div className="p-3 sm:p-4">
-                <p className="text-[10px] sm:text-xs text-[#111111] font-semibold tracking-wider uppercase mb-1">{product.boutique} · {product.type}</p>
-                <h4 className="text-xs sm:text-sm font-semibold text-[#1A1A1A] leading-snug mb-1.5 sm:mb-2 line-clamp-2">{product.name}</h4>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm sm:text-base font-bold text-[#111111]">{product.price}</p>
-                  <div className="flex items-center gap-1">
-                    <Star size={10} className="text-amber-400 fill-amber-400" />
-                    <span className="text-[10px] sm:text-xs text-[#6B6B6B]">{product.rating}</span>
+                    {/* Action overlay */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
+                      <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+                        onClick={() => window.open(`/product/${product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`, '_blank')}
+                        className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1A1A1A] shadow-md cursor-pointer" title="View Storefront Link">
+                        <Eye size={15} />
+                      </motion.button>
+                      <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+                        onClick={() => onEditProduct(product)}
+                        className="w-9 h-9 bg-[#111111] rounded-full flex items-center justify-center text-white shadow-md cursor-pointer" title="Edit Product">
+                        <Edit2 size={15} />
+                      </motion.button>
+                      <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+                        onClick={() => setDeleteId(product.id)}
+                        className="w-9 h-9 bg-red-500 rounded-full flex items-center justify-center text-white shadow-md cursor-pointer" title="Delete Product">
+                        <Trash2 size={15} />
+                      </motion.button>
+                    </div>
+                  </div>
+
+                  {/* Info */}
+                  <div className="p-3 sm:p-4">
+                    <p className="text-[10px] sm:text-xs text-[#111111] font-semibold tracking-wider uppercase mb-1">{product.boutique} · {product.type}</p>
+                    <h4 className="text-xs sm:text-sm font-semibold text-[#1A1A1A] leading-snug mb-1.5 sm:mb-2 line-clamp-2">{product.name}</h4>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm sm:text-base font-bold text-[#111111]">{product.price}</p>
+                      <div className="flex items-center gap-1">
+                        <Star size={10} className="text-amber-400 fill-amber-400" />
+                        <span className="text-[10px] sm:text-xs text-[#6B6B6B]">{product.rating}</span>
+                      </div>
+                    </div>
+                    <span className="inline-block mt-1.5 sm:mt-2 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E8DDD0] text-[#111111]">{product.category || product.collection}</span>
                   </div>
                 </div>
-                <span className="inline-block mt-1.5 sm:mt-2 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E8DDD0] text-[#111111]">{product.category || product.collection}</span>
-              </div>
-            </motion.div>
-          ))}
+
+                {/* Tracking Analytics Footer Badge */}
+                <div className="px-3 py-2.5 sm:px-4 sm:py-3 bg-[#FAF9F6] border-t border-[#E8DDD0] flex items-center justify-between text-[11px] font-semibold text-[#4A4A4A]">
+                  <div className="flex items-center gap-1.5" title="Link Clicks">
+                    <MousePointer size={12} className="text-[#8B2252]" />
+                    <span>{clicks} Clicks</span>
+                  </div>
+                  <div className="flex items-center gap-1.5" title="Page Views">
+                    <Eye size={12} className="text-[#111111]" />
+                    <span>{views} Views</span>
+                  </div>
+                  <div className="flex items-center gap-1 bg-[#111111] text-white px-2 py-0.5 rounded-full text-[9px]" title="Click Through Rate">
+                    <span>{ctr}% CTR</span>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
       </motion.div>
 

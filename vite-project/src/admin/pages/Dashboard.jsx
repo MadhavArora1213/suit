@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Package, ShoppingBag, TrendingUp, Users, ArrowUpRight, ArrowRight, Star, Eye } from 'lucide-react';
+import { Package, ShoppingBag, TrendingUp, Users, ArrowUpRight, ArrowRight, Star, Eye, MousePointer, BarChart2 } from 'lucide-react';
 import { getProducts, getOrders, getBoutiques, getCategories, syncProducts, syncOrders, syncBoutiques } from '../../utils/adminStore';
 import { collection, query, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
@@ -235,6 +235,9 @@ export default function Dashboard({ setActivePage }) {
   const totalUsers = users.length;
   const totalBoutiques = boutiques.length;
 
+  const totalViews = products.reduce((acc, p) => acc + (p.viewsCount || p.views || 0), 0);
+  const totalClicks = products.reduce((acc, p) => acc + (p.clicksCount || p.clicks || 0), 0);
+
   const pendingOrders = orders.filter(o => o.status === 'Pending' || o.status === 'Processing').length;
   const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
 
@@ -354,8 +357,12 @@ export default function Dashboard({ setActivePage }) {
     pct: Math.max(20, 100 - i * 20),
   }));
 
-  const hourlyRevenue = totalRevenue > 0 ? formatRevenue(Math.round(totalRevenue * 0.15)) : '₹1.2L';
-  const newOrdersCount = todayOrders || totalOrders > 0 ? Math.min(totalOrders, 5) : 0;
+  // Top clicked products
+  const topClickedProducts = [...products]
+    .sort((a, b) => (b.clicksCount || b.clicks || 0) - (a.clicksCount || a.clicks || 0))
+    .slice(0, 5);
+
+  const maxClicks = Math.max(...topClickedProducts.map(p => p.clicksCount || p.clicks || 0), 1);
 
   return (
     <div className="space-y-5">
@@ -376,7 +383,8 @@ export default function Dashboard({ setActivePage }) {
             {[
               { label: 'Revenue', val: formatRevenue(totalRevenue) },
               { label: 'Orders', val: totalOrders },
-              { label: 'Pending', val: pendingOrders },
+              { label: 'Link Clicks', val: totalClicks },
+              { label: 'Page Views', val: totalViews },
             ].map(({ label, val }) => (
               <div key={label} className="bg-white/15 backdrop-blur-sm rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 border border-white/10">
                 <p className="text-white/60 text-[10px] sm:text-xs uppercase tracking-wider">{label}</p>
@@ -411,6 +419,75 @@ export default function Dashboard({ setActivePage }) {
           );
         })}
       </div>
+
+      {/* Product Clicks & Visits Tracking Widget */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
+        className="bg-white rounded-2xl border border-[#E8DDD0]/60 p-5 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#8B2252]/10 flex items-center justify-center text-[#8B2252]">
+              <MousePointer size={20} />
+            </div>
+            <div>
+              <h3 className="text-base sm:text-lg font-semibold text-[#1A1A1A]">Product Link Click & View Analytics</h3>
+              <p className="text-[11px] text-[#9E9189]">Real-time tracking of product detail opens, link clicks, and storefront visits</p>
+            </div>
+          </div>
+          <button onClick={() => setActivePage('products')} className="text-xs font-semibold text-[#8B2252] hover:underline flex items-center gap-1 cursor-pointer">
+            View All Product Stats <ArrowRight size={13} />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          {/* Most Clicked Products List */}
+          <div className="space-y-3 bg-[#FAF9F6] p-4 rounded-xl border border-[#E8DDD0]">
+            <span className="text-xs font-bold text-[#111111] uppercase tracking-wider block mb-1">Most Clicked Products</span>
+            {topClickedProducts.length > 0 ? topClickedProducts.map((p, i) => {
+              const clicks = p.clicksCount || p.clicks || 0;
+              const views = p.viewsCount || p.views || 0;
+              const pct = maxClicks > 0 ? Math.round((clicks / maxClicks) * 100) : 0;
+              return (
+                <div key={p.id || i} className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-semibold text-[#1A1A1A] truncate max-w-[200px]">{i + 1}. {p.name}</span>
+                    <span className="font-bold text-[#8B2252]">{clicks} clicks <span className="text-[#9E9189] font-normal">({views} views)</span></span>
+                  </div>
+                  <div className="w-full bg-[#E8DDD0] h-2 rounded-full overflow-hidden">
+                    <div className="bg-[#8B2252] h-full rounded-full transition-all duration-700" style={{ width: `${Math.max(5, pct)}%` }} />
+                  </div>
+                </div>
+              );
+            }) : (
+              <p className="text-xs text-[#9E9189]">No product click data recorded yet.</p>
+            )}
+          </div>
+
+          {/* Quick Metrics & CTR */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#E8DDD0] flex flex-col justify-center">
+              <span className="text-[10px] font-bold text-[#9E9189] uppercase tracking-wider">Total Link Clicks</span>
+              <span className="text-3xl font-extrabold text-[#111111] mt-1">{totalClicks.toLocaleString()}</span>
+              <span className="text-[10px] text-[#10B981] font-semibold mt-1">Across all storefront cards & links</span>
+            </div>
+            <div className="bg-[#FAF9F6] p-4 rounded-xl border border-[#E8DDD0] flex flex-col justify-center">
+              <span className="text-[10px] font-bold text-[#9E9189] uppercase tracking-wider">Total Product Views</span>
+              <span className="text-3xl font-extrabold text-[#8B2252] mt-1">{totalViews.toLocaleString()}</span>
+              <span className="text-[10px] text-[#8B2252] font-semibold mt-1">Product Detail page views</span>
+            </div>
+            <div className="col-span-2 bg-[#FAF9F6] p-4 rounded-xl border border-[#E8DDD0] flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-[#9E9189] uppercase tracking-wider block">Average Click-Through Rate (CTR)</span>
+                <span className="text-2xl font-bold text-[#111111]">
+                  {totalViews > 0 ? `${((totalClicks / totalViews) * 100).toFixed(1)}%` : (totalClicks > 0 ? '100%' : '0%')}
+                </span>
+              </div>
+              <div className="w-12 h-12 rounded-full bg-[#111111] text-white flex items-center justify-center text-xs font-bold shadow-md">
+                CTR
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Charts Row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
@@ -566,3 +643,4 @@ export default function Dashboard({ setActivePage }) {
     </div>
   );
 }
+

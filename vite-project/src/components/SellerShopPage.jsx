@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useMotionTemplate, useMotionValue } from 'framer-motion';
 import {
   Phone, MapPin, Filter, ArrowUpDown, ChevronDown, Check, ArrowLeft,
@@ -133,26 +133,18 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
 }
 
 /* ─── FILTER ─── */
-function FilterSection({ title, options, selected, onSelect, defaultOpen = false }) {
-  const [open, setOpen] = useState(defaultOpen);
+function FilterAccordion({ title, children, defaultOpen = false }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-[#D4AF37]/15 pb-4 mb-4">
-      <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between py-2 group cursor-pointer">
-        <span className="text-[10px] tracking-[0.2em] uppercase text-[#1A0008]/70 font-semibold">{title}</span>
-        <ChevronDown size={14} className={`text-[#D4AF37]/70 transition-transform ${open ? 'rotate-180' : ''}`} />
+      <button onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-between w-full text-left group cursor-pointer py-1">
+        <h4 className="text-[10px] font-bold tracking-[0.15em] text-[#1A0008] uppercase group-hover:text-[#D4AF37] transition-colors">{title}</h4>
+        {isOpen ? <ChevronDown size={14} className="text-[#D4AF37] rotate-180 transition-transform" /> : <ChevronDown size={14} className="text-gray-400 group-hover:text-[#D4AF37] transition-transform" />}
       </button>
       <AnimatePresence>
-        {open && (
+        {isOpen && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-            <div className="flex flex-col gap-1.5 pt-3">
-              {options.map((opt) => (
-                <button key={opt.value} onClick={() => onSelect(opt.value)}
-                  className={`text-left text-[11px] py-2 px-3 rounded-xl flex items-center justify-between transition-colors ${selected === opt.value ? 'bg-[#D4AF37]/10 text-[#D4AF37] font-semibold' : 'text-[#1A0008]/60 hover:bg-[#D4AF37]/5 hover:text-[#1A0008]'}`}>
-                  <span>{opt.label}</span>
-                  {selected === opt.value && <Check size={12} className="text-[#D4AF37]" />}
-                </button>
-              ))}
-            </div>
+            <div className="pt-3">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -165,7 +157,14 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sortBy, setSortBy] = useState('default');
-  const [filters, setFilters] = useState({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' });
+  
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedFabrics, setSelectedFabrics] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedPrices, setSelectedPrices] = useState([]);
+  const [selectedOccasions, setSelectedOccasions] = useState([]);
+
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -195,15 +194,12 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
       setProducts(boutiqueProds);
       setFilteredProducts(boutiqueProds);
       
-      // If we got products, or if a reasonable time passed, stop loading
       if (boutiqueProds.length > 0) {
         setLoading(false);
       }
     };
 
     loadData();
-    
-    // Fallback: stop loading after 2.5s even if no products found (in case shop is actually empty)
     const timer = setTimeout(() => setLoading(false), 2500);
 
     window.addEventListener('admin-data-updated', loadData);
@@ -216,61 +212,147 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     };
   }, [boutiqueName]);
 
+  const toggleFilter = (setter, value) => {
+    setter(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);
+  };
+
+  const clearAllFilters = () => {
+    setSelectedCategories([]);
+    setSelectedSizes([]);
+    setSelectedFabrics([]);
+    setSelectedColors([]);
+    setSelectedPrices([]);
+    setSelectedOccasions([]);
+  };
+
+  const categoriesList = useMemo(() => {
+    const c = new Set();
+    products.forEach(p => {
+      if (p.type) c.add(p.type.trim());
+      if (p.suitType) c.add(p.suitType.trim());
+      if (p.category) c.add(p.category.trim());
+    });
+    return [...c].filter(Boolean).sort();
+  }, [products]);
+
+  const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
+
+  const fabricsList = useMemo(() => {
+    const f = new Set();
+    products.forEach(p => {
+      if (p.fabricName) f.add(p.fabricName.trim());
+      if (p.fabric) f.add(p.fabric.trim());
+      if (p.fabricDetails && p.fabricDetails.length <= 30) f.add(p.fabricDetails.trim());
+    });
+    return [...f].filter(Boolean).sort();
+  }, [products]);
+
+  const colorsList = useMemo(() => {
+    const c = new Set();
+    products.forEach(p => {
+      if (p.color) {
+        p.color.split(',').forEach(col => {
+          if (col.trim()) c.add(col.trim().toLowerCase());
+        });
+      }
+      if (p.colorVariants) {
+        Object.values(p.colorVariants).forEach(v => {
+          if (v.name) c.add(v.name.trim().toLowerCase());
+        });
+      }
+    });
+    return [...c].filter(Boolean).map(col => col.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')).sort();
+  }, [products]);
+
+  const pricesList = [
+    { id: '1k-3k', label: '₹1,000 - ₹3,000' },
+    { id: '3k-5k', label: '₹3,000 - ₹5,000' },
+    { id: '5k-10k', label: '₹5,000 - ₹10,000' },
+    { id: 'over10k', label: 'Over ₹10,000' }
+  ];
+
+  const occasionsList = useMemo(() => {
+    const o = new Set();
+    products.forEach(p => {
+      if (p.occasions && Array.isArray(p.occasions)) {
+        p.occasions.forEach(occ => o.add(occ.trim()));
+      } else if (typeof p.occasions === 'string') {
+        p.occasions.split(',').forEach(occ => o.add(occ.trim()));
+      }
+      if (p.occasion) {
+        p.occasion.split(',').forEach(occ => o.add(occ.trim()));
+      }
+    });
+    return [...o].filter(Boolean).sort();
+  }, [products]);
+
   useEffect(() => {
     let result = [...products];
-    if (filters.fabric !== 'All') result = result.filter(p => p.fabric === filters.fabric);
-    if (filters.occasion !== 'All') result = result.filter(p => p.occasion === filters.occasion);
-    if (filters.color !== 'All') result = result.filter(p => p.color === filters.color);
-    if (filters.size !== 'All') result = result.filter(p => p.sizes && p.sizes.includes(filters.size));
-    if (filters.work !== 'All') result = result.filter(p => p.work === filters.work || (p.description && p.description.includes(filters.work)));
-    if (filters.price !== 'All') {
+
+    const getText = (p) => `${p.name || ''} ${p.desc || ''} ${p.type || ''} ${p.collection || ''}`.toLowerCase();
+
+    if (selectedCategories.length > 0) {
+      result = result.filter(p => selectedCategories.some(c => 
+        (p.type && p.type.toLowerCase().includes(c.toLowerCase())) ||
+        (p.suitType && p.suitType.toLowerCase().includes(c.toLowerCase())) ||
+        (p.category && p.category.toLowerCase().includes(c.toLowerCase())) ||
+        getText(p).includes(c.toLowerCase())
+      ));
+    }
+
+    if (selectedFabrics.length > 0) {
+      result = result.filter(p => selectedFabrics.some(f => 
+        (p.fabricName && p.fabricName.toLowerCase().includes(f.toLowerCase())) ||
+        (p.fabric && p.fabric.toLowerCase().includes(f.toLowerCase())) ||
+        (p.fabricDetails && p.fabricDetails.toLowerCase().includes(f.toLowerCase())) ||
+        getText(p).includes(f.toLowerCase())
+      ));
+    }
+
+    if (selectedColors.length > 0) {
+      result = result.filter(p => selectedColors.some(c => {
+        if (p.color && p.color.toLowerCase().includes(c.toLowerCase())) return true;
+        if (p.colorVariants && Object.values(p.colorVariants).some(v => v.name && v.name.toLowerCase().includes(c.toLowerCase()))) return true;
+        const regex = new RegExp(`\\b${c}\\b`, 'i');
+        return regex.test(getText(p));
+      }));
+    }
+
+    if (selectedSizes.length > 0) {
+      result = result.filter(p => selectedSizes.some(s => 
+        (p.sizes && p.sizes.map(x => x.toLowerCase()).includes(s.toLowerCase())) ||
+        (p.fitOptions && p.fitOptions.map(x => x.toLowerCase()).includes(s.toLowerCase())) ||
+        getText(p).includes(s.toLowerCase())
+      ));
+    }
+
+    if (selectedPrices.length > 0) {
       result = result.filter(p => {
-        const price = parseInt(p.price.replace(/[^0-9]/g, ''));
-        if (filters.price === 'Under 500') return price < 500;
-        if (filters.price === '500 - 800') return price >= 500 && price <= 800;
-        if (filters.price === '800 - 1000') return price >= 800 && price <= 1000;
-        if (filters.price === '1000 - 1500') return price >= 1000 && price <= 1500;
-        if (filters.price === '1500 - 2000') return price >= 1500 && price <= 2000;
-        if (filters.price === '2000 - 3000') return price >= 2000 && price <= 3000;
-        if (filters.price === '3000 - 5000') return price >= 3000 && price <= 5000;
-        if (filters.price === 'Over 5000') return price > 5000;
-        return true;
+        const price = p.priceNum || parseInt((p.price || '0').toString().replace(/[^\d]/g, ''), 10) || 0;
+        if (selectedPrices.includes('1k-3k') && price >= 1000 && price <= 3000) return true;
+        if (selectedPrices.includes('3k-5k') && price >= 3000 && price <= 5000) return true;
+        if (selectedPrices.includes('5k-10k') && price >= 5000 && price <= 10000) return true;
+        if (selectedPrices.includes('over10k') && price > 10000) return true;
+        return false;
       });
     }
-    if (sortBy === 'price-low') result.sort((a, b) => parseInt(a.price.replace(/[^0-9]/g, '')) - parseInt(b.price.replace(/[^0-9]/g, '')));
-    if (sortBy === 'price-high') result.sort((a, b) => parseInt(b.price.replace(/[^0-9]/g, '')) - parseInt(a.price.replace(/[^0-9]/g, '')));
-    if (sortBy === 'newest') result.reverse();
-    setFilteredProducts(result);
-  }, [filters, sortBy, products]);
 
-  const fabricOptions = [{ value: 'All', label: 'All Fabrics' }, { value: 'Silk', label: 'Pure Silk' }, { value: 'Georgette', label: 'Georgette' }, { value: 'Cotton', label: 'Cotton' }, { value: 'Banarasi', label: 'Banarasi' }, { value: 'Chiffon', label: 'Chiffon' }];
-  const occasionOptions = [{ value: 'All', label: 'All Occasions' }, { value: 'Festive', label: 'Festive Wear' }, { value: 'Wedding', label: 'Wedding Guest' }, { value: 'Casual', label: 'Casual Wear' }];
-  const colorOptions = [{ value: 'All', label: 'All Colors' }, { value: 'Red', label: 'Red' }, { value: 'Blue', label: 'Blue' }, { value: 'Green', label: 'Green' }, { value: 'Pink', label: 'Pink' }, { value: 'Black', label: 'Black' }];
-  const priceOptions = [
-    { value: 'All', label: 'Any Price' },
-    { value: 'Under 500', label: 'Under ₹500' },
-    { value: '500 - 800', label: '₹500 - ₹800' },
-    { value: '800 - 1000', label: '₹800 - ₹1,000' },
-    { value: '1000 - 1500', label: '₹1,000 - ₹1,500' },
-    { value: '1500 - 2000', label: '₹1,500 - ₹2,000' },
-    { value: '2000 - 3000', label: '₹2,000 - ₹3,000' },
-    { value: '3000 - 5000', label: '₹3,000 - ₹5,000' },
-    { value: 'Over 5000', label: 'Over ₹5,000' }
-  ];
-  const sizeOptions = [
-    { value: 'All', label: 'All Sizes' },
-    { value: 'Unstitched', label: 'Unstitched' },
-    { value: 'Semi-Stitched', label: 'Semi-Stitched' },
-    { value: 'XS', label: 'XS' }, 
-    { value: 'S', label: 'S' }, 
-    { value: 'M', label: 'M' }, 
-    { value: 'L', label: 'L' }, 
-    { value: 'XL', label: 'XL' },
-    { value: 'XXL', label: 'XXL' },
-    { value: 'XXXL', label: 'XXXL' },
-    { value: 'XXXXL', label: 'XXXXL' }
-  ];
-  const workOptions = [{ value: 'All', label: 'All Work' }, { value: 'Embroidery', label: 'Hand Embroidery' }, { value: 'Zari', label: 'Zari Work' }, { value: 'Gota Patti', label: 'Gota Patti' }, { value: 'Printed', label: 'Printed' }];
+    if (selectedOccasions.length > 0) {
+      result = result.filter(p => selectedOccasions.some(o => 
+        (p.occasions && Array.isArray(p.occasions) && p.occasions.map(x => x.toLowerCase()).includes(o.toLowerCase())) ||
+        (p.occasion && p.occasion.toLowerCase().includes(o.toLowerCase())) ||
+        getText(p).includes(o.toLowerCase())
+      ));
+    }
+
+    if (sortBy === 'price-low') result.sort((a, b) => (a.priceNum || parseInt(a.price.replace(/[^\d]/g, ''), 10)) - (b.priceNum || parseInt(b.price.replace(/[^\d]/g, ''), 10)));
+    if (sortBy === 'price-high') result.sort((a, b) => (b.priceNum || parseInt(b.price.replace(/[^\d]/g, ''), 10)) - (a.priceNum || parseInt(a.price.replace(/[^\d]/g, ''), 10)));
+    if (sortBy === 'newest') result.reverse();
+
+    setFilteredProducts(result);
+  }, [selectedCategories, selectedSizes, selectedFabrics, selectedColors, selectedPrices, selectedOccasions, sortBy, products]);
+
+  const activeFilterCount = selectedCategories.length + selectedSizes.length + selectedFabrics.length + selectedColors.length + selectedPrices.length + selectedOccasions.length;
 
   if (!profile) return null;
 
@@ -432,14 +514,87 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
           <div className="sticky top-28 bg-white/50 p-6 rounded-3xl border border-[#D4AF37]/15 shadow-[0_8px_30px_rgba(188,165,138,0.05)] max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#D4AF37]/20">
             <div className="flex items-center justify-between mb-6 border-b border-[#D4AF37]/15 pb-4">
               <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#1A0008]">Refine</h3>
-              <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' })} className="text-[9px] uppercase font-bold tracking-wider text-[#D4AF37] hover:text-[#1A0008] transition-colors">Clear</button>
+              {activeFilterCount > 0 && (
+                <button onClick={clearAllFilters} className="text-[9px] uppercase font-bold tracking-wider text-[#D4AF37] hover:text-[#1A0008] transition-colors cursor-pointer">Clear All</button>
+              )}
             </div>
-            <FilterSection title="Fabric" options={fabricOptions} selected={filters.fabric} onSelect={(v) => setFilters(f => ({ ...f, fabric: v }))} />
-            <FilterSection title="Color" options={colorOptions} selected={filters.color} onSelect={(v) => setFilters(f => ({ ...f, color: v }))} />
-            <FilterSection title="Work / Pattern" options={workOptions} selected={filters.work} onSelect={(v) => setFilters(f => ({ ...f, work: v }))} />
-            <FilterSection title="Occasion" options={occasionOptions} selected={filters.occasion} onSelect={(v) => setFilters(f => ({ ...f, occasion: v }))} />
-            <FilterSection title="Size" options={sizeOptions} selected={filters.size} onSelect={(v) => setFilters(f => ({ ...f, size: v }))} />
-            <FilterSection title="Price" options={priceOptions} selected={filters.price} onSelect={(v) => setFilters(f => ({ ...f, price: v }))} />
+
+            {categoriesList.length > 0 && (
+              <FilterAccordion title="Category" defaultOpen={false}>
+                <div className="space-y-3">
+                  {categoriesList.map(c => (
+                    <label key={c} className="flex items-center gap-3 cursor-pointer group">
+                      <input type="checkbox" checked={selectedCategories.includes(c)} onChange={() => toggleFilter(setSelectedCategories, c)} className="w-4 h-4 rounded-sm border-gray-300 text-[#1A0008] accent-[#1A0008] cursor-pointer" />
+                      <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{c}</span>
+                    </label>
+                  ))}
+                </div>
+              </FilterAccordion>
+            )}
+
+            <FilterAccordion title="Size" defaultOpen={false}>
+              <div className="flex flex-wrap gap-2">
+                {sizesList.map(s => (
+                  <button key={s} onClick={() => toggleFilter(setSelectedSizes, s)}
+                    className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${selectedSizes.includes(s) ? 'border-[#1A0008] bg-[#1A0008] text-white' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </FilterAccordion>
+
+            {fabricsList.length > 0 && (
+              <FilterAccordion title="Fabric" defaultOpen={false}>
+                <div className="space-y-3">
+                  {fabricsList.map(f => (
+                    <label key={f} className="flex items-center gap-3 cursor-pointer group">
+                      <input type="checkbox" checked={selectedFabrics.includes(f)} onChange={() => toggleFilter(setSelectedFabrics, f)} className="w-4 h-4 rounded-sm accent-[#1A0008] cursor-pointer" />
+                      <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{f}</span>
+                    </label>
+                  ))}
+                </div>
+              </FilterAccordion>
+            )}
+
+            {colorsList.length > 0 && (
+              <FilterAccordion title="Color" defaultOpen={false}>
+                <div className="flex flex-wrap gap-2">
+                  {colorsList.map(c => {
+                    const isSelected = selectedColors.includes(c);
+                    return (
+                      <button key={c} onClick={() => toggleFilter(setSelectedColors, c)}
+                        className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${isSelected ? 'border-[#1A0008] bg-[#1A0008] text-white shadow-sm' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
+                        {c}
+                      </button>
+                    );
+                  })}
+                </div>
+              </FilterAccordion>
+            )}
+
+            <FilterAccordion title="Price" defaultOpen={false}>
+              <div className="space-y-3">
+                {pricesList.map(p => (
+                  <label key={p.id} className="flex items-center gap-3 cursor-pointer group">
+                    <input type="checkbox" checked={selectedPrices.includes(p.id)} onChange={() => toggleFilter(setSelectedPrices, p.id)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
+                    <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{p.label}</span>
+                  </label>
+                ))}
+              </div>
+            </FilterAccordion>
+
+            {occasionsList.length > 0 && (
+              <FilterAccordion title="Occasion" defaultOpen={false}>
+                <div className="space-y-3">
+                  {occasionsList.map(o => (
+                    <label key={o} className="flex items-center gap-3 cursor-pointer group">
+                      <input type="checkbox" checked={selectedOccasions.includes(o)} onChange={() => toggleFilter(setSelectedOccasions, o)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
+                      <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{o}</span>
+                    </label>
+                  ))}
+                </div>
+              </FilterAccordion>
+            )}
           </div>
         </div>
 
@@ -466,7 +621,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
           {filteredProducts.length === 0 ? (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 md:py-24 bg-white/50 rounded-2xl md:rounded-3xl border border-dashed border-[#D4AF37]/30">
               <p className="text-lg md:text-xl font-light text-[#6B6B6B]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>No pieces match your current filters.</p>
-              <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All' })} className="mt-4 text-[10px] font-bold tracking-[0.2em] uppercase text-[#D4AF37] hover:text-[#1A0008] border-b border-[#D4AF37]/40 pb-1 transition-colors">Reset All Filters</button>
+              <button onClick={clearAllFilters} className="mt-4 text-[10px] font-bold tracking-[0.2em] uppercase text-[#D4AF37] hover:text-[#1A0008] border-b border-[#D4AF37]/40 pb-1 transition-colors">Reset All Filters</button>
             </motion.div>
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-6 sm:gap-y-10 [perspective:1000px]">
@@ -500,18 +655,91 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
                 <div className="flex items-center justify-between mb-6 border-b border-[#D4AF37]/15 pb-4">
                   <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#1A0008]">Refine</h3>
                   <div className="flex items-center gap-4">
-                    <button onClick={() => setFilters({ fabric: 'All', occasion: 'All', color: 'All', price: 'All', size: 'All', work: 'All' })} className="text-[9px] uppercase font-bold tracking-wider text-[#D4AF37] hover:text-[#1A0008] transition-colors">Clear</button>
+                    {activeFilterCount > 0 && (
+                      <button onClick={clearAllFilters} className="text-[9px] uppercase font-bold tracking-wider text-[#D4AF37] hover:text-[#1A0008] transition-colors">Clear All</button>
+                    )}
                     <button onClick={() => setShowMobileFilter(false)} className="text-[#1A0008] hover:text-[#D4AF37] transition-colors cursor-pointer">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                     </button>
                   </div>
                 </div>
-                <FilterSection title="Fabric" options={fabricOptions} selected={filters.fabric} onSelect={(v) => setFilters(f => ({ ...f, fabric: v }))} defaultOpen={true} />
-                <FilterSection title="Color" options={colorOptions} selected={filters.color} onSelect={(v) => setFilters(f => ({ ...f, color: v }))} defaultOpen={true} />
-                <FilterSection title="Work / Pattern" options={workOptions} selected={filters.work} onSelect={(v) => setFilters(f => ({ ...f, work: v }))} defaultOpen={true} />
-                <FilterSection title="Occasion" options={occasionOptions} selected={filters.occasion} onSelect={(v) => setFilters(f => ({ ...f, occasion: v }))} defaultOpen={true} />
-                <FilterSection title="Size" options={sizeOptions} selected={filters.size} onSelect={(v) => setFilters(f => ({ ...f, size: v }))} defaultOpen={true} />
-                <FilterSection title="Price" options={priceOptions} selected={filters.price} onSelect={(v) => setFilters(f => ({ ...f, price: v }))} defaultOpen={true} />
+
+                {categoriesList.length > 0 && (
+                  <FilterAccordion title="Category" defaultOpen={false}>
+                    <div className="space-y-3">
+                      {categoriesList.map(c => (
+                        <label key={c} className="flex items-center gap-3 cursor-pointer group">
+                          <input type="checkbox" checked={selectedCategories.includes(c)} onChange={() => toggleFilter(setSelectedCategories, c)} className="w-4 h-4 rounded-sm border-gray-300 text-[#1A0008] accent-[#1A0008] cursor-pointer" />
+                          <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{c}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </FilterAccordion>
+                )}
+
+                <FilterAccordion title="Size" defaultOpen={false}>
+                  <div className="flex flex-wrap gap-2">
+                    {sizesList.map(s => (
+                      <button key={s} onClick={() => toggleFilter(setSelectedSizes, s)}
+                        className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${selectedSizes.includes(s) ? 'border-[#1A0008] bg-[#1A0008] text-white' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </FilterAccordion>
+
+                {fabricsList.length > 0 && (
+                  <FilterAccordion title="Fabric" defaultOpen={false}>
+                    <div className="space-y-3">
+                      {fabricsList.map(f => (
+                        <label key={f} className="flex items-center gap-3 cursor-pointer group">
+                          <input type="checkbox" checked={selectedFabrics.includes(f)} onChange={() => toggleFilter(setSelectedFabrics, f)} className="w-4 h-4 rounded-sm accent-[#1A0008] cursor-pointer" />
+                          <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{f}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </FilterAccordion>
+                )}
+
+                {colorsList.length > 0 && (
+                  <FilterAccordion title="Color" defaultOpen={false}>
+                    <div className="flex flex-wrap gap-2">
+                      {colorsList.map(c => {
+                        const isSelected = selectedColors.includes(c);
+                        return (
+                          <button key={c} onClick={() => toggleFilter(setSelectedColors, c)}
+                            className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${isSelected ? 'border-[#1A0008] bg-[#1A0008] text-white shadow-sm' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
+                            {c}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </FilterAccordion>
+                )}
+
+                <FilterAccordion title="Price" defaultOpen={false}>
+                  <div className="space-y-3">
+                    {pricesList.map(p => (
+                      <label key={p.id} className="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" checked={selectedPrices.includes(p.id)} onChange={() => toggleFilter(setSelectedPrices, p.id)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
+                        <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{p.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </FilterAccordion>
+
+                {occasionsList.length > 0 && (
+                  <FilterAccordion title="Occasion" defaultOpen={false}>
+                    <div className="space-y-3">
+                      {occasionsList.map(o => (
+                        <label key={o} className="flex items-center gap-3 cursor-pointer group">
+                          <input type="checkbox" checked={selectedOccasions.includes(o)} onChange={() => toggleFilter(setSelectedOccasions, o)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
+                          <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{o}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </FilterAccordion>
+                )}
               </div>
             </motion.div>
           </>

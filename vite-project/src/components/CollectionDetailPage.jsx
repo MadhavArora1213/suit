@@ -3,7 +3,7 @@ import { ArrowLeft, ShoppingBag, Heart, Eye, SlidersHorizontal, ChevronDown, Che
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { getAllProducts, getCollections } from '../utils/adminStore';
 
-function FilterAccordion({ title, children, defaultOpen = true }) {
+function FilterAccordion({ title, children, defaultOpen = false }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-[#D4AF37]/15 pb-5 mb-5">
@@ -40,17 +40,29 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
 
   const [collection, setCollection] = useState(null);
   const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let timeoutId;
     const load = () => {
       const allCols = getCollections();
       const col = allCols.find(c => (c.id || '').toLowerCase() === (slug || '').toLowerCase());
       setCollection(col || null);
-      setAllProducts(getAllProducts());
+      const prods = getAllProducts();
+      setAllProducts(prods);
+
+      if (prods.length > 0 || window.isLiveSyncComplete) {
+        setLoading(false);
+      } else {
+        timeoutId = setTimeout(() => setLoading(false), 3000);
+      }
     };
     load();
     window.addEventListener('admin-data-updated', load);
-    return () => window.removeEventListener('admin-data-updated', load);
+    return () => {
+      window.removeEventListener('admin-data-updated', load);
+      clearTimeout(timeoutId);
+    };
   }, [slug]);
 
   const products = useMemo(() => {
@@ -97,29 +109,80 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
 
   const boutiques = useMemo(() => [...new Set(products.map(p => p.boutique).filter(Boolean))], [products]);
   
-  const categoriesList = ['Anarkali', 'Straight Suit', 'Sharara', 'Patiala', 'Lehenga'];
-  const fabricsList = ['Cotton', 'Silk', 'Georgette', 'Velvet', 'Organza', 'Chanderi'];
-  const occasionsList = ['Casual', 'Festive', 'Wedding', 'Party'];
+  const categoriesList = useMemo(() => {
+    const c = new Set();
+    products.forEach(p => {
+      if (p.type) c.add(p.type.trim());
+      if (p.suitType) c.add(p.suitType.trim());
+      if (p.category) c.add(p.category.trim());
+    });
+    return [...c].filter(Boolean).sort();
+  }, [products]);
+  const fabricsList = useMemo(() => {
+    const f = new Set();
+    products.forEach(p => {
+      if (p.fabricName) f.add(p.fabricName.trim());
+      if (p.fabric) f.add(p.fabric.trim());
+      if (p.fabricDetails && p.fabricDetails.length <= 30) f.add(p.fabricDetails.trim());
+    });
+    return [...f].filter(Boolean).sort();
+  }, [products]);
+
+  const occasionsList = useMemo(() => {
+    const o = new Set();
+    products.forEach(p => {
+      if (p.occasions && Array.isArray(p.occasions)) {
+        p.occasions.forEach(occ => o.add(occ.trim()));
+      } else if (typeof p.occasions === 'string') {
+        p.occasions.split(',').forEach(occ => o.add(occ.trim()));
+      }
+      if (p.occasion) {
+        p.occasion.split(',').forEach(occ => o.add(occ.trim()));
+      }
+    });
+    return [...o].filter(Boolean).sort();
+  }, [products]);
   const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
   const patternsList = ['Solid', 'Printed', 'Embroidered', 'Floral', 'Geometric', 'Zari Work'];
   const stylesList = ['Straight', 'A-Line', 'Flared', 'Asymmetric'];
   const sleevesList = ['Sleeveless', 'Short Sleeves', '3/4 Sleeves', 'Full Sleeves'];
   const necksList = ['Round Neck', 'V-Neck', 'Square Neck', 'Mandarin Collar', 'Boat Neck'];
   const pricesList = [
-    { id: 'under5k', label: 'Under ₹5,000' },
+    { id: '1k-3k', label: '₹1,000 - ₹3,000' },
+    { id: '3k-5k', label: '₹3,000 - ₹5,000' },
     { id: '5k-10k', label: '₹5,000 - ₹10,000' },
     { id: 'over10k', label: 'Over ₹10,000' }
   ];
-  const colorsList = [
-    { name: 'Red', hex: '#E74C3C' },
-    { name: 'Blue', hex: '#3498DB' },
-    { name: 'Green', hex: '#2ECC71' },
-    { name: 'Pink', hex: '#F1948A' },
-    { name: 'Black', hex: '#1A0008' },
-    { name: 'White', hex: '#FFFFFF' },
-    { name: 'Yellow', hex: '#F1C40F' },
-    { name: 'Wine', hex: '#722F37' }
+  const baseColors = [
+    { name: 'Red', hex: '#E74C3C' }, { name: 'Blue', hex: '#3498DB' }, { name: 'Green', hex: '#2ECC71' },
+    { name: 'Pink', hex: '#F1948A' }, { name: 'Black', hex: '#1A0008' }, { name: 'White', hex: '#FFFFFF' },
+    { name: 'Yellow', hex: '#F1C40F' }, { name: 'Wine', hex: '#722F37' }, { name: 'Maroon', hex: '#800000' },
+    { name: 'Purple', hex: '#8E44AD' }, { name: 'Peach', hex: '#FFCBA4' }, { name: 'Orange', hex: '#E67E22' },
+    { name: 'Beige', hex: '#F5F5DC' }, { name: 'Mustard', hex: '#FFDB58' }, { name: 'Olive', hex: '#808000' },
+    { name: 'Teal', hex: '#008080' }, { name: 'Navy', hex: '#000080' }, { name: 'Grey', hex: '#7F8C8D' },
+    { name: 'Brown', hex: '#8B4513' }, { name: 'Gold', hex: '#FFD700' }, { name: 'Silver', hex: '#C0C0C0' },
+    { name: 'Ivory', hex: '#FFFFF0' }, { name: 'Magenta', hex: '#FF00FF' }, { name: 'Lavender', hex: '#E6E6FA' },
+    { name: 'Turquoise', hex: '#40E0D0' }, { name: 'Coral', hex: '#FF7F50' }, { name: 'Mint', hex: '#98FF98' },
+    { name: 'Indigo', hex: '#4B0082' }, { name: 'Rose', hex: '#FF007F' }, { name: 'Cyan', hex: '#00FFFF' }
   ];
+
+  const colorsList = useMemo(() => {
+    const c = new Set();
+    products.forEach(p => {
+      if (p.color) {
+        p.color.split(',').forEach(col => {
+          if (col.trim()) c.add(col.trim().toLowerCase());
+        });
+      }
+      if (p.colorVariants) {
+        Object.values(p.colorVariants).forEach(v => {
+          if (v.name) c.add(v.name.trim().toLowerCase());
+        });
+      }
+    });
+
+    return [...c].filter(Boolean).map(col => col.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')).sort();
+  }, [products]);
 
   const formatPrice = (num) => `₹${num.toLocaleString('en-IN')}`;
   
@@ -148,9 +211,11 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
     
     if (selectedPrices.length > 0) {
       result = result.filter(p => {
-        if (selectedPrices.includes('under5k') && p.priceNum < 5000) return true;
-        if (selectedPrices.includes('5k-10k') && p.priceNum >= 5000 && p.priceNum <= 10000) return true;
-        if (selectedPrices.includes('over10k') && p.priceNum > 10000) return true;
+        const price = p.priceNum || parseInt((p.price || '0').toString().replace(/[^\d]/g, ''), 10) || 0;
+        if (selectedPrices.includes('1k-3k') && price >= 1000 && price <= 3000) return true;
+        if (selectedPrices.includes('3k-5k') && price >= 3000 && price <= 5000) return true;
+        if (selectedPrices.includes('5k-10k') && price >= 5000 && price <= 10000) return true;
+        if (selectedPrices.includes('over10k') && price > 10000) return true;
         return false;
       });
     }
@@ -158,13 +223,23 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
     const getText = (p) => `${p.name} ${p.desc} ${p.type} ${p.collection}`.toLowerCase();
 
     if (selectedCategories.length > 0) {
-      result = result.filter(p => selectedCategories.some(c => getText(p).includes(c.toLowerCase())));
+      result = result.filter(p => selectedCategories.some(c => 
+        (p.type && p.type.toLowerCase().includes(c.toLowerCase())) ||
+        (p.suitType && p.suitType.toLowerCase().includes(c.toLowerCase())) ||
+        (p.category && p.category.toLowerCase().includes(c.toLowerCase())) ||
+        getText(p).includes(c.toLowerCase())
+      ));
     }
     if (selectedFabrics.length > 0) {
       result = result.filter(p => selectedFabrics.some(f => getText(p).includes(f.toLowerCase())));
     }
     if (selectedColors.length > 0) {
-      result = result.filter(p => selectedColors.some(c => getText(p).includes(c.toLowerCase())));
+      result = result.filter(p => selectedColors.some(c => {
+        if (p.color && p.color.toLowerCase().includes(c.toLowerCase())) return true;
+        if (p.colorVariants && Object.values(p.colorVariants).some(v => v.name && v.name.toLowerCase().includes(c.toLowerCase()))) return true;
+        const regex = new RegExp(`\\b${c}\\b`, 'i');
+        return regex.test(getText(p));
+      }));
     }
     if (selectedOccasions.length > 0) {
       result = result.filter(p => selectedOccasions.some(o => getText(p).includes(o.toLowerCase())));
@@ -353,7 +428,7 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
               )}
             </div>
 
-            <FilterAccordion title="Category" defaultOpen={true}>
+            <FilterAccordion title="Category" defaultOpen={false}>
               <div className="space-y-3">
                 {categoriesList.map(c => (
                   <label key={c} className="flex items-center gap-3 cursor-pointer group">
@@ -375,70 +450,31 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
               </div>
             </FilterAccordion>
 
-            <FilterAccordion title="Pattern and Print" defaultOpen={false}>
-              <div className="space-y-3">
-                {patternsList.map(pt => (
-                  <label key={pt} className="flex items-center gap-3 cursor-pointer group">
-                    <input type="checkbox" checked={selectedPatterns.includes(pt)} onChange={() => toggleFilter(setSelectedPatterns, pt)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
-                    <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{pt}</span>
-                  </label>
-                ))}
-              </div>
-            </FilterAccordion>
 
-            <FilterAccordion title="Style" defaultOpen={false}>
-              <div className="space-y-3">
-                {stylesList.map(st => (
-                  <label key={st} className="flex items-center gap-3 cursor-pointer group">
-                    <input type="checkbox" checked={selectedStyles.includes(st)} onChange={() => toggleFilter(setSelectedStyles, st)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
-                    <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{st}</span>
-                  </label>
-                ))}
-              </div>
-            </FilterAccordion>
 
-            <FilterAccordion title="Sleeve Length" defaultOpen={false}>
-              <div className="space-y-3">
-                {sleevesList.map(sl => (
-                  <label key={sl} className="flex items-center gap-3 cursor-pointer group">
-                    <input type="checkbox" checked={selectedSleeves.includes(sl)} onChange={() => toggleFilter(setSelectedSleeves, sl)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
-                    <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{sl}</span>
-                  </label>
-                ))}
-              </div>
-            </FilterAccordion>
 
-            <FilterAccordion title="Neck" defaultOpen={false}>
-              <div className="space-y-3">
-                {necksList.map(n => (
-                  <label key={n} className="flex items-center gap-3 cursor-pointer group">
-                    <input type="checkbox" checked={selectedNecks.includes(n)} onChange={() => toggleFilter(setSelectedNecks, n)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
-                    <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{n}</span>
-                  </label>
-                ))}
-              </div>
-            </FilterAccordion>
 
-            <FilterAccordion title="Fabric" defaultOpen={false}>
-              <div className="space-y-3">
-                {fabricsList.map(f => (
-                  <label key={f} className="flex items-center gap-3 cursor-pointer group">
-                    <input type="checkbox" checked={selectedFabrics.includes(f)} onChange={() => toggleFilter(setSelectedFabrics, f)} className="w-4 h-4 rounded-sm accent-[#1A0008] cursor-pointer" />
-                    <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{f}</span>
-                  </label>
-                ))}
-              </div>
-            </FilterAccordion>
+            {fabricsList.length > 0 && (
+              <FilterAccordion title="Fabric" defaultOpen={false}>
+                <div className="space-y-3">
+                  {fabricsList.map(f => (
+                    <label key={f} className="flex items-center gap-3 cursor-pointer group">
+                      <input type="checkbox" checked={selectedFabrics.includes(f)} onChange={() => toggleFilter(setSelectedFabrics, f)} className="w-4 h-4 rounded-sm accent-[#1A0008] cursor-pointer" />
+                      <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{f}</span>
+                    </label>
+                  ))}
+                </div>
+              </FilterAccordion>
+            )}
 
-            <FilterAccordion title="Color" defaultOpen={true}>
-              <div className="flex flex-wrap gap-3">
+            <FilterAccordion title="Color" defaultOpen={false}>
+              <div className="flex flex-wrap gap-2">
                 {colorsList.map(c => {
-                  const isSelected = selectedColors.includes(c.name);
+                  const isSelected = selectedColors.includes(c);
                   return (
-                    <button key={c.name} onClick={() => toggleFilter(setSelectedColors, c.name)} title={c.name}
-                      className={`w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all cursor-pointer ${isSelected ? 'border-gray-400 scale-110 shadow-md' : 'border-gray-200 hover:border-gray-300'}`}
-                      style={{ backgroundColor: c.hex }}>
-                      {isSelected && <Check size={12} className={c.name === 'White' || c.name === 'Yellow' ? 'text-black' : 'text-white'} />}
+                    <button key={c} onClick={() => toggleFilter(setSelectedColors, c)}
+                      className={`px-3 py-1.5 border text-[11px] font-medium transition-colors cursor-pointer ${isSelected ? 'border-[#1A0008] bg-[#1A0008] text-white shadow-sm' : 'border-[#D4AF37]/30 text-[#6B6B6B] hover:border-[#1A0008]'}`}>
+                      {c}
                     </button>
                   );
                 })}
@@ -456,16 +492,18 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
               </div>
             </FilterAccordion>
 
-            <FilterAccordion title="Occasion" defaultOpen={false}>
-              <div className="space-y-3">
-                {occasionsList.map(o => (
-                  <label key={o} className="flex items-center gap-3 cursor-pointer group">
-                    <input type="checkbox" checked={selectedOccasions.includes(o)} onChange={() => toggleFilter(setSelectedOccasions, o)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
-                    <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{o}</span>
-                  </label>
-                ))}
-              </div>
-            </FilterAccordion>
+            {occasionsList.length > 0 && (
+              <FilterAccordion title="Occasion" defaultOpen={false}>
+                <div className="space-y-3">
+                  {occasionsList.map(o => (
+                    <label key={o} className="flex items-center gap-3 cursor-pointer group">
+                      <input type="checkbox" checked={selectedOccasions.includes(o)} onChange={() => toggleFilter(setSelectedOccasions, o)} className="w-4 h-4 accent-[#1A0008] cursor-pointer" />
+                      <span className="text-[13px] text-gray-600 group-hover:text-black transition-colors">{o}</span>
+                    </label>
+                  ))}
+                </div>
+              </FilterAccordion>
+            )}
 
             <FilterAccordion title="Boutique and Shop" defaultOpen={false}>
               <div className="space-y-3">
@@ -500,7 +538,18 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
             </div>
           </div>
 
-          {filteredProducts.length === 0 ? (
+          {loading ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 sm:gap-x-4 md:gap-x-8 gap-y-8 sm:gap-y-12 py-6 md:py-8 w-full px-2 sm:px-4 md:px-8">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                <div key={i} className="flex flex-col w-full animate-pulse">
+                  <div className="w-full aspect-[3/4] rounded-[16px] bg-[#E8DDD0]/50 mb-4"></div>
+                  <div className="w-3/4 h-5 bg-[#E8DDD0]/50 rounded mb-2"></div>
+                  <div className="w-1/3 h-4 bg-[#E8DDD0]/50 rounded mb-2"></div>
+                  <div className="w-1/2 h-3 bg-[#E8DDD0]/50 rounded mt-auto"></div>
+                </div>
+              ))}
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-24 w-full border border-dashed border-[#D4AF37]/30 rounded-sm bg-white/50">
               <div className="w-16 h-16 bg-[#FAF9F6] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#D4AF37]/20">
                 <SlidersHorizontal size={20} className="text-[#D4AF37]" />
