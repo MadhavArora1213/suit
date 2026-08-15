@@ -143,7 +143,14 @@ function AppContent() {
             });
           }
         } catch (error) {
-          console.error("Error fetching user profile:", error);
+          console.warn("Firestore offline or profile fetch error, using local auth user state:", error);
+          setUser({
+            uid: currentUser.uid,
+            name: currentUser.displayName || 'User',
+            email: currentUser.email,
+            phone: currentUser.phoneNumber || '',
+            role: 'customer'
+          });
         }
       } else {
         setUser(null);

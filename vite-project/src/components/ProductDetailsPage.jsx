@@ -34,17 +34,20 @@ const ThumbStrip = React.memo(function ThumbStrip({ images, current, onSelect, v
 /* ═══ Marquee (pure, no re-renders) ═══ */
 const MarqueeBanner = React.memo(function MarqueeBanner() {
   return (
-    <div className="overflow-hidden bg-gradient-to-r from-[#8B2252] via-[#a02d62] to-[#8B2252] py-2">
+    <div className="overflow-hidden bg-[#1A0008] py-2 border-y border-[#D4AF37]/20">
       <div className="pm flex whitespace-nowrap">
-        {[...Array(8)].map((_, i) => (
-          <span key={i} className="text-[9px] uppercase tracking-[0.35em] text-white/80 font-medium mx-4 flex items-center gap-3">
+        {[...Array(12)].map((_, i) => (
+          <span key={i} className="text-[9px] uppercase tracking-[0.25em] text-white/90 font-semibold mx-4 flex items-center gap-2">
             <Gem size={9} className="text-[#D4AF37]" /> Handcrafted Luxury
+            <span className="text-[#D4AF37]/40 mx-1">✦</span>
             <Award size={9} className="text-[#D4AF37]" /> Artisan Excellence
+            <span className="text-[#D4AF37]/40 mx-1">✦</span>
             <Feather size={9} className="text-[#D4AF37]" /> Timeless Elegance
+            <span className="text-[#D4AF37]/40 mx-1">✦</span>
           </span>
         ))}
       </div>
-      <style>{`.pm{animation:scrollm 25s linear infinite}@keyframes scrollm{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`}</style>
+      <style>{`.pm{animation:scrollm 30s linear infinite}@keyframes scrollm{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`}</style>
     </div>
   );
 });
@@ -331,7 +334,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
       </nav>
 
       {/* ═══ Main ═══ */}
-      <div className="max-w-[1100px] mx-auto px-4 lg:px-8 py-4 lg:py-6 pb-20 lg:pb-6">
+      <div className="max-w-[1100px] mx-auto px-4 lg:px-8 py-4 lg:py-6 pb-32 lg:pb-12 overflow-x-hidden">
         <div className="flex flex-col lg:flex-row gap-5 lg:gap-10 items-start">
 
           {/* ─── LEFT: GALLERY ─── */}
@@ -383,7 +386,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
 
             {/* Mobile */}
             <div className="gallery-mobile lg:hidden flex flex-col gap-3">
-              <div className="w-full relative -mx-4">
+              <div className="w-full relative rounded-2xl overflow-hidden shadow-sm">
                 <div className="w-full aspect-[3/4] overflow-hidden relative group"
                   onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
                   <AnimatePresence mode="wait">
@@ -1058,22 +1061,47 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
       </AnimatePresence>
 
       {/* ═══ Mobile Sticky Bar ═══ */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-xl border-t border-gray-100 px-4 py-3.5 flex items-center gap-3 z-50 shadow-[0_-6px_24px_rgba(0,0,0,0.06)]">
-        <div className="flex flex-col mr-auto">
-          <span className="text-lg font-bold text-[#222]">{product.price}</span>
-          {product.originalPrice && <span className="text-[10px] text-gray-400 line-through">{product.originalPrice}</span>}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-2xl border-t border-gray-200/80 px-3.5 py-2.5 flex items-center gap-2 z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.12)]">
+        <div className="flex flex-col shrink-0 min-w-[70px]">
+          <span className="text-base font-extrabold text-[#1A0008] leading-none">{product.price}</span>
+          {product.originalPrice && <span className="text-[10px] text-gray-400 line-through mt-0.5">{product.originalPrice}</span>}
         </div>
+
         <button onClick={() => toggleFavorite(product.id)}
-          className={`w-12 h-12 flex items-center justify-center rounded-xl border shrink-0 transition-all ${
+          className={`w-10 h-10 flex items-center justify-center rounded-xl border shrink-0 transition-all ${
             favorites[product.id] ? 'bg-rose-50 border-rose-300 text-rose-500' : 'border-gray-200 text-gray-400'
           }`}>
-          <Heart size={17} className={favorites[product.id] ? 'fill-current' : ''} />
+          <Heart size={16} className={favorites[product.id] ? 'fill-current' : ''} />
         </button>
-        <button onClick={handleAddToBag}
-          className={`h-12 px-7 flex items-center justify-center gap-2 text-[12px] font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shrink-0 ${
-            addedToBag ? 'bg-[#2e7d32] text-white' : 'bg-gradient-to-r from-[#8B2252] to-[#a02d62] text-white'
+
+        <button onClick={handleAddToBag} disabled={!isInStock}
+          className={`flex-1 h-10 flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
+            !isInStock
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
+              : addedToBag 
+                ? 'bg-[#2e7d32] text-white shadow-md' 
+                : 'bg-[#1A0008] text-white shadow-md'
           }`}>
-          {addedToBag ? <><Check size={15} strokeWidth={3} /> Done</> : <><ShoppingBag size={15} /> Add</>}
+          {addedToBag ? <><Check size={14} strokeWidth={3} /> Added</> : <><ShoppingBag size={14} /> Bag</>}
+        </button>
+
+        <button onClick={() => { 
+            if (!isInStock) return;
+            const size = selectedFit === 'Stitched' ? (selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Stitched')) : selectedFit;
+            let finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
+            if (availableColors.length > 0 && availableColors[selectedColorIndex]) {
+              finalSelection = `${availableColors[selectedColorIndex].name} | ${finalSelection}`;
+            }
+            addToCart(product, finalSelection); 
+            setView('checkout'); 
+          }}
+          disabled={!isInStock}
+          className={`flex-1 h-10 flex items-center justify-center gap-1 text-[10px] font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer ${
+            !isInStock
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
+              : 'bg-[#D4AF37] text-white shadow-md hover:bg-[#b8952b]'
+          }`}>
+          <Sparkles size={13} /> Buy
         </button>
       </div>
 
