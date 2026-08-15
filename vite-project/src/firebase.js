@@ -85,7 +85,7 @@ function initFirebase() {
 // Initial initialization
 initFirebase();
 
-export async function uploadImageToFirebase(base64String, fileName) {
+export async function uploadImageToFirebase(base64String, fileName, folderName = 'products') {
   if (!base64String) return '';
   if (base64String.startsWith('http') || base64String.startsWith('/uploads')) return base64String;
 
@@ -99,7 +99,7 @@ export async function uploadImageToFirebase(base64String, fileName) {
       body: JSON.stringify({
         imageBase64: base64String,
         filename: fileName || Date.now() + '.jpg',
-        folder: 'products'
+        folder: folderName
       })
     });
 
@@ -369,6 +369,7 @@ export async function saveProductToFirestore(productId, product) {
       stock: product.stock || 0,
       image: product.image || '',
       additionalImages: product.additionalImages || [],
+      colorVariants: product.colorVariants || {},
       addedAt: product.addedAt || new Date().toISOString(),
       source: product.source || 'admin',
       updatedAt: new Date().toISOString()

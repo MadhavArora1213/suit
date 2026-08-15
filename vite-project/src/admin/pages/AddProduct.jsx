@@ -69,6 +69,8 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
   const [stockQty, setStockQty] = useState(ep?.stockQty || {});
   const [mainImage, setMainImage] = useState(ep?.image || null);
   const [additionalImages, setAdditionalImages] = useState(ep?.additionalImages || []);
+  const [colorVariants, setColorVariants] = useState(ep?.colorVariants || {});
+  const [activeColorSlot, setActiveColorSlot] = useState("1");
   const [boutiques, setBoutiques] = useState([]);
   const [globalCategories, setGlobalCategories] = useState([]);
   const [saved, setSaved] = useState(false);
@@ -94,6 +96,26 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
     const files = Array.from(e.target.files || []);
     const b64s = await Promise.all(files.map(fileToBase64));
     setAdditionalImages(prev => [...prev, ...b64s]);
+  };
+
+  const handleVariantMainImage = async (e, slot) => {
+    const file = e.target.files?.[0] || e.dataTransfer?.files?.[0];
+    if (!file) return;
+    const b64 = await fileToBase64(file);
+    setColorVariants(prev => ({
+      ...prev,
+      [slot]: { ...(prev[slot] || {}), mainImage: b64 }
+    }));
+  };
+
+  const handleVariantAdditionalImages = async (e, slot) => {
+    const files = Array.from(e.target.files || []);
+    const b64s = await Promise.all(files.map(fileToBase64));
+    setColorVariants(prev => {
+      const current = prev[slot] || {};
+      const addImgs = current.additionalImages || [];
+      return { ...prev, [slot]: { ...current, additionalImages: [...addImgs, ...b64s] } };
+    });
   };
 
   const handleSave = async (e) => {
@@ -124,6 +146,28 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
         finalAdditionalImages.push(url);
       } else {
         finalAdditionalImages.push(additionalImages[i]);
+      }
+    }
+
+    const finalColorVariants = { ...colorVariants };
+    for (const slot of Object.keys(finalColorVariants)) {
+      const variant = finalColorVariants[slot];
+      const colorFolderName = variant.name ? variant.name.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() : `color_${slot}`;
+      const uploadFolder = `products/variants/${colorFolderName}`;
+      
+      if (variant.mainImage && variant.mainImage.startsWith('data:image')) {
+        variant.mainImage = await uploadImageToFirebase(variant.mainImage, `main_${Date.now()}.jpg`, uploadFolder);
+      }
+      if (variant.additionalImages && variant.additionalImages.length > 0) {
+        const uploadedAdds = [];
+        for (let j = 0; j < variant.additionalImages.length; j++) {
+          if (variant.additionalImages[j].startsWith('data:image')) {
+             uploadedAdds.push(await uploadImageToFirebase(variant.additionalImages[j], `add_${Date.now()}_${j}.jpg`, uploadFolder));
+          } else {
+             uploadedAdds.push(variant.additionalImages[j]);
+          }
+        }
+        variant.additionalImages = uploadedAdds;
       }
     }
 
@@ -163,6 +207,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       shippingType: form.shippingType,
       image: finalMainImage,
       additionalImages: finalAdditionalImages,
+      colorVariants: finalColorVariants,
       addedAt: ep?.addedAt || new Date().toISOString(),
       source: 'admin',
     };
@@ -471,6 +516,80 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 <span className="text-xs text-[#6B8C90] mt-1">Add</span>
                 <input type="file" accept="image/*" multiple onChange={handleAdditionalImages} className="hidden" />
               </label>
+            </div>
+          </Card>
+
+          {/* Color Variants */}
+          <Card title="Color Variants (1-15)" subtitle="Define up to 15 different colors with specific images">
+            <div className="space-y-4">
+              <div>
+                <Label>Select Color Slot</Label>
+                <select value={activeColorSlot} onChange={e => setActiveColorSlot(e.target.value)}
+                  className="w-full px-4 py-3 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl text-sm text-[#1A1A1A] focus:outline-none appearance-none cursor-pointer transition-all">
+                  {[...Array(15)].map((_, i) => (
+                    <option key={i+1} value={String(i+1)}>Color Slot {i+1}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="p-4 bg-[#FAF9F6] border border-[#E8DDD0] rounded-xl space-y-4">
+                <div>
+                  <Label>Color {activeColorSlot} Name</Label>
+                  <Input 
+                    value={colorVariants[activeColorSlot]?.name || ''} 
+                    onChange={e => setColorVariants(prev => ({ ...prev, [activeColorSlot]: { ...prev[activeColorSlot], name: e.target.value } }))} 
+                    placeholder="e.g. Royal Blue" 
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Variant Main Image */}
+                  <div>
+                    <Label>Main Image</Label>
+                    <div className="relative rounded-xl overflow-hidden border-2 border-dashed aspect-[3/4] flex flex-col items-center justify-center cursor-pointer hover:bg-[#E8DDD0] transition-colors"
+                      style={{ borderColor: colorVariants[activeColorSlot]?.mainImage ? P : '#E8DDD0' }}>
+                      {colorVariants[activeColorSlot]?.mainImage ? (
+                        <>
+                          <img src={colorVariants[activeColorSlot].mainImage} alt="Preview" className="w-full h-full object-cover absolute inset-0" />
+                          <button type="button" onClick={(e) => { e.preventDefault(); setColorVariants(prev => ({ ...prev, [activeColorSlot]: { ...prev[activeColorSlot], mainImage: null } })) }}
+                            className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-red-600 transition-colors z-10">
+                            <X size={12} />
+                          </button>
+                        </>
+                      ) : (
+                        <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer">
+                          <Upload size={20} style={{ color: P }} className="mb-2" />
+                          <span className="text-[10px] text-[#6B8C90]">Upload</span>
+                          <input type="file" accept="image/*" onChange={(e) => handleVariantMainImage(e, activeColorSlot)} className="hidden" />
+                        </label>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Variant Additional Images */}
+                  <div>
+                    <Label>Additional Images</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {(colorVariants[activeColorSlot]?.additionalImages || []).map((img, i) => (
+                        <div key={i} className="relative rounded-lg overflow-hidden aspect-square border border-[#E8DDD0]">
+                          <img src={img} alt={`Add ${i + 1}`} className="w-full h-full object-cover" />
+                          <button type="button" onClick={() => setColorVariants(prev => ({
+                            ...prev, 
+                            [activeColorSlot]: { ...prev[activeColorSlot], additionalImages: prev[activeColorSlot].additionalImages.filter((_, idx) => idx !== i) }
+                          }))}
+                            className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center">
+                            <X size={8} />
+                          </button>
+                        </div>
+                      ))}
+                      <label className="aspect-square border-2 border-dashed border-[#E8DDD0] rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-[#E8DDD0] transition-colors">
+                        <Plus size={16} style={{ color: P }} />
+                        <input type="file" accept="image/*" multiple onChange={(e) => handleVariantAdditionalImages(e, activeColorSlot)} className="hidden" />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </Card>
 

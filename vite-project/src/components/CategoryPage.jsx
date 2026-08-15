@@ -26,7 +26,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Sort
   const [sortOption, setSortOption] = useState('newest');
 
@@ -37,7 +37,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedOccasions, setSelectedOccasions] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
-  
+
   useEffect(() => {
     setCategories(getCategories());
     const handleUpdate = () => setCategories(getCategories());
@@ -58,7 +58,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   useEffect(() => {
     window.scrollTo(0, 0);
     let timeoutId;
-    
+
     const fetchAndFilterProducts = () => {
       const all = getAllProducts();
       let finalProducts = [];
@@ -73,7 +73,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
         });
       }
       setProducts(finalProducts);
-      
+
       clearTimeout(timeoutId);
       if (finalProducts.length > 0) {
         setLoading(false);
@@ -96,7 +96,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   }, [categoryName]);
 
   const boutiques = useMemo(() => [...new Set(products.map(p => p.boutique).filter(Boolean))], [products]);
-  
+
   const fabricsList = useMemo(() => {
     const f = new Set();
     products.forEach(p => {
@@ -162,7 +162,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
   const colorsList = useMemo(() => {
     const c = new Set();
-    
+
     // 1. Extract explicit colors set via Admin Panel (p.color)
     products.forEach(p => {
       if (p.color) {
@@ -203,7 +203,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
     let result = [...products];
 
     if (selectedBoutiques.length > 0) result = result.filter(p => selectedBoutiques.includes(p.boutique));
-    
+
     if (selectedMaxPrice !== null) {
       result = result.filter(p => {
         const price = p.priceNum || parseInt((p.price || '0').toString().replace(/[^\d]/g, ''), 10) || 0;
@@ -214,7 +214,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
     const getText = (p) => `${p.name || ''} ${p.desc || ''} ${p.shortDesc || ''} ${p.type || ''} ${p.suitType || ''} ${p.collection || ''} ${p.fabricDetails || ''} ${p.fabricName || ''}`.toLowerCase();
 
     if (selectedFabrics.length > 0) {
-      result = result.filter(p => selectedFabrics.some(f => 
+      result = result.filter(p => selectedFabrics.some(f =>
         (p.fabricName && p.fabricName.toLowerCase().includes(f.toLowerCase())) ||
         getText(p).includes(f.toLowerCase())
       ));
@@ -229,15 +229,15 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
       }));
     }
     if (selectedOccasions.length > 0) {
-      result = result.filter(p => selectedOccasions.some(o => 
-        (p.occasions && p.occasions.map(x=>x.toLowerCase()).includes(o.toLowerCase())) ||
+      result = result.filter(p => selectedOccasions.some(o =>
+        (p.occasions && p.occasions.map(x => x.toLowerCase()).includes(o.toLowerCase())) ||
         getText(p).includes(o.toLowerCase())
       ));
     }
     if (selectedSizes.length > 0) {
-      result = result.filter(p => selectedSizes.some(s => 
-        (p.sizes && p.sizes.map(x=>x.toLowerCase()).includes(s.toLowerCase())) ||
-        (p.fitOptions && p.fitOptions.map(x=>x.toLowerCase()).includes(s.toLowerCase())) ||
+      result = result.filter(p => selectedSizes.some(s =>
+        (p.sizes && p.sizes.map(x => x.toLowerCase()).includes(s.toLowerCase())) ||
+        (p.fitOptions && p.fitOptions.map(x => x.toLowerCase()).includes(s.toLowerCase())) ||
         getText(p).includes(s.toLowerCase())
       ));
     }
@@ -264,14 +264,14 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] mt-[110px] selection:bg-[#D4AF37] selection:text-white">
-      
+
       <div className="relative w-full max-w-[1800px] mx-auto px-6 md:px-12 pt-4 pb-6 overflow-hidden">
         <div className="flex flex-col lg:flex-row items-center gap-6 lg:gap-12 relative">
-          
+
           <div className="w-full lg:w-1/2 flex flex-col justify-center z-20">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }} 
-              animate={{ opacity: 1, y: 0 }} 
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
               <div className="flex items-center gap-4 mb-6">
@@ -310,7 +310,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
           </div>
 
           <div className="w-full lg:w-1/2 flex justify-end gap-3 md:gap-4 pl-4 md:pl-0">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
@@ -318,8 +318,8 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
             >
               <img src={banner.bgImage} alt="Hero Main" className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700" />
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
@@ -334,10 +334,10 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
       <div id="collection-start" className="max-w-[1800px] mx-auto px-6 md:px-12 pt-2 pb-32">
         <div className="flex flex-col lg:flex-row gap-16 xl:gap-24">
-          
+
           <div className="w-full lg:w-[260px] shrink-0">
             <div className="sticky top-[120px] max-h-[calc(100vh-140px)] overflow-y-auto pr-4 pb-10 scrollbar-thin scrollbar-thumb-[#D4AF37]/30 scrollbar-track-transparent">
-              
+
               <div className="flex items-center justify-between mb-10">
                 <div className="flex items-center gap-3">
                   <SlidersHorizontal size={14} className="text-[#D4AF37]" />
@@ -382,9 +382,9 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                       ₹{(selectedMaxPrice !== null ? selectedMaxPrice : globalMaxPrice).toLocaleString('en-IN')}
                     </span>
                   </div>
-                  <input 
-                    type="range" 
-                    min={globalMinPrice} 
+                  <input
+                    type="range"
+                    min={globalMinPrice}
                     max={globalMaxPrice}
                     step={100}
                     value={selectedMaxPrice !== null ? selectedMaxPrice : globalMaxPrice}
@@ -434,7 +434,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                     {colorsList.map(c => {
                       const isSelected = selectedColors.includes(c);
                       const baseColor = baseColors.find(bc => bc.name.toLowerCase() === c.toLowerCase());
-                      
+
                       if (baseColor) {
                         return (
                           <button key={c} onClick={() => toggleFilter(setSelectedColors, c)} title={c}
@@ -498,7 +498,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
           {/* ── 10/10 Premium Product Grid ── */}
           <div className="flex-1 min-w-0">
-            
+
             <div className="flex items-end justify-between mb-12">
               <span className="text-[10px] font-bold text-[#1A0008]/40 tracking-[0.2em] uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 {filteredProducts.length} Results
@@ -523,7 +523,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                   ))}
                 </motion.div>
               ) : filteredProducts.length === 0 ? (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -538,7 +538,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                   <p className="text-[#1A0008]/50 text-sm max-w-sm mx-auto mb-8 font-light" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     Your refined criteria yielded no results. Try removing some filters to discover our beautiful collection.
                   </p>
-                  <button 
+                  <button
                     onClick={clearAllFilters}
                     className="border border-[#1A0008] text-[#1A0008] px-8 py-3 text-[10px] tracking-[0.25em] font-bold uppercase hover:bg-[#1A0008] hover:text-white transition-colors cursor-pointer"
                   >
@@ -570,16 +570,18 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                           alt={p.name}
                           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
                         />
-                        
+
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
-                        
-                        {/* Elegant floating boutique badge */}
-                        <div className="absolute top-4 left-4 z-10">
-                          <span className="bg-white/95 backdrop-blur-md px-3.5 py-1.5 text-[9px] font-bold tracking-[0.2em] uppercase text-[#1A0008] rounded-full shadow-sm">
-                            {p.badge || 'Exquisite'}
-                          </span>
-                        </div>
-                        
+
+                        {/* Diagonal Premium Sash */}
+                        {p.badge && (
+                          <div className="absolute top-0 left-0 overflow-hidden w-28 h-28 z-20 rounded-tl-2xl pointer-events-none">
+                            <div className="absolute top-5 -left-8 w-[150px] bg-gradient-to-r from-[#8B1A1A] to-[#601010] text-[#FAF9F6] text-[8px] font-black tracking-[0.25em] uppercase py-1.5 text-center shadow-lg border-y border-[#D4AF37]/40" style={{ transform: "rotate(-45deg)" }}>
+                              {p.badge}
+                            </div>
+                          </div>
+                        )}
+
                         <div className="absolute top-4 right-4 z-10">
                           <button onClick={(e) => { e.stopPropagation(); toggleFavorite(p.id); }}
                             className="w-9 h-9 bg-white/90 backdrop-blur-md rounded-full shadow-sm flex items-center justify-center hover:scale-110 transition-transform text-gray-900 cursor-pointer">
@@ -589,20 +591,20 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
                         {/* Quick View & Add to Bag Drawer overlay */}
                         <div className="absolute inset-x-3 bottom-3 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20 flex gap-2">
-                          <button 
-                            onClick={(e) => { 
-                              e.stopPropagation(); 
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
                               addToCart(p, p.fitOptions?.includes('Unstitched') ? 'Unstitched' : (p.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (p.sizes?.length > 0 ? `Stitched - ${p.sizes[0]}` : 'Stitched')));
                             }}
                             className="flex-1 bg-white/95 backdrop-blur-md text-[#1A0008] py-3.5 rounded-full text-[10px] font-bold tracking-[0.1em] uppercase flex items-center justify-center gap-2 hover:bg-[#1A0008] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
                           >
-                             <ShoppingBag size={14} /> Add to Bag
+                            <ShoppingBag size={14} /> Add to Bag
                           </button>
-                          <button 
+                          <button
                             onClick={(e) => { e.stopPropagation(); handleProductClick(p); }}
                             className="w-12 h-12 bg-white/95 backdrop-blur-md text-[#1A0008] flex items-center justify-center rounded-full hover:bg-[#D4AF37] hover:text-white transition-all shadow-[0_8px_30px_rgb(0,0,0,0.12)] cursor-pointer"
                           >
-                             <Eye size={16} />
+                            <Eye size={16} />
                           </button>
                         </div>
                       </div>

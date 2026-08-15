@@ -45,7 +45,7 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
   }, []);
 
   const getFilteredProducts = () => {
-    if (activeTab === 'all') return products;
+    if (activeTab === 'all') return products.slice(0, 12);
 
     return products.filter(p => {
       const pCat = (p.category || '').toLowerCase();
@@ -185,11 +185,13 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
                       </button>
                     </div>
 
-                    {/* Badge */}
+                    {/* Diagonal Premium Sash */}
                     {product.badge && (
-                      <span className="absolute top-3 left-3 bg-[#1A0008] text-[#F5D76E] border border-[#D4AF37]/50 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                        {product.badge}
-                      </span>
+                      <div className="absolute top-0 left-0 overflow-hidden w-28 h-28 z-20 rounded-tl-2xl pointer-events-none">
+                        <div className="absolute top-5 -left-8 w-[150px] bg-gradient-to-r from-[#8B1A1A] to-[#601010] text-[#FAF9F6] text-[8px] font-black tracking-[0.25em] uppercase py-1.5 text-center shadow-lg border-y border-[#D4AF37]/40" style={{ transform: "rotate(-45deg)" }}>
+                          {product.badge}
+                        </div>
+                      </div>
                     )}
 
                     {/* Wishlist Button */}

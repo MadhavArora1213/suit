@@ -66,6 +66,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
   const [addedToBag, setAddedToBag] = useState(false);
   const [selectedFit, setSelectedFit] = useState(product?.fitOptions?.[0] || 'Unstitched');
   const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || 'M');
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
 
   const isInStock = useMemo(() => {
     if (!product) return false;
@@ -108,6 +109,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
     const defaultFit = product?.fitOptions?.includes('Unstitched') ? 'Unstitched' : (product?.fitOptions?.[0] || 'Stitched');
     setSelectedFit(defaultFit);
     setSelectedSize(null);
+    setSelectedColorIndex(0);
     setCurrentImg(0);
     return () => { clearTimeout(addedTimerRef.current); clearTimeout(copiedTimerRef.current); };
   }, [product]);
@@ -128,7 +130,22 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
   }, []);
 
   // Memoized derivations
-  const allImages = useMemo(() => [product?.image, ...(product?.additionalImages || [])].filter(Boolean), [product]);
+  const availableColors = useMemo(() => {
+    if (!product?.colorVariants) return [];
+    return Object.keys(product.colorVariants)
+      .map(key => ({ ...product.colorVariants[key], _slot: key }))
+      .filter(v => v.mainImage)
+      .map((v, idx) => ({ ...v, name: v.name || `Color ${idx + 1}` }));
+  }, [product?.colorVariants]);
+
+  const selectedColorData = availableColors[selectedColorIndex];
+
+  const allImages = useMemo(() => {
+    if (selectedColorData) {
+      return [selectedColorData.mainImage, ...(selectedColorData.additionalImages || [])].filter(Boolean);
+    }
+    return [product?.image, ...(product?.additionalImages || [])].filter(Boolean);
+  }, [product, selectedColorData]);
   const avgRating = useMemo(() => {
     if (reviewsList && reviewsList.length > 0) return (reviewsList.reduce((s, r) => s + r.rating, 0) / reviewsList.length).toFixed(1);
     return product?.rating || '4.5';
@@ -153,12 +170,17 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
   const handleAddToBag = useCallback(() => {
     if (!product) return;
     const size = selectedFit === 'Stitched' ? (selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Stitched')) : selectedFit;
-    const finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
+    let finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
+    
+    if (availableColors.length > 0 && availableColors[selectedColorIndex]) {
+      finalSelection = `${availableColors[selectedColorIndex].name} | ${finalSelection}`;
+    }
+
     addToCart(product, finalSelection);
     setAddedToBag(true);
     clearTimeout(addedTimerRef.current);
     addedTimerRef.current = setTimeout(() => setAddedToBag(false), 2500);
-  }, [addToCart, product, selectedSize, selectedFit]);
+  }, [addToCart, product, selectedSize, selectedFit, availableColors, selectedColorIndex]);
 
   const handleReviewSubmit = useCallback(async (e) => {
     e.preventDefault();
@@ -465,7 +487,10 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                 <button onClick={() => { 
                     if (!isInStock) return;
                     const size = selectedFit === 'Stitched' ? (selectedSize || (product.sizes?.length > 0 ? product.sizes[0] : 'Stitched')) : selectedFit;
-                    const finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
+                    let finalSelection = selectedFit === 'Stitched' && size !== 'Stitched' ? `Stitched - ${size}` : selectedFit;
+                    if (availableColors.length > 0 && availableColors[selectedColorIndex]) {
+                      finalSelection = `${availableColors[selectedColorIndex].name} | ${finalSelection}`;
+                    }
                     addToCart(product, finalSelection); 
                     setView('checkout'); 
                   }}
@@ -485,6 +510,29 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                   <Heart size={18} className={favorites[product.id] ? 'fill-current' : ''} />
                 </button>
               </div>
+
+              {/* Color Selection */}
+              {availableColors.length > 0 && (
+                <div className="mb-4 bg-[#faf8f5] rounded-2xl p-4 border border-[#ebe5de]">
+                  <span className="text-[11px] font-bold text-[#8B2252] uppercase tracking-wider mb-2 block">Select Color</span>
+                  <div className="flex flex-wrap gap-4">
+                    {availableColors.map((color, idx) => (
+                      <button key={idx} type="button" onClick={() => { setSelectedColorIndex(idx); setCurrentImg(0); }}
+                        className={`group relative flex flex-col items-center gap-1.5 transition-all cursor-pointer`}
+                        title={color.name}>
+                        <div className={`w-12 h-12 rounded-full overflow-hidden border-2 transition-all ${
+                          selectedColorIndex === idx ? 'border-[#8B2252] shadow-md scale-110' : 'border-gray-200 opacity-70 group-hover:opacity-100'
+                        }`}>
+                          <img src={color.mainImage} alt={color.name} className="w-full h-full object-cover" />
+                        </div>
+                        <span className={`text-[9px] font-bold uppercase tracking-wider ${
+                          selectedColorIndex === idx ? 'text-[#8B2252]' : 'text-gray-500'
+                        }`}>{color.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Fit and Size Selection */}
               <div className="mb-4 bg-[#faf8f5] rounded-2xl p-4 border border-[#ebe5de]">

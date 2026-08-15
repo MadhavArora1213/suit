@@ -154,10 +154,15 @@ export default function Navbar({
             {['Home', 'Shop & Boutiques', 'Collection', 'About Us', 'Contact'].map((item) => (
               <li 
                 key={item} 
-                className={`megamenu-wrapper ${['Collection', 'Shop & Boutiques'].includes(item) ? 'static' : 'relative'}`}
+                className={`megamenu-wrapper ${['Collection', 'Shop & Boutiques'].includes(item) ? 'static pb-4 -mb-4' : 'relative'}`}
                 onMouseEnter={() => {
                   if (['Collection', 'Shop & Boutiques'].includes(item)) {
                     setActiveMegamenu(item);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (['Collection', 'Shop & Boutiques'].includes(item)) {
+                    setActiveMegamenu(null);
                   }
                 }}
               >
@@ -182,9 +187,8 @@ export default function Navbar({
                   )}
                 </a>
 
-                {/* Cinematic Floating Megamenu for Collection */}
                 {item === 'Collection' && (
-                  <div className={`absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-white/95 backdrop-blur-3xl border border-[#D4AF37]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl transition-all duration-500 z-50 h-[420px] p-3 transform origin-top overflow-hidden ${activeMegamenu === 'Collection' ? 'opacity-100 pointer-events-auto translate-y-0 scale-100' : 'opacity-0 pointer-events-none translate-y-4 scale-95'}`} onClick={() => setActiveMegamenu(null)}>
+                  <div className={`absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-2 bg-white/95 backdrop-blur-3xl border border-[#D4AF37]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl transition-all duration-500 z-50 h-[420px] p-3 transform origin-top overflow-hidden ${activeMegamenu === 'Collection' ? 'opacity-100 pointer-events-auto translate-y-0 scale-100' : 'opacity-0 pointer-events-none translate-y-4 scale-95'}`}>
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(#8B1A1A 1px, transparent 1px), linear-gradient(90deg, #8B1A1A 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
                     <div className="w-full h-full flex gap-8 p-8 bg-white/60 rounded-xl relative z-10">
 
@@ -284,9 +288,8 @@ export default function Navbar({
                   </div>
                 )}
 
-                {/* Cinematic Floating Megamenu for Boutiques */}
                 {item === 'Shop & Boutiques' && (
-                  <div className={`absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-4 bg-white/95 backdrop-blur-3xl border border-[#D4AF37]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl transition-all duration-500 z-50 h-[420px] p-3 transform origin-top overflow-hidden ${activeMegamenu === 'Shop & Boutiques' ? 'opacity-100 pointer-events-auto translate-y-0 scale-100' : 'opacity-0 pointer-events-none translate-y-4 scale-95'}`} onClick={() => setActiveMegamenu(null)}>
+                  <div className={`absolute top-[100%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1100px] mt-2 bg-white/95 backdrop-blur-3xl border border-[#D4AF37]/30 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] rounded-2xl transition-all duration-500 z-50 h-[420px] p-3 transform origin-top overflow-hidden ${activeMegamenu === 'Shop & Boutiques' ? 'opacity-100 pointer-events-auto translate-y-0 scale-100' : 'opacity-0 pointer-events-none translate-y-4 scale-95'}`}>
                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(#8B1A1A 1px, transparent 1px), linear-gradient(90deg, #8B1A1A 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
                     <div className="w-full h-full flex gap-8 p-8 bg-white/60 rounded-xl relative z-10">
 

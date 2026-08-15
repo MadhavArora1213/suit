@@ -100,10 +100,14 @@ export default function FeaturedCollections({ cart = [], addToCart, favorites = 
                   <img src={product.image} alt={product.name}
                     className="w-full h-full object-cover transform scale-100 group-hover:scale-108 transition-transform duration-700" />
 
-                  {/* Badge */}
-                  <span className="absolute top-3 left-3 bg-[#FAF9F6]/85 backdrop-blur-sm text-[#D4AF37] text-[8px] font-semibold tracking-[0.15em] uppercase px-2.5 py-1.5 border border-[#D4AF37]/25">
-                    {product.badge}
-                  </span>
+                  {/* Diagonal Premium Sash */}
+                  {product.badge && (
+                    <div className="absolute top-0 left-0 overflow-hidden w-28 h-28 z-20 pointer-events-none">
+                      <div className="absolute top-5 -left-8 w-[150px] bg-gradient-to-r from-[#8B1A1A] to-[#601010] text-[#FAF9F6] text-[8px] font-black tracking-[0.25em] uppercase py-1.5 text-center shadow-lg border-y border-[#D4AF37]/40" style={{ transform: "rotate(-45deg)" }}>
+                        {product.badge}
+                      </div>
+                    </div>
+                  )}
 
                   {/* Wishlist */}
                   <motion.button whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.9 }}
