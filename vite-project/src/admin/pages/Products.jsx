@@ -149,11 +149,21 @@ export default function Products({ setActivePage, onEditProduct }) {
                     <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#111111] text-[9px] sm:text-[11px] font-bold tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg border border-[#111111]/20">
                       {product.badge}
                     </span>
-                    <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${
-                      (product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 
-                      ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                      {(product.stock !== undefined ? product.stock : (product.stockQty ? Object.values(product.stockQty).reduce((a, b) => a + (Number(b) || 0), 0) : 0)) > 0 ? 'In Stock' : 'Out of Stock'}
-                    </span>
+                    {(() => {
+                      let isOOS = false;
+                      if (product.stockQty && typeof product.stockQty === 'object' && Object.keys(product.stockQty).length > 0) {
+                        const vals = Object.values(product.stockQty);
+                        isOOS = vals.every(v => !v || Number(v) <= 0);
+                      } else if (product.stock !== undefined) {
+                        isOOS = Number(product.stock) <= 0;
+                      }
+                      return (
+                        <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${
+                          isOOS ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                          {isOOS ? 'Out of Stock' : 'In Stock'}
+                        </span>
+                      );
+                    })()}
 
                     {/* Action overlay */}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">

@@ -50,6 +50,14 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
+  const isOutOfStock = useMemo(() => {
+    if (product.stockQty && typeof product.stockQty === 'object' && Object.keys(product.stockQty).length > 0) {
+      return Object.values(product.stockQty).every(v => !v || Number(v) <= 0);
+    }
+    if (product.stock !== undefined) return Number(product.stock) <= 0;
+    return false;
+  }, [product]);
+
   function handleMouseMove({ currentTarget, clientX, clientY }) {
     const { left, top, width, height } = currentTarget.getBoundingClientRect();
     mouseX.set(clientX - left - width / 2);
@@ -65,7 +73,7 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { mouseX.set(0); mouseY.set(0); }}
       onClick={() => { setSelectedProduct(product); setView('product-details'); }}
-      className="group cursor-pointer flex flex-col relative bg-transparent [perspective:1000px]"
+      className={`group cursor-pointer flex flex-col relative bg-transparent [perspective:1000px] ${isOutOfStock ? 'opacity-50 grayscale-[40%]' : ''}`}
     >
       <motion.div 
         style={{
@@ -76,21 +84,32 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
         className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-[#F0E8DC] shadow-sm group-hover:shadow-2xl transition-shadow duration-500"
       >
         <img src={product.image} alt={product.name} onLoad={() => setImageLoaded(true)}
-          className={`w-full h-full object-cover transition-all duration-1000 group-hover:scale-[1.08] ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} />
+          className={`w-full h-full object-cover transition-all duration-1000 ${isOutOfStock ? '' : 'group-hover:scale-[1.08]'} ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} />
         
         {/* Shine Effect */}
-        <motion.div 
-          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          style={{
-            background: useMotionTemplate`radial-gradient(circle at ${useTransform(mouseX, [-200, 200], [0, 100])}% ${useTransform(mouseY, [-200, 200], [0, 100])}%, rgba(255,255,255,0.2) 0%, transparent 60%)`
-          }}
-        />
+        {!isOutOfStock && (
+          <motion.div 
+            className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            style={{
+              background: useMotionTemplate`radial-gradient(circle at ${useTransform(mouseX, [-200, 200], [0, 100])}% ${useTransform(mouseY, [-200, 200], [0, 100])}%, rgba(255,255,255,0.2) 0%, transparent 60%)`
+            }}
+          />
+        )}
 
         {/* Diagonal Premium Sash */}
         {product.badge && (
           <div className="absolute top-0 left-0 overflow-hidden w-28 h-28 z-20 rounded-tl-2xl pointer-events-none" style={{ transform: "translateZ(20px)" }}>
             <div className="absolute top-5 -left-8 w-[150px] bg-gradient-to-r from-[#8B1A1A] to-[#601010] text-[#FAF9F6] text-[8px] font-black tracking-[0.25em] uppercase py-1.5 text-center shadow-lg border-y border-[#D4AF37]/40" style={{ transform: "rotate(-45deg)" }}>
               {product.badge}
+            </div>
+          </div>
+        )}
+
+        {/* Out of Stock Overlay */}
+        {isOutOfStock && (
+          <div className="absolute inset-0 bg-black/40 z-30 flex items-center justify-center pointer-events-none">
+            <div className="bg-black/80 text-white text-[10px] font-bold tracking-[0.2em] uppercase px-5 py-2.5 rounded-full backdrop-blur-sm border border-white/20">
+              Out of Stock
             </div>
           </div>
         )}
@@ -104,16 +123,26 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
         </button>
 
         {/* Hover Action Sheet */}
-        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-[150%] group-hover:translate-y-0 transition-transform duration-700 ease-[0.25,1,0.5,1] flex gap-2">
-          <button onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setView('product-details'); }}
-            className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#FAF9F6]/95 backdrop-blur-md text-[#1A0008] hover:bg-[#1A0008] hover:text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg border border-[#D4AF37]/20">
-            <Eye size={12} /> View
-          </button>
-          <button onClick={(e) => { e.stopPropagation(); addToCart(product, product.fitOptions?.includes('Unstitched') ? 'Unstitched' : (product.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (product.sizes?.length > 0 ? `Stitched - ${product.sizes[0]}` : 'Stitched'))); }}
-            className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#D4AF37] hover:bg-[#1A0008] text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg">
-            <ShoppingBag size={12} /> Bag
-          </button>
-        </div>
+        {!isOutOfStock && (
+          <div className="absolute inset-x-0 bottom-0 p-4 translate-y-[150%] group-hover:translate-y-0 transition-transform duration-700 ease-[0.25,1,0.5,1] flex gap-2">
+            <button onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setView('product-details'); }}
+              className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#FAF9F6]/95 backdrop-blur-md text-[#1A0008] hover:bg-[#1A0008] hover:text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg border border-[#D4AF37]/20">
+              <Eye size={12} /> View
+            </button>
+            <button onClick={(e) => { e.stopPropagation(); addToCart(product, product.fitOptions?.includes('Unstitched') ? 'Unstitched' : (product.fitOptions?.includes('Semi-Stitched') ? 'Semi-Stitched' : (product.sizes?.length > 0 ? `Stitched - ${product.sizes[0]}` : 'Stitched'))); }}
+              className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#D4AF37] hover:bg-[#1A0008] text-[#FAF9F6] transition-all flex items-center justify-center gap-1.5 shadow-lg">
+              <ShoppingBag size={12} /> Bag
+            </button>
+          </div>
+        )}
+        {isOutOfStock && (
+          <div className="absolute inset-x-0 bottom-0 p-4 flex gap-2">
+            <button onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); setView('product-details'); }}
+              className="flex-1 py-3 text-[9px] font-bold tracking-[0.2em] uppercase rounded-xl bg-[#FAF9F6]/95 backdrop-blur-md text-[#1A0008] transition-all flex items-center justify-center gap-1.5 shadow-lg border border-[#D4AF37]/20">
+              <Eye size={12} /> View
+            </button>
+          </div>
+        )}
       </motion.div>
       
       {/* Product Details */}
@@ -127,6 +156,9 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
           )}
           <span>{product.price}</span>
         </p>
+        {isOutOfStock && (
+          <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#c0392b]">Out of Stock</span>
+        )}
       </div>
     </motion.div>
   );

@@ -171,7 +171,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       }
     }
 
-    const totalStock = Object.values(stockQty).reduce((acc, curr) => acc + (Number(curr) || 0), 0);
+    const totalStock = selectedSizes.reduce((acc, size) => acc + ((stockQty[size] === undefined || stockQty[size] > 0) ? 1 : 0), 0);
 
     const product = {
       id: ep?.id || `admin_${Date.now()}`,
@@ -474,11 +474,11 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                     {selectedSizes.includes(size) && (
                       <button type="button" onClick={e => e.stopPropagation()}
                         className="ml-auto px-3 py-1 rounded-lg text-[11px] font-bold transition-all"
-                        style={stockQty[size] > 0
+                        style={(stockQty[size] === undefined || stockQty[size] > 0)
                           ? { background: '#D1FAE5', color: '#065F46', border: '1px solid #6EE7B7' }
                           : { background: '#FEE2E2', color: '#991B1B', border: '1px solid #FCA5A5' }}
                         onClick={e => { e.stopPropagation(); setStockQty(prev => ({ ...prev, [size]: prev[size] > 0 ? 0 : 1 })); }}>
-                        {stockQty[size] > 0 ? 'In Stock' : 'Out of Stock'}
+                        {(stockQty[size] === undefined || stockQty[size] > 0) ? 'In Stock' : 'Out of Stock'}
                       </button>
                     )}
                   </div>
