@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocat
 import { auth, db } from './firebase'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
-import { syncProducts, getAllProducts, getBoutiques, recordProductClick, recordProductView } from './utils/adminStore'
+import { syncProducts, getAllProducts, getBoutiques, getCategories, getCollections, recordProductClick, recordProductView } from './utils/adminStore'
 import { motion, AnimatePresence } from 'framer-motion'
 import { User } from 'lucide-react'
+import useSEO from './utils/useSEO'
 import './App.css'
 import LoadingScreen from './LoadingScreen'
 import Navbar from './components/Navbar'
@@ -98,6 +99,226 @@ const ProductDetailsPageWrapper = (props) => {
   }, [product?.id]);
 
   return <ProductDetailsPage product={product} {...props} />
+}
+
+const SITE = 'https://www.gurnaaz.co.in';
+
+const routeSEO = {
+  '/shop': {
+    title: 'Shop Premium Ethnic Wear | Suits, Anarkali, Sharara | GURNAAZ',
+    description: 'Shop handcrafted premium ethnic wear at Gurnaaz. Explore Anarkali suits, Sharara sets, Banarasi silk, Chikankari & designer outfits with free shipping across India.',
+    keywords: 'buy ethnic wear online, designer suits India, Anarkali suits, Sharara suits, Banarasi silk suits, Chikankari suits, premium Indian fashion, Gurnaaz shop',
+    schema: { "@context": "https://schema.org", "@type": "CollectionPage", "name": "Gurnaaz Shop", "description": "Premium handcrafted ethnic wear collection", "url": `${SITE}/shop`, "publisher": { "@type": "Organization", "name": "Gurnaaz", "logo": `${SITE}/gurnaaz_logo.png` } }
+  },
+  '/collections': {
+    title: 'Curated Collections | Wedding, Festive, Luxury Ethnic Wear | GURNAAZ',
+    description: 'Explore Gurnaaz curated collections — Wedding, Festive, Luxury & Casual ethnic wear. Handpicked designer suits and sets for every occasion.',
+    keywords: 'ethnic wear collections, wedding suits, festive wear, luxury ethnic wear, Gurnaaz collections',
+    schema: { "@context": "https://schema.org", "@type": "CollectionPage", "name": "Gurnaaz Collections", "url": `${SITE}/collections` }
+  },
+  '/shops-and-boutiques': {
+    title: 'Our Boutiques & Sellers | Premium Ethnic Wear Partners | GURNAAZ',
+    description: 'Discover Gurnaaz partner boutiques offering handcrafted ethnic wear. Shop from India\'s finest heritage boutiques — curated for quality and elegance.',
+    keywords: 'ethnic wear boutiques, Indian fashion sellers, designer boutique partners, Gurnaaz boutiques',
+    schema: { "@context": "https://schema.org", "@type": "CollectionPage", "name": "Gurnaaz Boutiques", "url": `${SITE}/shops-and-boutiques` }
+  },
+  '/about': {
+    title: 'About GURNAAZ | Our Story, Craftsmanship & Heritage',
+    description: 'Learn about Gurnaaz — India\'s premium handcrafted ethnic wear brand. Our commitment to heritage craftsmanship, sustainable fashion and timeless elegance.',
+    keywords: 'about Gurnaaz, Indian ethnic wear brand, handcrafted fashion, heritage craftsmanship, luxury Indian fashion brand',
+    schema: { "@context": "https://schema.org", "@type": "AboutPage", "name": "About Gurnaaz", "url": `${SITE}/about` }
+  },
+  '/contact': {
+    title: 'Contact GURNAAZ | Customer Support & Inquiries',
+    description: 'Get in touch with Gurnaaz for orders, inquiries, returns or custom requests. Reach our customer support team — we\'re here to help.',
+    keywords: 'contact Gurnaaz, customer support, order help, ethnic wear inquiries, Gurnaaz contact',
+    schema: { "@context": "https://schema.org", "@type": "ContactPage", "name": "Contact Gurnaaz", "url": `${SITE}/contact` }
+  },
+  '/privacy': {
+    title: 'Privacy Policy | GURNAAZ',
+    description: 'Gurnaaz privacy policy — how we collect, use and protect your personal information. Your privacy matters to us.',
+    keywords: 'privacy policy, Gurnaaz privacy, data protection',
+    schema: { "@context": "https://schema.org", "@type": "WebPage", "name": "Privacy Policy - Gurnaaz" }
+  },
+  '/shipping': {
+    title: 'Shipping Policy | Free Shipping Across India | GURNAAZ',
+    description: 'Gurnaaz shipping policy — free shipping across India on all orders. Easy returns, secure packaging, and fast delivery for all ethnic wear.',
+    keywords: 'shipping policy, free shipping India, Gurnaaz delivery, ethnic wear shipping',
+    schema: { "@context": "https://schema.org", "@type": "WebPage", "name": "Shipping Policy - Gurnaaz" }
+  },
+  '/faq': {
+    title: 'Frequently Asked Questions | GURNAAZ Help Center',
+    description: 'Find answers to common questions about Gurnaaz — orders, sizing, payments, returns, shipping and customization. Quick help at your fingertips.',
+    keywords: 'Gurnaaz FAQ, help center, order questions, sizing guide, return policy',
+    schema: { "@context": "https://schema.org", "@type": "FAQPage", "name": "Gurnaaz FAQ", "url": `${SITE}/faq`, "mainEntity": [
+      { "@type": "Question", "name": "How long does shipping take?", "acceptedAnswer": { "@type": "Answer", "text": "Standard delivery takes 5-7 business days across India. Express delivery is available in select cities." }},
+      { "@type": "Question", "name": "Do you offer returns?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, we offer easy returns within 7 days of delivery for unused items in original packaging." }},
+      { "@type": "Question", "name": "Are the suits handmade?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, all Gurnaaz outfits are handcrafted by skilled artisans using traditional techniques." }},
+      { "@type": "Question", "name": "Do you offer unstitched options?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, most of our suits are available in both stitched and unstitched options." }},
+      { "@type": "Question", "name": "How can I track my order?", "acceptedAnswer": { "@type": "Answer", "text": "Once your order is shipped, you'll receive a tracking link via email and SMS." }}
+    ]}
+  },
+  '/cart': {
+    title: 'Your Cart | GURNAAZ',
+    description: 'Review your selected ethnic wear items in your Gurnaaz cart. Proceed to checkout for secure payment and free shipping across India.',
+    keywords: 'shopping cart, checkout, Gurnaaz cart',
+    robots: 'noindex, nofollow',
+  },
+  '/checkout': {
+    title: 'Secure Checkout | GURNAAZ',
+    description: 'Complete your Gurnaaz order with secure Razorpay payment. Free shipping, easy returns on all handcrafted ethnic wear.',
+    keywords: 'secure checkout, online payment, Gurnaaz checkout',
+    robots: 'noindex, nofollow',
+  },
+  '/wishlist': {
+    title: 'Your Wishlist | Saved Ethnic Wear | GURNAAZ',
+    description: 'Your saved Gurnaaz favorites — ethnic suits, Anarkali, Sharara sets and more. Come back anytime to shop your curated wishlist.',
+    keywords: 'wishlist, saved items, favorite ethnic wear',
+  },
+};
+
+const defaultSEO = {
+  title: 'GURNAAZ — Premium Handcrafted Ethnic Wear | Shop Online',
+  description: 'Discover handcrafted premium ethnic wear at Gurnaaz. Luxury suits, Anarkali, Sharara, Banarasi & Chikankari — where tradition meets timeless elegance. Free shipping across India.',
+  keywords: 'Gurnaaz, premium ethnic wear, handcrafted suits, Anarkali, Sharara, Banarasi, Chikankari, luxury Indian fashion, buy ethnic wear online, designer suits',
+  schema: {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Gurnaaz",
+    "url": SITE,
+    "description": "Premium handcrafted ethnic wear",
+    "publisher": { "@type": "Organization", "name": "Gurnaaz", "logo": `${SITE}/gurnaaz_logo.png`, "url": SITE, "sameAs": ["https://www.instagram.com/gurnaaz.co.in", "https://www.facebook.com/gurnaaz.co.in"] },
+    "potentialAction": { "@type": "SearchAction", "target": `${SITE}/shop?search={search_term_string}`, "query-input": "required name=search_term_string" }
+  }
+};
+
+function getDynamicSEO(pathname) {
+  const allProducts = getAllProducts();
+  const allCategories = getCategories();
+  const allBoutiques = getBoutiques();
+  const allCollections = getCollections();
+
+  // /product/:productSlug
+  const productMatch = pathname.match(/^\/product\/(.+)$/);
+  if (productMatch) {
+    const slug = decodeURIComponent(productMatch[1]);
+    const product = allProducts.find(p => {
+      const nameSlug = (p.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      return nameSlug === slug || String(p.id) === slug;
+    });
+    if (product) {
+      const price = product.priceNum || parseInt(String(product.price).replace(/[^0-9]/g, '')) || 0;
+      const img = product.coverImage || product.image || `${SITE}/gurnaaz_logo.png`;
+      return {
+        title: `${product.name} | GURNAAZ`,
+        description: `Buy ${product.name} — ${product.shortDesc || 'handcrafted premium ethnic wear'}. ${product.fabricDetails ? product.fabricDetails + '.' : ''} Price: ${product.price || ''}. Free shipping across India.`,
+        keywords: `${product.name}, ${product.type || ''}, ${product.category || ''}, ${product.collection || ''}, ${product.fabricName || ''} suit, buy ${product.name}, Gurnaaz`,
+        image: img.startsWith('http') ? img : `${SITE}${img}`,
+        url: `${SITE}/product/${slug}`,
+        schema: {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": product.name,
+          "description": product.shortDesc || product.name,
+          "image": img.startsWith('http') ? img : `${SITE}${img}`,
+          "brand": { "@type": "Brand", "name": "Gurnaaz" },
+          "sku": product.id,
+          "offers": {
+            "@type": "Offer",
+            "url": `${SITE}/product/${slug}`,
+            "priceCurrency": "INR",
+            "price": price,
+            "availability": (product.stock || 0) > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "itemCondition": "https://schema.org/NewCondition"
+          },
+          "aggregateRating": product.rating ? {
+            "@type": "AggregateRating",
+            "ratingValue": product.rating,
+            "reviewCount": product.reviewsCount || 1
+          } : undefined
+        }
+      };
+    }
+    return { title: 'Product | GURNAAZ', description: defaultSEO.description };
+  }
+
+  // /category/:categorySlug
+  const catMatch = pathname.match(/^\/category\/(.+)$/);
+  if (catMatch) {
+    const slug = decodeURIComponent(catMatch[1]);
+    const cat = allCategories.find(c => c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug || String(c.id) === slug);
+    if (cat) {
+      return {
+        title: `${cat.name} | Shop Online | GURNAAZ`,
+        description: `Shop ${cat.name} at Gurnaaz. ${cat.tagline || cat.subtitle || 'Handcrafted premium ethnic wear'}. Explore our curated collection with free shipping across India.`,
+        keywords: `${cat.name}, buy ${cat.name}, ${cat.name} online, Gurnaaz ${cat.name}, ethnic wear`,
+        url: `${SITE}/category/${slug}`,
+        schema: { "@context": "https://schema.org", "@type": "CollectionPage", "name": cat.name, "description": cat.tagline || cat.subtitle || '', "url": `${SITE}/category/${slug}` }
+      };
+    }
+    return { title: `${slug} | GURNAAZ`, description: defaultSEO.description };
+  }
+
+  // /collections/:slug
+  const colMatch = pathname.match(/^\/collections\/(.+)$/);
+  if (colMatch) {
+    const slug = decodeURIComponent(colMatch[1]);
+    const col = allCollections.find(c => (c.id || '').toLowerCase() === slug || (c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug);
+    if (col) {
+      return {
+        title: `${col.name} Collection | GURNAAZ`,
+        description: `Explore the ${col.name} collection at Gurnaaz. ${col.description || 'Handcrafted premium ethnic wear curated for elegance.'} Free shipping across India.`,
+        keywords: `${col.name} collection, ${col.name} ethnic wear, Gurnaaz ${col.name}, designer suits`,
+        url: `${SITE}/collections/${slug}`,
+        schema: { "@context": "https://schema.org", "@type": "CollectionPage", "name": `${col.name} - Gurnaaz`, "description": col.description || '', "url": `${SITE}/collections/${slug}` }
+      };
+    }
+    return { title: `${slug} Collection | GURNAAZ`, description: defaultSEO.description };
+  }
+
+  // /shops-and-boutiques/:slug or /shop/:slug
+  const boutiqueMatch = pathname.match(/^\/(?:shops-and-boutiques|shop)\/(.+)$/);
+  if (boutiqueMatch) {
+    const slug = decodeURIComponent(boutiqueMatch[1]);
+    const boutique = allBoutiques.find(b => (b.id || '').toLowerCase() === slug || (b.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug);
+    if (boutique) {
+      return {
+        title: `${boutique.name} | GURNAAZ Boutique`,
+        description: `Shop from ${boutique.name} on Gurnaaz. ${boutique.description || 'Handcrafted premium ethnic wear from India\'s finest boutique.'} Free shipping across India.`,
+        keywords: `${boutique.name}, ${boutique.name} ethnic wear, shop ${boutique.name}, Gurnaaz boutique`,
+        url: `${SITE}/shops-and-boutiques/${slug}`,
+        schema: { "@context": "https://schema.org", "@type": "Store", "name": boutique.name, "description": boutique.description || '', "url": `${SITE}/shops-and-boutiques/${slug}`, "brand": { "@type": "Brand", "name": "Gurnaaz" } }
+      };
+    }
+    return { title: `${slug} | GURNAAZ Boutique`, description: defaultSEO.description };
+  }
+
+  return null;
+}
+
+const noIndexPages = ['/login', '/signup', '/profile'];
+
+function RouteSEO() {
+  const location = useLocation();
+  const path = location.pathname;
+
+  const [dynamicSEO, setDynamicSEO] = useState(null);
+
+  useEffect(() => {
+    setDynamicSEO(getDynamicSEO(path));
+  }, [path]);
+
+  const staticMatch = routeSEO[path];
+  const isNoIndex = noIndexPages.some(p => path.startsWith(p)) || path.startsWith('/admin');
+  const seoData = staticMatch || dynamicSEO || defaultSEO;
+
+  useSEO({
+    ...seoData,
+    robots: isNoIndex ? 'noindex, nofollow' : (seoData.robots || undefined),
+    url: seoData.url || `${SITE}${path}`,
+  });
+
+  return null;
 }
 
 function AppContent() {
@@ -388,6 +609,7 @@ function AppContent() {
   if (location.pathname === '/' || location.pathname === '') {
     return (
       <>
+        <RouteSEO />
         <Toast />
         {AuthModal}
         <CustomerHomePage 
@@ -403,6 +625,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F6]" style={{ opacity: contentVisible ? 1 : 0, transition: 'opacity 0.8s ease' }}>
+      <RouteSEO />
       <Toast />
       <ScrollToTop />
       

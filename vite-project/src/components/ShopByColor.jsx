@@ -1,22 +1,100 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getAllProducts } from '../utils/adminStore';
 
-const COLORS = [
-  { id: 'lavender', name: 'Lavender', hex: '#D6CADD', image: '/lavender_generated.png' },
-  { id: 'wine', name: 'Wine', hex: '#5B2A34', image: '/wine_generated.png' },
-  { id: 'black', name: 'Black', hex: '#1A1A1A', image: '/black_generated.png' },
-  { id: 'bottle-green', name: 'Bottle Green', hex: '#1E3F33', image: '/bottle_green_generated.png' },
-  { id: 'yellow', name: 'Yellow', hex: '#E2C792', image: '/yellow_generated.png' },
-  { id: 'custom', name: 'Bespoke', hex: 'Match Color', image: '/designer_suit_1.png', isCustom: true }
-];
+const COLOR_MAP = {
+  'lavender': { hex: '#D6CADD', image: '/lavender_generated.png' },
+  'purple': { hex: '#6B3A6B', image: '/lavender_generated.png' },
+  'wine': { hex: '#5B2A34', image: '/wine_generated.png' },
+  'maroon': { hex: '#6B1D1D', image: '/wine_generated.png' },
+  'red': { hex: '#8B1A1A', image: '/wine_generated.png' },
+  'black': { hex: '#1A1A1A', image: '/black_generated.png' },
+  'green': { hex: '#1E3F33', image: '/bottle_green_generated.png' },
+  'bottle green': { hex: '#1E3F33', image: '/bottle_green_generated.png' },
+  'emerald': { hex: '#1E6B3F', image: '/bottle_green_generated.png' },
+  'yellow': { hex: '#E2C792', image: '/yellow_generated.png' },
+  'mustard': { hex: '#C4A236', image: '/yellow_generated.png' },
+  'gold': { hex: '#D4AF37', image: '/yellow_generated.png' },
+  'blue': { hex: '#2B4C7E', image: '/lavender_generated.png' },
+  'navy': { hex: '#1A2744', image: '/black_generated.png' },
+  'pink': { hex: '#D4849B', image: '/lavender_generated.png' },
+  'peach': { hex: '#E8B4A0', image: '/lavender_generated.png' },
+  'white': { hex: '#F5F5F0', image: '/designer_suit_1.png' },
+  'ivory': { hex: '#FFFFF0', image: '/designer_suit_1.png' },
+  'beige': { hex: '#D4C5A9', image: '/designer_suit_1.png' },
+  'grey': { hex: '#808080', image: '/black_generated.png' },
+  'gray': { hex: '#808080', image: '/black_generated.png' },
+  'orange': { hex: '#D4721A', image: '/yellow_generated.png' },
+  'rust': { hex: '#B7472A', image: '/wine_generated.png' },
+  'teal': { hex: '#2E8B8B', image: '/bottle_green_generated.png' },
+  'brown': { hex: '#6B4226', image: '/wine_generated.png' },
+  'mauve': { hex: '#915F6D', image: '/lavender_generated.png' },
+};
 
-export default function ShopByColor() {
-  const [activeColorId, setActiveColorId] = useState(COLORS[0].id);
-  const [customColor, setCustomColor] = useState('#D4AF37');
+function getColorInfo(colorName) {
+  if (!colorName) return null;
+  const lower = colorName.toLowerCase().trim();
+  if (COLOR_MAP[lower]) return { name: colorName.trim(), ...COLOR_MAP[lower] };
+  for (const [key, val] of Object.entries(COLOR_MAP)) {
+    if (lower.includes(key) || key.includes(lower)) return { name: colorName.trim(), ...val };
+  }
+  return { name: colorName.trim(), hex: '#8B7355', image: '/designer_suit_1.png' };
+}
 
-  const activeColor = activeColorId === 'custom' 
-    ? { id: 'custom', name: 'Bespoke', hex: customColor, image: '/designer_suit_1.png' }
-    : COLORS.find(c => c.id === activeColorId);
+export default function ShopByColor({ setView, setSelectedCategory }) {
+  const navigate = useNavigate();
+  const [activeColorId, setActiveColorId] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
+
+  useEffect(() => {
+    setAllProducts(getAllProducts());
+    const handler = () => setAllProducts(getAllProducts());
+    window.addEventListener('admin-data-updated', handler);
+    window.addEventListener('gurnaaz-firebase-updated', handler);
+    return () => {
+      window.removeEventListener('admin-data-updated', handler);
+      window.removeEventListener('gurnaaz-firebase-updated', handler);
+    };
+  }, []);
+
+  const COLORS = useMemo(() => {
+    const colorCounts = {};
+    allProducts.forEach(p => {
+      const colorName = (p.color || '').trim();
+      if (!colorName) return;
+      const lower = colorName.toLowerCase();
+      if (!colorCounts[lower]) {
+        colorCounts[lower] = { name: colorName, count: 0, image: p.coverImage || p.image || '/designer_suit_1.png' };
+      }
+      colorCounts[lower].count++;
+    });
+
+    const sorted = Object.entries(colorCounts)
+      .sort((a, b) => b[1].count - a[1].count)
+      .slice(0, 5)
+      .map(([key, val]) => {
+        const info = getColorInfo(val.name);
+        return {
+          id: key,
+          name: val.name,
+          hex: info.hex,
+          image: val.image || info.image,
+        };
+      });
+
+    return sorted;
+  }, [allProducts]);
+
+  useEffect(() => {
+    if (COLORS.length > 0 && !activeColorId) {
+      setActiveColorId(COLORS[0].id);
+    }
+  }, [COLORS, activeColorId]);
+
+  const activeColor = COLORS.find(c => c.id === activeColorId) || COLORS[0];
+
+  if (!activeColor) return null;
 
   return (
     <section className="py-24 relative overflow-hidden bg-[#FAF9F6] min-h-[900px] flex items-center justify-center border-y border-[#1A0008]/10">
@@ -64,7 +142,7 @@ export default function ShopByColor() {
            </div>
 
            {/* Central Portrait Image - The Main Stage (Restored Luxury Arch) */}
-           <div className="relative w-full max-w-[420px] h-[550px] md:h-[650px] rounded-t-full rounded-b-xl shadow-[0_30px_80px_rgba(0,0,0,0.15)] overflow-hidden border-[6px] border-white z-20 transition-all duration-700 mt-4 group">
+           <div onClick={() => navigate(`/shop?color=${encodeURIComponent(activeColor.name)}`)} className="relative w-full max-w-[420px] h-[550px] md:h-[650px] rounded-t-full rounded-b-xl shadow-[0_30px_80px_rgba(0,0,0,0.15)] overflow-hidden border-[6px] border-white z-20 transition-all duration-700 mt-4 group cursor-pointer">
               <AnimatePresence mode="wait">
                   <motion.div
                      key={activeColor.id}
@@ -74,32 +152,24 @@ export default function ShopByColor() {
                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                      className="absolute inset-0"
                   >
-                     <img 
-                       src={activeColor.image} 
-                       alt={activeColor.name}
-                       className={`w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 ${activeColorId === 'custom' ? 'grayscale contrast-125' : ''}`}
-                     />
+                      <img 
+                        src={activeColor.image} 
+                        alt={activeColor.name}
+                        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                      />
                      
-                     {/* Bespoke Real-Time Tinting */}
-                     {activeColorId === 'custom' && (
-                       <>
-                         <div className="absolute inset-0 mix-blend-color opacity-80 transition-colors duration-100" style={{ backgroundColor: activeColor.hex }} />
-                         <div className="absolute inset-0 mix-blend-multiply opacity-50 transition-colors duration-100" style={{ backgroundColor: activeColor.hex }} />
-                       </>
-                     )}
-                     
-                     {/* Inner elegant border */}
+                      {/* Inner elegant border */}
                      <div className="absolute inset-3 border border-white/30 rounded-t-full rounded-b-md pointer-events-none" />
 
                      {/* Gradient for text */}
                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-90" />
                      
-                     {/* Elegant Button Overlaid on Image */}
-                     <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-full text-center px-4">
-                        <button className="px-10 py-3.5 bg-white/20 backdrop-blur-md border border-white/40 text-white rounded-full text-[10px] tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all font-semibold shadow-2xl">
-                           Explore {activeColor.name}
-                        </button>
-                     </div>
+                      {/* Elegant Button Overlaid on Image */}
+                      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-full text-center px-4">
+                         <button onClick={(e) => { e.stopPropagation(); navigate(`/shop?color=${encodeURIComponent(activeColor.name)}`); }} className="px-10 py-3.5 bg-white/20 backdrop-blur-md border border-white/40 text-white rounded-full text-[10px] tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all font-semibold shadow-2xl">
+                            Explore {activeColor.name}
+                         </button>
+                      </div>
                   </motion.div>
               </AnimatePresence>
            </div>
@@ -107,10 +177,11 @@ export default function ShopByColor() {
            {/* The Dynamic Glassmorphic Navigation Dock */}
            <div className="mt-12 md:mt-16 bg-white/60 backdrop-blur-xl border border-white/60 p-2 md:p-3 rounded-full shadow-[0_20px_40px_-15px_rgba(26,0,8,0.1)] flex items-center justify-center gap-2 md:gap-4 z-30 max-w-full overflow-x-auto no-scrollbar relative">
               {COLORS.map((color) => {
-                 const isActive = activeColorId === color.id;
-                 const isCustom = color.isCustom;
+                  const isActive = activeColorId === color.id;
                  
-                 return (
+  if (!COLORS.length || !activeColor) return null;
+
+  return (
                     <div 
                       key={color.id}
                       onClick={() => setActiveColorId(color.id)}
@@ -119,56 +190,23 @@ export default function ShopByColor() {
                     >
                        {/* Dynamic Thumbnail */}
                        <div className={`flex-shrink-0 rounded-full overflow-hidden transition-all duration-500 ${isActive ? 'w-10 h-10 md:w-12 md:h-12 border border-[#1A0008]/10 shadow-sm' : 'w-full h-full border-2 border-white/50 group-hover:border-white shadow-sm'}`}>
-                          {isCustom ? (
-                             <div className="relative w-full h-full bg-[#1A0008] flex items-center justify-center">
-                                 <div className="absolute inset-0 mix-blend-color opacity-80" style={{ backgroundColor: customColor }} />
-                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" className="relative z-10">
-                                   <circle cx="12" cy="12" r="4"/>
-                                   <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-                                 </svg>
-                             </div>
-                          ) : (
-                             <img src={color.image} className="w-full h-full object-cover object-top" />
-                          )}
+                           <img src={color.image} className="w-full h-full object-cover object-top" />
                        </div>
                        
-                       {/* Expanded Pill Text (Only visible when active) */}
-                       <div className={`overflow-hidden transition-all duration-500 flex flex-col justify-center ${isActive ? 'w-full opacity-100 ml-3' : 'w-0 opacity-0 ml-0'}`}>
-                           <p className="text-[#1A0008] font-bold text-xs md:text-sm whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                              {color.name}
-                           </p>
-                           <p className="text-[#1A0008]/50 text-[9px] tracking-[0.2em] uppercase whitespace-nowrap">
-                              {color.hex}
-                           </p>
-                       </div>
+                        {/* Expanded Pill Text (Only visible when active) */}
+                        <div className={`overflow-hidden transition-all duration-500 flex flex-col justify-center ${isActive ? 'w-full opacity-100 ml-3' : 'w-0 opacity-0 ml-0'}`}>
+                            <p className="text-[#1A0008] font-bold text-xs md:text-sm whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                               {color.name}
+                            </p>
+                            <p className="text-[#1A0008]/50 text-[9px] tracking-[0.2em] uppercase whitespace-nowrap">
+                               {allProducts.filter(p => (p.color || '').toLowerCase() === color.id).length} Products
+                            </p>
+                        </div>
                        
-                       {/* Invisible Color Input overlay covering the active pill for Bespoke */}
-                       {isCustom && isActive && (
-                          <input 
-                             type="color" 
-                             value={customColor} 
-                             onChange={(e) => setCustomColor(e.target.value)}
-                             className="absolute inset-0 w-full h-full cursor-pointer opacity-0 z-10"
-                             title="Pick a custom shade"
-                          />
-                       )}
-                    </div>
+                     </div>
                  )
               })}
-           </div>
-           
-           <AnimatePresence>
-             {activeColorId === 'custom' && (
-                <motion.p 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="mt-6 text-[#1A0008]/50 text-[10px] tracking-widest uppercase font-medium"
-                >
-                   Tap the bespoke pill to open color picker
-                </motion.p>
-             )}
-           </AnimatePresence>
+            </div>
 
        </div>
     </section>

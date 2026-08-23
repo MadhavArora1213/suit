@@ -29,6 +29,24 @@ import AddFestiveItem from './pages/AddFestiveItem';
 export default function AdminApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    document.title = 'GURNAAZ Admin Panel';
+    const setMeta = (name, content) => {
+      let el = document.querySelector(`meta[name="${name}"]`);
+      if (!el) { el = document.createElement('meta'); el.setAttribute('name', name); document.head.appendChild(el); }
+      el.setAttribute('content', content);
+    };
+    setMeta('robots', 'noindex, nofollow, noarchive, nosnippet');
+    setMeta('description', 'Admin panel - not for public access.');
+
+    const setOG = (prop, content) => {
+      let el = document.querySelector(`meta[property="${prop}"]`);
+      if (!el) { el = document.createElement('meta'); el.setAttribute('property', prop); document.head.appendChild(el); }
+      el.setAttribute('content', content);
+    };
+    setOG('og:robots', 'noindex, nofollow');
+  }, []);
   const getInitialAdminPage = () => {
     const path = window.location.pathname;
     if (path.startsWith('/admin/')) {

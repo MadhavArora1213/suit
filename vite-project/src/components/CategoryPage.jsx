@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ShoppingBag, Eye, SlidersHorizontal, Check, ChevronDown, ChevronUp, Heart } from 'lucide-react';
 import { getAllProducts, getCategories } from '../utils/adminStore';
@@ -23,6 +24,8 @@ function FilterAccordion({ title, children, defaultOpen = false }) {
 }
 
 export default function CategoryPage({ categoryName, setView, setSelectedProduct, addToCart, favorites = {}, toggleFavorite }) {
+  const [searchParams] = useSearchParams();
+  const colorParam = searchParams.get('color');
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +37,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
   const [selectedBoutiques, setSelectedBoutiques] = useState([]);
   const [selectedMaxPrice, setSelectedMaxPrice] = useState(null);
   const [selectedFabrics, setSelectedFabrics] = useState([]);
-  const [selectedColors, setSelectedColors] = useState([]);
+  const [selectedColors, setSelectedColors] = useState(colorParam ? [colorParam] : []);
   const [selectedOccasions, setSelectedOccasions] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
 

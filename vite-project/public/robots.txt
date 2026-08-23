@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login
+Disallow: /signup
+Disallow: /profile
+Disallow: /cart
+Disallow: /checkout
+
+Sitemap: https://www.gurnaaz.co.in/sitemap.xml
