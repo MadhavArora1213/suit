@@ -8,6 +8,7 @@ import {
   saveProductToFirestore,
   deleteProductFromFirestore,
   fetchProductsFromFirestore,
+  fetchProductOverridesFromFirestore,
   fetchCollectionFromFirestore,
   saveDocumentToFirestore,
   db,
@@ -39,6 +40,29 @@ export const initializeStore = async () => {
     };
 
     memoryStore.products = await safeFetch(fetchProductsFromFirestore());
+
+    // Load products_overrides (views, clicks) and merge into products
+    try {
+      const overrides = await fetchProductOverridesFromFirestore();
+      if (overrides && Object.keys(overrides).length > 0) {
+        memoryStore.products = memoryStore.products.map(p => {
+          const ovr = overrides[p.id];
+          if (ovr) {
+            return {
+              ...p,
+              viewsCount: ovr.viewsCount || p.viewsCount || 0,
+              views: ovr.views || p.views || 0,
+              uniqueViews: ovr.uniqueViews || p.uniqueViews || 0,
+              clicksCount: ovr.clicksCount || p.clicksCount || 0,
+              clicks: ovr.clicks || p.clicks || 0,
+            };
+          }
+          return p;
+        });
+      }
+    } catch (e) {
+      console.warn("Failed to load product overrides:", e.message);
+    }
 
     // Auto-correct stale stock values from stockQty
     if (memoryStore.products && memoryStore.products.length > 0) {
@@ -167,20 +191,73 @@ export const deleteProduct = (id) => {
 
 export const recordProductView = (id) => {
   if (!id) return;
-  const prod = memoryStore.products.find(p => String(p.id) === String(id));
-  if (!prod) return;
-  const currentViews = (prod.viewsCount || prod.views || 0) + 1;
-  updateProduct(id, { viewsCount: currentViews, views: currentViews });
-  notifyWebsite();
+
+  // Session-based unique view: same browser session mein dubara visit = no count
+  const viewedKey = 'gurnaaz_viewed_products';
+  let viewed = [];
+  try { viewed = JSON.parse(sessionStorage.getItem(viewedKey) || '[]'); } catch {}
+  if (viewed.includes(String(id))) return;
+  viewed.push(String(id));
+  try { sessionStorage.setItem(viewedKey, JSON.stringify(viewed)); } catch {}
+
+  if (isFirebaseConfigured()) {
+    // products_overrides collection mein likho (public write allowed), products mein nahi
+    const overridesRef = doc(db, 'products_overrides', String(id));
+    const productsRef = doc(db, 'products', String(id));
+
+    // Pehle dono se current counts padho
+    Promise.all([getDoc(overridesRef).catch(() => null), getDoc(productsRef).catch(() => null)])
+      .then(([overridesSnap, productSnap]) => {
+        const ovrData = overridesSnap?.exists() ? overridesSnap.data() : {};
+        const prodData = productSnap?.exists() ? productSnap.data() : {};
+        const currentViews = ovrData.viewsCount || prodData.viewsCount || 0;
+        const currentUnique = ovrData.uniqueViews || prodData.uniqueViews || 0;
+        const totalViews = currentViews + 1;
+        const uniqueViews = currentUnique + 1;
+
+        // Firestore rules ke hisaab se products pe write nahi ho sakta (admin only)
+        // Toh overrides mein likho — rules allow write: if true
+        setDoc(overridesRef, {
+          viewsCount: totalViews,
+          views: totalViews,
+          uniqueViews,
+          updatedAt: new Date().toISOString()
+        }, { merge: true }).then(() => {
+          // Memory store bhi update karo
+          const prod = memoryStore.products.find(p => String(p.id) === String(id));
+          if (prod) {
+            prod.viewsCount = totalViews;
+            prod.views = totalViews;
+            prod.uniqueViews = uniqueViews;
+          }
+          notifyWebsite();
+        }).catch(console.error);
+      }).catch(console.error);
+  }
 };
 
 export const recordProductClick = (id, clickType = 'card_click') => {
   if (!id) return;
-  const prod = memoryStore.products.find(p => String(p.id) === String(id));
-  if (!prod) return;
-  const currentClicks = (prod.clicksCount || prod.clicks || 0) + 1;
-  updateProduct(id, { clicksCount: currentClicks, clicks: currentClicks });
-  notifyWebsite();
+
+  if (isFirebaseConfigured()) {
+    const overridesRef = doc(db, 'products_overrides', String(id));
+    getDoc(overridesRef).then(snap => {
+      const data = snap.exists() ? snap.data() : {};
+      const totalClicks = (data.clicksCount || 0) + 1;
+      setDoc(overridesRef, {
+        clicksCount: totalClicks,
+        clicks: totalClicks,
+        updatedAt: new Date().toISOString()
+      }, { merge: true }).then(() => {
+        const prod = memoryStore.products.find(p => String(p.id) === String(id));
+        if (prod) {
+          prod.clicksCount = totalClicks;
+          prod.clicks = totalClicks;
+        }
+        notifyWebsite();
+      }).catch(console.error);
+    }).catch(console.error);
+  }
 };
 
 export const saveFestiveOffers = (arr) => {

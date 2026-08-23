@@ -370,6 +370,11 @@ export async function saveProductToFirestore(productId, product) {
       image: product.image || '',
       additionalImages: product.additionalImages || [],
       colorVariants: product.colorVariants || {},
+      viewsCount: product.viewsCount || 0,
+      views: product.views || 0,
+      uniqueViews: product.uniqueViews || 0,
+      clicksCount: product.clicksCount || 0,
+      clicks: product.clicks || 0,
       addedAt: product.addedAt || new Date().toISOString(),
       source: product.source || 'admin',
       updatedAt: new Date().toISOString()

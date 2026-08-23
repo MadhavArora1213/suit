@@ -71,9 +71,25 @@ const SellerShopPageWrapper = (props) => {
 
 const ProductDetailsPageWrapper = (props) => {
   const { productSlug } = useParams();
-  const allProds = getAllProducts();
-  const product = allProds.find(p => p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === productSlug) || 
-                  allProds.find(p => String(p.id) === productSlug) || null;
+  const [product, setProduct] = useState(() => {
+    const allProds = getAllProducts();
+    return allProds.find(p => p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === productSlug) || 
+           allProds.find(p => String(p.id) === productSlug) || null;
+  });
+
+  useEffect(() => {
+    const resolveProduct = () => {
+      const allProds = getAllProducts();
+      const found = allProds.find(p => p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === productSlug) || 
+                    allProds.find(p => String(p.id) === productSlug) || null;
+      if (found && !product) {
+        setProduct(found);
+      }
+    };
+    resolveProduct();
+    window.addEventListener('admin-data-updated', resolveProduct);
+    return () => window.removeEventListener('admin-data-updated', resolveProduct);
+  }, [productSlug]);
 
   useEffect(() => {
     if (product?.id) {
