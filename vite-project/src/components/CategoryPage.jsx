@@ -47,12 +47,16 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
 
   const currentCat = categories.find(c => c.name.toLowerCase() === categoryName.toLowerCase());
 
+  const catProducts = useMemo(() => {
+    return products.filter(p => (p.image || p.coverImage));
+  }, [products]);
+
   const banner = {
     title: currentCat?.name || categoryName,
     subtitle: currentCat?.subtitle || 'Curated Collection',
-    desc: currentCat?.tagline || 'Browse our exclusive, handcrafted selection of designer ethnic wear, curated from India’s finest heritage boutiques.',
-    bgImage: currentCat?.image || '/designer_suit_1.png',
-    bgImage2: currentCat?.image2 || '/anarkali_suit.png'
+    desc: currentCat?.tagline || `Explore ${catProducts.length > 0 ? catProducts.length + ' handpicked' : 'our exclusive'} ${categoryName} — crafted with love from India's finest heritage boutiques.`,
+    bgImage: (catProducts.length > 0 ? (catProducts[0].image || catProducts[0].coverImage) : null) || currentCat?.image || '/designer_suit_1.png',
+    bgImage2: (catProducts.length > 1 ? (catProducts[1].image || catProducts[1].coverImage) : null) || currentCat?.image2 || '/anarkali_suit.png'
   };
 
   useEffect(() => {
@@ -66,10 +70,11 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
         finalProducts = all;
       } else {
         finalProducts = all.filter(p => {
-          const typeMatch = (p.type || p.suitType || '').toLowerCase() === categoryName.toLowerCase();
-          const colMatch = (p.collection || '').toLowerCase() === categoryName.toLowerCase();
-          const catMatch = (p.category || '').toLowerCase() === categoryName.toLowerCase();
-          return typeMatch || colMatch || catMatch;
+          const typeMatch = (p.type || p.suitType || '').toLowerCase().includes(categoryName.toLowerCase());
+          const colMatch = (p.collection || '').toLowerCase().includes(categoryName.toLowerCase());
+          const catMatch = (p.category || '').toLowerCase().includes(categoryName.toLowerCase());
+          const nameMatch = (p.name || p.title || '').toLowerCase().includes(categoryName.toLowerCase());
+          return typeMatch || colMatch || catMatch || nameMatch;
         });
       }
       setProducts(finalProducts);
@@ -293,10 +298,7 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
                     Explore Collection
                   </span>
                 </button>
-                <div className="hidden sm:flex items-center gap-2 text-[#1A0008]/30 animate-bounce mt-1">
-                  <ChevronDown size={14} />
-                  <span className="text-[8px] tracking-[0.2em] uppercase font-bold">Scroll</span>
-                </div>
+
               </div>
             </motion.div>
           </div>

@@ -1,34 +1,54 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { getCategories } from '../utils/adminStore';
+import { getCategories, getAllProducts } from '../utils/adminStore';
 
 export default function ShoppingReimagined({ setView, setSelectedCategory }) {
   const targetRef = useRef(null);
   const [categories, setCategories] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
-    const fetchAndSetCategories = () => {
+    const fetchData = () => {
       const activeCats = getCategories()
         .filter(c => c.active !== false)
         .sort((a, b) => (a.order || 0) - (b.order || 0));
       setCategories(activeCats);
+      setAllProducts(getAllProducts());
     };
     
-    fetchAndSetCategories();
-    window.addEventListener('admin-data-updated', fetchAndSetCategories);
-    return () => window.removeEventListener('admin-data-updated', fetchAndSetCategories);
+    fetchData();
+    window.addEventListener('admin-data-updated', fetchData);
+    window.addEventListener('gurnaaz-firebase-updated', fetchData);
+    return () => {
+      window.removeEventListener('admin-data-updated', fetchData);
+      window.removeEventListener('gurnaaz-firebase-updated', fetchData);
+    };
   }, []);
 
-  // Construct dynamic CRAFTS array
+  // Construct dynamic CRAFTS array — each category gets a random product image
   const dynamicCrafts = [
     { id: 'intro', title: 'Signature Collections', subtitle: 'Shop by Fabric', type: 'intro' },
-    ...categories.map(cat => ({
-      id: cat.id || cat.name,
-      title: cat.name,
-      subtitle: cat.tagline || 'Explore our exclusive collection.',
-      image: cat.image || '/placeholder_suit.png',
-      type: 'craft'
-    }))
+    ...categories.map(cat => {
+      const catName = (cat.name || '').toLowerCase().trim();
+      const catId = (cat.id || '').toLowerCase().trim();
+      
+      const catProducts = allProducts.filter(p => {
+        const typeMatch = (p.type || p.suitType || '').toLowerCase().includes(catName);
+        const catMatch = (p.category || '').toLowerCase().includes(catName);
+        const collMatch = (p.collection || '').toLowerCase().includes(catName);
+        const idMatch = (p.category || '').toLowerCase() === catId || (p.type || '').toLowerCase() === catId || (p.collection || '').toLowerCase() === catId;
+        return typeMatch || catMatch || collMatch || idMatch;
+      });
+      
+      const randomProd = catProducts.length > 0 ? catProducts[Math.floor(Math.random() * catProducts.length)] : null;
+      return {
+        id: cat.id || cat.name,
+        title: cat.name,
+        subtitle: cat.tagline || 'Explore our exclusive collection.',
+        image: (randomProd && (randomProd.image || randomProd.coverImage)) || cat.image || '/placeholder_suit.png',
+        type: 'craft'
+      };
+    })
   ];
   
   // The section is 300vh tall to allow for plenty of scrolling time

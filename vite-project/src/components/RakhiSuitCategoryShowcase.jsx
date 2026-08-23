@@ -151,7 +151,7 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
         </div>
 
         {/* Products Grid */}
-        <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-7">
+        <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-7">
           <AnimatePresence>
             {filteredProducts.map((product) => {
               const isFav = favorites?.[product.id];
@@ -206,25 +206,25 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
                     </button>
                   </div>
 
-                  <div className="p-4 flex flex-col flex-grow justify-between">
+                  <div className="p-3 md:p-4 flex flex-col flex-grow justify-between">
                     <div>
-                      <div className="text-[10px] text-[#8B1A1A] font-bold uppercase tracking-widest mb-1">
+                      <div className="text-[9px] md:text-[10px] text-[#8B1A1A] font-bold uppercase tracking-widest mb-1">
                         {product.boutique || 'Gurnaaz Edition'}
                       </div>
                       <h3 
                         onClick={() => handleCardClick(product)}
-                        className="text-base font-semibold text-gray-900 line-clamp-2 cursor-pointer hover:text-[#8B1A1A] transition-colors leading-snug" 
+                        className="text-sm md:text-base font-semibold text-gray-900 line-clamp-2 cursor-pointer hover:text-[#8B1A1A] transition-colors leading-snug" 
                         style={{ fontFamily: "'Cormorant Garamond', serif" }}
                       >
-                        {product.name}
+                        {product.name || product.title}
                       </h3>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-                      <div>
-                        <span className="text-base font-extrabold text-[#1A0008]">{product.price}</span>
+                    <div className="mt-3 md:mt-4 pt-2 md:pt-3 border-t border-gray-100 flex flex-col gap-2">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-sm md:text-base font-extrabold text-[#1A0008]">{product.price}</span>
                         {product.originalPrice && (
-                          <span className="text-xs text-gray-400 line-through ml-2 font-light">{product.originalPrice}</span>
+                          <span className="text-[10px] md:text-xs text-gray-400 line-through font-light">{product.originalPrice}</span>
                         )}
                       </div>
 
@@ -233,7 +233,7 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
                           e.stopPropagation();
                           handleAddToCart(product);
                         }}
-                        className="px-3.5 py-2 bg-[#1A0008] hover:bg-[#8B1A1A] text-[#F5D76E] text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center gap-1"
+                        className="w-full py-2 bg-[#1A0008] hover:bg-[#8B1A1A] text-[#F5D76E] text-[10px] md:text-xs font-bold rounded-xl transition-all shadow-md active:scale-95 flex items-center justify-center gap-1"
                       >
                         <span>+</span> Add
                       </button>
