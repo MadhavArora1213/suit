@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
+import { getAllProducts } from '../utils/adminStore';
 
 function getTimeLeft() {
   const now = new Date();
@@ -25,6 +26,35 @@ export default function HeroRitual({ onSelectFilter }) {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [productImages, setProductImages] = useState({
+    suit: '/rakhi_suit_hero_shoot.jpg',
+    rakhi: '/rakhi_campaign_hero.png',
+    designer: '/designer_suit_1.png',
+  });
+
+  useEffect(() => {
+    const loadProducts = () => {
+      const products = getAllProducts().filter(p => p.image || p.coverImage);
+      if (products.length === 0) return;
+      const shuffled = [...products].sort(() => Math.random() - 0.5);
+      setProductImages({
+        suit: shuffled[0]?.image || shuffled[0]?.coverImage || '/rakhi_suit_hero_shoot.jpg',
+        rakhi: shuffled[1]?.image || shuffled[1]?.coverImage || '/rakhi_campaign_hero.png',
+        designer: shuffled[2]?.image || shuffled[2]?.coverImage || '/designer_suit_1.png',
+      });
+    };
+    loadProducts();
+    const retry1 = setTimeout(loadProducts, 2000);
+    const retry2 = setTimeout(loadProducts, 5000);
+    window.addEventListener('admin-data-updated', loadProducts);
+    window.addEventListener('gurnaaz-firebase-updated', loadProducts);
+    return () => {
+      clearTimeout(retry1);
+      clearTimeout(retry2);
+      window.removeEventListener('admin-data-updated', loadProducts);
+      window.removeEventListener('gurnaaz-firebase-updated', loadProducts);
+    };
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -106,7 +136,7 @@ export default function HeroRitual({ onSelectFilter }) {
             className="relative lg:absolute lg:left-[6%] lg:top-[10%] w-full lg:w-[270px] aspect-[3/4] lg:aspect-auto lg:h-[370px] bg-white p-1.5 md:p-2.5 pb-8 md:pb-10 border md:border-2 border-[#D4AF37] rounded-xl shadow-lg md:shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group transition-all"
           >
             <div className="w-full h-full overflow-hidden bg-[#E8DDD0] rounded-lg border border-gray-200 relative">
-              <img src="/rakhi_suit_hero_shoot.jpg" alt="Rakhi Suit Model Shoot" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
+              <img src={productImages.suit} alt="Rakhi Suit Model Shoot" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1A0008]/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2 md:p-3 text-white text-[9px] md:text-xs font-bold">
                 Silk Patiala & Silver Rakhi Set
               </div>
@@ -160,7 +190,7 @@ export default function HeroRitual({ onSelectFilter }) {
             </div>
             <div className="flex-grow flex items-center justify-center">
               <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-[2px] md:border-[3px] border-[#1A0008] shadow-[2px_2px_0px_rgba(26,0,8,1)] md:shadow-[4px_4px_0px_rgba(26,0,8,1)] bg-white p-0.5 md:p-1">
-                <img src="/rakhi_campaign_hero.png" alt="Signature Rakhi" className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform" />
+                <img src={productImages.rakhi} alt="Signature Rakhi" className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform" />
               </div>
             </div>
             <div className="text-[6px] sm:text-[7px] md:text-[10px] border-t border-[#1A0008]/20 md:border-t-2 pt-2 md:pt-3 text-[#1A0008] text-center tracking-[0.1em] md:tracking-widest uppercase font-black" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -177,7 +207,7 @@ export default function HeroRitual({ onSelectFilter }) {
             className="relative lg:absolute lg:right-[6%] lg:top-[8%] w-full lg:w-[250px] aspect-[3/4] lg:aspect-auto lg:h-[330px] bg-white p-1.5 md:p-2.5 pb-8 md:pb-10 border md:border-2 border-[#D4AF37] rounded-xl overflow-hidden shadow-lg md:shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group"
           >
             <div className="w-full h-full rounded-lg overflow-hidden bg-[#FAF9F6] border border-[#1A0008]/10">
-              <img src="/designer_suit_1.png" alt="Designer Suit" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
+              <img src={productImages.designer} alt="Designer Suit" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
             </div>
             
             {/* Sticker Bottom Right */}

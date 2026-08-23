@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Eye, EyeOff, Globe, Mail, Phone, Upload, Shield, Palette, Database, Save, Lock, Store, AtSign } from 'lucide-react';
+import { updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 const Instagram = ({ size = 16, className = '' }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -102,17 +104,41 @@ export default function Settings() {
     }
   }, []);
 
-  const handleSave = (section) => {
+  const handleSave = async (section) => {
     try {
       if (section === 'firebase') {
         localStorage.setItem('gurnaaz_firebase_config', JSON.stringify(firebase));
-        // Dispatch event so other parts of the app know Firebase config updated
         window.dispatchEvent(new CustomEvent('gurnaaz-firebase-updated'));
       } else if (section === 'branding' || section === 'contact') {
         localStorage.setItem('gurnaaz_general_config', JSON.stringify(general));
+      } else if (section === 'password') {
+        const user = auth.currentUser;
+        if (!user) {
+          alert('No admin user logged in.');
+          return;
+        }
+        if (!security.currentPassword || !security.newPassword || !security.confirmPassword) {
+          alert('Please fill in all password fields.');
+          return;
+        }
+        if (security.newPassword !== security.confirmPassword) {
+          alert('New password and confirm password do not match.');
+          return;
+        }
+        if (security.newPassword.length < 6) {
+          alert('New password must be at least 6 characters.');
+          return;
+        }
+        const credential = EmailAuthProvider.credential(user.email, security.currentPassword);
+        await reauthenticateWithCredential(user, credential);
+        await updatePassword(user, security.newPassword);
+        setSecurity({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        alert('Password updated successfully!');
       }
     } catch (e) {
-      console.error('Error saving settings to localStorage:', e);
+      console.error('Save error:', e);
+      alert('Error: ' + (e.message || 'Something went wrong'));
+      return;
     }
     setSavedSection(section);
     setTimeout(() => setSavedSection(null), 2200);

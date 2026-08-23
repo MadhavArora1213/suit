@@ -50,11 +50,17 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
+  const rotateX = useTransform(mouseY, [-200, 200], [7, -7]);
+  const rotateY = useTransform(mouseX, [-200, 200], [-7, 7]);
+  const shineX = useTransform(mouseX, [-200, 200], [0, 100]);
+  const shineY = useTransform(mouseY, [-200, 200], [0, 100]);
+  const shineBg = useMotionTemplate`radial-gradient(circle at ${shineX}% ${shineY}%, rgba(255,255,255,0.2) 0%, transparent 60%)`;
+
   const isOutOfStock = useMemo(() => {
+    if (product.stock !== undefined) return Number(product.stock) <= 0;
     if (product.stockQty && typeof product.stockQty === 'object' && Object.keys(product.stockQty).length > 0) {
       return Object.values(product.stockQty).every(v => !v || Number(v) <= 0);
     }
-    if (product.stock !== undefined) return Number(product.stock) <= 0;
     return false;
   }, [product]);
 
@@ -66,10 +72,10 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.25, 1, 0.5, 1] }}
+      viewport={{ once: true, margin: "200px" }}
+      transition={{ duration: 0.5, delay: Math.min(index, 3) * 0.05, ease: [0.25, 1, 0.5, 1] }}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { mouseX.set(0); mouseY.set(0); }}
       onClick={() => { setSelectedProduct(product); setView('product-details'); }}
@@ -77,8 +83,8 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
     >
       <motion.div 
         style={{
-          rotateX: useTransform(mouseY, [-200, 200], [7, -7]),
-          rotateY: useTransform(mouseX, [-200, 200], [-7, 7]),
+          rotateX,
+          rotateY,
           transformStyle: "preserve-3d"
         }}
         className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-[#F0E8DC] shadow-sm group-hover:shadow-2xl transition-shadow duration-500"
@@ -87,14 +93,10 @@ function ProductCard({ product, index, favorites, toggleFavorite, addToCart, set
           className={`w-full h-full object-cover transition-all duration-1000 ${isOutOfStock ? '' : 'group-hover:scale-[1.08]'} ${imageLoaded ? 'opacity-100' : 'opacity-0'}`} />
         
         {/* Shine Effect */}
-        {!isOutOfStock && (
-          <motion.div 
-            className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            style={{
-              background: useMotionTemplate`radial-gradient(circle at ${useTransform(mouseX, [-200, 200], [0, 100])}% ${useTransform(mouseY, [-200, 200], [0, 100])}%, rgba(255,255,255,0.2) 0%, transparent 60%)`
-            }}
-          />
-        )}
+        <motion.div 
+          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{ background: shineBg }}
+        />
 
         {/* Diagonal Premium Sash */}
         {product.badge && (
@@ -199,6 +201,8 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
 
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(8);
+  const loadMoreRef = useRef(null);
 
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -211,6 +215,8 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
+    let dataLoaded = false;
+
     const loadData = () => {
       const prof = getBoutiqueProfile(boutiqueName);
       setProfile(prof);
@@ -225,22 +231,33 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
       
       setProducts(boutiqueProds);
       setFilteredProducts(boutiqueProds);
-      
-      if (boutiqueProds.length > 0) {
+    };
+
+    loadData();
+
+    const handleDataReady = () => {
+      if (!dataLoaded) {
+        dataLoaded = true;
+        loadData();
         setLoading(false);
       }
     };
 
-    loadData();
-    const timer = setTimeout(() => setLoading(false), 2500);
-
-    window.addEventListener('admin-data-updated', loadData);
-    window.addEventListener('gurnaaz-firebase-updated', loadData);
+    window.addEventListener('admin-data-updated', handleDataReady);
+    window.addEventListener('gurnaaz-firebase-updated', handleDataReady);
+    
+    const safetyTimer = setTimeout(() => {
+      if (!dataLoaded) {
+        dataLoaded = true;
+        loadData();
+        setLoading(false);
+      }
+    }, 5000);
     
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener('admin-data-updated', loadData);
-      window.removeEventListener('gurnaaz-firebase-updated', loadData);
+      clearTimeout(safetyTimer);
+      window.removeEventListener('admin-data-updated', handleDataReady);
+      window.removeEventListener('gurnaaz-firebase-updated', handleDataReady);
     };
   }, [boutiqueName]);
 
@@ -385,6 +402,25 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
   }, [selectedCategories, selectedSizes, selectedFabrics, selectedColors, selectedPrices, selectedOccasions, sortBy, products]);
 
   const activeFilterCount = selectedCategories.length + selectedSizes.length + selectedFabrics.length + selectedColors.length + selectedPrices.length + selectedOccasions.length;
+
+  useEffect(() => {
+    setVisibleCount(8);
+  }, [selectedCategories, selectedSizes, selectedFabrics, selectedColors, selectedPrices, selectedOccasions, sortBy]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount(prev => prev + 4);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (loadMoreRef.current) observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [filteredProducts.length]);
+
+  const visibleProducts = filteredProducts.slice(0, visibleCount);
 
   if (!profile) return null;
 
@@ -656,11 +692,18 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
               <button onClick={clearAllFilters} className="mt-4 text-[10px] font-bold tracking-[0.2em] uppercase text-[#D4AF37] hover:text-[#1A0008] border-b border-[#D4AF37]/40 pb-1 transition-colors">Reset All Filters</button>
             </motion.div>
           ) : (
+            <>
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-6 sm:gap-y-10 [perspective:1000px]">
-              {filteredProducts.map((product, i) => (
+              {visibleProducts.map((product, i) => (
                 <ProductCard key={product.id} product={product} index={i} favorites={favorites} toggleFavorite={toggleFavorite} addToCart={addToCart} setSelectedProduct={setSelectedProduct} setView={setView} />
               ))}
             </div>
+            {visibleCount < filteredProducts.length && (
+              <div ref={loadMoreRef} className="flex justify-center py-8">
+                <div className="w-6 h-6 border-2 border-[#D4AF37]/30 border-t-[#D4AF37] rounded-full animate-spin" />
+              </div>
+            )}
+            </>
           )}
         </div>
       </div>

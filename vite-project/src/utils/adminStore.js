@@ -39,6 +39,19 @@ export const initializeStore = async () => {
     };
 
     memoryStore.products = await safeFetch(fetchProductsFromFirestore());
+
+    // Auto-correct stale stock values from stockQty
+    if (memoryStore.products && memoryStore.products.length > 0) {
+      memoryStore.products = memoryStore.products.map(p => {
+        if (p.sizes && p.sizes.length > 0 && p.stockQty && typeof p.stockQty === 'object' && Object.keys(p.stockQty).length > 0) {
+          const correctedStock = p.sizes.reduce((acc, size) => acc + (p.stockQty[size] === 0 ? 0 : 1), 0);
+          if (correctedStock !== p.stock) {
+            return { ...p, stock: correctedStock };
+          }
+        }
+        return p;
+      });
+    }
     memoryStore.boutiques = await safeFetch(fetchCollectionFromFirestore('boutiques'));
     memoryStore.categories = await safeFetch(fetchCollectionFromFirestore('categories'));
     memoryStore.collections = await safeFetch(fetchCollectionFromFirestore('collections'));
@@ -90,7 +103,7 @@ export const defaultCollections = [
 ];
 
 export const defaultBoutiques = [
-  { id: '1', name: 'Gurnaaz Heritage', type: 'Boutique', showInNavbar: true, isFeatured: true, coverImage: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80', description: 'Handcrafted royal ethnic suits & lehengas.' },
+  { id: '1', name: 'Gurnaaz Heritage', type: 'Boutique', showInNavbar: true, isFeatured: true, coverImage: '/gurnaaz_hero_model_custom.png', description: 'Handcrafted royal ethnic suits & lehengas.' },
   { id: '2', name: 'Kashmiri Silk Studio', type: 'Shop', showInNavbar: true, isFeatured: true, coverImage: '/designer_suit_1.png', description: 'Authentic Kashmiri Tilla & Zari work.' }
 ];
 

@@ -15,7 +15,7 @@ export default function AddCollectionTag({ setActivePage, editCollectionTag = nu
 
   useEffect(() => {
     if (editCollectionTag) {
-      setFormData(editCollectionTag);
+      setFormData(prev => ({ ...prev, ...editCollectionTag }));
       setIsEditing(true);
     } else {
       setIsEditing(false);

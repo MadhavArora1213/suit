@@ -151,11 +151,11 @@ export default function Products({ setActivePage, onEditProduct }) {
                     </span>
                     {(() => {
                       let isOOS = false;
-                      if (product.stockQty && typeof product.stockQty === 'object' && Object.keys(product.stockQty).length > 0) {
+                      if (product.stock !== undefined) {
+                        isOOS = Number(product.stock) <= 0;
+                      } else if (product.stockQty && typeof product.stockQty === 'object' && Object.keys(product.stockQty).length > 0) {
                         const vals = Object.values(product.stockQty);
                         isOOS = vals.every(v => !v || Number(v) <= 0);
-                      } else if (product.stock !== undefined) {
-                        isOOS = Number(product.stock) <= 0;
                       }
                       return (
                         <span className={`absolute top-2 right-2 text-[9px] sm:text-[11px] font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg ${

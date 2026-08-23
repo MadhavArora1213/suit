@@ -65,7 +65,7 @@ export default function AddBoutique({ setActivePage, editBoutique = null }) {
 
   useEffect(() => {
     if (editBoutique) {
-      setFormData(editBoutique);
+      setFormData(prev => ({ ...prev, ...editBoutique }));
       setIsEditing(true);
     }
   }, [editBoutique]);

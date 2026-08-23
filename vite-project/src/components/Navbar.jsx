@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Search, User, ShoppingBag, X, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import gurnaazLogo from '../assets/gurnaaz.png';
-import { getAllProducts, getBoutiques, getCategories, getCollections } from '../utils/adminStore';
+import { getAllProducts, getBoutiques, getCategories, getCollections, defaultBoutiques } from '../utils/adminStore';
 
 export default function Navbar({
   cart = [],
@@ -48,7 +48,8 @@ export default function Navbar({
 
   useEffect(() => {
     setAllProducts(getAllProducts());
-    const bts = getBoutiques().filter(b => b.showInNavbar !== false);
+    const rawBts = getBoutiques();
+    const bts = (rawBts.length > 0 ? rawBts : defaultBoutiques).filter(b => b.showInNavbar !== false);
     setNavBoutiques(bts.filter(b => b.type !== 'Shop'));
     setNavShops(bts.filter(b => b.type === 'Shop'));
     setNavFeatured(bts.filter(b => b.isFeatured === true).slice(0, 2));
@@ -57,7 +58,8 @@ export default function Navbar({
     
     const handleUpdate = () => {
       setAllProducts(getAllProducts());
-      const updatedBts = getBoutiques().filter(b => b.showInNavbar !== false);
+      const updatedRawBts = getBoutiques();
+      const updatedBts = (updatedRawBts.length > 0 ? updatedRawBts : defaultBoutiques).filter(b => b.showInNavbar !== false);
       setNavBoutiques(updatedBts.filter(b => b.type !== 'Shop'));
       setNavShops(updatedBts.filter(b => b.type === 'Shop'));
       setNavFeatured(updatedBts.filter(b => b.isFeatured === true).slice(0, 2));
@@ -388,7 +390,7 @@ export default function Navbar({
                             window.location.href = `/${feat.type === 'Shop' ? 'shop' : 'shops-and-boutiques'}/${feat.name.toLowerCase().replace(/ /g, '-')}`;
                           }
                         }}>
-                          <img src={feat.coverImage || (index === 0 ? "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" : "/designer_suit_1.png")} alt={feat.name} className={`w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-110 ${index === 0 ? 'object-center' : 'object-top'}`} />
+                          <img src={feat.coverImage || (index === 0 ? "/gurnaaz_hero_model_custom.png" : "/designer_suit_1.png")} alt={feat.name} className={`w-full h-full object-cover transition-transform duration-1000 group-hover/img:scale-110 ${index === 0 ? 'object-center' : 'object-top'}`} />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                           <div className="absolute inset-y-0 left-0 p-6 flex flex-col justify-end text-white">
                             <span className="text-[8px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-1 block">
@@ -406,8 +408,8 @@ export default function Navbar({
                       ))}
                       
                       {navFeatured.length === 0 && (
-                        <div className="flex-1 h-full flex items-center justify-center text-center p-8 bg-white/30 border border-dashed border-[#D4AF37]/30 rounded-xl ml-2 text-[#1A0008]/50 text-xs font-medium uppercase tracking-widest">
-                          Set featured shops/boutiques in Admin panel to display photos here.
+                        <div className="flex-1 h-full flex items-center justify-center rounded-xl ml-2 overflow-hidden">
+                          <img src="/gurnaaz_hero_model_custom.png" alt="Gurnaaz" className="w-full h-full object-cover object-top" />
                         </div>
                       )}
 

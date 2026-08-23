@@ -477,7 +477,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                         style={(stockQty[size] === undefined || stockQty[size] > 0)
                           ? { background: '#D1FAE5', color: '#065F46', border: '1px solid #6EE7B7' }
                           : { background: '#FEE2E2', color: '#991B1B', border: '1px solid #FCA5A5' }}
-                        onClick={e => { e.stopPropagation(); setStockQty(prev => ({ ...prev, [size]: prev[size] > 0 ? 0 : 1 })); }}>
+                        onClick={e => { e.stopPropagation(); setStockQty(prev => ({ ...prev, [size]: prev[size] === 0 ? 1 : 0 })); }}>
                         {(stockQty[size] === undefined || stockQty[size] > 0) ? 'In Stock' : 'Out of Stock'}
                       </button>
                     )}

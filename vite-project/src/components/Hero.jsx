@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { getAllProducts, getBoutiques } from '../utils/adminStore';
 
 /*
   Gurnaaz Hero — Queen's editorial layout:
@@ -26,6 +27,38 @@ export default function Hero() {
   const rotateRef = useRef(null);
   const [slide, setSlide] = useState(0);
   const [ready, setReady] = useState(false);
+
+  const [edgeProducts, setEdgeProducts] = useState({
+    leftImg: '/farshi_salwar_mustard.jpg', leftName: 'Shop Now',
+    rightImg: '/pink_anarkali_model.png', rightName: 'Shop Now',
+  });
+
+  useEffect(() => {
+    const loadEdgeProducts = () => {
+      const allProducts = getAllProducts().filter(p => p.image || p.coverImage);
+      if (allProducts.length === 0) return;
+      const shuffled = [...allProducts].sort(() => Math.random() - 0.5);
+      const left = shuffled[0];
+      const right = shuffled[1] || shuffled[0];
+      setEdgeProducts({
+        leftImg: left.image || left.coverImage,
+        leftName: left.boutique || left.title || 'Gurnaaz',
+        rightImg: right.image || right.coverImage,
+        rightName: right.boutique || right.title || 'Gurnaaz',
+      });
+    };
+    loadEdgeProducts();
+    const retry1 = setTimeout(loadEdgeProducts, 1500);
+    const retry2 = setTimeout(loadEdgeProducts, 4000);
+    window.addEventListener('admin-data-updated', loadEdgeProducts);
+    window.addEventListener('gurnaaz-firebase-updated', loadEdgeProducts);
+    return () => {
+      clearTimeout(retry1);
+      clearTimeout(retry2);
+      window.removeEventListener('admin-data-updated', loadEdgeProducts);
+      window.removeEventListener('gurnaaz-firebase-updated', loadEdgeProducts);
+    };
+  }, []);
 
   /* ── entry animation ── */
   useEffect(() => {
@@ -104,10 +137,12 @@ export default function Hero() {
           .hero-model-container { width: clamp(480px, 80vw, 700px) !important; bottom: -7vh !important; height: 95vh !important; }
           .hero-fashion-text { font-size: clamp(90px, 21vw, 340px) !important; }
           .hero-gurnaaz-text { font-size: clamp(50px, 15vw, 210px) !important; }
+          .hero-edge-card { transform: scale(0.8); }
         }
         @media (max-width: 1000px) {
           .hero-stats { display: none !important; }
           .hero-model-container { bottom: -10vh !important; }
+          .hero-edge-card { display: none !important; }
         }
         @media (max-width: 768px) {
           .gh-scale-large-left { transform: scale(0.65); transform-origin: bottom left; }
@@ -202,6 +237,61 @@ export default function Hero() {
         </div>
 
         {/* ════════════ LAYER 3 — Model image (ON TOP of text) ════════════ */}
+
+        {/* ════════════ LEFT EDGE — Product Card (Riwakarri) ════════════ */}
+        <div className="hero-edge-card" style={{
+          position: 'absolute',
+          left: 'clamp(8px, 2vw, 40px)',
+          top: '18%',
+          zIndex: 4,
+          pointerEvents: 'none',
+          opacity: ready ? 1 : 0,
+          transform: ready ? 'rotate(-6deg) translateX(0)' : 'rotate(-6deg) translateX(-30px)',
+          transition: `opacity 1s 0.6s ${ease}, transform 1s 0.6s ${ease}`,
+        }}>
+          <div style={{
+            width: 'clamp(100px, 12vw, 180px)',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            border: '4px solid #FAF9F6',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+            background: '#fff',
+          }}>
+            <img src={edgeProducts.leftImg} alt={edgeProducts.leftName}
+              style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+            <div style={{ padding: '6px 8px', textAlign: 'center' }}>
+              <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#8B1A1A' }}>{edgeProducts.leftName}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ════════════ RIGHT EDGE — Product Card (Thy Luxurryy) ════════════ */}
+        <div className="hero-edge-card" style={{
+          position: 'absolute',
+          right: 'clamp(8px, 2vw, 40px)',
+          top: '20%',
+          zIndex: 4,
+          pointerEvents: 'none',
+          opacity: ready ? 1 : 0,
+          transform: ready ? 'rotate(6deg) translateX(0)' : 'rotate(6deg) translateX(30px)',
+          transition: `opacity 1s 0.7s ${ease}, transform 1s 0.7s ${ease}`,
+        }}>
+          <div style={{
+            width: 'clamp(100px, 12vw, 180px)',
+            borderRadius: '16px',
+            overflow: 'hidden',
+            border: '4px solid #FAF9F6',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+            background: '#fff',
+          }}>
+            <img src={edgeProducts.rightImg} alt={edgeProducts.rightName}
+              style={{ width: '100%', aspectRatio: '3/4', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
+            <div style={{ padding: '6px 8px', textAlign: 'center' }}>
+              <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#8B1A1A' }}>{edgeProducts.rightName}</span>
+            </div>
+          </div>
+        </div>
+
         <div className="hero-model-container" style={{
           position: 'absolute',
           left: '50%', bottom: '8vh',

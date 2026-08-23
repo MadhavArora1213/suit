@@ -73,17 +73,15 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
 
   const isInStock = useMemo(() => {
     if (!product) return false;
+    if (product.stock !== undefined && Number(product.stock) <= 0) return false;
     if (selectedFit === 'Stitched') {
       if (product.stockQty && typeof product.stockQty === 'object') {
-        // If stockQty exists for this size, check it. Otherwise assume in stock for backward compatibility.
         if (product.stockQty[selectedSize] !== undefined) {
           return product.stockQty[selectedSize] > 0;
         }
       }
-      return true;
     }
-    // For Unstitched / Semi-Stitched, assume in stock
-    return true; 
+    return true;
   }, [selectedFit, selectedSize, product]);
   const [zoomedImg, setZoomedImg] = useState(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
