@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { getFestiveOffers } from '../utils/adminStore';
+import { getAllProducts } from '../utils/adminStore';
 
 function getTimeLeft() {
   const now = new Date();
@@ -19,14 +19,41 @@ function getTimeLeft() {
 export default function RakhiSaleOfferSection({ setView, setSelectedCategory, addToCart }) {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [copied, setCopied] = useState(false);
-  const [offers, setOffers] = useState(() => getFestiveOffers().filter(o => o.active !== false));
+  const [offers, setOffers] = useState([]);
+  const [heroImg, setHeroImg] = useState('/rakhi_suit_hero_shoot.jpg');
 
   useEffect(() => {
     const handleUpdate = () => {
-      setOffers(getFestiveOffers().filter(o => o.active !== false));
+      const products = getAllProducts().filter(p => (p.image || p.coverImage) && p.active !== false);
+      const mapped = products.slice(0, 8).map(p => {
+        const priceNum = parseInt(String(p.price).replace(/[^0-9]/g, '')) || 0;
+        const origNum = parseInt(String(p.originalPrice).replace(/[^0-9]/g, '')) || 0;
+        const pctOff = origNum > priceNum ? Math.round(((origNum - priceNum) / origNum) * 100) : 0;
+        const badgeText = pctOff > 0 ? `${pctOff}% OFF` : (p.badge || 'PREMIUM');
+        return {
+          id: p.id,
+          title: p.title || p.name || 'Premium Collection',
+          category: p.category || 'Festive Edit',
+          badge: badgeText,
+          image: p.image || p.coverImage,
+          price: p.price || '',
+          originalPrice: p.originalPrice || '',
+          active: true,
+        };
+      });
+      setOffers(mapped.slice(0, 4));
+      if (products.length > 0) {
+        const random = products[Math.floor(Math.random() * products.length)];
+        setHeroImg(random.image || random.coverImage || '/rakhi_suit_hero_shoot.jpg');
+      }
     };
+    handleUpdate();
     window.addEventListener('admin-data-updated', handleUpdate);
-    return () => window.removeEventListener('admin-data-updated', handleUpdate);
+    window.addEventListener('gurnaaz-firebase-updated', handleUpdate);
+    return () => {
+      window.removeEventListener('admin-data-updated', handleUpdate);
+      window.removeEventListener('gurnaaz-firebase-updated', handleUpdate);
+    };
   }, []);
 
   useEffect(() => {
@@ -110,7 +137,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
             <div className="relative w-full max-w-[420px] aspect-[4/5] rounded-t-full rounded-b-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(26,0,8,0.2)] border-[8px] border-white group z-10">
               
               <img 
-                src="/rakhi_suit_hero_shoot.jpg" 
+                src={heroImg} 
                 alt="Festive Collection" 
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" 
               />
