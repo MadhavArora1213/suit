@@ -104,7 +104,6 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
     if (product?.id) {
       setReviewsList(Array.isArray(getReviews(product.id)) ? getReviews(product.id) : []);
       syncProductReviews(product.id, (r) => setReviewsList(r));
-      recordProductView(product.id);
     }
     window.scrollTo({ top: 0, behavior: 'auto' });
     setAddedToBag(false);

@@ -190,50 +190,41 @@ export const deleteProduct = (id) => {
 };
 
 export const recordProductView = (id) => {
-  if (!id) return;
+  if (!id) { console.warn('[GURNAAZ-VIEW] No id provided'); return; }
 
-  // Session-based unique view: same browser session mein dubara visit = no count
   const viewedKey = 'gurnaaz_viewed_products';
   let viewed = [];
   try { viewed = JSON.parse(sessionStorage.getItem(viewedKey) || '[]'); } catch {}
-  if (viewed.includes(String(id))) return;
+  if (viewed.includes(String(id))) { console.log('[GURNAAZ-VIEW] Session skip for', id); return; }
   viewed.push(String(id));
   try { sessionStorage.setItem(viewedKey, JSON.stringify(viewed)); } catch {}
 
-  if (isFirebaseConfigured()) {
-    // products_overrides collection mein likho (public write allowed), products mein nahi
-    const overridesRef = doc(db, 'products_overrides', String(id));
-    const productsRef = doc(db, 'products', String(id));
+  console.log('[GURNAAZ-VIEW] Recording view for id:', id, '| Firebase:', isFirebaseConfigured());
 
-    // Pehle dono se current counts padho
-    Promise.all([getDoc(overridesRef).catch(() => null), getDoc(productsRef).catch(() => null)])
-      .then(([overridesSnap, productSnap]) => {
-        const ovrData = overridesSnap?.exists() ? overridesSnap.data() : {};
-        const prodData = productSnap?.exists() ? productSnap.data() : {};
-        const currentViews = ovrData.viewsCount || prodData.viewsCount || 0;
-        const currentUnique = ovrData.uniqueViews || prodData.uniqueViews || 0;
-        const totalViews = currentViews + 1;
-        const uniqueViews = currentUnique + 1;
+  if (!isFirebaseConfigured()) { console.warn('[GURNAAZ-VIEW] Firebase not configured'); return; }
 
-        // Firestore rules ke hisaab se products pe write nahi ho sakta (admin only)
-        // Toh overrides mein likho — rules allow write: if true
-        setDoc(overridesRef, {
-          viewsCount: totalViews,
-          views: totalViews,
-          uniqueViews,
-          updatedAt: new Date().toISOString()
-        }, { merge: true }).then(() => {
-          // Memory store bhi update karo
-          const prod = memoryStore.products.find(p => String(p.id) === String(id));
-          if (prod) {
-            prod.viewsCount = totalViews;
-            prod.views = totalViews;
-            prod.uniqueViews = uniqueViews;
-          }
-          notifyWebsite();
-        }).catch(console.error);
-      }).catch(console.error);
-  }
+  const overridesRef = doc(db, 'products_overrides', String(id));
+  getDoc(overridesRef).then(snap => {
+    const data = snap.exists() ? snap.data() : {};
+    const totalViews = (data.viewsCount || 0) + 1;
+    const uniqueViews = (data.uniqueViews || 0) + 1;
+    console.log('[GURNAAZ-VIEW] Firestore read OK. Current:', data.viewsCount, '-> New:', totalViews);
+    return setDoc(overridesRef, {
+      viewsCount: totalViews,
+      views: totalViews,
+      uniqueViews,
+      updatedAt: new Date().toISOString()
+    }, { merge: true });
+  }).then(() => {
+    console.log('[GURNAAZ-VIEW] Firestore write SUCCESS');
+    const prod = memoryStore.products.find(p => String(p.id) === String(id));
+    if (prod) {
+      prod.viewsCount = (prod.viewsCount || 0) + 1;
+      prod.views = prod.viewsCount;
+      prod.uniqueViews = (prod.uniqueViews || 0) + 1;
+    }
+    notifyWebsite();
+  }).catch(e => console.error('[GURNAAZ-VIEW] ERROR:', e.message, e));
 };
 
 export const recordProductClick = (id, clickType = 'card_click') => {
