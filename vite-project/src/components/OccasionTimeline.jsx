@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getAllProducts } from '../utils/adminStore';
 
 const OCCASIONS = [
   { id: 'daily-wear', label: 'Daily Wear' },
@@ -10,50 +11,58 @@ const OCCASIONS = [
   { id: 'luxury', label: 'Luxury Edit' },
 ];
 
-const MOCK_PRODUCTS = {
-  'daily-wear': [
-    { id: 1, name: 'Cotton Block Print Suit', price: '₹2,500', image: '/cotton_suit.png' },
-    { id: 2, name: 'Simple Chanderi Kurta', price: '₹3,200', image: '/designer_suit_1.png' },
-    { id: 3, name: 'Everyday Cotton Saree', price: '₹1,500', image: '/anarkali_suit.png' },
-    { id: 4, name: 'Linen Salwar Set', price: '₹2,900', image: '/pakistani_suit.png' }
-  ],
-  'casual': [
-    { id: 5, name: 'Pastel Organza Kurta', price: '₹4,500', image: '/chikankari_suit.png' },
-    { id: 6, name: 'Georgette Day Suit', price: '₹3,800', image: '/cotton_suit.png' },
-    { id: 7, name: 'Printed Silk Tunic', price: '₹5,200', image: '/designer_suit_1.png' },
-    { id: 8, name: 'Minimalist Sharara', price: '₹6,000', image: '/sharara_suit.png' }
-  ],
-  'festive': [
-    { id: 9, name: 'Diwali Special Banarasi', price: '₹12,000', image: '/banarasi_suit.png' },
-    { id: 10, name: 'Festive Velvet Suit', price: '₹9,500', image: '/anarkali_suit.png' },
-    { id: 11, name: 'Zari Work Anarkali', price: '₹14,500', image: '/designer_suit_1.png' },
-    { id: 12, name: 'Embroidered Sharara', price: '₹11,000', image: '/sharara_suit.png' }
-  ],
-  'party': [
-    { id: 13, name: 'Sequined Evening Gown', price: '₹18,000', image: '/pakistani_suit.png' },
-    { id: 14, name: 'Cocktail Saree', price: '₹15,500', image: '/designer_suit_1.png' },
-    { id: 15, name: 'Mirrorwork Lehenga', price: '₹22,000', image: '/anarkali_suit.png' },
-    { id: 16, name: 'Designer Drape Dress', price: '₹19,000', image: '/chikankari_suit.png' }
-  ],
-  'wedding': [
-    { id: 17, name: 'Bridal Red Lehenga', price: '₹85,000', image: '/sharara_suit.png' },
-    { id: 18, name: 'Heavy Zardozi Suit', price: '₹42,000', image: '/anarkali_suit.png' },
-    { id: 19, name: 'Pure Silk Banarasi', price: '₹35,000', image: '/banarasi_suit.png' },
-    { id: 20, name: 'Handcrafted Gharara', price: '₹48,000', image: '/designer_suit_1.png' }
-  ],
-  'luxury': [
-    { id: 21, name: 'Heirloom Kanjeevaram', price: '₹65,000', image: '/banarasi_suit.png' },
-    { id: 22, name: 'Exclusive Danka Work', price: '₹55,000', image: '/sharara_suit.png' },
-    { id: 23, name: 'Premium Organza Set', price: '₹45,000', image: '/anarkali_suit.png' },
-    { id: 24, name: 'Bespoke Tissue Saree', price: '₹75,000', image: '/designer_suit_1.png' }
-  ]
-};
+const FALLBACK_PRODUCTS = [
+  { id: 'fb1', name: 'Elegant Ethnic Suit', price: '₹5,000', image: '/cotton_suit.png' },
+  { id: 'fb2', name: 'Designer Kurta Set', price: '₹7,500', image: '/designer_suit_1.png' },
+  { id: 'fb3', name: 'Traditional Anarkali', price: '₹9,000', image: '/anarkali_suit.png' },
+  { id: 'fb4', name: 'Premium Sharara Set', price: '₹12,000', image: '/sharara_suit.png' },
+];
 
-// Fallback to daily-wear if missing
-const getMockProducts = (id) => MOCK_PRODUCTS[id] || MOCK_PRODUCTS['daily-wear'];
+function seededRandom(seed) {
+  let s = seed || 1;
+  return () => {
+    s = (s * 16807 + 0) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+function shuffleWithSeed(arr, seed) {
+  const shuffled = [...arr];
+  const rng = seededRandom(seed);
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function toSlug(name) {
+  return (name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+let globalSeed = 1;
 
 export default function OccasionTimeline() {
   const [activeOccasion, setActiveOccasion] = useState(OCCASIONS[0].id);
+  const [allProducts, setAllProducts] = useState(() => getAllProducts());
+  const [seedTick, setSeedTick] = useState(0);
+
+  useEffect(() => {
+    const handleUpdate = () => setAllProducts(getAllProducts());
+    window.addEventListener('admin-data-updated', handleUpdate);
+    return () => window.removeEventListener('admin-data-updated', handleUpdate);
+  }, []);
+
+  const reshuffle = useCallback(() => {
+    globalSeed = (globalSeed * 9301 + 49297) % 233280;
+    setSeedTick(globalSeed);
+  }, []);
+
+  const activeProducts = useMemo(() => {
+    const pool = allProducts.length > 0 ? allProducts : [];
+    if (pool.length === 0) return FALLBACK_PRODUCTS;
+    return shuffleWithSeed(pool, seedTick + OCCASIONS.findIndex(o => o.id === activeOccasion)).slice(0, 4);
+  }, [allProducts, seedTick, activeOccasion]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -61,21 +70,22 @@ export default function OccasionTimeline() {
         const idx = OCCASIONS.findIndex(o => o.id === current);
         return OCCASIONS[(idx + 1) % OCCASIONS.length].id;
       });
-    }, 4500); // Auto-slides every 4.5 seconds
+      reshuffle();
+    }, 4500);
     
     return () => clearInterval(timer);
-  }, []);
+  }, [reshuffle]);
 
-  const handleOccasionClick = (id) => {
+  const handleOccasionClick = useCallback((id) => {
     setActiveOccasion(id);
+    reshuffle();
     const rail = document.getElementById('occasion-product-rail');
     if (rail) {
       const y = rail.getBoundingClientRect().top + window.scrollY - 120;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
-  };
+  }, [reshuffle]);
 
-  const activeProducts = getMockProducts(activeOccasion);
   const activeIndex = OCCASIONS.findIndex(o => o.id === activeOccasion);
 
   return (
@@ -199,30 +209,63 @@ export default function OccasionTimeline() {
                     transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
                     className="group cursor-pointer flex flex-col"
                   >
-                    <div className="relative aspect-[3/4] overflow-hidden bg-[#F0EBE2] mb-5 border border-black/5 group-hover:shadow-2xl transition-all duration-500">
-                      <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out" />
+                    <a href={`/product/${toSlug(product.name)}`} className="block">
+                      <div className="relative aspect-[3/4] overflow-hidden bg-[#F0EBE2] mb-5 border border-black/5 group-hover:shadow-2xl transition-all duration-500">
+                        <img src={product.image || '/cotton_suit.png'} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out" loading="lazy" />
+                        
+                        {(() => {
+                          const priceNum = parseInt(String(product.price).replace(/[^0-9]/g, '')) || product.priceNum || 0;
+                          const origNum = parseInt(String(product.originalPrice).replace(/[^0-9]/g, '')) || product.originalPriceNum || 0;
+                          const pctOff = origNum > priceNum ? Math.round(((origNum - priceNum) / origNum) * 100) : 0;
+                          return pctOff > 0 ? (
+                            <span className="absolute top-3 left-3 bg-[#1A0008] text-white text-[9px] font-bold tracking-wider px-2.5 py-1 rounded-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                              {pctOff}% OFF
+                            </span>
+                          ) : product.badge ? (
+                            <span className="absolute top-3 left-3 bg-[#D4AF37] text-white text-[9px] font-bold tracking-wider px-2.5 py-1 rounded-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                              {product.badge}
+                            </span>
+                          ) : null;
+                        })()}
+                        
+                        {/* Hover Overlay */}
+                        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center backdrop-blur-[2px]">
+                           <span className="bg-white/95 text-[#1A0008] text-[9px] uppercase tracking-[0.2em] font-bold px-8 py-3.5 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                             Quick View
+                           </span>
+                        </div>
+                      </div>
                       
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center backdrop-blur-[2px]">
-                         <span className="bg-white/95 text-[#1A0008] text-[9px] uppercase tracking-[0.2em] font-bold px-8 py-3.5 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                           Quick View
-                         </span>
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-[13px] text-[#1A0008] font-medium mb-1.5 line-clamp-1 transition-colors group-hover:text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                            {product.name}
+                          </h4>
+                          <p className="text-[9px] text-[#1A0008]/40 tracking-[0.15em] uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                            {OCCASIONS.find(o => o.id === activeOccasion)?.label}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-end whitespace-nowrap">
+                          {(() => {
+                            const priceNum = parseInt(String(product.price).replace(/[^0-9]/g, '')) || product.priceNum || 0;
+                            const origNum = parseInt(String(product.originalPrice).replace(/[^0-9]/g, '')) || product.originalPriceNum || 0;
+                            const hasDiscount = origNum > priceNum;
+                            return (
+                              <>
+                                {hasDiscount && (
+                                  <span className="text-[#1A0008]/40 text-[11px] line-through" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                    {product.originalPrice || `₹${origNum.toLocaleString('en-IN')}`}
+                                  </span>
+                                )}
+                                <span className="text-[#1A0008] text-[15px] font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                                  {product.price || `₹${priceNum.toLocaleString('en-IN')}`}
+                                </span>
+                              </>
+                            );
+                          })()}
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex justify-between items-start gap-4">
-                      <div className="flex-1">
-                        <h4 className="text-[13px] text-[#1A0008] font-medium mb-1.5 line-clamp-1 transition-colors group-hover:text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                          {product.name}
-                        </h4>
-                        <p className="text-[9px] text-[#1A0008]/40 tracking-[0.15em] uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                          {OCCASIONS.find(o => o.id === activeOccasion)?.label}
-                        </p>
-                      </div>
-                      <p className="text-[#1A0008] text-[15px] font-semibold whitespace-nowrap" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                        {product.price}
-                      </p>
-                    </div>
+                    </a>
                   </motion.div>
                 ))}
               </AnimatePresence>

@@ -4,7 +4,7 @@ import { BadgeCheck } from 'lucide-react';
 
 export default function FeaturedSellers({ setView, setSelectedBoutique }) {
   const allProducts = getAllProducts();
-  const sellers = getBoutiques().filter(b => b.isFeatured).slice(0, 4); 
+  const sellers = getBoutiques().slice(0, 8); 
 
   return (
     <section className="py-24 md:py-32 bg-[#FAF9F6] relative overflow-hidden">

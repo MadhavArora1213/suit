@@ -112,16 +112,16 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
       <ShopByColor setView={setView} setSelectedCategory={setSelectedCategory} />
       <OccasionTimeline setView={setView} setSelectedCategory={setSelectedCategory} />
 
-      <AiOutfitFinder setView={setView} setSelectedProduct={setSelectedProduct} />
+      {/* <AiOutfitFinder setView={setView} setSelectedProduct={setSelectedProduct} /> */}
       
       {/* Featured Sellers (Instagram Style) */}
-      <FeaturedSellers setView={setView} setSelectedBoutique={setSelectedBoutique} />
+      {/* <FeaturedSellers setView={setView} setSelectedBoutique={setSelectedBoutique} /> */}
       
       <EditorialCollections setView={setView} setSelectedCollectionSlug={setSelectedCollectionSlug} />
       <WhyGurnaaz />
       <PremiumPackaging />
 
-      <RealReviews />
+      {/* <RealReviews /> */}
 
       <TrustStrip />
 
