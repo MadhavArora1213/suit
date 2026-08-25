@@ -1,16 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, CreditCard, Shield, AlertCircle, ShoppingBag, Truck, MessageSquare } from 'lucide-react';
 import { addOrder, getCoupons, getProducts } from '../utils/adminStore';
 import { RAZORPAY_KEY_ID, initiateRazorpayPayment } from '../utils/razorpay';
+import { usePageTracking } from '../hooks/usePageTracking';
+import { trackCheckoutStart, trackCheckoutStep, trackCheckoutAbandon, trackFormFill, trackFormFocus, trackFormBlur, trackFormSubmit, trackPaymentAttempt, trackPaymentSuccess, trackPaymentFail, trackPaymentAbandon } from '../utils/analytics';
 
 export default function CheckoutPage({ cart, setView, clearCart }) {
+  usePageTracking('Checkout', { cartItemCount: cart.length });
+
+  useEffect(() => {
+    trackCheckoutStart({
+      cartItemCount: cart.length,
+      cartTotal: cart.reduce((s, i) => s + (parseInt(String(i.price).replace(/\D/g, '')) || 0) * i.quantity, 0),
+    });
+    // Track abandon on unmount (user left checkout without completing)
+    return () => {
+      trackCheckoutAbandon(checkoutStepRef.current, { reason: 'page_leave' });
+    };
+  }, []);
+
   // Steps: 1 = Address, 2 = Payment, 3 = Completed
   const [checkoutStep, setCheckoutStep] = useState(1);
+  const checkoutStepRef = useRef(1);
+  const stepStartTime = useRef(Date.now());
   const [paymentMode, setPaymentMode] = useState('online'); // online, cod
   const [processingPayment, setProcessingPayment] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
   const [isLocalDelivery, setIsLocalDelivery] = useState(false);
+
+  // Keep ref in sync with state
+  useEffect(() => { checkoutStepRef.current = checkoutStep; }, [checkoutStep]);
   
   // Forms
   const [formData, setFormData] = useState({
@@ -93,6 +113,15 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (value && value.length === 1) trackFormFill(name, value);
+  };
+
+  const handleInputFocus = (e) => {
+    trackFormFocus(e.target.name);
+  };
+
+  const handleInputBlur = (e) => {
+    trackFormBlur(e.target.name, !!e.target.value);
   };
 
   const handleAddressSubmit = async (e) => {
@@ -101,6 +130,9 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
       alert('Please fill in all required shipping fields.');
       return;
     }
+    
+    const filledFields = Object.entries(formData).filter(([, v]) => !!v).map(([k]) => k);
+    trackFormSubmit(1, { filledFields, fieldsCount: filledFields.length });
     
     setProcessingPayment(true);
     setLoadingMsg('Calculating Shipping & Serviceability...');
@@ -154,6 +186,9 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
 
     setProcessingPayment(false);
     setCheckoutStep(2);
+    const stepTime = Math.round((Date.now() - stepStartTime.current) / 1000);
+    stepStartTime.current = Date.now();
+    trackCheckoutStep(2, { pincode: formData.zip, city: formData.city, step1TimeSeconds: stepTime });
   };
 
   const buildOrderRecord = (paymentStr, paymentId) => {
@@ -257,8 +292,10 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
     // Send confirmation email asynchronously
     sendConfirmationEmail(orderRecord);
     
+    const stepTime = Math.round((Date.now() - stepStartTime.current) / 1000);
     setProcessingPayment(false);
     setCheckoutStep(3);
+    trackCheckoutStep(3, { orderId, paymentMode: paymentStr, step2TimeSeconds: stepTime, totalCheckoutTimeSeconds: Math.round((Date.now() - stepStartTime.current) / 1000) });
     clearCart();
   };
 
@@ -274,6 +311,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
       setFinalPaymentMode(paymentStr);
       setProcessingPayment(true);
       setLoadingMsg('Placing your COD order...');
+      trackPaymentAttempt('cod', grandTotal);
 
       setTimeout(() => {
         finalizeOrder(paymentStr, '');
@@ -285,6 +323,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
     const paymentStr = 'Online Payment (Razorpay)';
     setProcessingPayment(true);
     setLoadingMsg('Redirecting to Razorpay...');
+    trackPaymentAttempt('razorpay', grandTotal);
 
     initiateRazorpayPayment({
       amount: grandTotal,
@@ -294,12 +333,15 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
       customerPhone: formData.phone,
       onSuccess: (paymentResponse) => {
         setLoadingMsg('Payment verified. Creating order...');
+        trackPaymentSuccess('razorpay', grandTotal, orderId);
         setTimeout(() => {
           finalizeOrder(paymentStr, paymentResponse.razorpayPaymentId);
         }, 800);
       },
       onFailure: (errorMsg) => {
         setProcessingPayment(false);
+        trackPaymentFail('razorpay', grandTotal, errorMsg);
+        trackPaymentAbandon('razorpay', grandTotal, 'razorpay_modal_closed', { errorMsg });
         alert(`Payment failed: ${errorMsg}`);
       }
     });
@@ -506,6 +548,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                           required 
                           value={formData.name} 
                           onChange={handleInputChange}
+                          onFocus={handleInputFocus}
+                          onBlur={handleInputBlur}
                           placeholder="e.g. Gurpreet Singh"
                           className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
                         />
@@ -518,6 +562,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                           required 
                           value={formData.phone} 
                           onChange={handleInputChange}
+                          onFocus={handleInputFocus}
+                          onBlur={handleInputBlur}
                           placeholder="e.g. +91 98765 43210"
                           className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
                         />
@@ -532,6 +578,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                         required
                         value={formData.email} 
                         onChange={handleInputChange}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
                         placeholder="e.g. gurpreet@example.com"
                         className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
                       />
@@ -545,6 +593,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                         required 
                         value={formData.address} 
                         onChange={handleInputChange}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
                         placeholder="Flat, Villa number, street name"
                         className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
                       />
@@ -559,6 +609,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                           required 
                           value={formData.city} 
                           onChange={handleInputChange}
+                          onFocus={handleInputFocus}
+                          onBlur={handleInputBlur}
                           placeholder="e.g. Amritsar"
                           className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
                         />
@@ -571,6 +623,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                           required 
                           value={formData.state} 
                           onChange={handleInputChange}
+                          onFocus={handleInputFocus}
+                          onBlur={handleInputBlur}
                           placeholder="e.g. Punjab"
                           className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
                         />
@@ -583,6 +637,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                           required 
                           value={formData.zip} 
                           onChange={handleInputChange}
+                          onFocus={handleInputFocus}
+                          onBlur={handleInputBlur}
                           placeholder="e.g. 143001"
                           className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
                         />

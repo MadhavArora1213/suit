@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Package, ShoppingBag, Image, Star,
   Settings, LogOut, ChevronRight, Sparkles, Layers,
-  Film, Megaphone, FolderOpen, ChevronLeft, Menu, Tag, MessageSquare, Users, Store, Grid
+  Film, Megaphone, FolderOpen, ChevronLeft, Menu, Tag, MessageSquare, Users, Store, Grid, BarChart3
 } from 'lucide-react';
 
 const navItems = [
   { id: 'dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
+  { id: 'analytics',    label: 'Analytics',    icon: BarChart3 },
   { id: 'products',     label: 'Products',     icon: Package },
   { id: 'festive-items',label: 'Festive Items (Churi/Rakhi)', icon: Sparkles },
   { id: 'orders',       label: 'Orders',       icon: ShoppingBag },

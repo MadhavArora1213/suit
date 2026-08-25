@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ShoppingBag, ArrowLeft, Trash2, Minus, Plus, CreditCard } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { usePageTracking } from '../hooks/usePageTracking';
+import { trackCartView, trackCartItemRemove, trackCartItemQtyChange, trackCheckoutClick } from '../utils/analytics';
 
 export default function CartPage({ cart, updateCartQty, removeFromCart, setView }) {
+  usePageTracking('Cart', { itemCount: cart.length, cartTotal: cart.reduce((s, i) => s + (parseInt(String(i.price).replace(/\D/g, '')) || 0) * i.quantity, 0) });
+
+  useEffect(() => {
+    if (cart.length > 0) trackCartView(cart);
+  }, []);
+
   const getSubtotal = () => cart.reduce((total, item) => {
     const priceNum = parseInt(item.price.replace(/[^\d]/g, ''), 10);
     return total + priceNum * item.quantity;
   }, 0);
+
+  const handleRemove = (item) => {
+    trackCartItemRemove(item.id, item.name, item.size, { price: item.price, qty: item.quantity });
+    removeFromCart(item.id, item.size);
+  };
+
+  const handleQtyChange = (item, newQty) => {
+    trackCartItemQtyChange(item.id, item.name, item.size, item.quantity, newQty, { price: item.price });
+    updateCartQty(item.id, item.size, newQty);
+  };
+
+  const handleCheckoutClick = () => {
+    const total = getSubtotal();
+    trackCheckoutClick(total, cart.length);
+    setView('checkout');
+  };
 
   return (
     <motion.div 
@@ -59,8 +83,8 @@ export default function CartPage({ cart, updateCartQty, removeFromCart, setView 
                     <div className="flex justify-between items-start gap-4">
                       <h3 className="text-lg font-medium text-[#1A0008] line-clamp-1">{item.name}</h3>
                       <button 
-                        onClick={() => removeFromCart(item.id, item.size)}
-                        className="text-[#6B6B6B] hover:text-[#rose-600] transition-colors p-1 cursor-pointer"
+                        onClick={() => handleRemove(item)}
+                        className="text-[#6B6B6B] hover:text-red-500 transition-colors p-1 cursor-pointer"
                         title="Remove Item"
                       >
                         <Trash2 size={16} />
@@ -79,14 +103,14 @@ export default function CartPage({ cart, updateCartQty, removeFromCart, setView 
                   <div className="flex items-center justify-between mt-6">
                     <div className="flex items-center border border-[#D4AF37]/20 bg-[#FAF9F6]">
                       <button 
-                        onClick={() => updateCartQty(item.id, item.size, item.quantity - 1)}
+                        onClick={() => handleQtyChange(item, item.quantity - 1)}
                         className="p-2 px-3 text-[#6B6B6B] hover:text-[#D4AF37] cursor-pointer"
                       >
                         <Minus size={12} />
                       </button>
                       <span className="text-sm font-semibold px-4 text-[#1A0008]">{item.quantity}</span>
                       <button 
-                        onClick={() => updateCartQty(item.id, item.size, item.quantity + 1)}
+                        onClick={() => handleQtyChange(item, item.quantity + 1)}
                         className="p-2 px-3 text-[#6B6B6B] hover:text-[#D4AF37] cursor-pointer"
                       >
                         <Plus size={12} />
@@ -130,7 +154,7 @@ export default function CartPage({ cart, updateCartQty, removeFromCart, setView 
             </div>
 
             <button 
-              onClick={() => setView('checkout')}
+              onClick={handleCheckoutClick}
               className="w-full bg-[#D4AF37] hover:bg-[#9A8268] text-[#FAF9F6] py-4 text-xs font-bold tracking-[0.25em] flex items-center justify-center gap-2.5 shadow-lg transition-colors cursor-pointer uppercase"
             >
               <CreditCard size={14} />

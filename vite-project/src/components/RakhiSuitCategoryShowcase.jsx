@@ -118,7 +118,7 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
 
           <div 
             ref={scrollContainerRef}
-            className="w-full flex items-center justify-start gap-2 md:gap-3 overflow-x-auto py-3 px-8 md:px-10 rounded-2xl md:rounded-full bg-[#1A0008]/5 border border-[#1A0008]/10 backdrop-blur-md no-scrollbar snap-x scroll-smooth"
+            className="w-full flex items-center justify-start gap-2 md:gap-3 overflow-x-auto py-3 px-8 md:px-10 rounded-2xl md:rounded-full bg-[#1A0008]/5 border border-[#1A0008]/10 backdrop-blur-md scrollbar-hide snap-x scroll-smooth"
           >
             {CATEGORIES.map((cat) => {
               const isActive = activeTab === cat.id;

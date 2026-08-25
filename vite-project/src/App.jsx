@@ -4,6 +4,7 @@ import { auth, db } from './firebase'
 import { signOut, onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { syncProducts, getAllProducts, getBoutiques, getCategories, getCollections, recordProductClick, recordProductView } from './utils/adminStore'
+import { trackPageView, trackSessionEnd, trackBackNavigation } from './utils/analytics'
 import { motion, AnimatePresence } from 'framer-motion'
 import { User } from 'lucide-react'
 import useSEO from './utils/useSEO'
@@ -47,6 +48,7 @@ function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
+    trackPageView(pathname);
   }, [pathname]);
   return null;
 }
@@ -349,6 +351,13 @@ function AppContent() {
       }
     };
     initStoreData();
+  }, []);
+
+  // Track session end when user closes tab/browser
+  useEffect(() => {
+    const handleBeforeUnload = () => trackSessionEnd();
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, []);
 
   useEffect(() => {

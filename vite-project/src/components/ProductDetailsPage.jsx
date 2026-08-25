@@ -7,6 +7,8 @@ import {
   Share2, ZoomIn, Clock, Users, Gem, Award, Feather
 } from 'lucide-react';
 import { getReviews, addReview, updateReview, deleteReview, syncProductReviews, getAllProducts, fileToBase64, recordProductView, recordProductClick } from '../utils/adminStore';
+import { usePageTracking } from '../hooks/usePageTracking';
+import { trackAddToCart, trackWishlistToggle } from '../utils/analytics';
 
 /* ═══ Thumbnail Strip (memoized) ═══ */
 const ThumbStrip = React.memo(function ThumbStrip({ images, current, onSelect, vertical = false }) {
@@ -53,6 +55,8 @@ const MarqueeBanner = React.memo(function MarqueeBanner() {
 });
 
 export default function ProductDetailsPage({ product, setView, setSelectedCategory, setSelectedBoutique, addToCart, favorites = {}, toggleFavorite, user, requireLogin }) {
+  usePageTracking('Product', { productName: product?.name, productId: product?.id, price: product?.price });
+
   const [_reviewsRaw, setReviewsList] = useState([]);
   const reviewsList = Array.isArray(_reviewsRaw) ? _reviewsRaw : [];
   const [openAccordions, setOpenAccordions] = useState({ details: true, size: false, material: false, shipping: false });
@@ -178,6 +182,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
     }
 
     addToCart(product, finalSelection);
+    trackAddToCart(product, { fit: finalSelection, color: availableColors[selectedColorIndex]?.name });
     setAddedToBag(true);
     clearTimeout(addedTimerRef.current);
     addedTimerRef.current = setTimeout(() => setAddedToBag(false), 2500);
@@ -504,7 +509,7 @@ export default function ProductDetailsPage({ product, setView, setSelectedCatego
                   <Sparkles size={14} className="shrink-0" /> Buy Now
                 </button>
 
-                <button onClick={() => toggleFavorite(product.id)}
+                <button onClick={() => { toggleFavorite(product.id); trackWishlistToggle(product.id, favorites[product.id] ? 'remove' : 'add', { productName: product.name }); }}
                   className={`w-[46px] h-[46px] flex items-center justify-center rounded-xl sm:rounded-2xl border-2 transition-all cursor-pointer shrink-0 ${
                     favorites[product.id] ? 'bg-rose-50 border-rose-300 text-rose-500' : 'border-gray-200 text-gray-400 hover:border-rose-300 hover:text-rose-400'
                   }`}>

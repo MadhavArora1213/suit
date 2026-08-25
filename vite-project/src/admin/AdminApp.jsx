@@ -25,6 +25,7 @@ import ReviewsAdmin from './pages/ReviewsAdmin';
 import CouponsAdmin from './pages/CouponsAdmin';
 import FestiveItemsAdmin from './pages/FestiveItemsAdmin';
 import AddFestiveItem from './pages/AddFestiveItem';
+import Analytics from './pages/Analytics';
 
 export default function AdminApp() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -123,6 +124,7 @@ export default function AdminApp() {
   const renderPage = () => {
     switch (activePage) {
       case 'dashboard':    return <Dashboard setActivePage={setActivePage} />;
+      case 'analytics':    return <Analytics />;
       case 'products':     return <Products setActivePage={setActivePage} onEditProduct={(p) => { setEditProduct(p); setActivePage('add-product'); }} />;
       case 'add-product':  return <AddProduct setActivePage={setActivePage} editProduct={editProduct} />;
       case 'festive-items':return <FestiveItemsAdmin setActivePage={setActivePage} />;
