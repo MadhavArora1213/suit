@@ -76,22 +76,23 @@ export default function KarwaChauthSaleOfferSection({ setView, setSelectedCatego
     <section id="karwa-chauth-sale" className="relative w-full py-20 bg-[#FAF9F6] text-[#1A0008] border-y border-[#1A0008]/10 overflow-hidden">
       
       {/* Top Gold Continuous Marquee Ribbon */}
-      <div className="w-full bg-[#1A0008] text-[#F5D76E] py-3 overflow-hidden flex whitespace-nowrap border-b border-[#D4AF37]/50 shadow-md">
-        <motion.div
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ repeat: Infinity, duration: 22, ease: 'linear' }}
-          className="flex items-center gap-10 font-bold text-xs uppercase tracking-[0.25em]"
-          style={{ fontFamily: "'DM Sans', sans-serif" }}
-        >
-          <span>✨ KARWA CHAUTH FESTIVAL SALE • UP TO 50% OFF</span>
-          <span>✦</span>
-          <span>FREE 925 SILVER KARWA CHAUTH SET WITH EVERY SUIT</span>
-          <span>✦</span>
-          <span>COMPLIMENTARY EXPRESS WORLDWIDE DISPATCH</span>
-          <span>✦</span>
-          <span>✨ KARWA CHAUTH FESTIVAL SALE • UP TO 50% OFF</span>
-          <span>✦</span>
-        </motion.div>
+      <div className="w-full bg-[#1A0008] text-[#F5D76E] py-3 overflow-hidden border-b border-[#D4AF37]/50 shadow-md">
+        <div className="flex w-max animate-marquee">
+          {[0, 1].map(k => (
+            <div
+              key={k}
+              className="flex items-center gap-10 pr-10 shrink-0 font-bold text-xs uppercase tracking-[0.25em]"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
+              <span>✨ KARWA CHAUTH FESTIVAL SALE • UP TO 50% OFF</span>
+              <span>✦</span>
+              <span>FREE 925 SILVER KARWA CHAUTH SET WITH EVERY SUIT</span>
+              <span>✦</span>
+              <span>COMPLIMENTARY EXPRESS WORLDWIDE DISPATCH</span>
+              <span>✦</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Signature Fine Grid Pattern Texture */}
@@ -135,7 +136,7 @@ export default function KarwaChauthSaleOfferSection({ setView, setSelectedCatego
             <div className="relative w-full max-w-[420px] aspect-[4/5] rounded-t-full rounded-b-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(26,0,8,0.2)] border-[8px] border-white group z-10">
               
               <img 
-                src={heroImg} 
+                loading="lazy" decoding="async" src={heroImg} 
                 alt="Festive Collection" 
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" 
               />
@@ -207,7 +208,7 @@ export default function KarwaChauthSaleOfferSection({ setView, setSelectedCatego
                   {/* Bare Image in Capsule Shape (No white card) */}
                   <div className="w-full h-full rounded-full overflow-hidden relative shadow-[0_15px_40px_rgba(26,0,8,0.08)] border-[5px] border-white group-hover:border-[#D4AF37]/30 transition-all duration-500">
                     <img 
-                      src={item.image} 
+                      loading="lazy" decoding="async" src={item.image} 
                       alt={item.title} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" 
                     />

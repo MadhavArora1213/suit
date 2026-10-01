@@ -105,7 +105,7 @@ export default function ShoppingReimagined({ setView, setSelectedCategory }) {
                 {/* Image Container */}
                 <div className="relative w-full h-full bg-[#E8DDD0]">
                   <img 
-                    src={craft.image} 
+                    loading="lazy" decoding="async" src={craft.image} 
                     alt={craft.title} 
                     className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-[2s] ease-out group-hover:scale-105"
                   />

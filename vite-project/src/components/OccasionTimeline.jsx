@@ -211,7 +211,7 @@ export default function OccasionTimeline() {
                   >
                     <a href={`/product/${toSlug(product.name)}`} className="block">
                       <div className="relative aspect-[3/4] overflow-hidden bg-[#F0EBE2] mb-5 border border-black/5 group-hover:shadow-2xl transition-all duration-500">
-                        <img src={product.image || '/cotton_suit.png'} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out" loading="lazy" />
+                        <img loading="lazy" decoding="async" src={product.image || '/cotton_suit.png'} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] ease-out" loading="lazy" />
                         
                         {(() => {
                           const priceNum = parseInt(String(product.price).replace(/[^0-9]/g, '')) || product.priceNum || 0;

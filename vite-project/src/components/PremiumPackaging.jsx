@@ -150,7 +150,7 @@ export default function PremiumPackaging() {
                 
                 {/* Product Background with deep inner shadow for realistic box depth */}
                 <img 
-                  src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" 
+                  loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80" 
                   alt="Folded Premium Fabric" 
                   className="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-[3s] ease-out group-hover:scale-110" 
                 />
@@ -166,7 +166,7 @@ export default function PremiumPackaging() {
                 <div className="absolute top-10 left-10 w-[140px] md:w-[150px] aspect-[1.75/1] bg-[#1a1a1a] shadow-[0_15px_30px_rgba(0,0,0,0.7)] flex items-center justify-center transform -rotate-12 transition-transform duration-[1.5s] ease-out group-hover:-rotate-6 z-10 overflow-hidden rounded-[2px]">
                   <div className="absolute inset-0 opacity-30 mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/black-felt.png')]" />
                   <div className="absolute inset-1 border border-[#D4AF37]/30" />
-                  <img src={gurnaazMonogram} alt="Gurnaaz" className="h-[90%] w-auto object-contain relative z-10 mix-blend-screen brightness-110 drop-shadow-md" />
+                  <img loading="lazy" decoding="async" src={gurnaazMonogram} alt="Gurnaaz" className="h-[90%] w-auto object-contain relative z-10 mix-blend-screen brightness-110 drop-shadow-md" />
                 </div>
 
                 {/* Thank You Card Layer - Hyper-Realistic Textured Paper */}
@@ -187,7 +187,7 @@ export default function PremiumPackaging() {
                   <div className="w-20 h-20 md:w-24 md:h-24 bg-[#1a1a1a] rounded-full shadow-[0_15px_25px_rgba(0,0,0,0.5)] flex items-center justify-center relative overflow-hidden">
                     <div className="absolute inset-0 opacity-40 mix-blend-overlay pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/black-felt.png')]" />
                     <div className="absolute inset-[3px] rounded-full border-[1.5px] border-[#D4AF37]/40 flex items-center justify-center bg-[#0a0a0a]">
-                       <img src={gurnaazMonogram} alt="G" className="h-[75%] w-auto object-contain mix-blend-screen brightness-110 drop-shadow-sm" />
+                       <img loading="lazy" decoding="async" src={gurnaazMonogram} alt="G" className="h-[75%] w-auto object-contain mix-blend-screen brightness-110 drop-shadow-sm" />
                     </div>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ export default function PremiumPackaging() {
                 
                 {/* Center Logo on the Lid */}
                 <div className="relative z-10 flex flex-col items-center">
-                  <img src={gurnaazMonogram} alt="Gurnaaz" className="h-32 md:h-40 w-auto object-contain mix-blend-screen opacity-90 drop-shadow-2xl" />
+                  <img loading="lazy" decoding="async" src={gurnaazMonogram} alt="Gurnaaz" className="h-32 md:h-40 w-auto object-contain mix-blend-screen opacity-90 drop-shadow-2xl" />
                 </div>
 
                 {/* Instruction Pill on the Lid */}

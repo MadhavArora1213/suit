@@ -91,7 +91,7 @@ export default function WhyGurnaaz() {
               
               {/* Arched Window Image - Indian Suit */}
               <div className="w-1/2 h-full bg-[#E8DDD0] rounded-t-full rounded-b-[32px] overflow-hidden shadow-inner relative z-10 border border-[#FAF9F6]">
-                <img src="/suit1.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 mix-blend-multiply" alt="Beautiful Punjabi Suit" />
+                <img loading="lazy" decoding="async" src="/suit1.png" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 mix-blend-multiply" alt="Beautiful Punjabi Suit" />
               </div>
 
               {/* Text Right */}
@@ -161,7 +161,7 @@ export default function WhyGurnaaz() {
               transition={{ delay: 0.6 }}
               className="h-[350px] md:h-[50%] bg-[#E8DDD0] border border-[#1A0008]/10 rounded-[32px] overflow-hidden shadow-sm relative group"
             >
-              <img src="/suit2.png" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 mix-blend-multiply" alt="Authentic Punjabi Suit" />
+              <img loading="lazy" decoding="async" src="/suit2.png" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 mix-blend-multiply" alt="Authentic Punjabi Suit" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#FAF9F6]/90 via-[#FAF9F6]/20 to-transparent" />
               <div className="absolute bottom-8 left-8 right-8">
                 <span className="text-[#8B1A1A] text-[10px] uppercase tracking-widest font-bold block mb-2">07 / Design</span>
@@ -211,7 +211,7 @@ export default function WhyGurnaaz() {
           >
             {/* Valid beautiful Indian Suit Image */}
             <img 
-              src="/suit3.png" 
+              loading="lazy" decoding="async" src="/suit3.png" 
               alt="Gurnaaz Luxury Suit" 
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-110 mix-blend-multiply" 
             />

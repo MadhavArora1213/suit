@@ -109,23 +109,23 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
       {/* Shopping, Reimagined Occasion Cards */}
       <ShoppingReimagined setView={setView} setSelectedCategory={setSelectedCategory} setSelectedCollectionSlug={setSelectedCollectionSlug} />
 
-      <ShopByColor setView={setView} setSelectedCategory={setSelectedCategory} />
-      <OccasionTimeline setView={setView} setSelectedCategory={setSelectedCategory} />
+      <div className="cv-auto"><ShopByColor setView={setView} setSelectedCategory={setSelectedCategory} /></div>
+      <div className="cv-auto"><OccasionTimeline setView={setView} setSelectedCategory={setSelectedCategory} /></div>
 
       {/* <AiOutfitFinder setView={setView} setSelectedProduct={setSelectedProduct} /> */}
       
       {/* Featured Sellers (Instagram Style) */}
       {/* <FeaturedSellers setView={setView} setSelectedBoutique={setSelectedBoutique} /> */}
       
-      <EditorialCollections setView={setView} setSelectedCollectionSlug={setSelectedCollectionSlug} />
-      <WhyGurnaaz />
-      <PremiumPackaging />
+      <div className="cv-auto"><EditorialCollections setView={setView} setSelectedCollectionSlug={setSelectedCollectionSlug} /></div>
+      <div className="cv-auto"><WhyGurnaaz /></div>
+      <div className="cv-auto"><PremiumPackaging /></div>
 
       {/* <RealReviews /> */}
 
-      <TrustStrip />
+      <div className="cv-auto"><TrustStrip /></div>
 
-      <Newsletter />
+      <div className="cv-auto"><Newsletter /></div>
 
       <Footer />
     </div>

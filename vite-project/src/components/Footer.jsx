@@ -11,7 +11,7 @@ export default function Footer({ setView }) {
 
       {/* ═══════════════ Mountain Background (full footer) ═══════════════ */}
       <img
-        src="/mountains_bg.jpg"
+        loading="lazy" decoding="async" src="/mountains_bg.jpg"
         alt="Mountain landscape"
         className="absolute inset-0 w-full h-full object-cover object-bottom"
       />
@@ -37,7 +37,7 @@ export default function Footer({ setView }) {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 md:gap-8">
 
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="md:col-span-5">
-            <img src={gurnaazLogo} alt="GURNAAZ" className="h-8 md:h-10 w-auto object-contain mb-4" />
+            <img loading="lazy" decoding="async" src={gurnaazLogo} alt="GURNAAZ" className="h-8 md:h-10 w-auto object-contain mb-4" />
              <h3 className="text-white md:text-[#1A0008] text-[22px] sm:text-2xl md:text-[28px] font-bold mb-3 sm:mb-4 leading-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>Your Premium Ethnic Wear Destination</h3>
              <p className="text-white/70 md:text-[#1A0008]/70 text-[13px] sm:text-[14px] leading-relaxed mb-6 sm:mb-8 max-w-xs sm:max-w-sm font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>Gurnaaz brings you handcrafted premium ethnic wear from India's finest heritage boutiques — curated, not aggregated.</p>
              <a href="#" onClick={(e) => { e.preventDefault(); navigate('collections'); }} className="inline-flex items-center gap-2.5 bg-[#1A0008] text-[#FAF9F6] text-[11px] sm:text-[12px] font-semibold tracking-[0.05em] px-6 sm:px-7 py-3 sm:py-3.5 hover:bg-[#D4AF37] transition-colors duration-300 rounded-xl" style={{ fontFamily: "'DM Sans', sans-serif" }}>

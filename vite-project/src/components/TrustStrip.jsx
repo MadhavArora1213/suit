@@ -36,14 +36,10 @@ const MARQUEE_TEXT = [
 // Marquee Component for the infinite scrolling ribbon
 const Marquee = () => {
   return (
-    <div className="w-full bg-[#1A0008] text-[#FAF9F6] py-2.5 md:py-4 overflow-hidden flex whitespace-nowrap border-y border-[#1A0008]">
-      <motion.div
-        className="flex gap-6 md:gap-12 items-center"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ ease: "linear", duration: 15, repeat: Infinity }}
-      >
+    <div className="w-full bg-[#1A0008] text-[#FAF9F6] py-2.5 md:py-4 overflow-hidden border-y border-[#1A0008]">
+      <div className="flex w-max animate-marquee-fast">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="flex gap-6 md:gap-12 items-center">
+          <div key={i} className="flex gap-6 md:gap-12 items-center pr-6 md:pr-12">
             {MARQUEE_TEXT.map((text, j) => (
               <div key={j} className="flex items-center gap-6 md:gap-12">
                 <span className="text-[9px] md:text-[12px] tracking-[0.2em] md:tracking-[0.3em] font-medium uppercase" style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -54,7 +50,7 @@ const Marquee = () => {
             ))}
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 };

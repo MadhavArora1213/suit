@@ -1,5 +1,5 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 import { getAllProducts } from '../utils/adminStore';
 
 function getTimeLeft() {
@@ -17,18 +17,11 @@ function getTimeLeft() {
 }
 
 export default function HeroRitual({ onSelectFilter }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"]
-  });
-
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [productImages, setProductImages] = useState({
     suit: '/rakhi_suit_hero_shoot.jpg',
-    rakhi: '/rakhi_campaign_hero.png',
     designer: '/designer_suit_1.png',
   });
 
@@ -39,7 +32,6 @@ export default function HeroRitual({ onSelectFilter }) {
       const shuffled = [...products].sort(() => Math.random() - 0.5);
       setProductImages({
         suit: shuffled[0]?.image || shuffled[0]?.coverImage || '/rakhi_suit_hero_shoot.jpg',
-        rakhi: shuffled[1]?.image || shuffled[1]?.coverImage || '/rakhi_campaign_hero.png',
         designer: shuffled[2]?.image || shuffled[2]?.coverImage || '/designer_suit_1.png',
       });
     };
@@ -71,7 +63,7 @@ export default function HeroRitual({ onSelectFilter }) {
   }, []);
 
   return (
-    <section ref={ref} className="relative w-full min-h-screen overflow-hidden bg-white flex flex-col pt-10">
+    <section className="relative w-full min-h-screen overflow-hidden bg-white flex flex-col pt-10">
       
       {/* Grid Pattern Background - Light Theme */}
       <div className="absolute inset-0 opacity-[0.2] pointer-events-none"
@@ -132,7 +124,7 @@ export default function HeroRitual({ onSelectFilter }) {
             animate={{ opacity: 1, y: 0, rotate: isMobile ? 0 : -12 }}
             transition={{ duration: 0.8, delay: 0.2, type: "spring" }}
             whileHover={{ scale: 1.05, rotate: isMobile ? 0 : -8, zIndex: 40 }}
-            className="relative lg:absolute lg:left-[6%] lg:top-[10%] w-full lg:w-[270px] aspect-[3/4] lg:aspect-auto lg:h-[370px] bg-white p-1.5 md:p-2.5 pb-8 md:pb-10 border md:border-2 border-[#D4AF37] rounded-xl shadow-lg md:shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group transition-all"
+            className="relative lg:absolute lg:left-[18%] lg:top-[10%] w-full lg:w-[270px] aspect-[3/4] lg:aspect-auto lg:h-[370px] bg-white p-1.5 md:p-2.5 pb-8 md:pb-10 border md:border-2 border-[#D4AF37] rounded-xl shadow-lg md:shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group transition-all"
           >
             <div className="w-full h-full overflow-hidden bg-[#E8DDD0] rounded-lg border border-gray-200 relative">
               <img src={productImages.suit} alt="Karwa Chauth Suit Model Shoot" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
@@ -147,34 +139,13 @@ export default function HeroRitual({ onSelectFilter }) {
             </div>
           </motion.div>
 
-          {/* Card 3: The Karwa Chauth Graphic (Light Gold/Maroon Theme) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 50, rotate: 0 }}
-            animate={{ opacity: 1, y: 0, rotate: isMobile ? 0 : 6 }}
-            transition={{ duration: 0.8, delay: 0.4, type: "spring" }}
-            whileHover={{ scale: 1.05, rotate: isMobile ? 0 : 3, zIndex: 40 }}
-            className="relative lg:absolute lg:left-[33%] lg:top-[8%] w-full lg:w-[260px] aspect-[3/4] lg:aspect-auto lg:h-[360px] bg-[#F5D76E] border md:border-2 border-[#1A0008] rounded-xl md:rounded-2xl p-2 md:p-4 shadow-lg md:shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-30 flex flex-col justify-between"
-          >
-            <div className="text-center text-sm sm:text-lg md:text-2xl mt-2 md:mt-4 text-[#1A0008] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Signature <br/> Karwa Chauth Thali
-            </div>
-            <div className="flex-grow flex items-center justify-center">
-              <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-[2px] md:border-[3px] border-[#1A0008] shadow-[2px_2px_0px_rgba(26,0,8,1)] md:shadow-[4px_4px_0px_rgba(26,0,8,1)] bg-white p-0.5 md:p-1">
-                <img src={productImages.rakhi} alt="Signature Karwa Chauth" className="w-full h-full object-cover rounded-full hover:scale-110 transition-transform" />
-              </div>
-            </div>
-            <div className="text-[6px] sm:text-[7px] md:text-[10px] border-t border-[#1A0008]/20 md:border-t-2 pt-2 md:pt-3 text-[#1A0008] text-center tracking-[0.1em] md:tracking-widest uppercase font-black" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Included in Gift Hampers
-            </div>
-          </motion.div>
-
           {/* Card 4: Model Image 2 */}
           <motion.div 
             initial={{ opacity: 0, y: 50, rotate: 0 }}
             animate={{ opacity: 1, y: 0, rotate: isMobile ? 0 : 12 }}
             transition={{ duration: 0.8, delay: 0.5, type: "spring" }}
             whileHover={{ scale: 1.05, rotate: isMobile ? 0 : 8, zIndex: 40 }}
-            className="relative lg:absolute lg:right-[6%] lg:top-[8%] w-full lg:w-[250px] aspect-[3/4] lg:aspect-auto lg:h-[330px] bg-white p-1.5 md:p-2.5 pb-8 md:pb-10 border md:border-2 border-[#D4AF37] rounded-xl overflow-hidden shadow-lg md:shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group"
+            className="relative lg:absolute lg:right-[18%] lg:top-[8%] w-full lg:w-[250px] aspect-[3/4] lg:aspect-auto lg:h-[330px] bg-white p-1.5 md:p-2.5 pb-8 md:pb-10 border md:border-2 border-[#D4AF37] rounded-xl overflow-hidden shadow-lg md:shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-10 group"
           >
             <div className="w-full h-full rounded-lg overflow-hidden bg-[#FAF9F6] border border-[#1A0008]/10">
               <img src={productImages.designer} alt="Designer Suit" className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700" />
@@ -185,25 +156,6 @@ export default function HeroRitual({ onSelectFilter }) {
               GIFT HER THE BEST
             </div>
           </motion.div>
-
-          {/* Spinning Circle Text */}
-          <div className="absolute top-[50%] left-[50%] lg:top-[-20px] lg:left-auto lg:right-[30%] -translate-x-1/2 -translate-y-1/2 lg:translate-x-0 lg:translate-y-0 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 z-50 pointer-events-none lg:pointer-events-auto flex items-center justify-center">
-            
-            {/* Backdrop circle to prevent text clashing with dark cards */}
-            <div className="absolute inset-0 bg-[#FAF9F6] rounded-full shadow-lg border border-[#D4AF37]/40 scale-95" />
-
-            <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible animate-[spin_12s_linear_infinite] relative z-10">
-              <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none" />
-              <text fontSize="10.5" fontWeight="900" letterSpacing="1.5" fill="#8B1A1A" style={{ fontFamily: "'DM Sans', sans-serif", textTransform: 'uppercase' }}>
-                <textPath href="#circlePath" startOffset="0%">
-                  UP TO 50% OFF SALE • LIVE IN BANARAS •
-                </textPath>
-              </text>
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center z-20">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#F5D76E] border-2 border-[#1A0008] shadow-[2px_2px_0px_rgba(26,0,8,1)]"></div>
-            </div>
-          </div>
 
         </div>
       </div>

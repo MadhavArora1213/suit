@@ -153,7 +153,7 @@ export default function ShopByColor({ setView, setSelectedCategory }) {
                      className="absolute inset-0"
                   >
                       <img 
-                        src={activeColor.image} 
+                        loading="lazy" decoding="async" src={activeColor.image} 
                         alt={activeColor.name}
                         className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                       />
@@ -190,7 +190,7 @@ export default function ShopByColor({ setView, setSelectedCategory }) {
                     >
                        {/* Dynamic Thumbnail */}
                        <div className={`flex-shrink-0 rounded-full overflow-hidden transition-all duration-500 ${isActive ? 'w-10 h-10 md:w-12 md:h-12 border border-[#1A0008]/10 shadow-sm' : 'w-full h-full border-2 border-white/50 group-hover:border-white shadow-sm'}`}>
-                           <img src={color.image} className="w-full h-full object-cover object-top" />
+                           <img loading="lazy" decoding="async" src={color.image} className="w-full h-full object-cover object-top" />
                        </div>
                        
                         {/* Expanded Pill Text (Only visible when active) */}

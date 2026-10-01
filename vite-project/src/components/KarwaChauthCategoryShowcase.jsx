@@ -158,13 +158,12 @@ export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduc
         </div>
 
         {/* Products Grid */}
-        <motion.div layout className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-7">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-7">
           <AnimatePresence>
             {filteredProducts.map((product) => {
               const isFav = favorites?.[product.id];
               return (
                 <motion.div
-                  layout
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -174,7 +173,7 @@ export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduc
                 >
                   <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden cursor-pointer" onClick={() => handleCardClick(product)}>
                     <img 
-                      src={product.image} 
+                      loading="lazy" decoding="async" src={product.image} 
                       alt={product.name} 
                       className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                     />
@@ -271,7 +270,7 @@ export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduc
               </button>
             </motion.div>
           )}
-        </motion.div>
+        </div>
 
       </div>
 
@@ -294,7 +293,7 @@ export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduc
 
               <div className="grid grid-cols-1 md:grid-cols-2">
                 <div className="aspect-[4/5] bg-gray-100">
-                  <img src={quickViewProduct.image} alt={quickViewProduct.name} className="w-full h-full object-cover" />
+                  <img loading="lazy" decoding="async" src={quickViewProduct.image} alt={quickViewProduct.name} className="w-full h-full object-cover" />
                 </div>
 
                 <div className="p-6 flex flex-col justify-between">

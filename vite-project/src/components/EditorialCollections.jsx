@@ -83,12 +83,12 @@ export default function EditorialCollections({ setView, setSelectedCollectionSlu
               className="absolute inset-0 w-full h-full flex items-center justify-center"
             >
               <img 
-                src={collection.image} 
+                loading="lazy" decoding="async" src={collection.image} 
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover blur-[100px] opacity-20 scale-125 saturate-100"
               />
               <img 
-                src={collection.image} 
+                loading="lazy" decoding="async" src={collection.image} 
                 alt={collection.title}
                 className="relative w-full h-[90vh] md:h-screen object-contain drop-shadow-2xl mix-blend-multiply"
               />
@@ -190,7 +190,7 @@ export default function EditorialCollections({ setView, setSelectedCollectionSlu
                       style={{ transform: `rotate(${i % 2 === 0 ? '-3deg' : '3deg'})` }}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <img src={prod.image || '/cotton_suit.png'} alt={prod.name} className="w-full h-full object-cover" />
+                      <img loading="lazy" decoding="async" src={prod.image || '/cotton_suit.png'} alt={prod.name} className="w-full h-full object-cover" />
                     </a>
                   ))}
                 </motion.div>

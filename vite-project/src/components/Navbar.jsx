@@ -71,8 +71,12 @@ export default function Navbar({
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      const s = window.scrollY > 60;
+      setScrolled(prev => (prev === s ? prev : s));
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -101,13 +105,9 @@ export default function Navbar({
     <>
       {/* Announcement Bar */}
       <div className={`fixed top-0 left-0 right-0 w-full bg-[#1A0008] text-[#FAF9F6] overflow-hidden flex whitespace-nowrap transition-all duration-500 z-[101] ${scrolled ? '-translate-y-full' : 'translate-y-0'}`}>
-        <motion.div
-          className="flex gap-8 items-center py-2"
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{ ease: "linear", duration: 120, repeat: Infinity }}
-        >
+        <div className="flex py-2 w-max shrink-0 animate-marquee-slow">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="flex gap-8 items-center">
+            <div key={i} className="flex gap-8 items-center pr-8">
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 🔥 UP TO 50% OFF : THE ULTIMATE KARWA CHAUTH SALE IS LIVE
               </span>
@@ -118,7 +118,7 @@ export default function Navbar({
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
       <motion.nav
@@ -129,7 +129,7 @@ export default function Navbar({
       >
         {/* Main Nav */}
         <div className={`transition-all duration-500 flex flex-col relative w-full ${scrolled
-          ? 'max-w-[1200px] bg-white/95 backdrop-blur-2xl shadow-[0_20px_50px_-15px_rgba(26,0,8,0.15)] rounded-3xl border border-white ring-1 ring-[#1A0008]/5'
+          ? 'max-w-[1200px] bg-white shadow-[0_20px_50px_-15px_rgba(26,0,8,0.15)] rounded-3xl border border-white ring-1 ring-[#1A0008]/5'
           : 'bg-white border-b border-[#1A0008]/10'
           }`}>
           

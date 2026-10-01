@@ -51,7 +51,7 @@ export default function Newsletter() {
         {/* ═══ Left — Image ═══ */}
         <div className="hidden md:block absolute left-0 top-0 w-[45%] h-full">
           <img
-            src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900&q=80"
+            loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=900&q=80"
             alt="Ethnic Wear"
             className="w-full h-full object-cover object-top mix-blend-multiply opacity-90"
           />
