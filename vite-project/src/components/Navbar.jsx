@@ -17,7 +17,8 @@ export default function Navbar({
   setSelectedBoutique,
   setSelectedCollectionSlug,
   user,
-  handleLogout
+  handleLogout,
+  authReady = true
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -433,7 +434,9 @@ export default function Navbar({
             onClick={() => setView('wishlist')}
             className={`cursor-pointer transition-colors relative text-[#1A0008] hover:text-[#8B1A1A]`}>
             <Heart strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
-            {favoriteCount > 0 && (
+            {!authReady ? (
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#E8DDD0] rounded-full animate-pulse" />
+            ) : favoriteCount > 0 && (
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#8B1A1A] rounded-full" />
             )}
           </button>
@@ -442,7 +445,9 @@ export default function Navbar({
             onClick={() => setCartOpen(true)}
             className={`cursor-pointer transition-colors relative text-[#1A0008] hover:text-[#8B1A1A]`}>
             <ShoppingBag strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
-            {cartItemCount > 0 && (
+            {!authReady ? (
+              <span className="absolute -top-1.5 -right-2 w-4 h-4 bg-[#E8DDD0] rounded-full animate-pulse" />
+            ) : cartItemCount > 0 && (
               <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }}
                 className="absolute -top-1.5 -right-2 bg-[#8B1A1A] text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-sm">
                 {cartItemCount}
@@ -450,7 +455,9 @@ export default function Navbar({
             )}
           </button>
 
-          {user ? (
+          {!authReady ? (
+            <div className="hidden lg:block w-7 h-7 rounded-full bg-[#E8DDD0] animate-pulse" />
+          ) : user ? (
             <button
               onClick={() => setView('profile')}
               title="My Profile"
@@ -559,7 +566,15 @@ export default function Navbar({
 
               {/* Login / Profile Mobile Section */}
               <div className="border-b border-[#D4AF37]/15 pb-5 -mt-2">
-                {user ? (
+                {!authReady ? (
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-[#E8DDD0] animate-pulse flex-shrink-0" />
+                    <div className="space-y-2">
+                      <div className="h-2.5 w-24 bg-[#E8DDD0] rounded animate-pulse" />
+                      <div className="h-3.5 w-32 bg-[#E8DDD0] rounded animate-pulse" />
+                    </div>
+                  </div>
+                ) : user ? (
                   <div className="flex items-center gap-4 cursor-pointer" onClick={() => { setView('profile'); setIsOpen(false); }}>
                     <div className="w-10 h-10 rounded-full overflow-hidden border border-[#D4AF37]">
                       <img src="/cute_luxury_model.png" alt="Profile" className="w-full h-full object-cover" />
@@ -670,13 +685,27 @@ export default function Navbar({
                   <div className="flex items-center gap-3">
                     <ShoppingBag size={18} className="text-[#D4AF37]" />
                     <span className="text-base tracking-[0.1em] text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>SHOPPING BAG</span>
-                    <span className="bg-[#D4AF37]/10 text-[#D4AF37] text-[9px] font-semibold px-2 py-0.5 rounded-full">{cartItemCount} items</span>
+                    <span className="bg-[#D4AF37]/10 text-[#D4AF37] text-[9px] font-semibold px-2 py-0.5 rounded-full">{!authReady ? '…' : `${cartItemCount} items`}</span>
                   </div>
                   <button onClick={() => setCartOpen(false)} className="text-[#6B6B6B] hover:text-[#1A0008] cursor-pointer"><X size={20} /></button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                  {cart.length === 0 ? (
+                  {!authReady ? (
+                    <div className="h-full flex flex-col justify-center gap-6">
+                      {[0, 1].map(i => (
+                        <div key={i} className="flex gap-4">
+                          <div className="w-20 h-24 bg-[#E8DDD0] animate-pulse flex-shrink-0 rounded" />
+                          <div className="flex-1 space-y-2 pt-1">
+                            <div className="h-3 w-3/4 bg-[#E8DDD0] rounded animate-pulse" />
+                            <div className="h-2.5 w-1/3 bg-[#E8DDD0] rounded animate-pulse" />
+                            <div className="h-3 w-1/4 bg-[#E8DDD0] rounded animate-pulse mt-8" />
+                          </div>
+                        </div>
+                      ))}
+                      <p className="text-[11px] text-[#6B6B6B] animate-pulse text-center pt-2">Loading your bag…</p>
+                    </div>
+                  ) : cart.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
                       <div className="w-16 h-16 rounded-full border border-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37]/30">
                         <ShoppingBag size={28} className="stroke-[1.25]" />
@@ -752,12 +781,26 @@ export default function Navbar({
                   <div className="flex items-center gap-3">
                     <Heart size={18} className="text-[#FAF9F6] fill-[#FAF9F6]" />
                     <span className="text-base tracking-[0.1em] text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>MY WISHLIST</span>
-                    <span className="bg-white/15 text-[#FAF9F6] text-[9px] font-semibold px-2 py-0.5 rounded-full">{favoriteCount} items</span>
+                    <span className="bg-white/15 text-[#FAF9F6] text-[9px] font-semibold px-2 py-0.5 rounded-full">{!authReady ? '…' : `${favoriteCount} items`}</span>
                   </div>
                   <button onClick={() => setWishlistOpen(false)} className="text-[#6B6B6B] hover:text-[#1A0008] cursor-pointer"><X size={20} /></button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                  {favoriteItems.length === 0 ? (
+                  {!authReady ? (
+                    <div className="h-full flex flex-col justify-center gap-6">
+                      {[0, 1].map(i => (
+                        <div key={i} className="flex gap-4">
+                          <div className="w-20 h-24 bg-[#E8DDD0] animate-pulse flex-shrink-0 rounded" />
+                          <div className="flex-1 space-y-2 pt-1">
+                            <div className="h-3 w-3/4 bg-[#E8DDD0] rounded animate-pulse" />
+                            <div className="h-2.5 w-1/2 bg-[#E8DDD0] rounded animate-pulse" />
+                            <div className="h-3 w-1/4 bg-[#E8DDD0] rounded animate-pulse mt-4" />
+                          </div>
+                        </div>
+                      ))}
+                      <p className="text-[11px] text-[#6B6B6B] animate-pulse text-center pt-2">Loading your wishlist…</p>
+                    </div>
+                  ) : favoriteItems.length === 0 ? (
                     <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
                       <div className="w-16 h-16 rounded-full border border-[#FAF9F6]/20 flex items-center justify-center text-[#FAF9F6]/30">
                         <Heart size={28} className="stroke-[1.25]" />
