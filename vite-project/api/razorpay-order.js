@@ -8,6 +8,13 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+    console.error('Razorpay order error: RAZORPAY_KEY_ID / RAZORPAY_KEY_SECRET missing in deployment env');
+    return res.status(503).json({
+      error: 'Payment gateway is not configured on the server. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in the deployment environment variables.',
+    });
+  }
+
   try {
     const { amount, orderId, customerName, customerEmail, customerPhone } = req.body;
 
