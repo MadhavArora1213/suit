@@ -531,6 +531,26 @@ function AppContent() {
     }
   }
 
+  const changeCartItemSize = async (productId, oldSize, newSize) => {
+    if (!newSize || oldSize === newSize) return;
+    const index = cart.findIndex((item) => item.id === productId && item.size === oldSize);
+    if (index === -1) return;
+    const newCart = [...cart];
+    const existingIndex = newCart.findIndex((item) => item.id === productId && item.size === newSize);
+    if (existingIndex > -1 && existingIndex !== index) {
+      newCart[existingIndex] = { ...newCart[existingIndex], quantity: newCart[existingIndex].quantity + newCart[index].quantity };
+      newCart.splice(index, 1);
+    } else {
+      newCart[index] = { ...newCart[index], size: newSize };
+    }
+    setCart(newCart);
+    const ts = Date.now();
+    if (user) {
+      try { await setDoc(doc(db, 'users', user.uid), { cart: newCart, cartUpdatedAt: ts }, { merge: true }); }
+      catch (err) { console.error("Error syncing cart:", err); }
+    }
+  }
+
   const toggleFavorite = async (productId) => {
     if (!user) { setShowLoginModal(true); return; }
     const newFavs = { ...favorites, [productId]: !favorites[productId] };
@@ -684,7 +704,7 @@ function AppContent() {
           <Route path="/shop/:slug" element={<SellerShopPageWrapper {...commonProps} />} />
           
           <Route path="/cart" element={<CartPage cart={cart} updateCartQty={updateCartQty} removeFromCart={removeFromCart} setView={setView} />} />
-          <Route path="/checkout" element={<CheckoutPage cart={cart} setView={setView} clearCart={clearCart} />} />
+            <Route path="/checkout" element={<CheckoutPage cart={cart} setView={setView} clearCart={clearCart} removeFromCart={removeFromCart} updateCartQty={updateCartQty} changeCartItemSize={changeCartItemSize} />} />
           
           <Route path="/login" element={<LoginSignup setView={setView} onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/signup" element={<LoginSignup setView={setView} onLoginSuccess={handleLoginSuccess} />} />

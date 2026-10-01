@@ -11,8 +11,8 @@ import {
   fetchProductOverridesFromFirestore,
   fetchCollectionFromFirestore,
   saveDocumentToFirestore,
-  db,
-  auth
+  currentDb,
+  isPanelContext
 } from '../firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
@@ -27,12 +27,6 @@ export const memoryStore = {
   collectionTags: [],
   coupons: [],
   festiveOffers: []
-};
-
-const isPanelContext = () => {
-  if (typeof window === 'undefined') return false;
-  const { pathname, hash, search } = window.location;
-  return pathname.startsWith('/admin') || hash === '#admin' || new URLSearchParams(search).has('admin');
 };
 
 // INITIALIZATION
@@ -242,7 +236,7 @@ export const recordProductView = (id) => {
 
   if (!isFirebaseConfigured()) { console.warn('[GURNAAZ-VIEW] Firebase not configured'); return; }
 
-  const overridesRef = doc(db, 'products_overrides', String(id));
+  const overridesRef = doc(currentDb(), 'products_overrides', String(id));
   getDoc(overridesRef).then(snap => {
     const data = snap.exists() ? snap.data() : {};
     const totalViews = (data.viewsCount || 0) + 1;
@@ -270,7 +264,7 @@ export const recordProductClick = (id, clickType = 'card_click') => {
   if (!id) return;
 
   if (isFirebaseConfigured()) {
-    const overridesRef = doc(db, 'products_overrides', String(id));
+    const overridesRef = doc(currentDb(), 'products_overrides', String(id));
     getDoc(overridesRef).then(snap => {
       const data = snap.exists() ? snap.data() : {};
       const totalClicks = (data.clicksCount || 0) + 1;
@@ -315,7 +309,7 @@ export const deleteFestiveOffer = async (id) => {
   memoryStore.festiveOffers = memoryStore.festiveOffers.filter(o => o.id !== id);
   if (isFirebaseConfigured()) {
     import('firebase/firestore').then(({ doc, deleteDoc }) => {
-      deleteDoc(doc(db, 'festiveOffers', id.toString())).catch(console.error);
+      deleteDoc(doc(currentDb(), 'festiveOffers', id.toString())).catch(console.error);
     });
   }
   notifyWebsite();
@@ -330,7 +324,7 @@ export const deleteCategory = async (id) => {
   memoryStore.categories = memoryStore.categories.filter(c => c.id !== id);
   if (isFirebaseConfigured()) {
     import('firebase/firestore').then(({ doc, deleteDoc }) => {
-      deleteDoc(doc(db, 'categories', id.toString())).catch(console.error);
+      deleteDoc(doc(currentDb(), 'categories', id.toString())).catch(console.error);
     });
   }
   notifyWebsite();
@@ -379,7 +373,7 @@ export const deleteCoupon = async (id) => {
   memoryStore.coupons = memoryStore.coupons.filter(c => c.id !== id);
   if (isFirebaseConfigured()) {
     import('firebase/firestore').then(({ doc, deleteDoc }) => {
-      deleteDoc(doc(db, 'coupons', id.toString())).catch(console.error);
+      deleteDoc(doc(currentDb(), 'coupons', id.toString())).catch(console.error);
     });
   }
   notifyWebsite();
@@ -470,7 +464,7 @@ export const deleteReview = async (productId, reviewId) => {
 
     if (isFirebaseConfigured()) {
       import('firebase/firestore').then(({ doc, deleteDoc }) => {
-        deleteDoc(doc(db, 'reviews', reviewId))
+        deleteDoc(doc(currentDb(), 'reviews', reviewId))
           .then(() => saveProductRatingToFirestore(productId, formattedAvg, reviews.length))
           .catch(console.error);
       });

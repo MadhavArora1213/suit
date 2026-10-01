@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Search, Mail, Phone, Calendar, User as UserIcon, ShieldAlert } from 'lucide-react';
 import { collection, query, getDocs, onSnapshot } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { adminDb as db } from '../../firebase';
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState([]);

@@ -1,7 +1,7 @@
 // Force HMR trigger for new routes
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth, db } from '../firebase';
+import { adminAuth as auth, adminDb as db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { initializeStore } from '../utils/adminStore';
 import AdminLogin from './AdminLogin';
@@ -86,6 +86,7 @@ export default function AdminApp() {
           try {
             const adminDoc = await getDoc(doc(db, 'admins', user.email.toLowerCase()));
             if (adminDoc.exists()) {
+              await initializeStore();
               setIsLoggedIn(true);
             } else {
               // Kick out non-admin users

@@ -1,6 +1,6 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getFirestore, doc, setDoc, getDocs, collection, query, where, deleteDoc, onSnapshot } from 'firebase/firestore';
-import { getAuth, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { getAuth, initializeAuth, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
@@ -35,6 +35,17 @@ let app;
 export let db = null;
 export let auth = null;
 export let storage = null;
+let adminApp = null;
+export let adminAuth = null;
+export let adminDb = null;
+
+export const isPanelContext = () => {
+  if (typeof window === 'undefined') return false;
+  const { pathname, hash, search } = window.location;
+  return pathname.startsWith('/admin') || hash === '#admin' || new URLSearchParams(search).has('admin');
+};
+
+export const currentDb = () => (adminDb && isPanelContext() ? adminDb : db);
 
 function initFirebase() {
   const firebaseConfig = getFirebaseConfig();
@@ -74,11 +85,31 @@ function initFirebase() {
         console.warn("Failed to initialize Firebase App Check:", appCheckErr);
       }
     }
+
+    adminApp = getApps().find(a => a.name === 'gurnaaz-admin') || initializeApp(firebaseConfig, 'gurnaaz-admin');
+    try {
+      adminAuth = initializeAuth(adminApp, { persistence: browserSessionPersistence });
+    } catch {
+      adminAuth = getAuth(adminApp);
+    }
+    adminDb = getFirestore(adminApp);
+    if (recaptchaKey && typeof window !== 'undefined') {
+      try {
+        initializeAppCheck(adminApp, {
+          provider: new ReCaptchaV3Provider(recaptchaKey),
+          isTokenAutoRefreshEnabled: true
+        });
+      } catch (adminAppCheckErr) {
+        console.warn("Failed to initialize Firebase App Check for admin:", adminAppCheckErr);
+      }
+    }
   } catch (err) {
     console.error("Firebase initialization failed:", err);
     db = null;
     auth = null;
     storage = null;
+    adminAuth = null;
+    adminDb = null;
   }
 }
 
@@ -135,13 +166,13 @@ export function isFirebaseConfigured() {
  * Saves or updates user profiles in the Firebase Firestore database
  */
 export async function saveUserData(userProfile) {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return;
   }
   if (!userProfile || (!userProfile.email && !userProfile.phone)) return;
   
   const docId = userProfile.email || userProfile.phone;
-  const userRef = doc(db, 'users', docId);
+  const userRef = doc(currentDb(), 'users', docId);
   
   try {
     await setDoc(userRef, {
@@ -159,12 +190,12 @@ export async function saveUserData(userProfile) {
  * Saves a product review to Firestore database
  */
 export async function saveReviewToFirestore(productId, review) {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return null;
   }
   try {
     const reviewId = review.id || `rev_${Date.now()}`;
-    const reviewRef = doc(db, 'reviews', reviewId);
+    const reviewRef = doc(currentDb(), 'reviews', reviewId);
     
     const reviewData = {
       id: reviewId,
@@ -188,11 +219,11 @@ export async function saveReviewToFirestore(productId, review) {
  * Fetches all reviews for a product from Firestore
  */
 export async function fetchReviewsFromFirestore(productId) {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return [];
   }
   try {
-    const reviewsCol = collection(db, 'reviews');
+    const reviewsCol = collection(currentDb(), 'reviews');
     const q = query(
       reviewsCol, 
       where('productId', '==', productId)
@@ -217,11 +248,11 @@ export async function fetchReviewsFromFirestore(productId) {
  * Saves dynamic product rating average and override values to Firestore
  */
 export async function saveProductRatingToFirestore(productId, avgRating, totalReviewsCount) {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return;
   }
   try {
-    const productRef = doc(db, 'products_overrides', productId);
+    const productRef = doc(currentDb(), 'products_overrides', productId);
     await setDoc(productRef, {
       rating: Number(avgRating),
       reviewsCount: Number(totalReviewsCount),
@@ -236,11 +267,11 @@ export async function saveProductRatingToFirestore(productId, avgRating, totalRe
  * Fetches product overrides (like average ratings) from Firestore
  */
 export async function fetchProductOverridesFromFirestore() {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return {};
   }
   try {
-    const overridesCol = collection(db, 'products_overrides');
+    const overridesCol = collection(currentDb(), 'products_overrides');
     const querySnapshot = await getDocs(overridesCol);
     const overrides = {};
     querySnapshot.forEach((docSnap) => {
@@ -257,11 +288,11 @@ export async function fetchProductOverridesFromFirestore() {
  * Saves a completed checkout order to the Firestore database
  */
 export async function saveOrderToFirestore(orderId, orderDetails) {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return null;
   }
   try {
-    const orderRef = doc(db, 'orders', orderId);
+    const orderRef = doc(currentDb(), 'orders', orderId);
     
     // Normalize properties
     const data = {
@@ -302,11 +333,11 @@ export async function saveOrderToFirestore(orderId, orderDetails) {
  * Fetches all orders from Firestore database
  */
 export async function fetchOrdersFromFirestore() {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return [];
   }
   try {
-    const ordersCol = collection(db, 'orders');
+    const ordersCol = collection(currentDb(), 'orders');
     const querySnapshot = await getDocs(ordersCol);
     const orders = [];
     querySnapshot.forEach((docSnap) => {
@@ -328,11 +359,11 @@ export async function fetchOrdersFromFirestore() {
  * Saves or updates a product in the Firestore database
  */
 export async function saveProductToFirestore(productId, product) {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return null;
   }
   try {
-    const productRef = doc(db, 'products', productId);
+    const productRef = doc(currentDb(), 'products', productId);
     
     // Normalize/sanitize data to prevent Firestore errors
     const data = {
@@ -392,11 +423,11 @@ export async function saveProductToFirestore(productId, product) {
  * Deletes a product from the Firestore database
  */
 export async function deleteProductFromFirestore(productId) {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return false;
   }
   try {
-    const productRef = doc(db, 'products', productId);
+    const productRef = doc(currentDb(), 'products', productId);
     await deleteDoc(productRef);
     return true;
   } catch (error) {
@@ -409,11 +440,11 @@ export async function deleteProductFromFirestore(productId) {
  * Fetches all products from the Firestore database
  */
 export async function fetchProductsFromFirestore() {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return [];
   }
   try {
-    const productsCol = collection(db, 'products');
+    const productsCol = collection(currentDb(), 'products');
     const querySnapshot = await getDocs(productsCol);
     const products = [];
     querySnapshot.forEach((docSnap) => {
@@ -436,12 +467,12 @@ export async function fetchProductsFromFirestore() {
  * Returns true if exists, false if not
  */
 export async function isEmailInWaitlist(email) {
-  if (!isFirebaseConfigured() || !db) return false;
+  if (!isFirebaseConfigured() || !currentDb()) return false;
   if (!email || !email.trim()) return false;
 
   const normalizedEmail = email.trim().toLowerCase();
   try {
-    const existing = await getDocs(query(collection(db, 'waitlist'), where('email', '==', normalizedEmail)));
+    const existing = await getDocs(query(collection(currentDb(), 'waitlist'), where('email', '==', normalizedEmail)));
     return !existing.empty;
   } catch (error) {
     console.error("Firestore check email error:", error);
@@ -454,7 +485,7 @@ export async function isEmailInWaitlist(email) {
  * Returns { success: true } or { success: false, reason: 'duplicate' | 'error' }
  */
 export async function saveWaitlistEmail(email, name) {
-  if (!isFirebaseConfigured() || !db) {
+  if (!isFirebaseConfigured() || !currentDb()) {
     return { success: false, reason: 'error' };
   }
   if (!email || !email.trim()) return { success: false, reason: 'error' };
@@ -466,7 +497,7 @@ export async function saveWaitlistEmail(email, name) {
     // Double-check uniqueness before saving (reads may be admin-only)
     let existing = null;
     try {
-      existing = await getDocs(query(collection(db, 'waitlist'), where('email', '==', normalizedEmail)));
+      existing = await getDocs(query(collection(currentDb(), 'waitlist'), where('email', '==', normalizedEmail)));
     } catch {
       existing = null;
     }
@@ -474,7 +505,7 @@ export async function saveWaitlistEmail(email, name) {
       return { success: false, reason: 'duplicate' };
     }
 
-    const waitlistRef = doc(db, 'waitlist', docId);
+    const waitlistRef = doc(currentDb(), 'waitlist', docId);
     await setDoc(waitlistRef, {
       email: normalizedEmail,
       name: (name || '').trim(),
@@ -492,9 +523,9 @@ export async function saveWaitlistEmail(email, name) {
  * Returns the total number of waitlist signups
  */
 export async function getWaitlistCount() {
-  if (!isFirebaseConfigured() || !db) return 0;
+  if (!isFirebaseConfigured() || !currentDb()) return 0;
   try {
-    const snapshot = await getDocs(collection(db, 'waitlist'));
+    const snapshot = await getDocs(collection(currentDb(), 'waitlist'));
     return snapshot.size;
   } catch (error) {
     console.error("Firestore waitlist count error:", error);
@@ -508,9 +539,9 @@ export async function getWaitlistCount() {
  * Returns unsubscribe function
  */
 export function onWaitlistUpdate(onUpdate) {
-  if (!isFirebaseConfigured() || !db) return () => {};
+  if (!isFirebaseConfigured() || !currentDb()) return () => {};
   try {
-    const waitlistRef = collection(db, 'waitlist');
+    const waitlistRef = collection(currentDb(), 'waitlist');
     return onSnapshot(waitlistRef, (snapshot) => {
       onUpdate(snapshot.size);
     });
@@ -524,9 +555,9 @@ export function onWaitlistUpdate(onUpdate) {
  * Generic fetch from any Firestore collection
  */
 export async function fetchCollectionFromFirestore(collectionName) {
-  if (!isFirebaseConfigured() || !db) return [];
+  if (!isFirebaseConfigured() || !currentDb()) return [];
   try {
-    const col = collection(db, collectionName);
+    const col = collection(currentDb(), collectionName);
     const querySnapshot = await getDocs(col);
     const results = [];
     querySnapshot.forEach((docSnap) => {
@@ -545,9 +576,9 @@ export async function fetchCollectionFromFirestore(collectionName) {
  * Generic save to any Firestore collection
  */
 export async function saveDocumentToFirestore(collectionName, docId, data) {
-  if (!isFirebaseConfigured() || !db) return false;
+  if (!isFirebaseConfigured() || !currentDb()) return false;
   try {
-    const ref = doc(db, collectionName, docId);
+    const ref = doc(currentDb(), collectionName, docId);
     await setDoc(ref, data);
     return true;
   } catch (error) {
@@ -560,9 +591,9 @@ export async function saveDocumentToFirestore(collectionName, docId, data) {
  * Generic delete from any Firestore collection
  */
 export async function deleteDocumentFromFirestore(collectionName, docId) {
-  if (!isFirebaseConfigured() || !db) return false;
+  if (!isFirebaseConfigured() || !currentDb()) return false;
   try {
-    const ref = doc(db, collectionName, docId);
+    const ref = doc(currentDb(), collectionName, docId);
     await deleteDoc(ref);
     return true;
   } catch (error) {
@@ -575,12 +606,12 @@ export async function deleteDocumentFromFirestore(collectionName, docId) {
  * Deletes ALL documents from a Firestore collection
  */
 export async function deleteAllFromFirestore(collectionName) {
-  if (!isFirebaseConfigured() || !db) return 0;
+  if (!isFirebaseConfigured() || !currentDb()) return 0;
   try {
-    const snapshot = await getDocs(collection(db, collectionName));
+    const snapshot = await getDocs(collection(currentDb(), collectionName));
     let count = 0;
     for (const docSnap of snapshot.docs) {
-      await deleteDoc(doc(db, collectionName, docSnap.id));
+      await deleteDoc(doc(currentDb(), collectionName, docSnap.id));
       count++;
     }
     return count;

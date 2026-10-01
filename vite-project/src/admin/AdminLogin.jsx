@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { auth } from '../firebase';
+import { adminAuth as auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, Mail, Sparkles } from 'lucide-react';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { adminDb as db } from '../firebase';
 import { signOut } from 'firebase/auth';
 
 const P = '#111111';

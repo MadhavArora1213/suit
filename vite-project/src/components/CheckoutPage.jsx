@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, CreditCard, Shield, AlertCircle, ShoppingBag, Truck, MessageSquare } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, CreditCard, Shield, AlertCircle, ShoppingBag, Truck, MessageSquare, Trash2, Minus, Plus } from 'lucide-react';
 import { addOrder, getCoupons, getProducts } from '../utils/adminStore';
 import { RAZORPAY_KEY_ID, initiateRazorpayPayment } from '../utils/razorpay';
 import { usePageTracking } from '../hooks/usePageTracking';
 import { trackCheckoutStart, trackCheckoutStep, trackCheckoutAbandon, trackFormFill, trackFormFocus, trackFormBlur, trackFormSubmit, trackPaymentAttempt, trackPaymentSuccess, trackPaymentFail, trackPaymentAbandon } from '../utils/analytics';
 
-export default function CheckoutPage({ cart, setView, clearCart }) {
+export default function CheckoutPage({ cart, setView, clearCart, removeFromCart, updateCartQty, changeCartItemSize }) {
   usePageTracking('Checkout', { cartItemCount: cart.length });
 
   useEffect(() => {
@@ -44,8 +44,8 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
   });
 
   const [couponCode, setCouponCode] = useState('');
-  const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [appliedPromoName, setAppliedPromoName] = useState('');
+  const [finalDiscount, setFinalDiscount] = useState(0);
   const [shippingCost, setShippingCost] = useState(0);
   const [isFetchingShipping, setIsFetchingShipping] = useState(false);
 
@@ -58,13 +58,21 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
     return total + priceNum * item.quantity;
   }, 0);
 
+  const appliedDiscount = useMemo(() => {
+    if (!appliedPromoName) return 0;
+    const match = getCoupons().find(c => c.code === appliedPromoName);
+    if (!match) return 0;
+    const subtotal = cart.reduce((total, item) => {
+      const priceNum = parseInt(item.price.replace(/[^\d]/g, ''), 10);
+      return total + priceNum * item.quantity;
+    }, 0);
+    return Number((subtotal * (match.discountPercentage / 100)).toFixed(2));
+  }, [appliedPromoName, cart]);
+
   const applyPromoCode = () => {
     const coupons = getCoupons();
     const match = coupons.find(c => c.code === couponCode.toUpperCase().replace(/\s+/g, ''));
     if (match) {
-      const subtotal = getSubtotal();
-      const discount = Number((subtotal * (match.discountPercentage / 100)).toFixed(2));
-      setAppliedDiscount(discount);
       setAppliedPromoName(match.code);
       alert(`Promo Code ${match.code} applied! Flat ${match.discountPercentage}% discount loaded.`);
     } else {
@@ -74,6 +82,16 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
 
   const getGrandTotal = () => {
     return getSubtotal() - appliedDiscount + shippingCost;
+  };
+
+  const getSizeOptions = (item) => {
+    const liveProduct = getProducts().find(p => p.id === item.id);
+    const sizes = liveProduct?.sizes?.length ? liveProduct.sizes : item.sizes;
+    if (!sizes || sizes.length < 2) return [];
+    const stock = liveProduct?.stockQty || item.stockQty;
+    const options = sizes.filter(s => !(stock && typeof stock === 'object' && stock[s] !== undefined && stock[s] <= 0));
+    if (!options.includes(item.size)) options.unshift(item.size);
+    return options;
   };
 
   useEffect(() => {
@@ -106,9 +124,9 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
         }
       }
     };
-    // We already fetch in handleAddressSubmit initially, so this will primarily catch paymentMode toggles.
+    // We already fetch in handleAddressSubmit initially, so this will primarily catch paymentMode toggles and cart edits.
     fetchShippingCost();
-  }, [paymentMode]);
+  }, [paymentMode, cart]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -288,6 +306,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
     addOrder(orderRecord);
     setFinalOrderCart([...cart]);
     setFinalPaymentMode(paymentStr);
+    setFinalDiscount(appliedDiscount);
     
     // Send confirmation email asynchronously
     sendConfirmationEmail(orderRecord);
@@ -352,7 +371,7 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
     const totalAmount = finalOrderCart.reduce((total, item) => {
       const priceNum = parseInt(item.price.replace(/[^\d]/g, ''), 10);
       return total + priceNum * item.quantity;
-    }, 0) - appliedDiscount + shippingCost;
+    }, 0) - finalDiscount + shippingCost;
 
     return (
       <motion.div 
@@ -414,12 +433,12 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
             <div className="border-t border-[#D4AF37]/10 pt-4 space-y-2 text-xs">
               <div className="flex justify-between text-[#6B6B6B]">
                 <span>Items Subtotal</span>
-                <span>₹{(totalAmount + appliedDiscount - shippingCost).toLocaleString()}</span>
+                <span>₹{(totalAmount + finalDiscount - shippingCost).toLocaleString()}</span>
               </div>
-              {appliedDiscount > 0 && (
+              {finalDiscount > 0 && (
                 <div className="flex justify-between text-emerald-600 font-semibold">
                   <span>Promo Code Discount ({appliedPromoName})</span>
-                  <span>-₹{appliedDiscount.toLocaleString()}</span>
+                  <span>-₹{finalDiscount.toLocaleString()}</span>
                 </div>
               )}
               <div className="flex justify-between text-[#6B6B6B]">
@@ -796,19 +815,62 @@ export default function CheckoutPage({ cart, setView, clearCart }) {
                   Items Summary
                 </h3>
 
-                <div className="divide-y divide-[#D4AF37]/10 max-h-[250px] overflow-y-auto pr-2">
-                  {cart.map((item) => (
-                    <div key={`${item.id}-${item.size}`} className="py-4 flex gap-4 first:pt-0 last:pb-0 text-left">
-                      <div className="w-12 h-16 bg-[#E8DDD0] overflow-hidden flex-shrink-0 border border-[#D4AF37]/5">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover object-top" />
+                <div className="divide-y divide-[#D4AF37]/10 max-h-[320px] overflow-y-auto pr-2">
+                  {cart.map((item) => {
+                    const sizeOptions = getSizeOptions(item);
+                    return (
+                      <div key={`${item.id}-${item.size}`} className="py-4 flex gap-3 first:pt-0 last:pb-0 text-left relative">
+                        <div className="w-12 h-16 bg-[#E8DDD0] overflow-hidden flex-shrink-0 border border-[#D4AF37]/5">
+                          <img src={item.image} alt={item.name} className="w-full h-full object-cover object-top" />
+                        </div>
+                        <div className="flex-1 min-w-0 pr-6">
+                          <h4 className="text-xs font-semibold text-[#1A0008] truncate">{item.name}</h4>
+                          <span className="text-xs font-semibold text-[#D4AF37] block mt-0.5">{item.price}</span>
+                          <div className="flex flex-wrap items-center gap-2 mt-2">
+                            {sizeOptions.length > 1 ? (
+                              <select
+                                value={item.size}
+                                onChange={(e) => changeCartItemSize(item.id, item.size, e.target.value)}
+                                aria-label={`Size for ${item.name}`}
+                                className="bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none px-2 py-1 text-[10px] font-semibold rounded cursor-pointer"
+                              >
+                                {sizeOptions.map(s => <option key={s} value={s}>Size: {s}</option>)}
+                              </select>
+                            ) : (
+                              <span className="text-[9px] text-[#6B6B6B]">Size: <span className="text-[#1A0008] font-semibold">{item.size}</span></span>
+                            )}
+                            <div className="flex items-center border border-[#D4AF37]/20 bg-[#FAF9F6]">
+                              <button
+                                type="button"
+                                onClick={() => updateCartQty(item.id, item.size, item.quantity - 1)}
+                                className="px-2 py-1 text-[#6B6B6B] hover:text-[#D4AF37] cursor-pointer"
+                                title="Decrease quantity"
+                              >
+                                <Minus size={11} />
+                              </button>
+                              <span className="text-[11px] font-semibold px-1.5 text-[#1A0008]">{item.quantity}</span>
+                              <button
+                                type="button"
+                                onClick={() => updateCartQty(item.id, item.size, item.quantity + 1)}
+                                className="px-2 py-1 text-[#6B6B6B] hover:text-[#D4AF37] cursor-pointer"
+                                title="Increase quantity"
+                              >
+                                <Plus size={11} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeFromCart(item.id, item.size)}
+                          className="absolute top-3 right-0 text-[#6B6B6B] hover:text-red-500 transition-colors p-1 cursor-pointer"
+                          title="Remove item"
+                        >
+                          <Trash2 size={14} />
+                        </button>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-xs font-semibold text-[#1A0008] truncate">{item.name}</h4>
-                        <span className="text-[9px] text-[#6B6B6B] block">Size: {item.size} · Qty: {item.quantity}</span>
-                        <span className="text-xs font-semibold text-[#D4AF37] block mt-0.5">{item.price}</span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div className="border-t border-[#D4AF37]/15 pt-4 space-y-2 text-xs uppercase tracking-wider font-semibold text-[#6B6B6B]">

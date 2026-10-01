@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Package, ShoppingBag, TrendingUp, Users, ArrowUpRight, ArrowRight, Star, Eye, MousePointer, BarChart2 } from 'lucide-react';
 import { getProducts, getOrders, getBoutiques, getCategories, syncProducts, syncOrders, syncBoutiques } from '../../utils/adminStore';
 import { collection, query, getDocs, onSnapshot } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { adminDb as db } from '../../firebase';
 
 const P = '#111111';
 const PL = '#E8DDD0';

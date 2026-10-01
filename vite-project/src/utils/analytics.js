@@ -1,4 +1,4 @@
-import { db, isFirebaseConfigured } from '../firebase';
+import { currentDb, isFirebaseConfigured } from '../firebase';
 import { collection, addDoc, getDocs, query, orderBy, limit as firestoreLimit, Timestamp } from 'firebase/firestore';
 
 const STORAGE_KEY = 'gurnaaz_analytics_events';
@@ -56,9 +56,9 @@ export function trackEvent(eventType, data = {}) {
 }
 
 async function syncEventToFirestore(event) {
-  if (!isFirebaseConfigured() || !db) return;
+  if (!isFirebaseConfigured() || !currentDb()) return;
   try {
-    const eventsRef = collection(db, 'analytics_events');
+    const eventsRef = collection(currentDb(), 'analytics_events');
     await addDoc(eventsRef, { ...event, createdAt: Timestamp.now() });
   } catch (e) {}
 }
@@ -80,10 +80,10 @@ export function getStoredJourney(sessionId) {
 }
 
 export async function fetchAnalyticsFromFirestore({ eventType, days = 7, maxResults = 1000 } = {}) {
-  if (!isFirebaseConfigured() || !db) return [];
+  if (!isFirebaseConfigured() || !currentDb()) return [];
 
   try {
-    const eventsRef = collection(db, 'analytics_events');
+    const eventsRef = collection(currentDb(), 'analytics_events');
     const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
     const q = query(eventsRef, orderBy('createdAt', 'desc'), firestoreLimit(maxResults));
     const snapshot = await getDocs(q);
