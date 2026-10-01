@@ -4,6 +4,16 @@ import { useState, useEffect } from 'react';
 import gurnaazLogo from '../assets/gurnaaz.png';
 import { getAllProducts, getBoutiques, getCategories, getCollections, defaultBoutiques } from '../utils/adminStore';
 
+function NavListSkeleton({ count = 4, width = 'w-24' }) {
+  return (
+    <div className="flex flex-col gap-3.5">
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className={`h-4 bg-[#E8DDD0]/50 rounded animate-pulse ${width}`} />
+      ))}
+    </div>
+  );
+}
+
 export default function Navbar({
   cart = [],
   removeFromCart,
@@ -18,7 +28,8 @@ export default function Navbar({
   setSelectedCollectionSlug,
   user,
   handleLogout,
-  authReady = true
+  authReady = true,
+  storeReady = true
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -199,7 +210,7 @@ export default function Navbar({
                       <div className="w-[35%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Shop by Category</span>
                         <div className="grid grid-cols-2 gap-x-8 gap-y-3 mt-2">
-                          {navCategories.length > 0 ? (
+                          {storeReady && navCategories.length > 0 ? (
                             navCategories.map((cat, i) => (
                               <a
                                 key={cat.id || cat.name}
@@ -228,7 +239,7 @@ export default function Navbar({
                       <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 px-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Curated Edits</span>
                         <div className="flex flex-col gap-3.5 mt-2">
-                          {dynamicCollections.length > 0 ? (
+                          {storeReady && dynamicCollections.length > 0 ? (
                             dynamicCollections.slice(0, 7).map((edit) => (
                               <a
                                 key={edit.id}
@@ -261,7 +272,7 @@ export default function Navbar({
                       </div>
 
                       {/* Col 3: Featured Image 1 */}
-                      {col3 ? (
+                      {storeReady && col3 ? (
                         <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl ml-4 shadow-lg" onClick={() => {
                           if (setSelectedCollectionSlug) {
                             setSelectedCollectionSlug(col3.id);
@@ -282,7 +293,7 @@ export default function Navbar({
                       )}
 
                       {/* Col 4: Featured Image 2 */}
-                      {col4 ? (
+                      {storeReady && col4 ? (
                         <div className="flex-1 h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg" onClick={() => {
                           if (setSelectedCollectionSlug) {
                             setSelectedCollectionSlug(col4.id);
@@ -316,7 +327,7 @@ export default function Navbar({
                       <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Top Shops</span>
                         <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
-                          {navShops.length > 0 ? (
+                          {storeReady && navShops.length > 0 ? (
                             navShops.map((shop) => (
                               <a
                                 key={shop.id}
@@ -349,7 +360,7 @@ export default function Navbar({
                       <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 px-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Top Boutiques</span>
                         <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
-                          {navBoutiques.length > 0 ? (
+                          {storeReady && navBoutiques.length > 0 ? (
                             navBoutiques.map((btq) => (
                               <a
                                 key={btq.id}
@@ -382,7 +393,12 @@ export default function Navbar({
                         </a>
                       </div>
 
-                      {navFeatured.map((feat, index) => (
+                      {!storeReady ? (
+                        <>
+                          <div className="w-[32%] ml-4 h-full bg-[#E8DDD0]/40 rounded-xl animate-pulse" />
+                          <div className="flex-1 h-full bg-[#E8DDD0]/40 rounded-xl animate-pulse" />
+                        </>
+                      ) : navFeatured.map((feat, index) => (
                         <div key={feat.id} className={`${index === 0 ? 'w-[32%] ml-4' : 'flex-1'} h-full relative overflow-hidden group/img cursor-pointer rounded-xl shadow-lg`} onClick={() => {
                           if (setSelectedBoutique) {
                             setSelectedBoutique(feat.name);
@@ -408,7 +424,7 @@ export default function Navbar({
                         </div>
                       ))}
                       
-                      {navFeatured.length === 0 && (
+                      {storeReady && navFeatured.length === 0 && (
                         <div className="flex-1 h-full flex items-center justify-center rounded-xl ml-2 overflow-hidden">
                           <img src="/gurnaaz_hero_model_custom.png" alt="Gurnaaz" className="w-full h-full object-cover object-top" />
                         </div>
@@ -434,7 +450,7 @@ export default function Navbar({
             onClick={() => setView('wishlist')}
             className={`cursor-pointer transition-colors relative text-[#1A0008] hover:text-[#8B1A1A]`}>
             <Heart strokeWidth={1.5} className="w-5 h-5 md:w-5 md:h-5" />
-            {!authReady ? (
+            {!authReady || !storeReady ? (
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#E8DDD0] rounded-full animate-pulse" />
             ) : favoriteCount > 0 && (
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#8B1A1A] rounded-full" />
@@ -603,7 +619,7 @@ export default function Navbar({
               <div className="space-y-2">
                 <span className="text-[11px] tracking-[0.2em] text-[#1A0008]/40 uppercase font-bold block">SHOP CATEGORIES</span>
                 <div className="pl-4 flex flex-col gap-3">
-                  {navCategories.map((cat) => (
+                  {!storeReady ? <NavListSkeleton count={4} /> : navCategories.map((cat) => (
                     <a key={cat.id || cat.name} href="#" onClick={(e) => {
                       e.preventDefault();
                       setSelectedCategory(cat.name);
@@ -620,7 +636,7 @@ export default function Navbar({
               <div className="space-y-2">
                 <span className="text-[11px] tracking-[0.2em] text-[#1A0008]/40 uppercase font-bold block">TOP SHOPS</span>
                 <div className="pl-4 flex flex-col gap-3">
-                  {navShops.slice(0, 5).map((bt) => (
+                  {!storeReady ? <NavListSkeleton count={5} /> : navShops.slice(0, 5).map((bt) => (
                     <a key={bt.id} href="#" onClick={(e) => {
                       e.preventDefault();
                       setSelectedBoutique(bt.name);
@@ -637,7 +653,7 @@ export default function Navbar({
               <div className="space-y-2">
                 <span className="text-[11px] tracking-[0.2em] text-[#1A0008]/40 uppercase font-bold block">TOP BOUTIQUES</span>
                 <div className="pl-4 flex flex-col gap-3">
-                  {navBoutiques.slice(0, 5).map((bt) => (
+                  {!storeReady ? <NavListSkeleton count={5} /> : navBoutiques.slice(0, 5).map((bt) => (
                     <a key={bt.id} href="#" onClick={(e) => {
                       e.preventDefault();
                       setSelectedBoutique(bt.name);
@@ -781,12 +797,12 @@ export default function Navbar({
                   <div className="flex items-center gap-3">
                     <Heart size={18} className="text-[#FAF9F6] fill-[#FAF9F6]" />
                     <span className="text-base tracking-[0.1em] text-[#1A0008]" style={{ fontFamily: "'Cormorant Garamond', serif" }}>MY WISHLIST</span>
-                    <span className="bg-white/15 text-[#FAF9F6] text-[9px] font-semibold px-2 py-0.5 rounded-full">{!authReady ? '…' : `${favoriteCount} items`}</span>
+                    <span className="bg-white/15 text-[#FAF9F6] text-[9px] font-semibold px-2 py-0.5 rounded-full">{!authReady || !storeReady ? '…' : `${favoriteCount} items`}</span>
                   </div>
                   <button onClick={() => setWishlistOpen(false)} className="text-[#6B6B6B] hover:text-[#1A0008] cursor-pointer"><X size={20} /></button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                  {!authReady ? (
+                  {!authReady || !storeReady ? (
                     <div className="h-full flex flex-col justify-center gap-6">
                       {[0, 1].map(i => (
                         <div key={i} className="flex gap-4">

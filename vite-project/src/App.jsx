@@ -692,6 +692,7 @@ function AppContent() {
         updateCartQty={updateCartQty}
         handleLogout={handleLogout}
         authReady={authReady}
+        storeReady={storeReady}
       />
       
       <Suspense fallback={<div className="h-screen w-full flex items-center justify-center pt-[110px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1A0008]"></div></div>}>
