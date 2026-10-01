@@ -7,7 +7,7 @@ import { auth, db } from '../firebase';
 import { buildProfile, profileNeedsHeal, healUserDoc } from '../utils/userProfile';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 
-export default function LoginSignup({ setView, onLoginSuccess }) {
+export default function LoginSignup({ setView, onLoginSuccess, showToast }) {
   const [mode, setMode] = useState(window.location.pathname === '/signup' ? 'signup' : 'login');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -108,6 +108,13 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     }
   };
 
+  // Notices without a baked-in character image go to the global toast instead
+  // of the empty-board modal image.
+  const notify = (msg) => {
+    if (typeof showToast === 'function') showToast(msg);
+    else setErrors({ form: msg });
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!checkRateLimit()) return;
@@ -124,7 +131,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
 
       if (await isAdminAccount(userCredential.user.email)) {
         await signOut(auth);
-        setErrors({ form: 'This is an admin account. Please sign in from the admin panel.' });
+        notify('Admin accounts cannot sign in here. Please use the admin panel.');
         return;
       }
       
@@ -317,7 +324,7 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
 
       if (await isAdminAccount(userCredential.user.email)) {
         await signOut(auth);
-        setErrors({ form: 'This is an admin account. Please sign in from the admin panel.' });
+        notify('Admin accounts cannot sign in here. Please use the admin panel.');
         return;
       }
       
