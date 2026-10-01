@@ -13,8 +13,8 @@ import OccasionTimeline from './OccasionTimeline';
 import ShopByColor from './ShopByColor';
 import ShoppingReimagined from './ShoppingReimagined';
 import HeroRitual from './HeroRitual';
-import RakhiSaleOfferSection from './RakhiSaleOfferSection';
-import RakhiSuitCategoryShowcase from './RakhiSuitCategoryShowcase';
+import KarwaChauthSaleOfferSection from './KarwaChauthSaleOfferSection';
+import KarwaChauthCategoryShowcase from './KarwaChauthCategoryShowcase';
 import Footer from './Footer';
 import Navbar from './Navbar';
 
@@ -90,14 +90,14 @@ export default function CustomerHomePage({ setView, cart, favorites, addToCart, 
         )}
       </AnimatePresence>
 
-      {/* 1st Section: Hero - Rakhi & Suit Model Shoot Discovery Ritual */}
+      {/* 1st Section: Hero - Karwa Chauth & Suit Model Shoot Discovery Ritual */}
       <HeroRitual onSelectFilter={handleRitualFilter} />
 
       {/* 2nd Section: Offer & Sale Section (Scroll right below Hero) */}
-      <RakhiSaleOfferSection setView={setView} setSelectedCategory={setSelectedCategory} />
+      <KarwaChauthSaleOfferSection setView={setView} setSelectedCategory={setSelectedCategory} />
 
-      {/* 3rd Section: Rakhi, Suits, Kids Rakhi, Kashmiri Churi, Kadas & Gift Box Showcase */}
-      <RakhiSuitCategoryShowcase 
+      {/* 3rd Section: Karwa Chauth, Suits, Kids Festive, Kashmiri Churi, Kadas & Gift Box Showcase */}
+      <KarwaChauthCategoryShowcase 
         setView={setView} 
         setSelectedProduct={setSelectedProduct} 
         addToCart={addToCart} 

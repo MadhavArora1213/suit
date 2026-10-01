@@ -4,11 +4,11 @@ import { getAllProducts } from '../utils/adminStore';
 
 function getTimeLeft() {
   const now = new Date();
-  const rakhi = new Date(now.getFullYear(), 7, 28, 23, 59, 59);
-  if (now > rakhi) {
-    rakhi.setFullYear(rakhi.getFullYear() + 1);
+  const karwaChauth = new Date(now.getFullYear(), 9, 29, 23, 59, 59);
+  if (now > karwaChauth) {
+    karwaChauth.setFullYear(karwaChauth.getFullYear() + 1);
   }
-  const diff = rakhi - now;
+  const diff = karwaChauth - now;
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
   const mins = Math.floor((diff / (1000 * 60)) % 60);
@@ -16,7 +16,7 @@ function getTimeLeft() {
   return { days, hours, mins, secs };
 }
 
-export default function RakhiSaleOfferSection({ setView, setSelectedCategory, addToCart }) {
+export default function KarwaChauthSaleOfferSection({ setView, setSelectedCategory, addToCart }) {
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [copied, setCopied] = useState(false);
   const [offers, setOffers] = useState([]);
@@ -62,7 +62,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
   }, []);
 
   const handleCopyCode = () => {
-    navigator.clipboard.writeText('RAKHI50');
+    navigator.clipboard.writeText('KARWA50');
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
@@ -73,7 +73,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
   };
 
   return (
-    <section id="rakhi-offers-sale" className="relative w-full py-20 bg-[#FAF9F6] text-[#1A0008] border-y border-[#1A0008]/10 overflow-hidden">
+    <section id="karwa-chauth-sale" className="relative w-full py-20 bg-[#FAF9F6] text-[#1A0008] border-y border-[#1A0008]/10 overflow-hidden">
       
       {/* Top Gold Continuous Marquee Ribbon */}
       <div className="w-full bg-[#1A0008] text-[#F5D76E] py-3 overflow-hidden flex whitespace-nowrap border-b border-[#D4AF37]/50 shadow-md">
@@ -83,15 +83,15 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
           className="flex items-center gap-10 font-bold text-xs uppercase tracking-[0.25em]"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
-          <span>✨ RAKSHA BANDHAN FESTIVAL SALE • UP TO 50% OFF</span>
+          <span>✨ KARWA CHAUTH FESTIVAL SALE • UP TO 50% OFF</span>
           <span>✦</span>
-          <span>FREE 925 SILVER RAKHI WITH EVERY SUIT</span>
+          <span>FREE 925 SILVER KARWA CHAUTH SET WITH EVERY SUIT</span>
           <span>✦</span>
           <span>FREE 'BEHEN KI AWAAZ' AUDIO QR CARD IN GIFT BOXES</span>
           <span>✦</span>
           <span>COMPLIMENTARY EXPRESS WORLDWIDE DISPATCH</span>
           <span>✦</span>
-          <span>✨ RAKSHA BANDHAN FESTIVAL SALE • UP TO 50% OFF</span>
+          <span>✨ KARWA CHAUTH FESTIVAL SALE • UP TO 50% OFF</span>
           <span>✦</span>
         </motion.div>
       </div>
@@ -117,14 +117,14 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
           </span>
 
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-light text-[#1A0008] tracking-tight max-w-4xl leading-none" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Raksha Bandhan <span className="relative inline-block px-2">
+            Karwa Chauth <span className="relative inline-block px-2">
               <span className="relative z-10 text-[#8B1A1A] italic font-normal">Grand Festive Edit</span>
               <span className="absolute bottom-2 left-0 w-full h-[35%] bg-[#F5D76E]/70 -z-10 -rotate-1" />
             </span>
           </h2>
 
           <p className="mt-4 text-[#555] text-sm md:text-base max-w-2xl font-light tracking-wide leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            Explore special festive bundles featuring Designer Suits, Kashmiri Churi bangles, Gold Kadas, Kids Rakhis, and personalized audio gift box hampers.
+            Explore special festive bundles featuring Designer Suits, Kashmiri Churi bangles, Gold Kadas, Karwa Chauth Thali Sets, and personalized audio gift box hampers.
           </p>
         </div>
 
@@ -158,7 +158,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
                 </h3>
                 
                 <p className="text-[11px] sm:text-[13px] text-gray-200 font-light mb-6 sm:mb-8 leading-relaxed max-w-[100%] sm:max-w-[90%]">
-                  Exclusive Rakhi bundles featuring premium Silk Suits & audio QR gift hampers.
+                  Exclusive Karwa Chauth bundles featuring premium Silk Suits & audio QR gift hampers.
                 </p>
 
                 {/* Minimalist Floating Timer */}
@@ -268,7 +268,7 @@ export default function RakhiSaleOfferSection({ setView, setSelectedCategory, ad
           <div className="p-4 bg-white rounded-2xl border border-gray-200/80 flex flex-col items-center shadow-sm">
             <span className="text-2xl mb-1">🚚</span>
             <span className="text-xs font-bold text-[#1A0008]">48-Hour Dispatch Guarantee</span>
-            <span className="text-[10px] text-gray-500 font-light">Express delivery before Rakhi</span>
+            <span className="text-[10px] text-gray-500 font-light">Express delivery before Karwa Chauth</span>
           </div>
 
           <div className="p-4 bg-white rounded-2xl border border-gray-200/80 flex flex-col items-center shadow-sm">

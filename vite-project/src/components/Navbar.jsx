@@ -109,7 +109,7 @@ export default function Navbar({
           {[...Array(6)].map((_, i) => (
             <div key={i} className="flex gap-8 items-center">
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#D4AF37]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                🔥 UP TO 50% OFF : THE ULTIMATE RAKHI SALE IS LIVE
+                🔥 UP TO 50% OFF : THE ULTIMATE KARWA CHAUTH SALE IS LIVE
               </span>
               <span className="text-[#FAF9F6]/30 text-[10px]">✦</span>
               <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#FAF9F6]" style={{ fontFamily: "'DM Sans', sans-serif" }}>

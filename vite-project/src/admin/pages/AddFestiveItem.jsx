@@ -10,8 +10,8 @@ const categoryOptions = [
   'Designer Kadas',
   'Patiala Suits',
   'Gift Hampers',
-  'Kids Rakhi',
-  'Silver Rakhi',
+  'Kids Festive',
+  'Silver Karwa Set',
   'Bracelets',
   'Other'
 ];

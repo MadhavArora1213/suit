@@ -5,14 +5,14 @@ import { getAllProducts } from '../utils/adminStore';
 const CATEGORIES = [
   { id: 'all', label: 'All Festive Collection', icon: '✨' },
   { id: 'suits', label: 'Designer Suits', type: 'Patiala', icon: '👗' },
-  { id: 'rakhi', label: 'Rakhi Specials', type: 'Rakhi Collection', icon: '📿' },
-  { id: 'kids', label: 'Bacheya Ki Rakhi', type: 'Kids Rakhi', icon: '👶' },
+  { id: 'karwa', label: 'Karwa Chauth Specials', type: 'Karwa Chauth Collection', icon: '📿' },
+  { id: 'kids', label: 'Kids Festive Edit', type: 'Kids Festive', icon: '👶' },
   { id: 'kashmiri', label: 'Girls Kashmiri Churi', type: 'Kashmiri Churi', icon: '🌸' },
   { id: 'kadas', label: 'Girls Designer Kadas', type: 'Designer Kadas', icon: '💫' },
   { id: 'hampers', label: 'Gift Box Hampers', type: 'Gift Box', icon: '🎁' },
 ];
 
-export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct, addToCart, toggleFavorite, favorites, user }) {
+export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduct, addToCart, toggleFavorite, favorites, user }) {
   const [products, setProducts] = useState([]);
   const [activeTab, setActiveTab] = useState('all');
   const [quickViewProduct, setQuickViewProduct] = useState(null);
@@ -56,8 +56,8 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
       if (activeTab === 'suits') {
         return ['anarkali', 'patiala', 'banarasi', 'chikankari', 'sharara', 'pakistani', 'kashmiri', 'designer suits', 'suit'].some(k => pType.includes(k) || pCat.includes(k) || pName.includes(k));
       }
-      if (activeTab === 'rakhi') {
-        return pCat.includes('rakhi') || pColl.includes('rakhi') || pName.includes('rakhi') || pType.includes('rakhi');
+      if (activeTab === 'karwa') {
+        return ['karwa', 'rakhi'].some(k => pCat.includes(k) || pColl.includes(k) || pName.includes(k) || pType.includes(k));
       }
       if (activeTab === 'kids') {
         return pCat.includes('kids') || pColl.includes('kids') || pName.includes('kids') || pType.includes('kids');
@@ -97,10 +97,10 @@ export default function RakhiSuitCategoryShowcase({ setView, setSelectedProduct,
           </div>
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1A0008] tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Explore <span className="italic text-[#8B1A1A] font-normal">Rakhi & Ethnic Collections</span>
+            Explore <span className="italic text-[#8B1A1A] font-normal">Karwa Chauth & Ethnic Collections</span>
           </h2>
           <p className="text-gray-600 text-xs md:text-sm mt-3 max-w-xl mx-auto font-light leading-relaxed">
-            Discover exquisite Suits, Kids Rakhis, Kashmiri Churi Bangles, Designer Gold Kadas, and Luxury Audio QR Gift Hampers.
+            Discover exquisite Suits, Karwa Chauth Thali Sets, Kashmiri Churi Bangles, Designer Gold Kadas, and Luxury Audio QR Gift Hampers.
           </p>
         </div>
 

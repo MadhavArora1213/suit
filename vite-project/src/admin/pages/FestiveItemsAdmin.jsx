@@ -19,13 +19,14 @@ export default function FestiveItemsAdmin({ setActivePage }) {
     return () => window.removeEventListener('admin-data-updated', reloadData);
   }, []);
 
-  const categories = ['All', 'Kashmiri Churi', 'Designer Kadas', 'Patiala Suits', 'Gift Hampers', 'Kids Rakhi', 'Silver Rakhi', 'Bracelets'];
+  const categories = ['All', 'Kashmiri Churi', 'Designer Kadas', 'Patiala Suits', 'Gift Hampers', 'Kids Festive', 'Silver Karwa Set', 'Bracelets'];
+  const legacyAliases = { 'Kids Festive': 'Kids Rakhi', 'Silver Karwa Set': 'Silver Rakhi' };
 
   const filtered = items.filter(item => {
     const matchSearch = item.title.toLowerCase().includes(search.toLowerCase()) || 
                         (item.category || '').toLowerCase().includes(search.toLowerCase()) ||
                         (item.badge || '').toLowerCase().includes(search.toLowerCase());
-    const matchCat = filterCat === 'All' || item.category === filterCat;
+    const matchCat = filterCat === 'All' || item.category === filterCat || item.category === legacyAliases[filterCat];
     return matchSearch && matchCat;
   });
 
@@ -52,7 +53,7 @@ export default function FestiveItemsAdmin({ setActivePage }) {
             </span>
             <h2 className="text-xl sm:text-2xl font-bold text-[#1A1A1A]">Festive & Special Offers</h2>
           </div>
-          <p className="text-xs sm:text-sm text-[#7A6E65]">Manage Churi, Rakhi, Kadas, Hampers & Combos for Rakhi Festive Offers ({filtered.length} items found)</p>
+          <p className="text-xs sm:text-sm text-[#7A6E65]">Manage Churi, Karwa Chauth, Kadas, Hampers & Combos for Karwa Chauth Festive Offers ({filtered.length} items found)</p>
         </div>
 
         <motion.button
@@ -63,7 +64,7 @@ export default function FestiveItemsAdmin({ setActivePage }) {
           }}
           className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#8B1A1A] to-[#6B0D13] text-[#F5D76E] px-5 py-3 rounded-xl text-xs sm:text-sm font-bold shadow-md hover:shadow-lg transition-all cursor-pointer w-full sm:w-auto"
         >
-          <Plus size={16} /> Add Festive Item (Rakhi/Churi/Kada)
+          <Plus size={16} /> Add Festive Item (Karwa/Churi/Kada)
         </motion.button>
       </div>
 
@@ -73,7 +74,7 @@ export default function FestiveItemsAdmin({ setActivePage }) {
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8B1A1A]" />
           <input
             type="text"
-            placeholder="Search Churi, Rakhi, Kadas, Hampers, Suits..."
+            placeholder="Search Churi, Karwa, Kadas, Hampers, Suits..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-9 pr-3 py-2.5 bg-[#FAF9F5] border border-[#E8DDD0] rounded-xl text-xs sm:text-sm text-[#1A1A1A] placeholder-[#B0A99F] focus:outline-none focus:border-[#8B1A1A] transition-all"

@@ -10,7 +10,7 @@ const navItems = [
   { id: 'dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
   { id: 'analytics',    label: 'Analytics',    icon: BarChart3 },
   { id: 'products',     label: 'Products',     icon: Package },
-  { id: 'festive-items',label: 'Festive Items (Churi/Rakhi)', icon: Sparkles },
+  { id: 'festive-items',label: 'Festive Items (Churi/Karwa)', icon: Sparkles },
   { id: 'orders',       label: 'Orders',       icon: ShoppingBag },
   { id: 'users',        label: 'Users',        icon: Users },
   { id: 'boutiques',    label: 'Shops & Boutiques',    icon: Store },
