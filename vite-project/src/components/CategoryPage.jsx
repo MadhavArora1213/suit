@@ -129,10 +129,11 @@ export default function CategoryPage({ categoryName, setView, setSelectedProduct
       if (p.sizes && Array.isArray(p.sizes)) p.sizes.forEach(sz => s.add(sz.trim()));
       if (p.fitOptions && Array.isArray(p.fitOptions)) p.fitOptions.forEach(sz => s.add(sz.trim()));
     });
-    const order = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
+    const order = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', '5XL', '6XL', '7XL', '8XL', '9XL', '10XL'];
+    const normSz = (sz) => (sz || '').replace(/\s*\(.*\)\s*$/, '').trim();
     return [...s].filter(Boolean).sort((a, b) => {
-      let idxA = order.indexOf(a);
-      let idxB = order.indexOf(b);
+      let idxA = order.indexOf(normSz(a));
+      let idxB = order.indexOf(normSz(b));
       if (idxA === -1) idxA = 999;
       if (idxB === -1) idxB = 999;
       if (idxA === 999 && idxB === 999) return a.localeCompare(b);

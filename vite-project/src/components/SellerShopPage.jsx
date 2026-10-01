@@ -284,7 +284,7 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     return [...c].filter(Boolean).sort();
   }, [products]);
 
-  const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
+  const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', '5XL', '6XL', '7XL', '8XL', '9XL', '10XL'];
 
   const fabricsList = useMemo(() => {
     const f = new Set();
@@ -368,10 +368,11 @@ export default function SellerShopPage({ boutiqueName, setView, setSelectedProdu
     }
 
     if (selectedSizes.length > 0) {
-      result = result.filter(p => selectedSizes.some(s => 
-        (p.sizes && p.sizes.map(x => x.toLowerCase()).includes(s.toLowerCase())) ||
-        (p.fitOptions && p.fitOptions.map(x => x.toLowerCase()).includes(s.toLowerCase())) ||
-        getText(p).includes(s.toLowerCase())
+      const normSz = x => (x || '').replace(/\s*\(.*\)\s*$/, '').trim().toLowerCase();
+      result = result.filter(p => selectedSizes.some(s =>
+        (p.sizes && p.sizes.some(x => normSz(x) === normSz(s))) ||
+        (p.fitOptions && p.fitOptions.some(x => normSz(x) === normSz(s))) ||
+        getText(p).includes(normSz(s))
       ));
     }
 

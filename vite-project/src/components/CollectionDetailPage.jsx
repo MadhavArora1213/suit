@@ -142,7 +142,7 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
     });
     return [...o].filter(Boolean).sort();
   }, [products]);
-  const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL'];
+  const sizesList = ['Unstitched', 'Semi-Stitched', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'XXXXL', '5XL', '6XL', '7XL', '8XL', '9XL', '10XL'];
   const patternsList = ['Solid', 'Printed', 'Embroidered', 'Floral', 'Geometric', 'Zari Work'];
   const stylesList = ['Straight', 'A-Line', 'Flared', 'Asymmetric'];
   const sleevesList = ['Sleeveless', 'Short Sleeves', '3/4 Sleeves', 'Full Sleeves'];
@@ -245,7 +245,12 @@ export default function CollectionDetailPage({ slug, setView, setSelectedCategor
       result = result.filter(p => selectedOccasions.some(o => getText(p).includes(o.toLowerCase())));
     }
     if (selectedSizes.length > 0) {
-      result = result.filter(p => selectedSizes.some(s => getText(p).includes(s.toLowerCase())));
+      const normSz = x => (x || '').replace(/\s*\(.*\)\s*$/, '').trim().toLowerCase();
+      result = result.filter(p => selectedSizes.some(s =>
+        (p.sizes && p.sizes.some(x => normSz(x) === normSz(s))) ||
+        (p.fitOptions && p.fitOptions.some(x => normSz(x) === normSz(s))) ||
+        getText(p).includes(normSz(s))
+      ));
     }
     if (selectedPatterns.length > 0) {
       result = result.filter(p => selectedPatterns.some(pt => getText(p).includes(pt.toLowerCase())));

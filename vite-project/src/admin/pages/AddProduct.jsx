@@ -6,7 +6,7 @@ import { uploadImageToFirebase } from '../../firebase';
 
 const P = '#111111';
 
-const sizes = ['XS (34)', 'S (36)', 'M (38)', 'L (40)', 'XL (42)', 'XXL (44)', 'XXXL (46)', 'XXXXL (48)'];
+const sizes = ['XS (34)', 'S (36)', 'M (38)', 'L (40)', 'XL (42)', 'XXL (44)', 'XXXL (46)', 'XXXXL (48)', '5XL (50)', '6XL (52)', '7XL (54)', '8XL (56)', '9XL (58)', '10XL (60)'];
 const occasions = ['Festive', 'Wedding', 'Casual', 'Party', 'Daily Wear', 'Bridal', 'Engagement', 'Sangeet', 'Mehendi', 'Reception', 'Puja', 'Eid', 'Diwali', 'Holi', 'Navratri', 'Karva Chauth', 'Office Wear', 'Travel', 'Brunch', 'Date Night'];
 const careOptions = ['Dry Clean Only', 'Hand Wash', 'Machine Wash', 'Do Not Bleach', 'Iron on Low Heat'];
 const badges = ['Silk Blend', 'Handloom', 'Premium', 'Hot Seller', 'New Edition', 'Artisanal', 'Heritage', 'Exclusive', 'Best Price', 'Verified', '100% Cotton', 'Lightweight'];
