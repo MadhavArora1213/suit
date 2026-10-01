@@ -67,6 +67,7 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
   const [selectedOccasions, setSelectedOccasions] = useState(ep?.occasions || []);
   const [selectedCare, setSelectedCare] = useState(ep?.care || []);
   const [stockQty, setStockQty] = useState(ep?.stockQty || {});
+  const [globalInStock, setGlobalInStock] = useState(() => (ep ? !ep.manualOOS : true));
   const [mainImage, setMainImage] = useState(ep?.image || null);
   const [additionalImages, setAdditionalImages] = useState(ep?.additionalImages || []);
   const [colorVariants, setColorVariants] = useState(ep?.colorVariants || {});
@@ -203,7 +204,9 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
       occasions: selectedOccasions,
       care: selectedCare,
       stockQty,
-      stock: totalStock,
+      ...(usesSizeStock
+        ? { stock: totalStock, manualOOS: false }
+        : { stock: globalInStock ? 1 : 0, manualOOS: !globalInStock }),
       shippingType: form.shippingType,
       image: finalMainImage,
       additionalImages: finalAdditionalImages,
@@ -223,6 +226,8 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
     setSaved(true);
     setTimeout(() => { setSaved(false); setActivePage('products'); }, 1500);
   };
+
+  const usesSizeStock = selectedFits.includes('Stitched') && selectedSizes.length > 0;
 
   return (
     <form onSubmit={handleSave} className="space-y-5">
@@ -488,6 +493,26 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
             {!selectedFits.includes('Stitched') && (
               <p className="text-sm text-[#6B8C90] italic">Sizes are not applicable for purely Unstitched products.</p>
             )}
+            {!(selectedFits.includes('Stitched') && selectedSizes.length > 0) && (
+              <div className="mt-4 flex flex-wrap items-center gap-3 p-4 rounded-xl border border-[#E8DDD0] bg-[#FAF9F6]">
+                <div>
+                  <p className="text-sm font-semibold text-[#1A1A1A]">Availability</p>
+                  <p className="text-xs text-[#6B8C90]">No sizes selected — set overall stock for this product</p>
+                </div>
+                <div className="ml-auto flex gap-2">
+                  <button type="button" onClick={() => setGlobalInStock(true)}
+                    className="px-4 py-2 rounded-lg text-xs font-bold transition-all"
+                    style={globalInStock ? { background: '#D1FAE5', color: '#065F46', border: '1px solid #6EE7B7' } : { background: '#fff', color: '#6B6B60', border: '1px solid #E8DDD0' }}>
+                    In Stock
+                  </button>
+                  <button type="button" onClick={() => setGlobalInStock(false)}
+                    className="px-4 py-2 rounded-lg text-xs font-bold transition-all"
+                    style={!globalInStock ? { background: '#FEE2E2', color: '#991B1B', border: '1px solid #FCA5A5' } : { background: '#fff', color: '#6B6B60', border: '1px solid #E8DDD0' }}>
+                    Out of Stock
+                  </button>
+                </div>
+              </div>
+            )}
           </Card>
         </div>
 
@@ -688,6 +713,11 @@ export default function AddProduct({ setActivePage, editProduct = null }) {
                 { label: 'Type',       val: form.suitType },
                 { label: 'Fits',       val: selectedFits.join(', ') || 'None' },
                 { label: 'Sizes',      val: selectedSizes.length ? `${selectedSizes.length} selected` : 'None' },
+                {
+                  label: 'Stock',
+                  val: usesSizeStock ? `${selectedSizes.filter(s => (stockQty[s] === undefined || stockQty[s] > 0)).length}/${selectedSizes.length} sizes` : (globalInStock ? 'In Stock' : 'Out of Stock'),
+                  color: usesSizeStock ? undefined : (globalInStock ? '#10B981' : '#F43F5E'),
+                },
                 { label: 'Image',      val: mainImage ? '✓ Ready' : 'Not uploaded', color: mainImage ? '#10B981' : '#F43F5E' },
               ].map(({ label, val, bold, color }) => (
                 <div key={label} className="flex justify-between items-center">

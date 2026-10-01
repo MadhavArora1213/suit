@@ -398,6 +398,7 @@ export async function saveProductToFirestore(productId, product) {
       care: product.care || [],
       stockQty: product.stockQty || {},
       stock: product.stock || 0,
+      manualOOS: !!product.manualOOS,
       image: product.image || '',
       additionalImages: product.additionalImages || [],
       colorVariants: product.colorVariants || {},

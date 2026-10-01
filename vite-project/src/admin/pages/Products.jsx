@@ -68,7 +68,7 @@ export default function Products({ setActivePage, onEditProduct }) {
     const stockQty = (p.stockQty && typeof p.stockQty === 'object' && Object.keys(p.stockQty).length > 0)
       ? Object.keys(p.stockQty).reduce((acc, k) => { acc[k] = 0; return acc; }, {})
       : (p.stockQty || {});
-    return { stock: 0, stockQty };
+    return { stock: 0, stockQty, manualOOS: true };
   };
 
   const handleBulkOutOfStock = () => {
