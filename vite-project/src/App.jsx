@@ -726,7 +726,7 @@ function AppContent() {
           <Route path="/shop/:slug" element={<SellerShopPageWrapper {...commonProps} />} />
           
           <Route path="/cart" element={<CartPage cart={cart} updateCartQty={updateCartQty} removeFromCart={removeFromCart} setView={setView} />} />
-            <Route path="/checkout" element={<CheckoutPage cart={cart} setView={setView} clearCart={clearCart} removeFromCart={removeFromCart} updateCartQty={updateCartQty} changeCartItemSize={changeCartItemSize} />} />
+            <Route path="/checkout" element={<CheckoutPage cart={cart} setView={setView} clearCart={clearCart} removeFromCart={removeFromCart} updateCartQty={updateCartQty} changeCartItemSize={changeCartItemSize} authReady={authReady} />} />
           
           <Route path="/login" element={<LoginSignup setView={setView} onLoginSuccess={handleLoginSuccess} showToast={showToast} />} />
           <Route path="/signup" element={<LoginSignup setView={setView} onLoginSuccess={handleLoginSuccess} showToast={showToast} />} />

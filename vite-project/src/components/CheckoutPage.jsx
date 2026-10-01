@@ -16,7 +16,106 @@ const INDIAN_STATES = [
   'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
 ];
 
-export default function CheckoutPage({ cart, setView, clearCart, removeFromCart, updateCartQty, changeCartItemSize }) {
+function CheckoutSkeleton() {
+  return (
+    <div className="bg-[#FAF9F6] min-h-screen text-[#1A0008] pt-32 pb-24" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 text-left" aria-busy="true" aria-label="Loading checkout">
+        {/* Back link */}
+        <div className="h-3 w-40 bg-[#E8DDD0] rounded animate-pulse mb-8" />
+
+        {/* Header + step indicators */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12 border-b border-[#D4AF37]/15 pb-6">
+          <div className="h-10 w-64 bg-[#E8DDD0] rounded animate-pulse" />
+          <div className="flex items-center gap-4">
+            <div className="h-4 w-24 bg-[#E8DDD0] rounded animate-pulse" />
+            <div className="h-4 w-4 bg-[#E8DDD0] rounded animate-pulse" />
+            <div className="h-4 w-24 bg-[#E8DDD0] rounded animate-pulse" />
+            <div className="h-4 w-4 bg-[#E8DDD0] rounded animate-pulse" />
+            <div className="h-4 w-20 bg-[#E8DDD0] rounded animate-pulse" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left: shipping address card */}
+          <div className="lg:col-span-2 bg-white border border-[#D4AF37]/15 p-8 rounded shadow-sm space-y-6">
+            <div className="space-y-2">
+              <div className="h-7 w-56 bg-[#E8DDD0] rounded animate-pulse" />
+              <p className="text-[11px] text-[#6B6B6B] animate-pulse">Loading your bag &amp; shipping details…</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="space-y-2">
+                <div className="h-3 w-24 bg-[#E8DDD0] rounded animate-pulse" />
+                <div className="h-11 w-full bg-[#E8DDD0] rounded animate-pulse" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-3 w-28 bg-[#E8DDD0] rounded animate-pulse" />
+                <div className="h-11 w-full bg-[#E8DDD0] rounded animate-pulse" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 w-32 bg-[#E8DDD0] rounded animate-pulse" />
+              <div className="h-11 w-full bg-[#E8DDD0] rounded animate-pulse" />
+            </div>
+            <div className="space-y-2">
+              <div className="h-3 w-36 bg-[#E8DDD0] rounded animate-pulse" />
+              <div className="h-11 w-full bg-[#E8DDD0] rounded animate-pulse" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="space-y-2">
+                <div className="h-3 w-20 bg-[#E8DDD0] rounded animate-pulse" />
+                <div className="h-11 w-full bg-[#E8DDD0] rounded animate-pulse" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-3 w-24 bg-[#E8DDD0] rounded animate-pulse" />
+                <div className="h-11 w-full bg-[#E8DDD0] rounded animate-pulse" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-3 w-28 bg-[#E8DDD0] rounded animate-pulse" />
+                <div className="h-11 w-full bg-[#E8DDD0] rounded animate-pulse" />
+              </div>
+            </div>
+            <div className="h-14 w-full bg-[#E8DDD0] rounded animate-pulse" />
+          </div>
+
+          {/* Right: promo + items summary */}
+          <div className="space-y-6">
+            <div className="bg-white border border-[#D4AF37]/15 p-6 rounded shadow-sm space-y-3">
+              <div className="h-3 w-40 bg-[#E8DDD0] rounded animate-pulse" />
+              <div className="flex gap-2">
+                <div className="h-10 flex-1 bg-[#E8DDD0] rounded animate-pulse" />
+                <div className="h-10 w-24 bg-[#E8DDD0] rounded animate-pulse" />
+              </div>
+            </div>
+            <div className="bg-white border border-[#D4AF37]/15 p-6 rounded shadow-sm space-y-4">
+              <div className="h-5 w-44 bg-[#E8DDD0] rounded animate-pulse" />
+              <div className="flex gap-3">
+                <div className="w-12 h-16 bg-[#E8DDD0] rounded animate-pulse flex-shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 w-3/4 bg-[#E8DDD0] rounded animate-pulse" />
+                  <div className="h-3 w-1/3 bg-[#E8DDD0] rounded animate-pulse" />
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <div className="w-12 h-16 bg-[#E8DDD0] rounded animate-pulse flex-shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-3 w-2/3 bg-[#E8DDD0] rounded animate-pulse" />
+                  <div className="h-3 w-1/4 bg-[#E8DDD0] rounded animate-pulse" />
+                </div>
+              </div>
+              <div className="border-t border-[#D4AF37]/10 pt-4 space-y-3">
+                <div className="h-3 w-full bg-[#E8DDD0] rounded animate-pulse" />
+                <div className="h-3 w-2/3 bg-[#E8DDD0] rounded animate-pulse" />
+                <div className="h-5 w-1/2 bg-[#E8DDD0] rounded animate-pulse" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function CheckoutPage({ cart, setView, clearCart, removeFromCart, updateCartQty, changeCartItemSize, authReady = true }) {
   usePageTracking('Checkout', { cartItemCount: cart.length });
 
   useEffect(() => {
@@ -431,6 +530,12 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
       }
     });
   };
+
+  // Page reload: bag hasn't hydrated from the account yet — show skeleton
+  // instead of the "Your bag is empty" state.
+  if (!authReady) {
+    return <CheckoutSkeleton />;
+  }
 
   // Step 3: Success page
   if (checkoutStep === 3) {
