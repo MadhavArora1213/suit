@@ -3,14 +3,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getAllProducts } from '../utils/adminStore';
 
 const CATEGORIES = [
-  { id: 'all', label: 'All Festive Collection', icon: '✨' },
-  { id: 'suits', label: 'Designer Suits', type: 'Patiala', icon: '👗' },
-  { id: 'karwa', label: 'Karwa Chauth Specials', type: 'Karwa Chauth Collection', icon: '📿' },
-  { id: 'kids', label: 'Kids Festive Edit', type: 'Kids Festive', icon: '👶' },
-  { id: 'kashmiri', label: 'Girls Kashmiri Churi', type: 'Kashmiri Churi', icon: '🌸' },
-  { id: 'kadas', label: 'Girls Designer Kadas', type: 'Designer Kadas', icon: '💫' },
-  { id: 'hampers', label: 'Gift Box Hampers', type: 'Gift Box', icon: '🎁' },
+  { id: 'all', label: 'All Suits', icon: '✨' },
+  { id: 'suits', label: 'Designer Suits', icon: '👗', keywords: ['anarkali', 'sharara', 'patiala', 'banarasi', 'chikankari', 'pakistani', 'straight cut', 'a-line', 'gown', 'floor length', 'indo western', 'kurti set', 'suit set'] },
+  { id: 'cord', label: 'Co-ord Sets', icon: '🧵', keywords: ['co-ord', 'coord', 'cord set', 'cord'] },
+  { id: 'lehenga', label: 'Lehengas', icon: '👘', keywords: ['lehenga'] },
+  { id: 'saree', label: 'Sarees', icon: '🥻', keywords: ['saree', 'sari'] },
+  { id: 'readymade', label: 'Readymade Suits', icon: '🏷️', keywords: ['readymade', 'ready-made', 'ready to wear'] },
+  { id: 'unstitched', label: 'Unstitched Suits', icon: '🪡', keywords: ['unstitched', 'un-stitched', 'un stitch'] },
+  { id: 'palazzo', label: 'Palazzo Suits', icon: '👖', keywords: ['palazzo', 'plazo'] },
 ];
+
+const SPECIAL_TABS = CATEGORIES.filter(c => c.id !== 'all' && c.id !== 'suits');
+
+const productText = (p) =>
+  [p.name, p.title, p.category, p.type, p.collection, p.styleCategory].filter(Boolean).join(' ').toLowerCase();
+
+const matchesKeywords = (text, keywords = []) => keywords.some(k => text.includes(k));
+
+const matchesTab = (p, tabId) => {
+  const text = productText(p);
+  if (tabId === 'all') return true;
+  const tab = CATEGORIES.find(c => c.id === tabId);
+  if (!tab) return true;
+  if (tabId === 'suits') {
+    return matchesKeywords(text, tab.keywords) || !SPECIAL_TABS.some(c => matchesKeywords(text, c.keywords));
+  }
+  return matchesKeywords(text, tab.keywords);
+};
 
 export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduct, addToCart, toggleFavorite, favorites, user }) {
   const [products, setProducts] = useState([]);
@@ -45,35 +64,11 @@ export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduc
   }, []);
 
   const getFilteredProducts = () => {
-    if (activeTab === 'all') return products.slice(0, 12);
-
-    return products.filter(p => {
-      const pCat = (p.category || '').toLowerCase();
-      const pType = (p.type || '').toLowerCase();
-      const pColl = (p.collection || '').toLowerCase();
-      const pName = (p.name || '').toLowerCase();
-
-      if (activeTab === 'suits') {
-        return ['anarkali', 'patiala', 'banarasi', 'chikankari', 'sharara', 'pakistani', 'kashmiri', 'designer suits', 'suit'].some(k => pType.includes(k) || pCat.includes(k) || pName.includes(k));
-      }
-      if (activeTab === 'karwa') {
-        return ['karwa', 'rakhi'].some(k => pCat.includes(k) || pColl.includes(k) || pName.includes(k) || pType.includes(k));
-      }
-      if (activeTab === 'kids') {
-        return pCat.includes('kids') || pColl.includes('kids') || pName.includes('kids') || pType.includes('kids');
-      }
-      if (activeTab === 'kashmiri') {
-        return pCat.includes('kashmiri') || pColl.includes('kashmiri') || pName.includes('kashmiri') || pName.includes('churi');
-      }
-      if (activeTab === 'kadas') {
-        return pCat.includes('kada') || pColl.includes('kada') || pName.includes('kada') || pType.includes('kada');
-      }
-      if (activeTab === 'hampers') {
-        return pCat.includes('box') || pCat.includes('hamper') || pColl.includes('box') || pName.includes('box') || pName.includes('hamper');
-      }
-      return true;
-    });
+    if (activeTab === 'all') return products;
+    return products.filter(p => matchesTab(p, activeTab));
   };
+
+  const getTabCount = (tabId) => products.filter(p => matchesTab(p, tabId)).length;
 
   const filteredProducts = getFilteredProducts();
 
@@ -93,15 +88,22 @@ export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduc
         {/* Section Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#8B1A1A]/10 border border-[#8B1A1A]/30 text-[#8B1A1A] text-xs font-bold uppercase tracking-[0.25em] mb-3">
-            <span>✨</span> Handcrafted Festival Edition
+            <span>✨</span> Handcrafted Suit Edition
           </div>
 
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-[#1A0008] tracking-tight" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-            Explore <span className="italic text-[#8B1A1A] font-normal">Karwa Chauth & Ethnic Collections</span>
+            Explore <span className="italic text-[#8B1A1A] font-normal">Suits & Ethnic Wear</span>
           </h2>
-          <p className="text-gray-600 text-xs md:text-sm mt-3 max-w-xl mx-auto font-light leading-relaxed">
-            Discover exquisite Suits, Karwa Chauth Thali Sets, Kashmiri Churi Bangles, Designer Gold Kadas, and Luxury Audio QR Gift Hampers.
+          <p className="text-gray-600 text-xs md:text-sm mt-3 max-w-2xl mx-auto font-light leading-relaxed">
+            Discover exquisite Designer Suits, Co-ord Sets, Lehengas, Sarees, Readymade &amp; Unstitched Suits, Palazzo Suits — everything to steal the spotlight this Karwa Chauth.
           </p>
+
+          {/* Ornamental Divider */}
+          <div className="flex items-center justify-center gap-3 mt-5">
+            <span className="w-12 h-[1px] bg-gradient-to-r from-transparent to-[#D4AF37]" />
+            <span className="w-1.5 h-1.5 rotate-45 bg-[#D4AF37]" />
+            <span className="w-12 h-[1px] bg-gradient-to-l from-transparent to-[#D4AF37]" />
+          </div>
         </div>
 
         {/* Category Tabs Bar with Arrows */}
@@ -135,6 +137,11 @@ export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduc
                 >
                   <span>{cat.icon}</span>
                   <span>{cat.label}</span>
+                  <span className={`text-[9px] font-black px-1.5 py-0.5 rounded-full leading-none ${
+                    isActive ? 'bg-[#F5D76E]/20 text-[#F5D76E]' : 'bg-[#1A0008]/10 text-[#1A0008]/60'
+                  }`}>
+                    {getTabCount(cat.id)}
+                  </span>
                 </button>
               );
             })}
@@ -243,6 +250,27 @@ export default function KarwaChauthCategoryShowcase({ setView, setSelectedProduc
               );
             })}
           </AnimatePresence>
+
+          {/* Empty State */}
+          {filteredProducts.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="col-span-full text-center py-16 px-6 bg-white rounded-3xl border border-dashed border-[#1A0008]/20 shadow-sm"
+            >
+              <div className="text-4xl mb-3">🧵</div>
+              <p className="text-xl text-[#1A0008] font-semibold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                No pieces in this style yet
+              </p>
+              <p className="text-xs text-gray-500 mt-1.5">New arrivals drop every day — check back soon.</p>
+              <button
+                onClick={() => setActiveTab('all')}
+                className="mt-5 px-6 py-2.5 bg-[#1A0008] hover:bg-[#8B1A1A] text-[#F5D76E] text-[11px] font-bold uppercase tracking-[0.2em] rounded-full transition-all shadow-md"
+              >
+                Browse All Suits
+              </button>
+            </motion.div>
+          )}
         </motion.div>
 
       </div>

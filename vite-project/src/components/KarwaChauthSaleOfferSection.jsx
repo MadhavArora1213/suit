@@ -87,8 +87,6 @@ export default function KarwaChauthSaleOfferSection({ setView, setSelectedCatego
           <span>✦</span>
           <span>FREE 925 SILVER KARWA CHAUTH SET WITH EVERY SUIT</span>
           <span>✦</span>
-          <span>FREE 'BEHEN KI AWAAZ' AUDIO QR CARD IN GIFT BOXES</span>
-          <span>✦</span>
           <span>COMPLIMENTARY EXPRESS WORLDWIDE DISPATCH</span>
           <span>✦</span>
           <span>✨ KARWA CHAUTH FESTIVAL SALE • UP TO 50% OFF</span>
@@ -124,7 +122,7 @@ export default function KarwaChauthSaleOfferSection({ setView, setSelectedCatego
           </h2>
 
           <p className="mt-4 text-[#555] text-sm md:text-base max-w-2xl font-light tracking-wide leading-relaxed" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            Explore special festive bundles featuring Designer Suits, Kashmiri Churi bangles, Gold Kadas, Karwa Chauth Thali Sets, and personalized audio gift box hampers.
+            Explore special festive bundles featuring Designer Suits, Co-ord Sets, Lehengas, Sarees, and premium Karwa Chauth gift hampers.
           </p>
         </div>
 
@@ -158,7 +156,7 @@ export default function KarwaChauthSaleOfferSection({ setView, setSelectedCatego
                 </h3>
                 
                 <p className="text-[11px] sm:text-[13px] text-gray-200 font-light mb-6 sm:mb-8 leading-relaxed max-w-[100%] sm:max-w-[90%]">
-                  Exclusive Karwa Chauth bundles featuring premium Silk Suits & audio QR gift hampers.
+                  Exclusive Karwa Chauth bundles featuring premium Silk Suits & festive gift hampers.
                 </p>
 
                 {/* Minimalist Floating Timer */}
@@ -260,9 +258,9 @@ export default function KarwaChauthSaleOfferSection({ setView, setSelectedCatego
           </div>
 
           <div className="p-4 bg-white rounded-2xl border border-gray-200/80 flex flex-col items-center shadow-sm">
-            <span className="text-2xl mb-1">🎙️</span>
-            <span className="text-xs font-bold text-[#1A0008]">Behen Ki Awaaz Voice Card</span>
-            <span className="text-[10px] text-gray-500 font-light">Free inside every gift box</span>
+            <span className="text-2xl mb-1">🔍</span>
+            <span className="text-xs font-bold text-[#1A0008]">3-Point Quality Check</span>
+            <span className="text-[10px] text-gray-500 font-light">Inspected before dispatch</span>
           </div>
 
           <div className="p-4 bg-white rounded-2xl border border-gray-200/80 flex flex-col items-center shadow-sm">

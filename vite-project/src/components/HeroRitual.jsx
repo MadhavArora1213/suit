@@ -87,7 +87,7 @@ export default function HeroRitual({ onSelectFilter }) {
         </div>
         
         <h1 className="text-[10vw] md:text-[6vw] lg:text-[4.5vw] font-light leading-[1.1] tracking-tight text-[#1A0008] max-w-5xl" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-          Celebrate the purest bond. Claim <br className="hidden md:block" />
+          Celebrate the sacred vow. Claim <br className="hidden md:block" />
           the best offers on our <span className="relative inline-block px-2">
             <span className="relative z-10 text-[#8B1A1A] italic">exclusive collection.</span>
             {/* Soft Gold Highlight behind text */}
@@ -96,8 +96,7 @@ export default function HeroRitual({ onSelectFilter }) {
         </h1>
         
         <p className="mt-6 text-[#555] text-[13px] sm:text-[14px] md:text-[16px] max-w-2xl tracking-wide font-light px-2" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-          Up to 50% Off on premium ethnic suits and signature Karwa Chauth gift boxes. <br className="hidden md:block" />
-          Every order includes the exclusive 'Behen Ki Awaaz' QR card.
+          Up to 50% Off on premium ethnic suits and signature Karwa Chauth gift boxes.
         </p>
 
         {mounted && (
@@ -148,45 +147,16 @@ export default function HeroRitual({ onSelectFilter }) {
             </div>
           </motion.div>
 
-          {/* Card 2: The Audio QR Box (Dark Contrast Theme with Gold Glow) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 50, rotate: 0 }}
-            animate={{ opacity: 1, y: 0, rotate: isMobile ? 0 : -2 }}
-            transition={{ duration: 0.8, delay: 0.3, type: "spring" }}
-            whileHover={{ scale: 1.05, rotate: 0, zIndex: 40 }}
-            className="relative lg:absolute lg:left-[24%] lg:top-[5%] w-full lg:w-[310px] aspect-[3/4] lg:aspect-auto lg:h-[410px] bg-[#1A0008] border md:border-2 border-[#D4AF37] rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 shadow-lg md:shadow-[0_25px_60px_rgba(212,175,55,0.3)] z-20 flex flex-col justify-center items-center text-center text-white overflow-hidden"
-          >
-            {/* Background glow */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#D4AF37]/30 via-transparent to-transparent opacity-60 pointer-events-none" />
-            
-            <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-white border md:border-2 border-[#D4AF37] p-1 md:p-1.5 rounded-lg md:rounded-xl mb-2 md:mb-4 flex items-center justify-center relative z-10 shadow-[2px_2px_0px_rgba(212,175,55,1)] md:shadow-[4px_4px_0px_rgba(212,175,55,1)]">
-              {/* Dummy QR Code */}
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Gurnaaz+Karwa+Chauth+Special" alt="QR Code" className="w-full h-full object-contain opacity-90" />
-            </div>
-            
-            <h3 className="text-[16px] sm:text-[22px] md:text-[36px] mb-1 md:mb-2 leading-tight text-[#F5D76E] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Behen<br/>Ki Awaaz 🎙️
-            </h3>
-            
-            <p className="text-[7px] sm:text-[9px] md:text-[12px] text-[#FAF9F6]/90 border border-[#D4AF37]/40 p-1.5 md:p-2.5 rounded-lg md:rounded-xl w-full bg-white/10 relative z-10 backdrop-blur-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Scan the QR code inside your gift box to play her voice note.
-            </p>
-            
-            <div className="absolute bottom-3 md:bottom-5 text-[6px] md:text-[9px] tracking-[0.2em] md:tracking-[0.3em] text-[#D4AF37] uppercase font-bold" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Scan to Play Audio
-            </div>
-          </motion.div>
-
           {/* Card 3: The Karwa Chauth Graphic (Light Gold/Maroon Theme) */}
           <motion.div 
             initial={{ opacity: 0, y: 50, rotate: 0 }}
             animate={{ opacity: 1, y: 0, rotate: isMobile ? 0 : 6 }}
             transition={{ duration: 0.8, delay: 0.4, type: "spring" }}
             whileHover={{ scale: 1.05, rotate: isMobile ? 0 : 3, zIndex: 40 }}
-            className="relative lg:absolute lg:right-[24%] lg:top-[15%] w-full lg:w-[260px] aspect-[3/4] lg:aspect-auto lg:h-[360px] bg-[#F5D76E] border md:border-2 border-[#1A0008] rounded-xl md:rounded-2xl p-2 md:p-4 shadow-lg md:shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-30 flex flex-col justify-between"
+            className="relative lg:absolute lg:left-[33%] lg:top-[8%] w-full lg:w-[260px] aspect-[3/4] lg:aspect-auto lg:h-[360px] bg-[#F5D76E] border md:border-2 border-[#1A0008] rounded-xl md:rounded-2xl p-2 md:p-4 shadow-lg md:shadow-[0_20px_50px_rgba(26,0,8,0.2)] z-30 flex flex-col justify-between"
           >
             <div className="text-center text-sm sm:text-lg md:text-2xl mt-2 md:mt-4 text-[#1A0008] font-bold" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Signature <br/> Silver Karwas
+              Signature <br/> Karwa Chauth Thali
             </div>
             <div className="flex-grow flex items-center justify-center">
               <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-[2px] md:border-[3px] border-[#1A0008] shadow-[2px_2px_0px_rgba(26,0,8,1)] md:shadow-[4px_4px_0px_rgba(26,0,8,1)] bg-white p-0.5 md:p-1">
