@@ -2,18 +2,36 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isAdmin() {
+    function isSignedIn() {
       return request.auth != null;
     }
 
-    match /products/{productId} {
-      allow read: if true;
-      allow write: if isAdmin();
+    function userEmail() {
+      return isSignedIn() && request.auth.token.email != null
+        ? request.auth.token.email.lower()
+        : '';
     }
 
+    function isAdmin() {
+      return userEmail() != '' &&
+        exists(/databases/$(database)/documents/admins/$(userEmail()));
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Catalog
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Anonymous view/click counters
     match /products_overrides/{docId} {
       allow read: if true;
-      allow write: if true;
+      allow create, update: if true;
+      allow delete: if isAdmin();
     }
 
     match /settings/{document=**} {
@@ -21,23 +39,28 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Reviews
     match /reviews/{reviewId} {
       allow read: if true;
-      allow create: if true;
-      allow update, delete: if isAdmin();
+      allow create: if isAdmin() ||
+        (isSignedIn() && request.resource.data.userId == request.auth.uid);
+      allow update, delete: if isAdmin() ||
+        (isSignedIn() && resource.data.userId == request.auth.uid);
     }
 
+    // Orders (guest checkout creates, only staff reads)
     match /orders/{orderId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
     }
 
+    // Contact form (guest creates, only staff reads)
     match /contacts/{ticketId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();
     }
 
-    match /boutiques/{boutiqueId} {
+    match /boutiques/{docId} {
       allow read: if true;
       allow write: if isAdmin();
     }
@@ -57,38 +80,42 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    match /coupons/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
     match /festiveOffers/{docId} {
       allow read: if true;
       allow write: if isAdmin();
     }
 
-    match /admins/{docId} {
-      allow read, write: if isAdmin();
+    // Coupon codes are applied at checkout by shoppers
+    match /coupons/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
-    match /waitlist/{emailId} {
+    // Admin roster: a user may only check their own admin entry (login flow)
+    match /admins/{docId} {
+      allow read: if isAdmin() || (isSignedIn() && userEmail() == docId);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /waitlist/{docId} {
       allow read: if isAdmin();
       allow create: if true;
       allow update, delete: if isAdmin();
     }
 
     match /users/{userId} {
-      allow read: if isAdmin();
-      allow create, update: if request.auth != null;
+      allow read: if isAdmin() || isOwner(userId);
+      allow create, update: if isAdmin() || isOwner(userId);
       allow delete: if isAdmin();
     }
 
-    match /adminData/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
+    // Anonymous storefront telemetry (checkout, clicks, page views)
+    match /analytics_events/{docId} {
+      allow create: if request.resource.data.type is string &&
+        request.resource.data.timestamp is number;
+      allow read, update, delete: if isAdmin();
     }
 
-    // Catch-all: everything else locked to admin only
     match /{document=**} {
       allow read, write: if isAdmin();
     }

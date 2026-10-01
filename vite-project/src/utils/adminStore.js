@@ -29,6 +29,12 @@ export const memoryStore = {
   festiveOffers: []
 };
 
+const isPanelContext = () => {
+  if (typeof window === 'undefined') return false;
+  const { pathname, hash, search } = window.location;
+  return pathname.startsWith('/admin') || hash === '#admin' || new URLSearchParams(search).has('admin');
+};
+
 // INITIALIZATION
 export const initializeStore = async () => {
   if (!isFirebaseConfigured()) return;
@@ -95,8 +101,19 @@ export const initializeStore = async () => {
       });
     }
 
-    memoryStore.orders = await safeFetch(fetchCollectionFromFirestore('orders'));
-    memoryStore.support = await safeFetch(fetchCollectionFromFirestore('contacts'));
+    memoryStore.products = memoryStore.products.map(p => {
+      const list = memoryStore.reviews[p.id];
+      if (list && list.length > 0) {
+        const avg = list.reduce((sum, r) => sum + (Number(r.rating) || 0), 0) / list.length;
+        return { ...p, rating: parseFloat(avg.toFixed(1)), reviewsCount: list.length };
+      }
+      return p;
+    });
+
+    if (isPanelContext()) {
+      memoryStore.orders = await safeFetch(fetchOrdersFromFirestore());
+      memoryStore.support = await safeFetch(fetchCollectionFromFirestore('contacts'));
+    }
 
     notifyWebsite();
 
@@ -400,6 +417,10 @@ export const saveSupportTickets = (arr) => {
   memoryStore.support = arr;
 }
 
+const setLocalProductRating = (productId, rating) => {
+  memoryStore.products = memoryStore.products.map(p => p.id === productId ? { ...p, rating } : p);
+};
+
 export const addReview = (productId, review) => {
   if (!memoryStore.reviews[productId]) memoryStore.reviews[productId] = [];
   const newReview = { id: `rev_${Date.now()}`, date: new Date().toLocaleDateString(), createdAt: new Date().toISOString(), productId, ...review };
@@ -408,7 +429,7 @@ export const addReview = (productId, review) => {
   const reviews = memoryStore.reviews[productId];
   const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
   const formattedAvg = parseFloat(avg.toFixed(1));
-  updateProduct(productId, { rating: formattedAvg });
+  setLocalProductRating(productId, formattedAvg);
   
   if (isFirebaseConfigured()) {
     saveDocumentToFirestore('reviews', newReview.id, newReview).then(() => saveProductRatingToFirestore(productId, formattedAvg, reviews.length)).catch(console.error);
@@ -424,7 +445,7 @@ export const updateReview = (productId, reviewId, updatedData) => {
     const reviews = memoryStore.reviews[productId];
     const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
     const formattedAvg = parseFloat(avg.toFixed(1));
-    updateProduct(productId, { rating: formattedAvg });
+    setLocalProductRating(productId, formattedAvg);
     
     if (isFirebaseConfigured()) {
       const updatedReview = memoryStore.reviews[productId].find(r => r.id === reviewId);
@@ -445,7 +466,7 @@ export const deleteReview = async (productId, reviewId) => {
     const reviews = memoryStore.reviews[productId];
     const avg = reviews.length > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) : 0;
     const formattedAvg = parseFloat(avg.toFixed(1));
-    updateProduct(productId, { rating: formattedAvg });
+    setLocalProductRating(productId, formattedAvg);
 
     if (isFirebaseConfigured()) {
       import('firebase/firestore').then(({ doc, deleteDoc }) => {
@@ -464,7 +485,7 @@ export const syncProductReviews = async (productId, onSyncComplete) => {
     if (dbReviews && dbReviews.length > 0) {
         memoryStore.reviews[productId] = dbReviews.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
         const avg = dbReviews.reduce((sum, r) => sum + r.rating, 0) / dbReviews.length;
-        updateProduct(productId, { rating: parseFloat(avg.toFixed(1)) });
+        setLocalProductRating(productId, parseFloat(avg.toFixed(1)));
     }
     if (onSyncComplete) onSyncComplete(memoryStore.reviews[productId]);
   } catch (e) {

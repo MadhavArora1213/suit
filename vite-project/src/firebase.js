@@ -463,9 +463,14 @@ export async function saveWaitlistEmail(email, name) {
   const docId = normalizedEmail.replace(/[.#$\[\]]/g, '_');
 
   try {
-    // Double-check uniqueness before saving
-    const existing = await getDocs(query(collection(db, 'waitlist'), where('email', '==', normalizedEmail)));
-    if (!existing.empty) {
+    // Double-check uniqueness before saving (reads may be admin-only)
+    let existing = null;
+    try {
+      existing = await getDocs(query(collection(db, 'waitlist'), where('email', '==', normalizedEmail)));
+    } catch {
+      existing = null;
+    }
+    if (existing && !existing.empty) {
       return { success: false, reason: 'duplicate' };
     }
 

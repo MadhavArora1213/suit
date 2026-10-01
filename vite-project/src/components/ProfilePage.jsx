@@ -1,11 +1,26 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { LogOut, User, Mail, Phone, Calendar, ArrowLeft } from 'lucide-react';
+import { LogOut, Mail, Phone, Calendar, ArrowLeft } from 'lucide-react';
 
-export default function ProfilePage({ user, setView, handleLogout }) {
-  if (!user) {
-    setView('login');
-    return null;
+export default function ProfilePage({ user, authReady = true, setView, handleLogout }) {
+  // Redirect only after the auth session has resolved, so a logged-in user
+  // is never bounced to /login while Firebase is still restoring the session.
+  useEffect(() => {
+    if (authReady && !user) setView('login');
+  }, [authReady, user, setView]);
+
+  if (!authReady) {
+    return (
+      <div className="min-h-screen bg-[#FAF9F6] pt-32 pb-20 px-6 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1A0008]" />
+      </div>
+    );
   }
+
+  if (!user) return null;
+
+  const displayName = user.name || (user.email ? user.email.split('@')[0] : 'My Account');
+  const email = user.email || 'Not available';
 
   const joinDate = user.createdAt?.seconds 
     ? new Date(user.createdAt.seconds * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -36,10 +51,10 @@ export default function ProfilePage({ user, setView, handleLogout }) {
           {/* Header */}
           <div className="flex flex-col items-center mb-12 relative">
             <div className="w-24 h-24 rounded-full bg-[#1A0008]/5 flex items-center justify-center text-[#D4AF37] font-light text-4xl border-4 border-white shadow-sm mb-4">
-              {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+              {displayName.charAt(0).toUpperCase()}
             </div>
             <h1 className="text-3xl font-light text-[#1A0008] tracking-tight text-center" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              {user.name || 'Anonymous User'}
+              {displayName}
             </h1>
             <span className="text-xs text-[#D4AF37] uppercase tracking-[0.2em] font-semibold mt-2 px-3 py-1 bg-[#D4AF37]/10 rounded-full">
               {user.role === 'admin' ? 'Administrator' : 'Customer'}
@@ -52,7 +67,7 @@ export default function ProfilePage({ user, setView, handleLogout }) {
               <Mail className="w-5 h-5 text-[#D4AF37] mr-4" />
               <div>
                 <div className="text-[10px] text-[#1A0008]/40 uppercase tracking-wider font-semibold mb-1">Email Address</div>
-                <div className="text-sm text-[#1A0008]">{user.email}</div>
+                <div className="text-sm text-[#1A0008]">{email}</div>
               </div>
             </div>
 

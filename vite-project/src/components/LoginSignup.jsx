@@ -4,6 +4,7 @@ import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, Phone, Check, ArrowRight, Ale
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail, sendPasswordResetEmail } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
+import { buildProfile, profileNeedsHeal, healUserDoc } from '../utils/userProfile';
 import { isValidPhoneNumber } from 'libphonenumber-js';
 
 export default function LoginSignup({ setView, onLoginSuccess }) {
@@ -108,14 +109,14 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, sanitizedEmail, form.password);
       
-      // Fetch user profile from Firestore
+      // Profile from Firestore, always merged with the auth session so
+      // name/email are never empty even if the stored doc is partial.
       const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
-      let userProfile = { name: form.email.split('@')[0], email: form.email, phone: '' };
-      
-      if (userDoc.exists()) {
-        userProfile = userDoc.data();
-      }
-      
+      const stored = userDoc.exists() ? userDoc.data() : {};
+      const userProfile = buildProfile(userCredential.user, stored);
+
+      if (profileNeedsHeal(userDoc.exists(), stored)) healUserDoc(userCredential.user);
+
       handleSuccessAuth(userProfile);
     } catch (error) {
       console.error("Login error:", error);
@@ -298,21 +299,17 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
       // Check if user exists in Firestore
       const userRef = doc(db, 'users', userCredential.user.uid);
       const userDoc = await getDoc(userRef);
-      
-      let userProfile = {
-        uid: userCredential.user.uid,
-        name: userCredential.user.displayName || 'Google User',
-        email: userCredential.user.email,
-        phone: userCredential.user.phoneNumber || '',
-        role: 'customer'
-      };
+      const exists = userDoc.exists();
+      const stored = exists ? userDoc.data() : {};
+      let userProfile = buildProfile(userCredential.user, stored);
 
-      if (!userDoc.exists()) {
+      if (!exists) {
         // Create new user profile if first time logging in
         userProfile.createdAt = serverTimestamp();
         await setDoc(userRef, userProfile);
-      } else {
-        userProfile = userDoc.data();
+      } else if (profileNeedsHeal(true, stored)) {
+        // Stored doc is missing identity fields (partial doc) - repair it
+        healUserDoc(userCredential.user);
       }
       
       handleSuccessAuth(userProfile);

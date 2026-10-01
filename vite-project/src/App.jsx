@@ -8,6 +8,7 @@ import { trackPageView, trackSessionEnd, trackBackNavigation } from './utils/ana
 import { motion, AnimatePresence } from 'framer-motion'
 import { User } from 'lucide-react'
 import useSEO from './utils/useSEO'
+import { buildProfile, profileNeedsHeal, healUserDoc } from './utils/userProfile'
 import './App.css'
 import LoadingScreen from './LoadingScreen'
 import Navbar from './components/Navbar'
@@ -336,6 +337,7 @@ function AppContent() {
   const [toastMessage, setToastMessage] = useState('')
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [user, setUser] = useState(null)
+  const [authReady, setAuthReady] = useState(false)
   
   const allProducts = getAllProducts();
 
@@ -368,43 +370,41 @@ function AppContent() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        try {
-          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-          if (userDoc.exists()) {
-            const data = userDoc.data();
-            setUser({ ...data, uid: currentUser.uid });
-            if (data.cart) setCart(data.cart);
-            else setCart([]);
-            if (data.favorites) setFavorites(data.favorites);
-            else setFavorites({});
-          } else {
-            setUser({
-              uid: currentUser.uid,
-              name: currentUser.displayName || 'User',
-              email: currentUser.email,
-              phone: currentUser.phoneNumber || '',
-              role: 'customer'
-            });
-          }
-        } catch (error) {
-          console.warn("Firestore offline or profile fetch error, using local auth user state:", error);
-          setUser({
-            uid: currentUser.uid,
-            name: currentUser.displayName || 'User',
-            email: currentUser.email,
-            phone: currentUser.phoneNumber || '',
-            role: 'customer'
-          });
+      if (!currentUser) {
+        if (!cancelled) {
+          setUser(null);
+          setFavorites({});
+          setCart([]);
+          setAuthReady(true);
         }
-      } else {
-        setUser(null);
-        setFavorites({});
-        setCart([]);
+        return;
+      }
+
+      const authProfile = buildProfile(currentUser, {});
+      try {
+        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        const exists = userDoc.exists();
+        const data = exists ? userDoc.data() : {};
+        const profile = buildProfile(currentUser, data);
+
+        if (!cancelled) {
+          setUser(profile);
+          setCart(data.cart ? data.cart : []);
+          setFavorites(data.favorites ? data.favorites : {});
+        }
+
+        // Repair partial/missing profile docs (identity fields only)
+        if (profileNeedsHeal(exists, data)) healUserDoc(currentUser);
+      } catch (error) {
+        console.warn("Firestore offline or profile fetch error, using local auth user state:", error);
+        if (!cancelled) setUser(authProfile);
+      } finally {
+        if (!cancelled) setAuthReady(true);
       }
     });
-    return () => unsubscribe();
+    return () => { cancelled = true; unsubscribe(); };
   }, []);
 
   const showToast = (msg) => {
@@ -470,9 +470,11 @@ function AppContent() {
   };
   // ------------------------------
 
-  const handleLoginSuccess = (userProfile) => {
-    setUser(userProfile)
-    showToast(`Welcome back, ${userProfile.name}! Login successful.`);
+    const handleLoginSuccess = (userProfile) => {
+    const profile = buildProfile(auth.currentUser, userProfile || {})
+    setUser(profile)
+    showToast(`Welcome back, ${profile.name}! Login successful.`)
+;
     const redirectPath = sessionStorage.getItem('redirectAfterLogin');
     if (redirectPath) {
       sessionStorage.removeItem('redirectAfterLogin');
@@ -688,7 +690,7 @@ function AppContent() {
           <Route path="/signup" element={<LoginSignup setView={setView} onLoginSuccess={handleLoginSuccess} />} />
           
           <Route path="/wishlist" element={<WishlistPage allProducts={allProducts} setView={setView} favorites={favorites} toggleFavorite={toggleFavorite} addToCart={addToCart} />} />
-          <Route path="/profile" element={<ProfilePage user={user} setView={setView} handleLogout={handleLogout} />} />
+          <Route path="/profile" element={<ProfilePage user={user} authReady={authReady} setView={setView} handleLogout={handleLogout} />} />
           
           <Route path="/contact" element={<ContactPage setView={setView} user={user} />} />
           <Route path="/about" element={<AboutPage setView={setView} />} />
