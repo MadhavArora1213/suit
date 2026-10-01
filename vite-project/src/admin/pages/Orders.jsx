@@ -107,7 +107,7 @@ export default function Orders() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-[#1A1A1A] truncate">{order.customer || 'Customer'}</p>
-                    <p className="text-[10px] text-[#9E9189]">{ordId} · {order.city || 'N/A'}</p>
+                    <p className="text-[10px] text-[#9E9189]">{ordId} · {order.city || 'N/A'}{order.destination === 'International' ? ` · ${order.country || 'International'}` : ''}</p>
                   </div>
                 </div>
                 <select
@@ -199,7 +199,7 @@ export default function Orders() {
                             </div>
                             <div>
                               <p className="text-sm font-semibold text-[#1A1A1A]">{order.customer || order.shippingDetails?.name || 'Customer'}</p>
-                              <p className="text-xs text-[#9E9189]">{order.city || 'N/A'}</p>
+                              <p className="text-xs text-[#9E9189]">{order.city || 'N/A'}{order.destination === 'International' ? ` · ${order.country || 'International'}` : ''}</p>
                             </div>
                           </div>
                         </td>
@@ -249,6 +249,10 @@ export default function Orders() {
                                   { label: 'Email', value: order.email || 'N/A' },
                                   { label: 'Payment Mode', value: order.payment || 'N/A' },
                                   { label: 'Shipping City', value: order.city || 'N/A' },
+                                  ...(order.destination === 'International' ? [
+                                    { label: 'Destination', value: `International · ${order.country || ''}` },
+                                    { label: 'Shipping Note', value: 'Confirm shipping charges with customer' },
+                                  ] : []),
                                   { label: 'Order Date', value: order.date || 'N/A' },
                                 ].map(({ label, value }) => (
                                   <div key={label} className="bg-white rounded-xl p-3 border border-[#E8DDD0]">

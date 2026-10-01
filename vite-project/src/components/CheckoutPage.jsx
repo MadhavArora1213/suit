@@ -6,6 +6,16 @@ import { RAZORPAY_KEY_ID, initiateRazorpayPayment } from '../utils/razorpay';
 import { usePageTracking } from '../hooks/usePageTracking';
 import { trackCheckoutStart, trackCheckoutStep, trackCheckoutAbandon, trackFormFill, trackFormFocus, trackFormBlur, trackFormSubmit, trackPaymentAttempt, trackPaymentSuccess, trackPaymentFail, trackPaymentAbandon } from '../utils/analytics';
 
+const INTL_SHIPPING_NOTE = 'After you confirm your order, our team will connect with you for your order and let you know the shipping charges and all.';
+
+const INDIAN_STATES = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat', 'Haryana',
+  'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur',
+  'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana',
+  'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal', 'Andaman and Nicobar Islands', 'Chandigarh',
+  'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+];
+
 export default function CheckoutPage({ cart, setView, clearCart, removeFromCart, updateCartQty, changeCartItemSize }) {
   usePageTracking('Checkout', { cartItemCount: cart.length });
 
@@ -28,6 +38,7 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
   const [processingPayment, setProcessingPayment] = useState(false);
   const [loadingMsg, setLoadingMsg] = useState('');
   const [isLocalDelivery, setIsLocalDelivery] = useState(false);
+  const [shipRegion, setShipRegion] = useState('india'); // 'india' | 'international'
 
   // Keep ref in sync with state
   useEffect(() => { checkoutStepRef.current = checkoutStep; }, [checkoutStep]);
@@ -40,7 +51,8 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
     address: '',
     city: '',
     state: '',
-    zip: ''
+    zip: '',
+    country: 'India'
   });
 
   const [couponCode, setCouponCode] = useState('');
@@ -96,6 +108,11 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
 
   useEffect(() => {
     const fetchShippingCost = async () => {
+      if (shipRegion === 'international') {
+        setShippingCost(0);
+        setIsFetchingShipping(false);
+        return;
+      }
       if (checkoutStep === 2 && formData.zip) {
         setIsFetchingShipping(true);
         try {
@@ -126,12 +143,28 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
     };
     // We already fetch in handleAddressSubmit initially, so this will primarily catch paymentMode toggles and cart edits.
     fetchShippingCost();
-  }, [paymentMode, cart]);
+  }, [paymentMode, cart, shipRegion]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    // Country is locked to India for domestic deliveries.
+    if (name === 'country' && shipRegion === 'india') return;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (value && value.length === 1) trackFormFill(name, value);
+  };
+
+  const selectRegion = (region) => {
+    setShipRegion(region);
+    setShippingCost(0);
+    setIsFetchingShipping(false);
+    setIsLocalDelivery(false);
+    setPaymentMode('online');
+    // Keep the address fields locked to the selected destination.
+    setFormData(prev => ({
+      ...prev,
+      country: region === 'india' ? 'India' : '',
+      state: ''
+    }));
   };
 
   const handleInputFocus = (e) => {
@@ -144,13 +177,38 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
 
   const handleAddressSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone || !formData.address || !formData.city || !formData.state || !formData.zip) {
+    if (!formData.name || !formData.phone || !formData.address || !formData.city || !formData.state || !formData.zip || (shipRegion === 'international' && !formData.country)) {
       alert('Please fill in all required shipping fields.');
       return;
+    }
+
+    // India: only Indian states / 6-digit PIN codes are accepted.
+    if (shipRegion === 'india') {
+      if (!INDIAN_STATES.includes(formData.state)) {
+        alert('Please select your state from the list.');
+        return;
+      }
+      if (!/^\d{6}$/.test(formData.zip.trim())) {
+        alert('Please enter a valid 6-digit Indian PIN code.');
+        return;
+      }
     }
     
     const filledFields = Object.entries(formData).filter(([, v]) => !!v).map(([k]) => k);
     trackFormSubmit(1, { filledFields, fieldsCount: filledFields.length });
+
+    // International: no Delhivery check — shipping charges are quoted by the team later.
+    if (shipRegion === 'international') {
+      setShippingCost(0);
+      setIsFetchingShipping(false);
+      setIsLocalDelivery(false);
+      setPaymentMode('online');
+      setCheckoutStep(2);
+      const intlStepTime = Math.round((Date.now() - stepStartTime.current) / 1000);
+      stepStartTime.current = Date.now();
+      trackCheckoutStep(2, { destination: 'international', country: formData.country, step1TimeSeconds: intlStepTime });
+      return;
+    }
     
     setProcessingPayment(true);
     setLoadingMsg('Calculating Shipping & Serviceability...');
@@ -222,6 +280,9 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
       state: formData.state,
       zip: formData.zip,
       address: formData.address,
+      destination: shipRegion === 'international' ? 'International' : 'India',
+      country: shipRegion === 'international' ? formData.country : 'India',
+      shippingNote: shipRegion === 'international' ? INTL_SHIPPING_NOTE : '',
       amount: `₹${grandTotal.toLocaleString()}`,
       amountNum: grandTotal,
       payment: paymentStr,
@@ -264,8 +325,13 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
           <p style="color: #444; line-height: 1.5;">
             ${orderRecord.customer} - ${orderRecord.phone}<br/>
             ${orderRecord.address}<br/>
-            ${orderRecord.city}, ${orderRecord.state} - ${orderRecord.zip}
+            ${orderRecord.city}, ${orderRecord.state}, ${orderRecord.country} - ${orderRecord.zip}
           </p>
+          ${orderRecord.destination === 'International' ? `
+            <div style="background: #FAF9F6; padding: 15px; margin: 15px 0; border: 1px solid #E8DDD0; border-radius: 4px;">
+              <p style="margin: 0; font-size: 13px; color: #1A0008;"><strong>International Order:</strong> ${INTL_SHIPPING_NOTE}</p>
+            </div>
+          ` : ''}
 
           <h3 style="border-bottom: 1px solid #D4AF37; padding-bottom: 5px; color: #1A0008; margin-top: 25px;">Order Summary</h3>
           <ul style="list-style-type: none; padding: 0;">
@@ -443,8 +509,16 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
               )}
               <div className="flex justify-between text-[#6B6B6B]">
                 <span>Shipping & Delivery</span>
-                <span className="text-[#1A0008] font-bold">{shippingCost > 0 ? `₹${shippingCost}` : 'FREE'}</span>
+                <span className="text-[#1A0008] font-bold">{shipRegion === 'international' ? 'TO BE CONFIRMED' : (shippingCost > 0 ? `₹${shippingCost}` : 'FREE')}</span>
               </div>
+              {shipRegion === 'international' && (
+                <div className="bg-[#E8DDD0]/25 border border-[#D4AF37]/25 p-3 rounded">
+                  <p className="text-[10px] text-[#1A0008]/80 leading-relaxed font-medium">
+                    <strong className="uppercase tracking-wider">International Order — </strong>
+                    {INTL_SHIPPING_NOTE}
+                  </p>
+                </div>
+              )}
               <div className="border-t border-[#D4AF37]/20 pt-3 flex justify-between text-sm font-bold text-[#1A0008]">
                 <span>Grand Total Paid</span>
                 <span className="text-[#005461]">₹{totalAmount.toLocaleString()}</span>
@@ -455,7 +529,7 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
             <div className="border-t border-[#D4AF37]/10 pt-4 text-xs space-y-1.5">
               <span className="text-[10px] uppercase tracking-widest text-[#D4AF37] font-bold block mb-1">Shipping Destination</span>
               <p className="font-semibold text-[#1A0008]">{formData.name} · {formData.phone}</p>
-              <p className="text-[#6B6B6B] leading-relaxed">{formData.address}, {formData.city}, {formData.state} - {formData.zip}</p>
+              <p className="text-[#6B6B6B] leading-relaxed">{formData.address}, {formData.city}, {formData.state}{shipRegion === 'international' ? `, ${formData.country}` : ''} - {formData.zip}</p>
             </div>
           </div>
 
@@ -558,6 +632,40 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
                   </h3>
                   
                   <form onSubmit={handleAddressSubmit} className="space-y-5">
+                    {/* Step 1 first: where should we ship? */}
+                    <div className="space-y-1.5 text-left">
+                      <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">Where should we deliver? *</label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => selectRegion('india')}
+                          className={`py-3.5 px-3 border flex flex-col items-start gap-1 text-left transition-all rounded ${
+                            shipRegion === 'india'
+                              ? 'bg-[#E8DDD0]/30 border-[#D4AF37] text-[#005461]'
+                              : 'border-[#D4AF37]/25 hover:border-[#1A0008] text-[#6B6B6B] cursor-pointer'
+                          }`}
+                        >
+                          <span className="text-[11px] font-bold tracking-wider uppercase">India (Domestic)</span>
+                          <span className="text-[9px] normal-case tracking-normal font-normal">Delhivery · 2-5 days · shipping calculated at checkout</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => selectRegion('international')}
+                          className={`py-3.5 px-3 border flex flex-col items-start gap-1 text-left transition-all rounded ${
+                            shipRegion === 'international'
+                              ? 'bg-[#E8DDD0]/30 border-[#D4AF37] text-[#005461]'
+                              : 'border-[#D4AF37]/25 hover:border-[#1A0008] text-[#6B6B6B] cursor-pointer'
+                          }`}
+                        >
+                          <span className="text-[11px] font-bold tracking-wider uppercase">International</span>
+                          <span className="text-[9px] normal-case tracking-normal font-normal">Our team will confirm shipping charges after your order</span>
+                        </button>
+                      </div>
+                      {shipRegion === 'international' && (
+                        <p className="text-[9px] text-[#6B6B6B] leading-relaxed pt-1">{INTL_SHIPPING_NOTE}</p>
+                      )}
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div className="space-y-1.5 text-left">
                         <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">Full Name *</label>
@@ -635,40 +743,75 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
                         />
                       </div>
                       <div className="space-y-1.5 text-left">
-                        <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">State *</label>
-                        <input 
-                          type="text" 
-                          name="state" 
-                          required 
-                          value={formData.state} 
-                          onChange={handleInputChange}
-                          onFocus={handleInputFocus}
-                          onBlur={handleInputBlur}
-                          placeholder="e.g. Punjab"
-                          className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
-                        />
+                        <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">{shipRegion === 'international' ? 'State / Region *' : 'State *'}</label>
+                        {shipRegion === 'india' ? (
+                          <select
+                            name="state"
+                            required
+                            value={formData.state}
+                            onChange={handleInputChange}
+                            onFocus={handleInputFocus}
+                            onBlur={handleInputBlur}
+                            className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold cursor-pointer"
+                          >
+                            <option value="" disabled>Select state</option>
+                            {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                        ) : (
+                          <input 
+                            type="text" 
+                            name="state" 
+                            required 
+                            value={formData.state} 
+                            onChange={handleInputChange}
+                            onFocus={handleInputFocus}
+                            onBlur={handleInputBlur}
+                            placeholder="e.g. California"
+                            className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
+                          />
+                        )}
                       </div>
                       <div className="space-y-1.5 text-left">
-                        <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">ZIP / Postal Code *</label>
+                        <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">{shipRegion === 'international' ? 'ZIP / Postal Code *' : 'PIN Code *'}</label>
                         <input 
                           type="text" 
                           name="zip" 
                           required 
+                          inputMode={shipRegion === 'india' ? 'numeric' : undefined}
+                          maxLength={shipRegion === 'india' ? 6 : undefined}
                           value={formData.zip} 
                           onChange={handleInputChange}
                           onFocus={handleInputFocus}
                           onBlur={handleInputBlur}
-                          placeholder="e.g. 143001"
+                          placeholder={shipRegion === 'india' ? 'e.g. 143001' : 'e.g. 90210'}
                           className="w-full bg-[#FAF9F6] border border-[#D4AF37]/20 focus:border-[#D4AF37] outline-none p-3.5 text-xs transition-colors rounded font-semibold"
                         />
                       </div>
+                    </div>
+
+                    <div className="space-y-1.5 text-left">
+                      <label className="text-[9px] uppercase tracking-widest text-[#6B6B6B] font-bold block">Country *</label>
+                      <input 
+                        type="text" 
+                        name="country" 
+                        required
+                        readOnly={shipRegion === 'india'}
+                        value={shipRegion === 'india' ? 'India' : formData.country} 
+                        onChange={handleInputChange}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
+                        placeholder={shipRegion === 'india' ? '' : 'e.g. United States'}
+                        className={`w-full border border-[#D4AF37]/20 outline-none p-3.5 text-xs transition-colors rounded font-semibold ${
+                          shipRegion === 'india' ? 'bg-gray-100 text-[#6B6B6B] cursor-not-allowed' : 'bg-[#FAF9F6] focus:border-[#D4AF37]'
+                        }`}
+                      />
                     </div>
 
                     <button 
                       type="submit"
                       className="w-full bg-[#1A0008] hover:bg-[#D4AF37] hover:text-[#FAF9F6] text-[#FAF9F6] py-4 text-xs font-bold tracking-widest transition-colors cursor-pointer uppercase rounded mt-4"
                     >
-                      PROCEED TO PAYMENT STEP
+                      {shipRegion === 'international' ? 'CONTINUE TO CONFIRM ORDER' : 'PROCEED TO PAYMENT STEP'}
                     </button>
                   </form>
                 </div>
@@ -683,6 +826,16 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
                     </h3>
                     <p className="text-xs text-[#6B6B6B] mt-1">Pay securely via Razorpay. Card, UPI, Netbanking & more.</p>
                   </div>
+
+                  {shipRegion === 'international' && (
+                    <div className="bg-[#E8DDD0]/25 border border-[#D4AF37]/30 p-4 rounded flex items-start gap-2.5">
+                      <MessageSquare size={16} className="text-[#005461] mt-0.5 flex-shrink-0" />
+                      <p className="text-[11px] text-[#1A0008]/80 leading-relaxed font-medium">
+                        <strong className="uppercase tracking-wider text-[10px]">International Order — </strong>
+                        {INTL_SHIPPING_NOTE} We do not ship via Delhivery for international orders.
+                      </p>
+                    </div>
+                  )}
 
                   {/* Payment mode selectors */}
                   <div className="grid grid-cols-2 gap-3">
@@ -729,7 +882,9 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
                     <div className="bg-red-50/50 border border-red-100 p-3 rounded flex items-start gap-2.5">
                       <AlertCircle size={16} className="text-red-500 mt-0.5 flex-shrink-0" />
                       <p className="text-[10px] text-red-700/80 font-bold tracking-wide uppercase leading-relaxed">
-                        Cash on Delivery is currently only available for local deliveries within Jalandhar, Hoshiarpur, and Mukerian regions.
+                        {shipRegion === 'international'
+                          ? 'Cash on Delivery is not available for international orders. Shipping charges will be confirmed by our team after you confirm your order.'
+                          : 'Cash on Delivery is currently only available for local deliveries within Jalandhar, Hoshiarpur, and Mukerian regions.'}
                       </p>
                     </div>
                   )}
@@ -884,6 +1039,17 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
                       <span>-₹{appliedDiscount.toLocaleString()}</span>
                     </div>
                   )}
+                  {shipRegion === 'international' ? (
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span>Shipping Charges</span>
+                        <span className="text-[#1A0008] font-bold">TO BE CONFIRMED</span>
+                      </div>
+                      <p className="text-[9px] normal-case tracking-normal font-medium text-[#6B6B6B] leading-relaxed">
+                        {INTL_SHIPPING_NOTE}
+                      </p>
+                    </div>
+                  ) : (
                   <div className="flex justify-between">
                     <span>Shipping Charges</span>
                     <span className="text-[#1A0008] font-bold">
@@ -898,6 +1064,7 @@ export default function CheckoutPage({ cart, setView, clearCart, removeFromCart,
                       }
                     </span>
                   </div>
+                  )}
                   <div className="border-t border-[#D4AF37]/10 mt-2 pt-2 flex justify-between text-sm text-[#1A0008] font-bold">
                     <span>Grand Total</span>
                     <span className="text-[#005461]">₹{getGrandTotal().toLocaleString()}</span>
