@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Eye, EyeOff, Mail, Lock, User, Phone, Check, ArrowRight, AlertCircle, X } from 'lucide-react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail, sendPasswordResetEmail } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail, sendPasswordResetEmail, signOut } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { buildProfile, profileNeedsHeal, healUserDoc } from '../utils/userProfile';
@@ -95,6 +95,19 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     }
   };
 
+  // Admins belong to the panel only (/admin). Fail-open so a transient
+  // Firestore error never locks a normal customer out.
+  const isAdminAccount = async (email) => {
+    if (!email) return false;
+    try {
+      const snap = await getDoc(doc(db, 'admins', email.toLowerCase()));
+      return snap.exists();
+    } catch (err) {
+      console.warn('Admin account check failed, allowing login:', err);
+      return false;
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!checkRateLimit()) return;
@@ -108,6 +121,12 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, sanitizedEmail, form.password);
+
+      if (await isAdminAccount(userCredential.user.email)) {
+        await signOut(auth);
+        setErrors({ form: 'This is an admin account. Please sign in from the admin panel.' });
+        return;
+      }
       
       // Profile from Firestore, always merged with the auth session so
       // name/email are never empty even if the stored doc is partial.
@@ -295,6 +314,12 @@ export default function LoginSignup({ setView, onLoginSuccess }) {
     try {
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
+
+      if (await isAdminAccount(userCredential.user.email)) {
+        await signOut(auth);
+        setErrors({ form: 'This is an admin account. Please sign in from the admin panel.' });
+        return;
+      }
       
       // Check if user exists in Firestore
       const userRef = doc(db, 'users', userCredential.user.uid);

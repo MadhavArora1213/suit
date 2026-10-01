@@ -382,6 +382,26 @@ function AppContent() {
         return;
       }
 
+      // Admin accounts are panel-only: kick them off the customer site
+      // (covers sessions created before the split).
+      if (currentUser.email) {
+        try {
+          const adminSnap = await getDoc(doc(db, 'admins', currentUser.email.toLowerCase()));
+          if (adminSnap.exists()) {
+            await signOut(auth);
+            if (!cancelled) {
+              setUser(null);
+              setFavorites({});
+              setCart([]);
+              setAuthReady(true);
+            }
+            return;
+          }
+        } catch (adminErr) {
+          console.warn('Admin session check failed:', adminErr);
+        }
+      }
+
       const authProfile = buildProfile(currentUser, {});
       try {
         const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
