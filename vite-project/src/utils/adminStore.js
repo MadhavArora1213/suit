@@ -189,6 +189,28 @@ export const deleteProduct = (id) => {
   if (isFirebaseConfigured()) deleteProductFromFirestore(id).catch(console.error);
 };
 
+// BULK ACTIONS
+export const bulkDeleteProducts = (ids) => {
+  const idSet = new Set(ids.map(String));
+  memoryStore.products = memoryStore.products.filter(p => !idSet.has(String(p.id)));
+  if (isFirebaseConfigured()) {
+    ids.forEach(id => deleteProductFromFirestore(id).catch(console.error));
+  }
+};
+
+// patch: object, or a function (product) => object
+export const bulkUpdateProducts = (ids, patch) => {
+  const idSet = new Set(ids.map(String));
+  const resolve = typeof patch === 'function' ? patch : () => patch;
+  memoryStore.products = memoryStore.products.map(p => (idSet.has(String(p.id)) ? { ...p, ...resolve(p) } : p));
+  if (isFirebaseConfigured()) {
+    ids.forEach(id => {
+      const updated = memoryStore.products.find(p => String(p.id) === String(id));
+      if (updated) saveProductToFirestore(id, updated).catch(console.error);
+    });
+  }
+};
+
 export const recordProductView = (id) => {
   if (!id) { console.warn('[GURNAAZ-VIEW] No id provided'); return; }
 

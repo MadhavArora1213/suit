@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Edit2, Trash2, Eye, Star, MousePointer, BarChart2, TrendingUp } from 'lucide-react';
-import { getProducts, deleteProduct as storeDelete, notifyWebsite } from '../../utils/adminStore';
+import { Search, Plus, Edit2, Trash2, Eye, Star, MousePointer, TrendingUp, PackageX, X } from 'lucide-react';
+import { getProducts, deleteProduct as storeDelete, bulkDeleteProducts, bulkUpdateProducts, notifyWebsite } from '../../utils/adminStore';
 
 export default function Products({ setActivePage, onEditProduct }) {
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('All');
-  const [deleteId, setDeleteId] = useState(null);
+  const [selected, setSelected] = useState([]);
+  const [confirm, setConfirm] = useState(null); // { type: 'single' | 'delete' | 'oos', id? }
 
   const loadAll = () => {
     return getProducts().map(p => ({ ...p, source: 'admin' }));
@@ -28,17 +29,86 @@ export default function Products({ setActivePage, onEditProduct }) {
     return matchSearch && matchCat;
   });
 
+  const visibleIds = filtered.map(p => p.id);
+  // Ignore ids whose product no longer exists (deleted elsewhere / filtered out)
+  const selectedIds = selected.filter(id => products.some(p => p.id === id));
+  const allVisibleSelected = visibleIds.length > 0 && visibleIds.every(id => selectedIds.includes(id));
+
+  const toggleSelect = (id) => {
+    setSelected(prev => (prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]));
+  };
+
+  const toggleSelectAllVisible = () => {
+    setSelected(prev => (allVisibleSelected
+      ? prev.filter(id => !visibleIds.includes(id))
+      : Array.from(new Set([...prev, ...visibleIds]))));
+  };
+
+  const selectEveryProduct = () => setSelected(products.map(p => p.id));
+
+  const clearSelection = () => setSelected([]);
+
   const handleDelete = (id) => {
     storeDelete(id);
     notifyWebsite();
     setProducts(prev => prev.filter(p => p.id !== id));
-    setDeleteId(null);
+    setConfirm(null);
+  };
+
+  const handleBulkDelete = () => {
+    const ids = selectedIds.slice();
+    bulkDeleteProducts(ids);
+    notifyWebsite();
+    setProducts(prev => prev.filter(p => !ids.includes(p.id)));
+    setSelected([]);
+    setConfirm(null);
+  };
+
+  const zeroStock = (p) => {
+    const stockQty = (p.stockQty && typeof p.stockQty === 'object' && Object.keys(p.stockQty).length > 0)
+      ? Object.keys(p.stockQty).reduce((acc, k) => { acc[k] = 0; return acc; }, {})
+      : (p.stockQty || {});
+    return { stock: 0, stockQty };
+  };
+
+  const handleBulkOutOfStock = () => {
+    const ids = selectedIds.slice();
+    bulkUpdateProducts(ids, zeroStock);
+    notifyWebsite();
+    setProducts(prev => prev.map(p => (ids.includes(p.id) ? { ...p, ...zeroStock(p) } : p)));
+    setConfirm(null);
+    setSelected([]);
   };
 
   // Analytics totals
   const totalViews = products.reduce((acc, p) => acc + (p.viewsCount || p.views || 0), 0);
   const totalClicks = products.reduce((acc, p) => acc + (p.clicksCount || p.clicks || 0), 0);
   const mostClickedProduct = [...products].sort((a, b) => (b.clicksCount || b.clicks || 0) - (a.clicksCount || a.clicks || 0))[0];
+
+  // Confirm modal copy
+  const confirmIsOOS = confirm?.type === 'oos';
+  const confirmIsSingle = confirm?.type === 'single';
+  const confirmCount = selectedIds.length;
+  const confirmNoun = confirmCount === 1 ? 'Product' : 'Products';
+  const confirmTitle = confirmIsSingle
+    ? 'Delete Product?'
+    : confirmIsOOS
+      ? `Mark ${confirmCount} ${confirmNoun} Out of Stock?`
+      : `Delete ${confirmCount} ${confirmNoun}?`;
+  const confirmDesc = confirmIsSingle
+    ? 'This action cannot be undone.'
+    : confirmIsOOS
+      ? 'Stock will be set to 0 for every size on the selected products. You can restore stock later by editing each product.'
+      : `This will permanently remove ${confirmCount} ${confirmNoun.toLowerCase()} from your store. This action cannot be undone.`;
+  const confirmCta = confirmIsSingle
+    ? 'Delete'
+    : confirmIsOOS ? 'Mark Out of Stock' : `Delete ${confirmCount}`;
+  const runConfirm = () => {
+    if (!confirm) return;
+    if (confirmIsSingle) handleDelete(confirm.id);
+    else if (confirmIsOOS) handleBulkOutOfStock();
+    else handleBulkDelete();
+  };
 
   return (
     <div className="space-y-5">
@@ -120,6 +190,70 @@ export default function Products({ setActivePage, onEditProduct }) {
         </div>
       </div>
 
+      {/* Bulk Actions */}
+      <div className="bg-white rounded-2xl border border-[#E8DDD0] p-3 flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <input
+            type="checkbox"
+            id="bulk-select-all"
+            checked={allVisibleSelected}
+            onChange={toggleSelectAllVisible}
+            disabled={filtered.length === 0}
+            className="w-4 h-4 accent-[#111111] cursor-pointer disabled:cursor-not-allowed"
+          />
+          <label htmlFor="bulk-select-all" className="text-xs font-semibold text-[#6B6B6B] cursor-pointer select-none">
+            Select all ({filtered.length})
+          </label>
+          {products.length > filtered.length && (
+            <button
+              type="button"
+              onClick={selectEveryProduct}
+              className="text-[11px] font-semibold text-[#8B2252] underline underline-offset-2 hover:text-[#111111] cursor-pointer"
+            >
+              All {products.length} products
+            </button>
+          )}
+        </div>
+
+        <div className="sm:ml-auto">
+          <AnimatePresence>
+            {selectedIds.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                className="flex items-center gap-2 flex-wrap"
+              >
+                <span className="text-[11px] font-bold text-white bg-[#111111] px-2.5 py-1.5 rounded-lg">
+                  {selectedIds.length} selected
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setConfirm({ type: 'oos' })}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-[#FFF7E6] border border-[#E8C77A] text-[#8A6100] hover:bg-[#FDECC2] transition-colors cursor-pointer"
+                >
+                  <PackageX size={13} /> Mark Out of Stock
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirm({ type: 'delete' })}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold bg-red-50 border border-red-200 text-red-600 hover:bg-red-100 transition-colors cursor-pointer"
+                >
+                  <Trash2 size={13} /> Delete
+                </button>
+                <button
+                  type="button"
+                  onClick={clearSelection}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors cursor-pointer"
+                >
+                  <X size={13} /> Clear
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
       {/* Products Grid */}
       <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4">
         <AnimatePresence mode="popLayout">
@@ -127,6 +261,7 @@ export default function Products({ setActivePage, onEditProduct }) {
             const clicks = product.clicksCount || product.clicks || 0;
             const views = product.viewsCount || product.views || 0;
             const ctr = views > 0 ? ((clicks / views) * 100).toFixed(0) : (clicks > 0 ? 100 : 0);
+            const isSelected = selectedIds.includes(product.id);
 
             return (
               <motion.div
@@ -136,7 +271,11 @@ export default function Products({ setActivePage, onEditProduct }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: i * 0.04, duration: 0.35 }}
-                className="bg-white rounded-2xl border border-[#E8DDD0] overflow-hidden group hover:shadow-lg hover:shadow-[#111111]/10 hover:border-[#111111]/30 transition-all duration-300 flex flex-col justify-between"
+                className={`bg-white rounded-2xl border overflow-hidden group transition-all duration-300 flex flex-col justify-between ${
+                  isSelected
+                    ? 'border-[#111111] shadow-lg shadow-[#111111]/15 ring-2 ring-[#111111]/20'
+                    : 'border-[#E8DDD0] hover:shadow-lg hover:shadow-[#111111]/10 hover:border-[#111111]/30'
+                }`}
               >
                 <div>
                   {/* Image */}
@@ -146,7 +285,7 @@ export default function Products({ setActivePage, onEditProduct }) {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xs text-[#9E9189]">No Image</div>
                     )}
-                    <span className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-[#111111] text-[9px] sm:text-[11px] font-bold tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg border border-[#111111]/20">
+                    <span className="absolute top-2 left-9 bg-white/90 backdrop-blur-sm text-[#111111] text-[9px] sm:text-[11px] font-bold tracking-wider px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg border border-[#111111]/20">
                       {product.badge}
                     </span>
                     {(() => {
@@ -178,11 +317,23 @@ export default function Products({ setActivePage, onEditProduct }) {
                         <Edit2 size={15} />
                       </motion.button>
                       <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-                        onClick={() => setDeleteId(product.id)}
+                        onClick={() => setConfirm({ type: 'single', id: product.id })}
                         className="w-9 h-9 bg-red-500 rounded-full flex items-center justify-center text-white shadow-md cursor-pointer" title="Delete Product">
                         <Trash2 size={15} />
                       </motion.button>
                     </div>
+
+                    {/* Selection checkbox */}
+                    <span className="absolute top-2 left-2 z-20 bg-white/95 backdrop-blur-sm rounded-md p-1 border border-[#111111]/15 shadow-sm">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelect(product.id)}
+                        onClick={e => e.stopPropagation()}
+                        aria-label={`Select ${product.name}`}
+                        className="block w-4 h-4 accent-[#111111] cursor-pointer"
+                      />
+                    </span>
                   </div>
 
                   {/* Info */}
@@ -220,12 +371,12 @@ export default function Products({ setActivePage, onEditProduct }) {
         </AnimatePresence>
       </motion.div>
 
-      {/* Delete Confirm Modal */}
+      {/* Confirm Modal (single + bulk) */}
       <AnimatePresence>
-        {deleteId && (
+        {confirm && (
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            onClick={() => setDeleteId(null)}
+            onClick={() => setConfirm(null)}
             className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center"
           >
             <motion.div
@@ -233,14 +384,21 @@ export default function Products({ setActivePage, onEditProduct }) {
               onClick={e => e.stopPropagation()}
               className="bg-white rounded-2xl p-7 max-w-sm w-full mx-4 shadow-2xl border border-[#E8DDD0]"
             >
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Trash2 size={22} className="text-red-500" />
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${confirmIsOOS ? 'bg-amber-100' : 'bg-red-100'}`}>
+                {confirmIsOOS ? <PackageX size={22} className="text-amber-600" /> : <Trash2 size={22} className="text-red-500" />}
               </div>
-              <h3 className="text-lg font-semibold text-center text-[#1A1A1A] mb-2">Delete Product?</h3>
-              <p className="text-sm text-center text-[#9E9189] mb-6">This action cannot be undone.</p>
+              <h3 className="text-lg font-semibold text-center text-[#1A1A1A] mb-2">{confirmTitle}</h3>
+              <p className="text-sm text-center text-[#9E9189] mb-6">{confirmDesc}</p>
               <div className="flex gap-3">
-                <button onClick={() => setDeleteId(null)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors">Cancel</button>
-                <button onClick={() => handleDelete(deleteId)} className="flex-1 py-2.5 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600 transition-colors">Delete</button>
+                <button onClick={() => setConfirm(null)} className="flex-1 py-2.5 border border-[#E8DDD0] rounded-xl text-sm font-semibold text-[#6B6B6B] hover:bg-[#F8F4F9] transition-colors cursor-pointer">Cancel</button>
+                <button
+                  onClick={runConfirm}
+                  className={`flex-1 py-2.5 text-white rounded-xl text-sm font-semibold transition-colors cursor-pointer ${
+                    confirmIsOOS ? 'bg-amber-500 hover:bg-amber-600' : 'bg-red-500 hover:bg-red-600'
+                  }`}
+                >
+                  {confirmCta}
+                </button>
               </div>
             </motion.div>
           </motion.div>
