@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Search, User, ShoppingBag, X, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import gurnaazLogo from '../assets/gurnaaz.png';
-import { getAllProducts, getBoutiques, getCategories, getCollections, defaultBoutiques } from '../utils/adminStore';
+import { getAllProducts, getBoutiques, getCategories, getCollections } from '../utils/adminStore';
 
 function NavListSkeleton({ count = 4, width = 'w-24' }) {
   return (
@@ -59,28 +59,19 @@ export default function Navbar({
   }, []);
 
   useEffect(() => {
-    setAllProducts(getAllProducts());
-    const rawBts = getBoutiques();
-    const bts = (rawBts.length > 0 ? rawBts : defaultBoutiques).filter(b => b.showInNavbar !== false);
-    setNavBoutiques(bts.filter(b => b.type !== 'Shop'));
-    setNavShops(bts.filter(b => b.type === 'Shop'));
-    setNavFeatured(bts.filter(b => b.isFeatured === true).slice(0, 2));
-    setNavCategories(getCategories().filter(c => c.active !== false).sort((a,b) => (a.order || 0) - (b.order || 0)));
-    setDynamicCollections(getCollections().filter(c => c.active !== false).sort((a,b) => (a.order || 0) - (b.order || 0)));
-    
-    const handleUpdate = () => {
+    const loadNavData = () => {
       setAllProducts(getAllProducts());
-      const updatedRawBts = getBoutiques();
-      const updatedBts = (updatedRawBts.length > 0 ? updatedRawBts : defaultBoutiques).filter(b => b.showInNavbar !== false);
-      setNavBoutiques(updatedBts.filter(b => b.type !== 'Shop'));
-      setNavShops(updatedBts.filter(b => b.type === 'Shop'));
-      setNavFeatured(updatedBts.filter(b => b.isFeatured === true).slice(0, 2));
+      const bts = getBoutiques().filter(b => b.showInNavbar !== false);
+      setNavBoutiques(bts.filter(b => b.type !== 'Shop'));
+      setNavShops(bts.filter(b => b.type === 'Shop'));
+      setNavFeatured(bts.filter(b => b.isFeatured === true).slice(0, 2));
       setNavCategories(getCategories().filter(c => c.active !== false).sort((a,b) => (a.order || 0) - (b.order || 0)));
       setDynamicCollections(getCollections().filter(c => c.active !== false).sort((a,b) => (a.order || 0) - (b.order || 0)));
     };
-    window.addEventListener('admin-data-updated', handleUpdate);
-    return () => window.removeEventListener('admin-data-updated', handleUpdate);
-  }, []);
+    loadNavData();
+    window.addEventListener('admin-data-updated', loadNavData);
+    return () => window.removeEventListener('admin-data-updated', loadNavData);
+  }, [storeReady]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -227,10 +218,12 @@ export default function Navbar({
                                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover/cat:w-full opacity-50" />
                               </a>
                             ))
-                          ) : (
+                          ) : !storeReady ? (
                             [1, 2, 3, 4, 5, 6].map(i => (
                               <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-24 my-1"></div>
                             ))
+                          ) : (
+                            <p className="text-[11px] text-[#6B6B6B]/70 italic col-span-2">No categories added yet</p>
                           )}
                         </div>
                       </div>
@@ -259,10 +252,12 @@ export default function Navbar({
                                 {edit.title}
                               </a>
                             ))
-                          ) : (
+                          ) : !storeReady ? (
                             [1, 2, 3, 4, 5].map(i => (
                               <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-28 my-1"></div>
                             ))
+                          ) : (
+                            <p className="text-[11px] text-[#6B6B6B]/70 italic">No collections added yet</p>
                           )}
                         </div>
                         <a href="/collections" onClick={(e) => { e.preventDefault(); window.location.href = '/collections'; }}
@@ -327,7 +322,13 @@ export default function Navbar({
                       <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 pr-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Top Shops</span>
                         <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
-                          {storeReady && navShops.length > 0 ? (
+                          {!storeReady ? (
+                            [1, 2, 3, 4].map(i => (
+                              <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-24 my-1"></div>
+                            ))
+                          ) : navShops.length === 0 ? (
+                            <p className="text-[11px] text-[#6B6B6B]/70 italic">No shops added yet</p>
+                          ) : (
                             navShops.map((shop) => (
                               <a
                                 key={shop.id}
@@ -348,10 +349,6 @@ export default function Navbar({
                                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover/btq:w-full opacity-50" />
                               </a>
                             ))
-                          ) : (
-                            [1, 2, 3, 4].map(i => (
-                              <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-24 my-1"></div>
-                            ))
                           )}
                         </div>
                       </div>
@@ -360,7 +357,13 @@ export default function Navbar({
                       <div className="w-[18%] flex flex-col border-r border-[#D4AF37]/10 px-4">
                         <span className="text-[9px] tracking-[0.3em] text-[#D4AF37] uppercase font-bold mb-5 flex items-center gap-2"><span className="w-4 h-[1px] bg-[#D4AF37]"></span> Top Boutiques</span>
                         <div className="flex flex-col gap-3.5 mt-2 max-h-[300px] overflow-y-auto scrollbar-thin">
-                          {storeReady && navBoutiques.length > 0 ? (
+                          {!storeReady ? (
+                            [1, 2, 3, 4].map(i => (
+                              <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-28 my-1"></div>
+                            ))
+                          ) : navBoutiques.length === 0 ? (
+                            <p className="text-[11px] text-[#6B6B6B]/70 italic">No boutiques added yet</p>
+                          ) : (
                             navBoutiques.map((btq) => (
                               <a
                                 key={btq.id}
@@ -380,10 +383,6 @@ export default function Navbar({
                                 {btq.name}
                                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#D4AF37] transition-all duration-300 group-hover/btq:w-full opacity-50" />
                               </a>
-                            ))
-                          ) : (
-                            [1, 2, 3, 4].map(i => (
-                              <div key={i} className="h-4 bg-[#E8DDD0]/50 rounded animate-pulse w-28 my-1"></div>
                             ))
                           )}
                         </div>
